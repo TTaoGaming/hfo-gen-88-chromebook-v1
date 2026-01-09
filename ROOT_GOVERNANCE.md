@@ -1,4 +1,4 @@
-# Medallion: Gold | Mutation: 0% | HIVE: V
+# Medallion: Bronze | Mutation: 0% | HIVE: V
 # ⚖️ HFO Root Governance & Anti-Pollution Manifest
 
 **Status**: HARDENED

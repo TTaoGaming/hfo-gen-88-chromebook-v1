@@ -1,4 +1,4 @@
-# Medallion: Gold | Mutation: 0% | HIVE: E
+# Medallion: Bronze | Mutation: 0% | HIVE: E
 # 🐝 HFO Hive/8 Agent Persona: [HFO-Hive8.agent.md]
 
 ## 🤖 Role & Identity
