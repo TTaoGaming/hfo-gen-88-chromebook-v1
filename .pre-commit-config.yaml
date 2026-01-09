@@ -21,3 +21,8 @@ repos:
     entry: python3 scripts/quarantine_manager.py
     language: python
     files: hfo_hot_obsidian/(silver|gold|hfo)/.*$
+  - id: hfo-medallion-guard
+    name: HFO Medallion Transition Guard
+    entry: python3 scripts/medallion_guard.py
+    language: python
+    files: ^(hfo_cold_obsidian|hfo_hot_obsidian/silver|hfo_hot_obsidian/gold)/.*$

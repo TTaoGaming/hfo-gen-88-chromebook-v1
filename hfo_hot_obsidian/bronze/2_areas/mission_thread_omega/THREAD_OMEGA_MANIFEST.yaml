@@ -4,23 +4,22 @@
 mission:
   id: "THREAD_OMEGA"
   name: "Total Tool Virtualization"
-  status: "cold"
+  status: "active"
   current_project: "Physics Cursor Vertical Slice (V10)"
-  phase: "HIVE: H (Hunt)"
+  phase: "HIVE: I (Interlock)"
 
 objectives:
   completed:
     - id: "P0_V10_1"
       title: "Cold Source Analysis"
       desc: "MediaPipe integration patterns mapped from Cold Bronze."
+    - id: "P7_V10_H1"
+      title: "HUNT Phase: Intelligence Gained"
+      desc: "Identified MediaPipe environment requirements for Chromebook V-1."
   active:
-    - id: "P0_V10_2"
-      title: "Environment Prep"
-      desc: "Setting up Python dependencies for MediaPipe sensing."
-  missing:
-    - id: "P2_V10_1"
-      title: "Rapier Wasm Integration"
-      desc: "Physics engine bridge for coordinate smoothing."
+    - id: "P1_V10_1"
+      title: "Zod 6.0 Interlock"
+      desc: "Drafting the P0 -> P1 coordinate relay contract."
     - id: "P3_V10_1"
       title: "W3C Event Dispatcher"
       desc: "Mechanism to inject PointerEvents into browser targets."

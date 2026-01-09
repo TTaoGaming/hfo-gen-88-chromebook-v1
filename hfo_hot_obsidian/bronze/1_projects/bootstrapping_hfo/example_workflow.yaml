@@ -1,0 +1,13 @@
+# Medallion: Bronze | HIVE: I | Mission: Alpha
+# 🕸️ Example Sequential Thinking Workflow
+
+workflow_id: "BOOTSTRAP_P1_CONTRACTS"
+steps:
+  - id: 1
+    thought: "Scan hfo_cold_obsidian for P1 Zod schemas."
+  - id: 2
+    thought: "Draft initial Port 1 ↔ Port 7 schema bridge."
+  - id: 3
+    thought: "Validate against existing MediaPipe landmark streams."
+  - id: 4
+    thought: "Finalize Bronze manifest update."
