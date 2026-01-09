@@ -5,7 +5,7 @@ import shutil
 import json
 from datetime import datetime
 
-# Medallion: Bronze | Mutation: 95% | HIVE: V
+# Medallion: Bronze | Mutation: 0% | HIVE: V
 # P5 DEFEND: Automated Quarantine & Demotion Manager
 
 GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/bootstrapping_hfo/defenses/BOOK_OF_BLOOD_GRUDGES.jsonl"

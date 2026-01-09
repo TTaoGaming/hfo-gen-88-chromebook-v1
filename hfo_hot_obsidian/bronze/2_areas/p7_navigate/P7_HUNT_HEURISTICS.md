@@ -1,4 +1,4 @@
-# Medallion: Bronze | Mutation: 95% | HIVE: I
+# Medallion: Bronze | Mutation: 0% | HIVE: I
 // Medallion: Bronze | Mutation: N/A | HIVE: I
 # 🧭 Port 7 (Navigate): Meta-Hive Hunt Heuristics
 

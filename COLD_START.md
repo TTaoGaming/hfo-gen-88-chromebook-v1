@@ -1,4 +1,4 @@
-# Medallion: Gold | Mutation: 100% | HIVE: V
+# Medallion: Gold | Mutation: 0% | HIVE: V
 # 🧊 HFO Cold Start Protocol: Chromebook V-1
 
 **Mission**: Phoenix Project Resurrection

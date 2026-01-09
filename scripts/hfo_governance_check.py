@@ -3,7 +3,7 @@ import sys
 import re
 import os
 
-# Medallion: Bronze | Mutation: 95% | HIVE: V
+# Medallion: Bronze | Mutation: 0% | HIVE: V
 # P5 DEFEND: ROE Enforcement Script
 
 PROVENANCE_REGEX = r"(//|#) Medallion: (Bronze|Silver|Gold) \| Mutation: \d+% \| HIVE: (H|I|V|E)"
