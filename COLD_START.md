@@ -1,3 +1,4 @@
+# Medallion: Gold | Mutation: 100% | HIVE: V
 # 🧊 HFO Cold Start Protocol: Chromebook V-1
 
 **Mission**: Phoenix Project Resurrection
@@ -28,10 +29,10 @@
 
 ## 🗺️ Commander Mapping (Medallion Compliance)
 
-| Commander | Medallion Layer | Cold Source Path | Hot Destination Path |
-|:---|:---|:---|:---|
-| P0 SENSE | Bronze | `bronze/p0/...` | `hfo_hot_obsidian/bronze/p0/...` |
-| P1 FUSE | Silver-to-Bronze | `bronze/p1/...` | `hfo_hot_obsidian/bronze/p1/...` |
+| Commander | Medallion Layer  | Cold Source Path | Hot Destination Path             |
+| :-------- | :--------------- | :--------------- | :------------------------------- |
+| P0 SENSE  | Bronze           | `bronze/p0/...`  | `hfo_hot_obsidian/bronze/p0/...` |
+| P1 FUSE   | Silver-to-Bronze | `bronze/p1/...`  | `hfo_hot_obsidian/bronze/p1/...` |
 
 ---
 *Spider Sovereign (Port 7) | Protocol V1.0*

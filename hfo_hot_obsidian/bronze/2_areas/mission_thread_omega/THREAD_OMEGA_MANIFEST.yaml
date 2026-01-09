@@ -1,0 +1,41 @@
+# Medallion: Bronze | HIVE: I | Mission: Omega
+# 🎯 THREAD_OMEGA_MANIFEST.yaml
+
+mission:
+  id: "THREAD_OMEGA"
+  name: "Total Tool Virtualization"
+  status: "cold"
+  current_project: "Physics Cursor Vertical Slice (V10)"
+  phase: "HIVE: H (Hunt)"
+
+objectives:
+  completed:
+    - id: "P0_V10_1"
+      title: "Cold Source Analysis"
+      desc: "MediaPipe integration patterns mapped from Cold Bronze."
+  active:
+    - id: "P0_V10_2"
+      title: "Environment Prep"
+      desc: "Setting up Python dependencies for MediaPipe sensing."
+  missing:
+    - id: "P2_V10_1"
+      title: "Rapier Wasm Integration"
+      desc: "Physics engine bridge for coordinate smoothing."
+    - id: "P3_V10_1"
+      title: "W3C Event Dispatcher"
+      desc: "Mechanism to inject PointerEvents into browser targets."
+
+pipeline_status:
+  p0_sensor: "🔴 Offline"
+  p1_schema: "⚪ Planned"
+  p2_physics: "⚪ Planned"
+  p3_delivery: "⚪ Planned"
+
+blockers:
+  - "Need verified MediaPipe environment on Chromebook (Linux V-1)."
+  - "Physics cursor coordinate drift detection requires P5 validation."
+
+provenance:
+  created: "2026-01-09T22:30:00Z"
+  commander: "P7 Spider Sovereign"
+  medallion: "Bronze"

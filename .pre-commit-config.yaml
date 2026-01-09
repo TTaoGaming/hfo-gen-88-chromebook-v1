@@ -8,11 +8,16 @@ repos:
     -   id: check-yaml
     -   id: check-added-large-files
 
-# Placeholder for HFO Medallion Flow Governance
-# - repo: local
-#   hooks:
-#   - id: hfo-contract-validation
-#     name: HFO Zod Contract Check
-#     entry: ./scripts/validate_contracts.sh
-#     language: script
-#     files: ^bronze/.*\.ts$
+# HFO Medallion Flow Governance
+- repo: local
+  hooks:
+  - id: hfo-governance-check
+    name: HFO Governance Header Check
+    entry: python3 scripts/hfo_governance_check.py
+    language: python
+    files: \.(py|ts|js|v|md)$
+  - id: hfo-quarantine-manager
+    name: HFO Automated Quarantine Manager
+    entry: python3 scripts/quarantine_manager.py
+    language: python
+    files: hfo_hot_obsidian/(silver|gold|hfo)/.*$

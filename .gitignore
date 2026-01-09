@@ -45,6 +45,7 @@ ENV/
 *.log
 
 # Workspace Specific
+.env
 ttao-notes-*
 *.swp
 .DS_Store

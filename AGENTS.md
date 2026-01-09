@@ -1,3 +1,4 @@
+# Medallion: Gold | Mutation: 100% | HIVE: E
 # 🤖 AI AGENT DEPLOYMENT BRIEFING: GEN 88 CHROMEBOOK V-1
 
 **Current State**: 🧊 **COLD START**
@@ -10,15 +11,33 @@
 ## 🎯 Overarching Goal
 The goal of **HFO (Hyper-Fractal Obsidian)** is to build an **Apex Ensemble Mosaic Warfare Mission Engineering Platform**. We are virtualizing human interaction through a high-fidelity **Physics Cursor** that bridges physical sensing (MediaPipe) with virtual substrates (W3C Pointer Events).
 
-### Core Components
-- **8 Legendary Commanders (Ports 0-7)**: Specialized AI nodes using JADC2 doctrine.
-- **Mosaic Warfare**: Disaggregated, composable effects via AI Stigmergy.
-- **Medallion Flow**: Refinement from Bronze (unstable) to HFO (MAP-ELITE optimized).
+---
+
+## 🚀 Mission Threads
+Every action must be aligned with one of these two primary mission threads:
+
+### 🧵 Thread Alpha: HFO Bootstrapping
+- **Focus**: AI Orchestration, JADC2 Mosaic Warfare, Galois Lattice mapping, and MTG Sliver narrative framing.
+- **Goal**: Hardening the swarm coordination logic and the Medallion flow.
+
+### 🧵 Thread Omega: Total Tool Virtualization
+- **Focus**: High-fidelity virtual tool creation from user intent (function + form).
+- **Short-term (V10)**: MediaPipe/Camera → W3C Pointer for consumers (e.g., Piano Genie, Excalidraw).
+- **Goal**: Instant, functional, and educational virtual tools that surpass analog counterparts.
 
 ---
 
 ## 📍 Current Phase: Gen 88 Canalization
-We are currently executing the **Physics Cursor Vertical Slice (V10)**.
+We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alpha Bootstrapping**.
+
+**Active Defenses**:
+- **P4 SCREAM**: Pre-commit governance header enforcement enabled.
+- **P5 DEFEND**: Integrity audit (Scripts/Hooks) operational.
+- **Grudge Ledger**: `BOOK_OF_BLOOD_GRUDGES.jsonl` active.
+
+**Tooling Intelligence**:
+- **P0 SENSE**: Tavily Search / Brave Search active.
+- **P7 NAVIGATE**: Github API / runSubagent active.
 
 **The Pipeline:**
 `Camera (Python/MediaPipe) → Port 0 (Sense) → Port 1 (Fuse) → Port 2 (Physics/Rapier) → Port 3 (Deliver) → W3C Pointer Event.`

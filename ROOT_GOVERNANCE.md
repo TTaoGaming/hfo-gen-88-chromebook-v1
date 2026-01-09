@@ -1,3 +1,4 @@
+# Medallion: Gold | Mutation: 100% | HIVE: V
 # ⚖️ HFO Root Governance & Anti-Pollution Manifest
 
 **Status**: HARDENED
@@ -7,7 +8,7 @@
 ---
 
 ## 🚫 The Law of Root Purity
-To prevent "Root Pollution" across AI swarm agents, the root directory of the workspace is restricted to the following files and directories. Any unauthorized file creation in the root will be flagged by **Port 4 (Disrupt)** and logged in the **Blood Book of Grudges**.
+To prevent "Root Pollution" across AI swarm agents, the root directory of the workspace is restricted to the following files and directories. Any unauthorized file creation in the root will be flagged by **Port 4 (Disrupt)** and logged in the **Book of Blood Grudges**.
 
 ### ✅ Authorized Root Directories
 - `hfo_cold_obsidian/`: Hardened source of truth (Read-Only context).
@@ -22,6 +23,7 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 - `COLD_START.md`: Resurrection protocols.
 - `ROOT_GOVERNANCE.md`: This manifest.
 - `.gitignore`: Git exclusion rules.
+- `.env`: API keys and environment variables.
 - `.pre-commit-config.yaml`: Pre-commit governance.
 - `pyproject.toml` / `requirements.txt`: Environment definitions.
 
