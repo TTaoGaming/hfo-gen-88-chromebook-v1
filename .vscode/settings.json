@@ -1,0 +1,13 @@
+{
+    "python.analysis.extraPaths": [
+        "./hfo_cold_obsidian/bronze",
+        "./hfo_hot_obsidian/bronze"
+    ],
+    "editor.ruleIndex": [88],
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "*.jsonl": "jsono",
+        "*.md": "markdown"
+    },
+    "markdown.links.openLocation": "currentGroup"
+}
