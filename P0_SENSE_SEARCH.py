@@ -50,7 +50,7 @@ def main():
     tavily_key = os.getenv("TAVILY_API_KEY")
     brave_key = os.getenv("BRAVE_API_KEY")
 
-    query = "HFO Gen 88 Phoenix Project Architecture Hardening"
+    query = "@mediapipe/tasks-vision vision_bundle.js script global name for FilesetResolver and GestureRecognizer"
 
     print(f"🔍 [P0-SENSE]: Searching Tavily...")
     tavily_results = search_tavily(query, tavily_key)

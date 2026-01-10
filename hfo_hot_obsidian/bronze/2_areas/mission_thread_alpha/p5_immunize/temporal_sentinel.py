@@ -8,7 +8,7 @@ from datetime import datetime
 # PORT-5-IMMUNIZE: AI Theater & Workflow Sentinel
 
 BLACKBOARD_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
-GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_immunize/BOOK_OF_BLOOD_GRUDGES.jsonl"
+GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/BOOK_OF_BLOOD_GRUDGES.jsonl"
 
 def log_grudge(scream_id, message):
     entry = {

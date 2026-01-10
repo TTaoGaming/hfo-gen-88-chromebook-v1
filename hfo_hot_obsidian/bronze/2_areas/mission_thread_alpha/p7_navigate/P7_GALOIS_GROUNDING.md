@@ -14,16 +14,16 @@ The HFO architecture is mapped as an 8x8 Galois Lattice where each intersection 
 **Archetype Grounding**: [P7_ARCHETYPE_GROUNDING.md](P7_ARCHETYPE_GROUNDING.md)
 **Thinking Octet**: [P7_THINKING_OCTET.md](P7_THINKING_OCTET.md)
 
-| Port | OBSIDIAN Verb | JADC2 Role | Technical Domain | Narrative Anchor |
-|:---:|:---|:---|:---|:---|
-| **P0** | **O**BSERVE | ISR Sensor Tile | MediaPipe / Python Source | Lidless Legion |
-| **P1** | **B**RIDGE | Data Fabric Tile | Zod 6.0 / TS Bridge | Web Weaver |
-| **P2** | **S**HAPE | Digital Twin Tile | Physics / Rapier Wasm | Mirror Magus |
-| **P3** | **I**NJECT | Effect Dispatcher | W3C Events / FSM | Spore Storm |
-| **P4** | **D**RUPT | Electronic Warfare | Feedback Loops / Suppression | Red Regnant |
-| **P5** | **I**MMUNIZE | Force Protection | Integrity / Governance | Pyre Praetorian |
-| **P6** | **A**RCHIVE | Sustain / Logistics | DuckDB / Stigmergy | Kraken Keeper |
-| **P7** | **N**AVIGATE | BMC2 / Orchestration | Knowledge Management | Spider Sovereign |
+|  Port  | OBSIDIAN Verb | JADC2 Role           | Technical Domain             | Narrative Anchor |
+| :----: | :------------ | :------------------- | :--------------------------- | :--------------- |
+| **P0** | **O**BSERVE   | ISR Sensor Tile      | MediaPipe / Python Source    | Lidless Legion   |
+| **P1** | **B**RIDGE    | Data Fabric Tile     | Zod 6.0 / TS Bridge          | Web Weaver       |
+| **P2** | **S**HAPE     | Digital Twin Tile    | Physics / Rapier Wasm        | Mirror Magus     |
+| **P3** | **I**NJECT    | Effect Dispatcher    | W3C Events / FSM             | Spore Storm      |
+| **P4** | **D**RUPT     | Electronic Warfare   | Feedback Loops / Suppression | Red Regnant      |
+| **P5** | **I**MMUNIZE  | Force Protection     | Integrity / Governance       | Pyre Praetorian  |
+| **P6** | **A**RCHIVE   | Sustain / Logistics  | DuckDB / Stigmergy           | Kraken Keeper    |
+| **P7** | **N**AVIGATE  | BMC2 / Orchestration | Knowledge Management         | Spider Sovereign |
 
 ---
 

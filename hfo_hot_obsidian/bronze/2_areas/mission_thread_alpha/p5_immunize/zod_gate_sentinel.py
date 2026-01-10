@@ -26,6 +26,9 @@ def check_contracts():
         path = os.path.join(CONTRACTS_DIR, cf)
         with open(path, 'r') as f:
             content = f.read()
+            if "export const CloudEventEnvelopeSchema" not in content:
+                 print(f"❌ [P5 ZOD-SHIELD]: CloudEvent envelope missing in {cf}")
+                 return False
             if "export const P0SensingSchema" not in content:
                  print(f"⚠️ [P5 ZOD-SHIELD]: P0 schema missing in {cf}")
             if "export const P1PhysicsInputSchema" not in content:

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,23 +8,59 @@
 
     <!-- Medallion: Cold Bronze | Mutation: 0% | HIVE: V -->
     <!-- 🏗️ Styles -->
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
     <style>
-        body { margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden; background: #111; color: #eee; font-family: sans-serif; }
-        #layout-container { width: 100%; height: 100%; }
-        .component-container { padding: 10px; height: 100%; overflow: auto; box-sizing: border-box; }
-        video { width: 100%; border-radius: 8px; transform: scaleX(-1); background: #000; }
-        canvas { position: absolute; top: 10px; left: 10px; pointer-events: none; transform: scaleX(-1); }
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #111;
+            color: #eee;
+            font-family: sans-serif;
+        }
+
+        #layout-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .component-container {
+            padding: 10px;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+            transform: scaleX(-1);
+            background: #000;
+        }
+
+        canvas {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            pointer-events: none;
+            transform: scaleX(-1);
+        }
     </style>
 </head>
+
 <body>
     <div id="layout-container"></div>
 
     <!-- 📦 Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+        crossorigin="anonymous"></script>
 
     <script type="importmap">
     {
@@ -183,8 +220,8 @@
                 if (results.multiHandLandmarks) {
                     for (const landmarks of results.multiHandLandmarks) {
                         if (state.debug) {
-                            drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color: '#00FF0033', lineWidth: 2});
-                            drawLandmarks(ctx, landmarks, {color: '#FF000033', lineWidth: 1, radius: 2});
+                            drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { color: '#00FF0033', lineWidth: 2 });
+                            drawLandmarks(ctx, landmarks, { color: '#FF000033', lineWidth: 1, radius: 2 });
                         }
 
                         // 🎯 Extract Index Tip (Landmark 8)
@@ -221,7 +258,7 @@
             const camera = new Camera(video, {
                 onFrame: async () => {
                     if (state.active) {
-                        await handsInstance.send({image: video});
+                        await handsInstance.send({ image: video });
                     }
                 },
                 width: 1280,
@@ -314,4 +351,5 @@
         window.addEventListener('resize', () => layout.updateSize());
     </script>
 </body>
+
 </html>

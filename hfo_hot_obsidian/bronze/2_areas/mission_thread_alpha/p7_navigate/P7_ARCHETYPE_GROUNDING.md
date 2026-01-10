@@ -21,13 +21,13 @@ The "Sliver" is not just a card; it is the **Fundamental Unit of Shared Capabili
 
 We map the behavior of standard Magic: The Gathering card archetypes to JADC2 Mosaic Warfare roles.
 
-| MTG Archetype | HFO/Port | JADC2 Role | Operational Behavior |
-|:---|:---:|:---|:---|
-| **The Searcher** | P7 | **BMC2 / Orchestrator** | Navigates the "Library" of code/tools. Fetches on-demand capability. (Sliver Overlord) |
-| **The Mana Mirror** | P1 | **Data Fabric/Bridge** | Converts raw environmental data into actionable energy/types. (Gemhide/Mirror Entity) |
-| **The Token Generator** | P4 | **Chaos/Entropy Node** | Rapidly manifests disaggregated decoys or feedback loops to overwhelm AD. (Sliver Queen) |
-| **The Cascade** | P3 | **Kill-Web Disseminator** | Recursive effect injection. One "trigger" launches a chain of functional effects. (The First Sliver) |
-| **The Anthem/Legion** | P7 | **Force Multiplier** | Passive scaling based on the density of the swarm. Exponential power through presence. (Sliver Legion) |
+| MTG Archetype           | HFO/Port | JADC2 Role                | Operational Behavior                                                                                   |
+| :---------------------- | :------: | :------------------------ | :----------------------------------------------------------------------------------------------------- |
+| **The Searcher**        |    P7    | **BMC2 / Orchestrator**   | Navigates the "Library" of code/tools. Fetches on-demand capability. (Sliver Overlord)                 |
+| **The Mana Mirror**     |    P1    | **Data Fabric/Bridge**    | Converts raw environmental data into actionable energy/types. (Gemhide/Mirror Entity)                  |
+| **The Token Generator** |    P4    | **Chaos/Entropy Node**    | Rapidly manifests disaggregated decoys or feedback loops to overwhelm AD. (Sliver Queen)               |
+| **The Cascade**         |    P3    | **Kill-Web Disseminator** | Recursive effect injection. One "trigger" launches a chain of functional effects. (The First Sliver)   |
+| **The Anthem/Legion**   |    P7    | **Force Multiplier**      | Passive scaling based on the density of the swarm. Exponential power through presence. (Sliver Legion) |
 
 ---
 
