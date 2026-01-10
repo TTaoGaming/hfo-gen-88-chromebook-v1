@@ -32,11 +32,12 @@ We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alp
 
 **Active Mission Projects**:
 - `0_p0_observe.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha) - **Dynamic Hardware Sensing V1 Active + Resource-Aware Stryker (stryker_boot.sh)**.
-- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V33 Frozen + V34 Tuning**.
+- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V34 Frozen + V35 Tuning**.
     - **V33 Stabilization**: Implemented Geometric Identity Lock (Bipartite Solver), 1s Coastal Persistence, and territorial Identity Repulsion (0.12). 
-    - **V34 Development**: Tuning High-Inertia Tracker and barrier-based discovery to resolve movement noise.
-    - **Validation**: `scripts/p5_forensic_harness.py` verified V33.
-    - **Status**: V33 promoted to **Cold Bronze** (Golden Example). V34 active in **Hot Bronze**.
+    - **V34 Layout**: Implemented Hero Pattern Layout (70% Excalidraw) and Diagnostic Stack. Freezing as UI baseline.
+    - **V35 Development**: Tuning movement physics and refining the UI focus.
+    - **Validation**: `scripts/p5_forensic_harness.py` verified V34 syntax and E2E.
+    - **Status**: V34 promoted to **Cold Bronze**. V35 active in **Hot Bronze**.
 
 **Active Defenses**:
 - **PORT-5-IMMUNIZE (THE 8 SHIELDS)**:
