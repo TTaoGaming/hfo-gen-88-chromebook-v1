@@ -5,7 +5,7 @@ mission:
   id: "THREAD_OMEGA"
   name: "Total Tool Virtualization"
   status: "active"
-  current_project: "Physics Cursor Vertical Slice (V11)"
+  current_project: "Physics Cursor Vertical Slice (V12)"
   phase: "HIVE: I (Interlock)"
 
 objectives:
@@ -25,6 +25,9 @@ objectives:
     - id: "P1_V11_1"
       title: "One Euro Dual Cursors"
       desc: "Implemented 'Smooth' and 'Snappy' presets for index tip tracking."
+    - id: "P0_V12_1"
+      title: "Landmark Gesture Logic"
+      desc: "Implemented pinch, fist, and open hand detection logic."
   active:
     - id: "P1_V10_1"
       title: "Zod 6.0 Interlock"

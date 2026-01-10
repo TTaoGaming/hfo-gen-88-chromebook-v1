@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO Omega: Physics Cursor Workspace V12.5</title>
+    <title>HFO Omega: Matter.js Cursor Workspace V15</title>
 
     <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
     <!-- 🏗️ Styles -->
@@ -102,7 +102,8 @@
         "imports": {
             "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
             "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
-            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm"
         }
     }
     </script>
@@ -111,6 +112,7 @@
         import { GoldenLayout, LayoutConfig } from 'golden-layout';
         import GUI from 'lil-gui';
         import { GestureRecognizer, HandLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import Matter from 'matter-js';
 
         // 🧠 One Euro Filter Implementation
         class LowPassFilter {
@@ -173,9 +175,16 @@
                 minHandPresenceConfidence: 0.5,
                 minTrackingConfidence: 0.5
             },
+            physics: {
+                stiffness: 0.05,
+                damping: 0.1,
+                lookAhead: 5.0
+            },
             cursors: {
-                smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth' },
-                snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy' }
+                smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth (1€)' },
+                snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy (1€)' },
+                spring: { x: 0.5, y: 0.5, body: null, anchor: null, constraint: null, color: '#ff00ff', label: 'Spring (MATTER)' },
+                predictive: { x: 0.5, y: 0.5, body: null, color: '#00ff00', label: 'Predictive (MATTER)' }
             },
             gestures: {
                 active: 'None',
@@ -189,6 +198,39 @@
         state.cursors.smooth.filterY = new OneEuroFilter(30, 0.5, 0.001);
         state.cursors.snappy.filterX = new OneEuroFilter(30, 2.0, 0.1);
         state.cursors.snappy.filterY = new OneEuroFilter(30, 2.0, 0.1);
+
+        // 🏗️ Matter.js Initialization
+        let engine, runner;
+        const initPhysics = () => {
+            const { Engine, Bodies, Composite, Constraint, Runner } = Matter;
+            
+            engine = Engine.create();
+            engine.gravity.scale = 0; // No gravity for 2D UI cursors
+
+            // 1. Spring Body (Anchor + Body + Constraint)
+            state.cursors.spring.anchor = Bodies.circle(0.5, 0.5, 1, { isStatic: true, isSensor: true });
+            state.cursors.spring.body = Bodies.circle(0.5, 0.5, 10, { frictionAir: 0.1 });
+            state.cursors.spring.constraint = Constraint.create({
+                bodyA: state.cursors.spring.anchor,
+                bodyB: state.cursors.spring.body,
+                stiffness: state.physics.stiffness,
+                damping: state.physics.damping,
+                length: 0
+            });
+
+            // 2. Predictive Body (Static/Kinematic proxy)
+            state.cursors.predictive.body = Bodies.circle(0.5, 0.5, 10, { isStatic: true });
+
+            Composite.add(engine.world, [
+                state.cursors.spring.anchor, 
+                state.cursors.spring.body, 
+                state.cursors.spring.constraint,
+                state.cursors.predictive.body
+            ]);
+
+            runner = Runner.create();
+            Runner.run(runner, engine);
+        };
 
         let gestureRecognizer = null;
 
@@ -241,6 +283,9 @@
 
                             // 🎯 Focus on Index Tip (8)
                             const tip = landmarks[8];
+                            const px = tip.x * canvas.width;
+                            const py = tip.y * canvas.height;
+
                             state.cursors.smooth.x = state.cursors.smooth.filterX.call(tip.x, now);
                             state.cursors.smooth.y = state.cursors.smooth.filterY.call(tip.y, now);
                             state.cursors.snappy.x = state.cursors.snappy.filterX.call(tip.x, now);
@@ -254,8 +299,33 @@
                                 state.gestures.isDown = (topGesture.categoryName === 'Closed_Fist' || topGesture.categoryName === 'Pointing_Up');
                             }
 
+                            // ⚙️ Matter.js Sync
+                            if (engine) {
+                                // A. Update Spring Anchor
+                                Matter.Body.setPosition(state.cursors.spring.anchor, {
+                                    x: state.cursors.smooth.x * canvas.width,
+                                    y: state.cursors.smooth.y * canvas.height
+                                });
+
+                                // B. Predictive Lead
+                                const vel = {
+                                    x: (state.cursors.snappy.x - state.cursors.smooth.x) * state.physics.lookAhead,
+                                    y: (state.cursors.snappy.y - state.cursors.smooth.y) * state.physics.lookAhead
+                                };
+                                Matter.Body.setPosition(state.cursors.predictive.body, {
+                                    x: (state.cursors.smooth.x + vel.x) * canvas.width,
+                                    y: (state.cursors.smooth.y + vel.y) * canvas.height
+                                });
+
+                                // Update local state for rendering
+                                state.cursors.spring.x = state.cursors.spring.body.position.x / canvas.width;
+                                state.cursors.spring.y = state.cursors.spring.body.position.y / canvas.height;
+                                state.cursors.predictive.x = state.cursors.predictive.body.position.x / canvas.width;
+                                state.cursors.predictive.y = state.cursors.predictive.body.position.y / canvas.height;
+                            }
+
                             // Render Custom Cursors
-                            [state.cursors.smooth, state.cursors.snappy].forEach(cursor => {
+                            [state.cursors.smooth, state.cursors.snappy, state.cursors.spring, state.cursors.predictive].forEach(cursor => {
                                 ctx.beginPath();
                                 ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 12, 0, 2 * Math.PI);
                                 ctx.fillStyle = cursor.color;
@@ -263,6 +333,11 @@
                                 ctx.strokeStyle = state.gestures.isDown ? '#fff' : 'transparent';
                                 ctx.lineWidth = 4;
                                 ctx.stroke();
+                                
+                                // Label
+                                ctx.fillStyle = '#fff';
+                                ctx.font = '12px Courier';
+                                ctx.fillText(cursor.label, cursor.x * canvas.width + 15, cursor.y * canvas.height + 5);
                             });
                         });
                     }
@@ -275,6 +350,7 @@
             video.onloadedmetadata = () => {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
+                initPhysics(); // Init Matter.js when canvas dimensions are known
                 render();
             };
         };
@@ -284,21 +360,27 @@
             div.className = 'component-container';
             div.innerHTML = `
                 <div class="data-card" style="border-left-color: #00ccff">
-                    <h3>Smooth Cursor (1€)</h3>
+                    <h3>Smooth (1€)</h3>
                     <code id="smooth-data">X: 0.000, Y: 0.000</code>
                 </div>
-                <div class="data-card" style="border-left-color: #ffcc00">
-                    <h3>Snappy Cursor (1€)</h3>
-                    <code id="snappy-data">X: 0.000, Y: 0.000</code>
+                <div class="data-card" style="border-left-color: #ff00ff">
+                    <h3>Spring (Matter)</h3>
+                    <code id="spring-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div class="data-card" style="border-left-color: #00ff00">
+                    <h3>Predictive (Matter)</h3>
+                    <code id="pred-data">X: 0.000, Y: 0.000</code>
                 </div>
             `;
             container.appendChild(div);
             const smoothEl = div.querySelector('#smooth-data');
-            const snappyEl = div.querySelector('#snappy-data');
+            const springEl = div.querySelector('#spring-data');
+            const predEl = div.querySelector('#pred-data');
 
             const update = () => {
                 smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(4)}, Y: ${state.cursors.smooth.y.toFixed(4)}`;
-                snappyEl.innerText = `X: ${state.cursors.snappy.x.toFixed(4)}, Y: ${state.cursors.snappy.y.toFixed(4)}`;
+                springEl.innerText = `X: ${state.cursors.spring.x.toFixed(4)}, Y: ${state.cursors.spring.y.toFixed(4)}`;
+                predEl.innerText = `X: ${state.cursors.predictive.x.toFixed(4)}, Y: ${state.cursors.predictive.y.toFixed(4)}`;
                 requestAnimationFrame(update);
             };
             update();
@@ -339,16 +421,18 @@
 
         const initSettings = (container) => {
             const gui = new GUI({ container, autoPlace: false });
+            
+            const phys = gui.addFolder('Matter.js Dynamics');
+            phys.add(state.physics, 'stiffness', 0, 1).name('Spring Stiffness').onChange(v => state.cursors.spring.constraint.stiffness = v);
+            phys.add(state.physics, 'damping', 0, 1).name('Spring Damping').onChange(v => state.cursors.spring.constraint.damping = v);
+            phys.add(state.physics, 'lookAhead', 0, 20).name('Predictive T');
+            phys.open();
+
             const mp = gui.addFolder('MediaPipe Tasks');
             mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({minHandDetectionConfidence: v}));
             mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({minHandPresenceConfidence: v}));
             mp.add(state, 'debug').name('Show Mesh');
             mp.open();
-
-            const physics = gui.addFolder('One Euro Filters');
-            physics.add(state.cursors.smooth.filterX, 'minCutoff', 0.01, 10).name('Smooth MinCutoff').onChange(v => state.cursors.smooth.filterY.minCutoff = v);
-            physics.add(state.cursors.smooth.filterX, 'beta', 0, 1).name('Smooth Beta').onChange(v => state.cursors.smooth.filterY.beta = v);
-            physics.open();
 
             container.appendChild(gui.domElement);
         };
@@ -377,8 +461,8 @@
         layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
         layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
         layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
-        layout.loadLayout(config);
         
+        layout.loadLayout(config);
         window.addEventListener('resize', () => layout.updateSize());
     </script>
 </body>

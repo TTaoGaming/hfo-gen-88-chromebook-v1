@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO Omega: Physics Cursor Workspace V12.5</title>
+    <title>HFO Omega: Physics Cursor Workspace V13</title>
 
     <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
     <!-- 🏗️ Styles -->
@@ -102,15 +102,18 @@
         "imports": {
             "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
             "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
-            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "@dimforge/rapier2d": "https://cdn.skypack.dev/pin/@dimforge/rapier2d@v0.11.2-u6X9V4w6yKyL34OUjd5o/mode=imports/optimized/@dimforge/rapier2d.js"
         }
     }
     </script>
 
     <script type="module">
+        console.log('HFO V13: Module Script Starting');
         import { GoldenLayout, LayoutConfig } from 'golden-layout';
         import GUI from 'lil-gui';
         import { GestureRecognizer, HandLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import * as RAPIER from '@dimforge/rapier2d';
 
         // 🧠 One Euro Filter Implementation
         class LowPassFilter {
@@ -167,6 +170,8 @@
             active: true,
             debug: true,
             stats: { fps: 0 },
+            RAPIER: null,
+            world: null,
             mpOptions: {
                 numHands: 1,
                 minHandDetectionConfidence: 0.5,
@@ -175,7 +180,9 @@
             },
             cursors: {
                 smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth' },
-                snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy' }
+                snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy' },
+                spring: { x: 0.5, y: 0.5, body: null, target: { x: 0.5, y: 0.5 }, color: '#ff00ff', label: 'Spring' },
+                predictive: { x: 0.5, y: 0.5, body: null, color: '#00ff00', label: 'Predictive' }
             },
             gestures: {
                 active: 'None',
@@ -191,6 +198,39 @@
         state.cursors.snappy.filterY = new OneEuroFilter(30, 2.0, 0.1);
 
         let gestureRecognizer = null;
+
+        // 🏗️ Step 1: Initialize Rapier
+        const initPhysics = async () => {
+            console.log('RAPIER Namespace Keys:', Object.keys(RAPIER));
+            
+            // Rapier 0.11.x uses .init() as the WASM loader
+            const init = RAPIER.init || (RAPIER.default && RAPIER.default.init) || RAPIER.default;
+            
+            if (typeof init !== 'function') {
+                console.error('Could not find init function. Keys:', Object.keys(RAPIER));
+                throw new Error('RAPIER init not found in bundle');
+            }
+
+            const RAPIER_INST = await init();
+            console.log("RAPIER WASM Instance Ready");
+
+            // Initialize World FIRST
+            state.world = new RAPIER_INST.World({ x: 0.0, y: 0.0 });
+            
+            // 1. Spring Cursor (Dynamic Body)
+            const springDesc = RAPIER_INST.RigidBodyDesc.dynamic()
+                .setTranslation(0.5, 0.5)
+                .setLinearDamping(10.0);
+            state.cursors.spring.body = state.world.createRigidBody(springDesc);
+            state.world.createCollider(RAPIER_INST.ColliderDesc.ball(0.01), state.cursors.spring.body);
+
+            // 2. Predictive Cursor (Kinematic Body)
+            const predDesc = RAPIER_INST.RigidBodyDesc.kinematicPositionBased()
+                .setTranslation(0.5, 0.5);
+            state.cursors.predictive.body = state.world.createRigidBody(predDesc);
+            
+            console.log("Rapier Physics Ensemble Hardened");
+        };
 
         // 📽️ MediaPipe Processor
         const initMediaPipe = async (container) => {
@@ -246,6 +286,45 @@
                             state.cursors.snappy.x = state.cursors.snappy.filterX.call(tip.x, now);
                             state.cursors.snappy.y = state.cursors.snappy.filterY.call(tip.y, now);
 
+                            // � Physics Bridge (P2 SHAPE)
+                            if (state.world) {
+                                // 1. Spring-Mass-Dampener (PD Control)
+                                const k = 800.0; // Stiffness
+                                const d = 40.0;  // Damping
+                                const sBody = state.cursors.spring.body;
+                                const sPos = sBody.translation();
+                                const sVel = sBody.linvel();
+                                
+                                const force = {
+                                    x: k * (tip.x - sPos.x) - d * sVel.x,
+                                    y: k * (tip.y - sPos.y) - d * sVel.y
+                                };
+                                sBody.applyImpulse(force, true);
+
+                                // 2. Predictive (Velocity leads Position)
+                                const pBody = state.cursors.predictive.body;
+                                const lastTip = state.cursors.predictive.lastTip || tip;
+                                const dt = (now - (state.cursors.predictive.lastTime || now)) / 1000 || 0.016;
+                                
+                                const vx = (tip.x - lastTip.x) / dt;
+                                const vy = (tip.y - lastTip.y) / dt;
+                                
+                                const lookahead = 0.04; // 40ms prediction
+                                state.cursors.predictive.x = tip.x + vx * lookahead;
+                                state.cursors.predictive.y = tip.y + vy * lookahead;
+                                pBody.setNextKinematicTranslation({ x: state.cursors.predictive.x, y: state.cursors.predictive.y });
+
+                                state.cursors.predictive.lastTip = { ...tip };
+                                state.cursors.predictive.lastTime = now;
+
+                                state.world.step();
+
+                                // Sync physics state back
+                                const finalSpringPos = sBody.translation();
+                                state.cursors.spring.x = finalSpringPos.x;
+                                state.cursors.spring.y = finalSpringPos.y;
+                            }
+
                             // 🤏 Gesture Integration
                             if (results.gestures && results.gestures[index]) {
                                 const topGesture = results.gestures[index][0];
@@ -255,7 +334,7 @@
                             }
 
                             // Render Custom Cursors
-                            [state.cursors.smooth, state.cursors.snappy].forEach(cursor => {
+                            [state.cursors.smooth, state.cursors.snappy, state.cursors.spring, state.cursors.predictive].forEach(cursor => {
                                 ctx.beginPath();
                                 ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 12, 0, 2 * Math.PI);
                                 ctx.fillStyle = cursor.color;
@@ -284,21 +363,33 @@
             div.className = 'component-container';
             div.innerHTML = `
                 <div class="data-card" style="border-left-color: #00ccff">
-                    <h3>Smooth Cursor (1€)</h3>
+                    <h3>SMOOTH (1€)</h3>
                     <code id="smooth-data">X: 0.000, Y: 0.000</code>
                 </div>
                 <div class="data-card" style="border-left-color: #ffcc00">
-                    <h3>Snappy Cursor (1€)</h3>
+                    <h3>SNAPPY (1€)</h3>
                     <code id="snappy-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div class="data-card" style="border-left-color: #ff00ff">
+                    <h3>SPRING (RAPIER)</h3>
+                    <code id="spring-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div class="data-card" style="border-left-color: #00ff00">
+                    <h3>PREDICTIVE (RAPIER)</h3>
+                    <code id="predictive-data">X: 0.000, Y: 0.000</code>
                 </div>
             `;
             container.appendChild(div);
             const smoothEl = div.querySelector('#smooth-data');
             const snappyEl = div.querySelector('#snappy-data');
+            const springEl = div.querySelector('#spring-data');
+            const predEl = div.querySelector('#predictive-data');
 
             const update = () => {
-                smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(4)}, Y: ${state.cursors.smooth.y.toFixed(4)}`;
-                snappyEl.innerText = `X: ${state.cursors.snappy.x.toFixed(4)}, Y: ${state.cursors.snappy.y.toFixed(4)}`;
+                smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(3)}, Y: ${state.cursors.smooth.y.toFixed(3)}`;
+                snappyEl.innerText = `X: ${state.cursors.snappy.x.toFixed(3)}, Y: ${state.cursors.snappy.y.toFixed(3)}`;
+                springEl.innerText = `X: ${state.cursors.spring.x.toFixed(3)}, Y: ${state.cursors.spring.y.toFixed(3)}`;
+                predEl.innerText = `X: ${state.cursors.predictive.x.toFixed(3)}, Y: ${state.cursors.predictive.y.toFixed(3)}`;
                 requestAnimationFrame(update);
             };
             update();
@@ -377,7 +468,16 @@
         layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
         layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
         layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
-        layout.loadLayout(config);
+        
+        // Initialize Core Engines
+        console.log("Starting Initialization...");
+        initPhysics().then(() => {
+            console.log("Physics Ready, loading layout...");
+            layout.loadLayout(config);
+        }).catch(err => {
+            console.error("CRITICAL INIT FAILURE:", err);
+            document.body.innerHTML = `<div style="color:red; padding:20px;"><h1>Critical Initialization Failure</h1><pre>${err.stack}</pre></div>`;
+        });
         
         window.addEventListener('resize', () => layout.updateSize());
     </script>
