@@ -5,7 +5,7 @@ mission:
   id: "THREAD_OMEGA"
   name: "Total Tool Virtualization"
   status: "active"
-  current_project: "Physics Cursor Vertical Slice (V10)"
+  current_project: "Physics Cursor Vertical Slice (V11)"
   phase: "HIVE: I (Interlock)"
 
 objectives:
@@ -19,6 +19,12 @@ objectives:
     - id: "P2_V10_1"
       title: "Physics Selection"
       desc: "Committed to Mass-Spring-Dampener model for digital twin."
+    - id: "P3_V10_UI"
+      title: "Golden Layout & LILGUI"
+      desc: "Solidified the command-center UI with tiling and real-time param tuning."
+    - id: "P1_V11_1"
+      title: "One Euro Dual Cursors"
+      desc: "Implemented 'Smooth' and 'Snappy' presets for index tip tracking."
   active:
     - id: "P1_V10_1"
       title: "Zod 6.0 Interlock"

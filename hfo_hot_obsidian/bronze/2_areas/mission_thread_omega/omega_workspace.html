@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO Omega: Physics Cursor Workspace</title>
+    <title>HFO Omega: Physics Cursor Workspace V11</title>
 
     <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
     <!-- 🏗️ Styles -->
@@ -38,6 +38,55 @@
         import { GoldenLayout, LayoutConfig } from 'golden-layout';
         import GUI from 'lil-gui';
 
+        // 🧠 One Euro Filter Implementation
+        class LowPassFilter {
+            constructor(alpha) {
+                this.alpha = alpha;
+                this.s = null;
+            }
+            call(value) {
+                if (this.s === null) {
+                    this.s = value;
+                } else {
+                    this.s = this.alpha * value + (1.0 - this.alpha) * this.s;
+                }
+                return this.s;
+            }
+        }
+
+        class OneEuroFilter {
+            constructor(freq, minCutoff = 1.0, beta = 0.0, dCutoff = 1.0) {
+                this.freq = freq;
+                this.minCutoff = minCutoff;
+                this.beta = beta;
+                this.dCutoff = dCutoff;
+                this.xFilter = new LowPassFilter(this.alpha(minCutoff));
+                this.dxFilter = new LowPassFilter(this.alpha(dCutoff));
+                this.lastTime = null;
+            }
+
+            alpha(cutoff) {
+                const te = 1.0 / this.freq;
+                const tau = 1.0 / (2 * Math.PI * cutoff);
+                return 1.0 / (1.0 + tau / te);
+            }
+
+            call(x, timestamp = null) {
+                if (this.lastTime !== null && timestamp !== null) {
+                    this.freq = 1.0 / ((timestamp - this.lastTime) / 1000);
+                }
+                this.lastTime = timestamp;
+
+                const prevX = this.xFilter.s;
+                const dx = prevX === null ? 0.0 : (x - prevX) * this.freq;
+                const edx = this.dxFilter.call(dx);
+
+                const cutoff = this.minCutoff + this.beta * Math.abs(edx);
+                this.xFilter.alpha = this.alpha(cutoff);
+                return this.xFilter.call(x);
+            }
+        }
+
         let handsInstance = null;
 
         // 🎥 MediaPipe State
@@ -47,28 +96,48 @@
             debug: true,
             stats: { fps: 0 },
             mpOptions: {
-                maxNumHands: 2,
+                maxNumHands: 1,
                 modelComplexity: 1,
                 minDetectionConfidence: 0.5,
                 minTrackingConfidence: 0.5
+            },
+            cursors: {
+                smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth Cursor' },
+                snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy Cursor' }
             }
         };
+
+        // Initialize Filters
+        state.cursors.smooth.filterX = new OneEuroFilter(30, 0.5, 0.001);
+        state.cursors.smooth.filterY = new OneEuroFilter(30, 0.5, 0.001);
+        state.cursors.snappy.filterX = new OneEuroFilter(30, 2.0, 0.1);
+        state.cursors.snappy.filterY = new OneEuroFilter(30, 2.0, 0.1);
 
         // 🛠️ GUI Logic
         const initGUI = (container) => {
             const gui = new GUI({ container, autoPlace: false });
 
-            const mpFolder = gui.addFolder('MediaPipe Pipeline');
+            const mpFolder = gui.addFolder('P0: SENSOR (MediaPipe)');
             mpFolder.add(state.mpOptions, 'maxNumHands', 1, 4, 1).name('Max Hands').onChange(updateMP);
             mpFolder.add(state.mpOptions, 'modelComplexity', { 'Lite (0)': 0, 'Full (1)': 1 }).name('Complexity').onChange(updateMP);
             mpFolder.add(state.mpOptions, 'minDetectionConfidence', 0, 1).name('Detection Thresh').onChange(updateMP);
             mpFolder.add(state.mpOptions, 'minTrackingConfidence', 0, 1).name('Tracking Thresh').onChange(updateMP);
             mpFolder.open();
 
+            const cursorsFolder = gui.addFolder('P2: SHAPE (One Euro Filters)');
+            const sFolder = cursorsFolder.addFolder('Smooth Preset');
+            sFolder.add(state.cursors.smooth.filterX, 'minCutoff', 0.1, 10).name('Min Cutoff').onChange(v => state.cursors.smooth.filterY.minCutoff = v);
+            sFolder.add(state.cursors.smooth.filterX, 'beta', 0, 1).name('Beta').onChange(v => state.cursors.smooth.filterY.beta = v);
+
+            const snFolder = cursorsFolder.addFolder('Snappy Preset');
+            snFolder.add(state.cursors.snappy.filterX, 'minCutoff', 0.1, 10).name('Min Cutoff').onChange(v => state.cursors.snappy.filterY.minCutoff = v);
+            snFolder.add(state.cursors.snappy.filterX, 'beta', 0, 1).name('Beta').onChange(v => state.cursors.snappy.filterY.beta = v);
+            cursorsFolder.open();
+
             const vizFolder = gui.addFolder('Visualization');
             vizFolder.add(state, 'active').name('Sensing Active');
             vizFolder.add(state, 'debug').name('Show Skeleton');
-            vizFolder.add(state, 'smoothing', 0, 1).name('MSD Smoothing');
+            vizFolder.add(state, 'smoothing', 0, 1).name('Global Smoothing');
             vizFolder.add(state.stats, 'fps').name('MP FPS').listen();
             vizFolder.open();
 
@@ -104,20 +173,49 @@
             handsInstance.onResults((results) => {
                 const now = performance.now();
                 state.stats.fps = Math.round(1000 / (now - lastTime));
-                lastTime = now;
 
                 if (!state.active) return;
 
                 ctx.save();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-                if (results.multiHandLandmarks && state.debug) {
+
+                if (results.multiHandLandmarks) {
                     for (const landmarks of results.multiHandLandmarks) {
-                        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 5});
-                        drawLandmarks(ctx, landmarks, {color: '#FF0000', lineWidth: 2});
+                        if (state.debug) {
+                            drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color: '#00FF0033', lineWidth: 2});
+                            drawLandmarks(ctx, landmarks, {color: '#FF000033', lineWidth: 1, radius: 2});
+                        }
+
+                        // 🎯 Extract Index Tip (Landmark 8)
+                        const tip = landmarks[8];
+                        const timestamp = now;
+
+                        // Apply Filters
+                        state.cursors.smooth.x = state.cursors.smooth.filterX.call(tip.x, timestamp);
+                        state.cursors.smooth.y = state.cursors.smooth.filterY.call(tip.y, timestamp);
+                        state.cursors.snappy.x = state.cursors.snappy.filterX.call(tip.x, timestamp);
+                        state.cursors.snappy.y = state.cursors.snappy.filterY.call(tip.y, timestamp);
+
+                        // Render Cursors
+                        [state.cursors.smooth, state.cursors.snappy].forEach(cursor => {
+                            ctx.beginPath();
+                            ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 10, 0, 2 * Math.PI);
+                            ctx.fillStyle = cursor.color;
+                            ctx.fill();
+                            ctx.strokeStyle = '#fff';
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+
+                            // Label
+                            ctx.fillStyle = '#fff';
+                            ctx.font = '12px Courier New';
+                            ctx.fillText(cursor.label, cursor.x * canvas.width + 15, cursor.y * canvas.height + 5);
+                        });
                     }
                 }
                 ctx.restore();
+                lastTime = now;
             });
 
             const camera = new Camera(video, {
@@ -138,22 +236,60 @@
             camera.start();
         };
 
+        const initPhysicsPanel = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.innerHTML = `
+                <div style="background: #222; padding: 15px; border-radius: 8px; border-left: 4px solid #00ccff; margin-bottom: 10px;">
+                    <h3 style="margin-top:0">🔵 Smooth Cursor</h3>
+                    <code id="smooth-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div style="background: #222; padding: 15px; border-radius: 8px; border-left: 4px solid #ffcc00;">
+                    <h3 style="margin-top:0">🟡 Snappy Cursor</h3>
+                    <code id="snappy-data">X: 0.000, Y: 0.000</code>
+                </div>
+            `;
+            container.appendChild(div);
+
+            const smoothEl = div.querySelector('#smooth-data');
+            const snappyEl = div.querySelector('#snappy-data');
+
+            const update = () => {
+                smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(4)}, Y: ${state.cursors.smooth.y.toFixed(4)}`;
+                snappyEl.innerText = `X: ${state.cursors.snappy.x.toFixed(4)}, Y: ${state.cursors.snappy.y.toFixed(4)}`;
+                requestAnimationFrame(update);
+            };
+            update();
+        };
+
         // 🏗️ Layout Config
         const config = {
             root: {
-                type: 'row',
+                type: 'column',
                 content: [
                     {
-                        type: 'component',
-                        componentType: 'MediaPipe',
-                        title: 'P0: SENSE (MediaPipe)',
-                        width: 70
+                        type: 'row',
+                        height: 70,
+                        content: [
+                            {
+                                type: 'component',
+                                componentType: 'MediaPipe',
+                                title: 'P0: SENSE (MediaPipe)',
+                                width: 60
+                            },
+                            {
+                                type: 'component',
+                                componentType: 'Physics',
+                                title: 'P2: SHAPE (Physics Data)',
+                                width: 40
+                            }
+                        ]
                     },
                     {
                         type: 'component',
                         componentType: 'Settings',
-                        title: 'P7: NAVIGATE (Settings)',
-                        width: 30
+                        title: 'P7: NAVIGATE (System Control)',
+                        height: 30
                     }
                 ]
             }
@@ -163,6 +299,10 @@
 
         layout.registerComponentFactoryFunction('MediaPipe', (container) => {
             initMediaPipe(container.element);
+        });
+
+        layout.registerComponentFactoryFunction('Physics', (container) => {
+            initPhysicsPanel(container.element);
         });
 
         layout.registerComponentFactoryFunction('Settings', (container) => {

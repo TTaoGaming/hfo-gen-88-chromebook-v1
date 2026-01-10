@@ -72,4 +72,13 @@ To prevent context window saturation, the Navigator enforces a **Fractal Shard B
 4. **Receipt Freeze**: All receipts are committed before the "I" (Interlock) phase begins.
 
 ---
+
+## 🛡️ Hardened Constraints & Forensics
+
+1. **Forensic Filter**: The Navigator only processes entries where `tool` matches `T[0-7]`. All other blackboard noise is bypassed for cognitive mapping.
+2. **Shard Enforcement**: Any entry where `tokens_used > token_cap` triggers a `SCREAM_4` disruption event and invalidates the turn.
+3. **Hash Integrity**: Every `thought_hash` must be verifiable against the `payload.summary`.
+4. **Drift Detection**: If `tokens_used` hits 1,024 for 3+ tools in a single turn, the system is "Redlining" and must simplify its abstraction layer.
+
+---
 *Spider Sovereign | Thinking Octet Manifest | Receipt: G88_THINK_OCT_20260110*

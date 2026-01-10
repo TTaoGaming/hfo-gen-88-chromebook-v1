@@ -1,0 +1,32 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+# P7 FRACTAL OCTREE: Context Sharding Abstractions
+# -----------------------------------------------------------------------------
+# PURPOSE: Remove magic numbers from Port 7 and provide a hierarchical scalar
+# for context window management across different LLM generations.
+# -----------------------------------------------------------------------------
+
+fractal_root:
+  name: "G88_CHROMEBOOK_V1_BUDGET"
+  total_tokens: 65536  # Theoretical upper bound for turn context
+  safety_margin: 0.2    # 20% reserved for tool overhead
+
+octant_navigator:
+  name: "PORT_7_NAVIGATE"
+  share: 0.125         # 1/8th of the global context
+  master_budget_scalar: 8192 # Calculated as total_tokens * share
+
+  shards:
+    T0_SENSE: 1024
+    T1_BRIDGE: 1024
+    T2_SHAPE: 1024
+    T3_INJECT: 1024
+    T4_DISRUPT: 1024
+    T5_DEFEND: 1024
+    T6_STORE: 1024
+    T7_NAVIGATE: 1024
+
+degradation_thresholds:
+  hard_floor: 128     # LOSS_ZONE: Information density is too high/lossy
+  soft_floor: 512     # CAUTION_ZONE: Compressed summaries only
+  nominal: 1024       # STABLE_ZONE: Standard 8-step thinking
+  high_fidelity: 4096 # ELITE_ZONE: Detailed chain-of-thought
