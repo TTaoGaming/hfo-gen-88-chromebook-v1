@@ -6,7 +6,7 @@ import os
 # Medallion: Bronze | Mutation: 0% | HIVE: P
 # P0-SERVER: Header-Compliant WASM Server for Rapier/MediaPipe
 
-PORT = 8092
+PORT = 8094
 DIRECTORY = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega"
 
 class Handler(http.server.SimpleHTTPRequestHandler):

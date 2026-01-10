@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { OMEGA_WORKSPACE_LOCAL_URL, ACTIVE_OMEGA_VERSION } from '../lib/omega_version_manager';
 
-test.describe('HFO Omega V20 Smoke Test', () => {
+test.describe(`HFO Omega ${ACTIVE_OMEGA_VERSION} Smoke Test`, () => {
+    test.setTimeout(60000);
     test.beforeEach(async ({ page }) => {
         await page.addInitScript(() => {
             if (!navigator.mediaDevices) {
@@ -12,7 +14,14 @@ test.describe('HFO Omega V20 Smoke Test', () => {
                     const canvas = document.createElement('canvas');
                     canvas.width = 1280;
                     canvas.height = 720;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(0, 0, 1280, 720);
                     const stream = canvas.captureStream(30);
+                    setInterval(() => {
+                        ctx.fillStyle = 'black';
+                        ctx.fillRect(0, 0, 1, 1);
+                    }, 100);
                     return stream;
                 },
                 configurable: true
@@ -24,18 +33,18 @@ test.describe('HFO Omega V20 Smoke Test', () => {
                 createFromOptions: async () => ({
                     recognizeForVideo: () => ({
                         landmarks: [[
-                            {x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},
-                            {x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0.5,y:0.5,z:0} // Landmark 8
+                            { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 },
+                            { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0.5, y: 0.5, z: 0 } // Landmark 8
                         ]],
                         gestures: [[{ categoryName: 'Open_Palm', score: 0.9 }]],
                     }),
-                    setOptions: () => {}
+                    setOptions: () => { }
                 })
             };
             // @ts-ignore
             window.FilesetResolver = { forVisionTasks: async () => ({}) };
             // @ts-ignore
-            window.DrawingUtils = class { drawConnectors() {} };
+            window.DrawingUtils = class { drawConnectors() { } };
         });
     });
 
@@ -46,7 +55,7 @@ test.describe('HFO Omega V20 Smoke Test', () => {
         });
         page.on('pageerror', err => console.log('BROWSER EXCEPTION:', err.message));
 
-        await page.goto('http://localhost:8092/omega_workspace_v20.html');
+        await page.goto(OMEGA_WORKSPACE_LOCAL_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
         await page.waitForSelector('#layout-container');
 

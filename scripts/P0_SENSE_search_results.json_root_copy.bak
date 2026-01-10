@@ -1,0 +1,881 @@
+{
+  "query": "--query test",
+  "tavily": {
+    "query": "--query test",
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://stackoverflow.com/questions/754527/best-way-to-test-sql-queries",
+        "title": "Best way to test SQL queries [closed] - Stack Overflow",
+        "content": "Here's our first test:\n\n```\n--a select statement that catenates the test name and the case statement select concat( -- the test name 'For every (year, month) there is one and only one (absolute_month): ', -- the case statement case when -- one or more subqueries -- in this case, an expected value and an actual value -- that must be equal for the test to pass ( select count(distinct year, month) from month_value) --expected value, = ( select count(distinct absolute_month) from cm_absolute_month) -- actual value -- the then and else branches of the case statement then 'passed' else 'failed' end -- close the concat function and terminate the query ); -- test result. \n```\n\nRunning that query produces this result: `For every (year, month) there is one and only one (absolute_month): passed` [...] Our test will be a SQL `select` query, with the following structure: a test name and a case statement catenated together. The test name is just an arbitrary string. The case statement is just `case when` test statements `then 'passed' else 'failed' end`.\n\nThe test statements will just be SQL selects (subqueries) that must be true for the test to pass.\n\nHere's our first test: [...] Now let's put our tests, which are just queries, into a file, and run that script against the database. Indeed, if we store our view definitions in a script (or scripts, I recommend one file per related views) to be run against the database, we can add our tests for each view to the same script, so that the act of (re-) creating our view also runs the view's tests. That way, we both get regression tests when we re-create views, and, when the view creation runs against production, the view will also be tested in production.\n\nShare\n\nImprove this answer\n\nedited Jul 23, 2024 at 2:10\n\nPang\n\n10.2k146146 gold badges8787 silver badges126126 bronze badges\n\nanswered Apr 16, 2009 at 2:53\n\ntpdi\n\n35.3k1111 gold badges8383 silver badges123123 bronze badges",
+        "score": 0.9954261,
+        "raw_content": null
+      },
+      {
+        "url": "https://docs.github.com/en/code-security/codeql-cli/using-the-advanced-functionality-of-the-codeql-cli/testing-custom-queries",
+        "title": "Testing custom queries - GitHub Docs",
+        "content": "You may find it useful to look at the way query tests are organized in the CodeQL repository. Each language has a `src` directory, `ql//ql/src`, that contains libraries and queries for analyzing codebases. Alongside the `src` directory, there is a `test` directory with tests for these libraries and queries.\n\nEach `test` directory is configured as a test CodeQL pack with two subdirectories:\n\n `query-tests` a series of subdirectories with tests for queries stored in the `src` directory. Each subdirectory contains test code and a QL reference file that specifies the query to test.\n `library-tests` a series of subdirectories with tests for QL library files. Each subdirectory contains test code and queries that were written as unit tests for a library. [...] For information about saving the search path as part of your configuration, see Specifying command options in a CodeQL configuration file.\n4. Executes the test by running the query and generating an `EmptyThen.actual` results file.\n5. Checks for an `EmptyThen.expected` file to compare with the `.actual` results file.\n6. Reports the results of the test \u2014 in this case, a failure: `0 tests passed; 1 tests failed:`. The test failed because we haven\u2019t yet added a file with the expected results of the query.\n\n### View the query test output\n\nCodeQL generates the following files in the `EmptyThen` directory: [...] ## Running `codeql test run`\n\nCodeQL query tests are executed by running the following command:\n\n```\ncodeql test run  \n```\n\nThe  argument can be one or more of the following:\n\n Path to a `.ql` file.\n Path to a `.qlref` file that references a `.ql` file.\n Path to a directory that will be searched recursively for `.ql` and `.qlref` files.\n\nYou can also specify:\n\n `--threads:` optionally, the number of threads to use when running queries. The default option is `1`. You can specify more threads to speed up query execution. Specifying `0` matches the number of threads to the number of logical processors.\n\nFor full details of all the options you can use when testing queries, see test run.\n\n## Example",
+        "score": 0.98087597,
+        "raw_content": null
+      },
+      {
+        "url": "https://developer.vanta.com/docs/query-test-results-and-filter-for-failing-resources",
+        "title": "Query test results and filter for failing resources - Vanta Developer",
+        "content": "Steps:\n\n GET a list of tests, filtered by status and category.\n GET a list of test entities by TestId, and filter by entity status.\n\n## List Tests Endpoint - Filter by status and category\n\nThe List Tests endpoint allows us to query a list of our tests, and filter by several helpful query parameters. We'll use this endpoint to find a test we want to query failing entities on by filtering by test status and category.\n\nEndpoint:\n\n`/tests`\n\nQuery Parameters: [...] Jump to Content\n\nVanta Developer Console\n\nDocsAPI Reference\n\nVanta Developer ConsoleLog In\n\nLog In\n\n###### Start typing to search\u2026\n\n# Query test results and filter for failing resources\n\nQuery test results and filter for failing resources with the Vanta API\n\n## Query filtered tests and failing entities\n\nThis guide will walkthrough how to query test details and failing test entities using the Vanta API.\n\nIn order to query test results and subsequent failing entities, we'll first need to obtain the test's ID. We can get this TestId by querying a list of tests and filtering by parameters like status and category. The other option is to obtain the testId from viewing the test in Vanta. Each test's ID will be located in the URL while viewing a test:\n\nSteps: [...] ## Get Test Entities Endpoint - Filter for failing Entities\n\nWith the Vanta Test's ID, we can query a tests entities. Filtering with the entityStatus parameter will return a list of test entities of that status on the test.\n\nEndpoint:\n\n`/tests/:testId/entities`\n\nQuery Parameters:\n\n entityStatus (`ENUM`): The status of the entities to return. Defaults to `FAILING`.  \n   Possible values: `FAILING`, `DEACTIVATED`.\n pageSize (`10`): An integer value that specifies the number of resources to return per page. This parameter controls the size of each page in paginated responses.\n pageCursor (): A string value used to navigate through pages of results. This parameter holds the cursor for the current page, allowing the API to fetch the next set of results.\n\nPath Variables:",
+        "score": 0.967163,
+        "raw_content": null
+      },
+      {
+        "url": "https://docs.oracle.com/cd/E55747_01/doc.41/e58244/GUID-158D651A-9F98-4870-92F0-20A0AFE439FB.htm",
+        "title": "Querying Test Results",
+        "content": "Go to main content\n\n126/128\n\n# Querying Test Results\n\nYou can query test results for Confusion Matrix and Test Metrics from `ODMR_USER_WF_CLAS_TEST_RESULTS` and `ODMR_USER_WF_REGR_TEST_RESULTS` repository views.\n\nYou can query the test results from:\n\n ODMR\\_USER\\_WF\\_CLAS\\_TEST\\_RESULTS Repository View\n ODMR\\_USER\\_WF\\_REGR\\_TEST\\_RESULTS Repository View\n\nThis section contains examples to query the following:\n\n Query Test Metrics and Confusion Matrix results: Example 8-3\n Query Test Metrics: Example 8-4\n Query Confusion Matrix: Example 8-5\n Query Lift Table results: Example 8-6\n\nExample 8-3 Querying Test Metrics and Confusion Matrix Results",
+        "score": 0.9334308,
+        "raw_content": null
+      },
+      {
+        "url": "https://dba.stackexchange.com/questions/223425/how-to-test-query",
+        "title": "how to test query - Database Administrators Stack Exchange",
+        "content": "Result #1\n\n```\nid colName 2 bla \n```\n\nResult #2\n\n```\nid colName 1  2 bla \n```\n\nHowever, sepupic is entirely right about the risk of issuing a delete on a big table. I would only do this if I wanted to test if I needed to know exactly how long the delete would take, logging included. In most cases the select is better for testing purposes.\n\nShare\n\nImprove this answer\n\nedited Dec 6, 2018 at 8:28\n\nAndriy M\n\n23.3k66 gold badges6060 silver badges104104 bronze badges\n\nanswered Nov 26, 2018 at 10:29\n\nRandi Vertongen\n\n16.6k44 gold badges3636 silver badges6464 bronze badges\n\nAdd a comment   |\n\n2 [...] #### Stack Exchange Network\n\nStack Exchange network consists of 183 Q&A communities including Stack Overflow, the largest, most trusted online community for developers to learn, share their knowledge, and build their careers.\n\nVisit Stack Exchange\n\nStack Internal\n\nKnowledge at work\n\nBring the best of human thought and AI automation together at your work.\n\n Explore Stack Internal\n\n# how to test query\n\nAsk Question\n\nAsked\n\nModified 2 years, 7 months ago\n\nViewed 14k times\n\n1\n\nI would like to run a query but just to test it and have the possibility to go back to previous state I saw rollback transaction.\n\ndo I have just to run this command before ?\n\n```\ndelete  from myTables where colName = \"\" \n```\n\n sql-server\n rollback\n\nShare\n\nImprove this question\n\nasked Nov 26, 2018 at 10:18\n\nLika [...] ```\nselect  from myTables where colName <> '' \n```\n\nWhile it can be not a problem to `begin tran`, do a `delete` and then `rollback` for a table with 10 rows in test environment, it can be a problem on large volumes of data or in concurrent environment, where you'll `lock` your table in absence of `index` on `colname`, and `delete` (and its `rollback`) will generate a lot of `transaction log` since `delete` is `fully logged operation` in any recovery model.\n\nShare\n\nImprove this answer\n\nedited Jun 5, 2023 at 8:04\n\nPaul White\u2666\n\n96k3030 gold badges446446 silver badges703703 bronze badges\n\nanswered Nov 26, 2018 at 10:33\n\nsepupic\n\n11.3k1818 silver badges2727 bronze badges\n\nAdd a comment   |\n\n1",
+        "score": 0.9230392,
+        "raw_content": null
+      }
+    ],
+    "response_time": 0.93,
+    "request_id": "e6a6b6b0-622f-4b6b-9429-5529d326d6aa"
+  },
+  "brave": {
+    "query": {
+      "original": "--query test",
+      "show_strict_warning": false,
+      "is_navigational": false,
+      "is_news_breaking": false,
+      "spellcheck_off": true,
+      "country": "us",
+      "bad_results": false,
+      "should_fallback": false,
+      "postal_code": "",
+      "city": "",
+      "header_country": "",
+      "more_results_available": true,
+      "state": ""
+    },
+    "mixed": {
+      "type": "mixed",
+      "main": [
+        {
+          "type": "web",
+          "index": 0,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 1,
+          "all": false
+        },
+        {
+          "type": "videos",
+          "all": true
+        },
+        {
+          "type": "web",
+          "index": 2,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 3,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 4,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 5,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 6,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 7,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 8,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 9,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 10,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 11,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 12,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 13,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 14,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 15,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 16,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 17,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 18,
+          "all": false
+        }
+      ],
+      "top": [],
+      "side": []
+    },
+    "type": "search",
+    "videos": {
+      "type": "videos",
+      "results": [
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=Lb3vfuew7Gk",
+          "title": "Test Your SQL Skills With These Real Interview Questions! - YouTube",
+          "description": "Since my first job as a software engineer, SQL has been a constant. In this video, I share 10 sql interview questions that truly test your knowledge, perfect...",
+          "age": "4 weeks ago",
+          "page_age": "2025-12-16T12:00:47",
+          "fetched_content_timestamp": 1767341949,
+          "video": {
+            "duration": "24:55",
+            "creator": "Chandoo",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/Ilne5cbbhHBlAF3xU6_jpVJcoAj7b6Lv0cMoT_vUQac/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9M/YjN2ZnVldzdHay9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/Lb3vfuew7Gk/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=6owEkqf9WNw",
+          "title": "SQL For Software Testing (QA) - How We Use SQL In Software Testing ...",
+          "description": "Utilize SQL to effectively validate backend processes, elevating your proficiency and demand as a QA Automation Engineer.\u25bc\u25bc\u25bc *YOUR NEXT STEP (FREE COURSE)* \u25bc...",
+          "age": "June 27, 2024",
+          "page_age": "2024-06-27T14:41:19",
+          "fetched_content_timestamp": 1767341949,
+          "video": {
+            "duration": "12:40",
+            "creator": "Super SQA | QA Automation",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/ugWuk8b3G4pVJ0t4rdx9FSN8ayvtNHs8wrFSo-HMP4E/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS82/b3dFa3FmOVdOdy9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/6owEkqf9WNw/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=chB5f80U9jA",
+          "title": "SQL Test Kit, or how to unit test any SQL query by Victor Landeau ...",
+          "description": "If nowadays automated testing tools and practices are quite developed in most programming languages, this is not the case in the SQL world. However, we no lo...",
+          "age": "March 13, 2024",
+          "page_age": "2024-03-13T20:50:32",
+          "fetched_content_timestamp": 1726670835,
+          "video": {
+            "duration": "13:07",
+            "views": 901,
+            "creator": "Devoxx",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/4UF8kBA2XCLJ0k_m-nyJjcR_tpaMqHduG61BVJx0vUs/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9j/aEI1ZjgwVTlqQS9t/YXhyZXNkZWZhdWx0/LmpwZz9zcXA9LW9h/eW13RW1DSUFLRU5B/RjhxdUtxUU1hOEFF/Qi1BSC1DWUFDMEFX/S0Fnd0lBQkFCR0Zv/Z0V5aF9NQTg9JmFt/cDtycz1BT240Q0xE/TlVISmw4dEI1bnd4/bkE2d3ltclNuS19U/eTFn",
+            "original": "https://i.ytimg.com/vi/chB5f80U9jA/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFogEyh_MA8=&amp;rs=AOn4CLDNUHJl8tB5nwxnA6wymrSnK_Ty1g"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=qQH4gWSnoKY",
+          "title": "DAX Query View Testing Patterns (with John Kerski) - YouTube",
+          "description": "Are you struggling with managing issues in your semantic models/datasets? Would you like to conduct tests and easily share those tests with your team? In thi...",
+          "age": "October 5, 2024",
+          "page_age": "2024-10-05T05:47:02",
+          "fetched_content_timestamp": 1740147194,
+          "video": {
+            "duration": "01:02:52",
+            "views": 1257,
+            "creator": "Havens Consulting",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/9qJUTycAjE0GqSxIzCfFu-7PZB0kyRpmhVvNrfZ1mMk/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9x/UUg0Z1dTbm9LWS9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/qQH4gWSnoKY/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=A25WoAxvLRU",
+          "title": "Testing Your Code Using the [DAX] Query View! - YouTube",
+          "description": "See some examples on how to leverage the DAX query view to save some of your test code, and staging tables. A great improvement from having to save hidden te...",
+          "age": "February 6, 2024",
+          "page_age": "2024-02-06T14:00:07",
+          "fetched_content_timestamp": 1767210414,
+          "video": {
+            "duration": "10:23",
+            "creator": "Havens Consulting",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/2xSqRcykvyznx63lQQEHlF_BlsSDMyuG6S1ZI1xkFPM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9B/MjVXb0F4dkxSVS9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/A25WoAxvLRU/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=teMXE6hzva0",
+          "title": "How SQL Indexes Actually Work (Step-by-Step) - YouTube",
+          "description": "Get the source code for this video for FREE \u2192 https://the-dotnet-weekly.ck.page/indexingWant to master Clean Architecture? Go here: https://bit.ly/3PupkOJWan",
+          "age": "2 weeks ago",
+          "page_age": "2025-12-30T12:01:46",
+          "fetched_content_timestamp": 1767782460,
+          "video": {
+            "duration": "16:08",
+            "creator": "Milan Jovanovi\u0107",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/bgLfKFIZ39y0hvE5U4P--3F1Ew7isWkXe9ZCCNS__Ok/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS90/ZU1YRTZoenZhMC9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/teMXE6hzva0/maxresdefault.jpg"
+          }
+        }
+      ],
+      "mutated_by_goggles": false
+    },
+    "web": {
+      "type": "search",
+      "results": [
+        {
+          "title": "connection pooling - Efficient SQL test query or validation query that will work across all (or most) databases - Stack Overflow",
+          "url": "https://stackoverflow.com/questions/3668506/efficient-sql-test-query-or-validation-query-that-will-work-across-all-or-most",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Using an Open Query connection and a TRY CATCH to put the results of the error to something useful. IF OBJECT_ID(&#x27;TEMPDB..#TEST_CONNECTION&#x27;) IS NOT NULL DROP TABLE #TEST_CONNECTION IF OBJECT_ID(&#x27;TEMPDB..#RESULTSERROR&#x27;) IS NOT NULL DROP TABLE #RESULTSERROR IF OBJECT_ID(&#x27;TEMPDB..#RESULTSGOOD&#x27;) IS NOT NULL DROP TABLE #RESULTSGOOD DECLARE @LINKEDSERVER AS VARCHAR(25) SET @LINKEDSERVER = &#x27;SERVER NAME GOES HERE&#x27; DECLARE @SQL AS VARCHAR(MAX) DECLARE @OPENQUERY AS VARCHAR(MAX) --IF OBJECT_ID (&#x27;dbo.usp_GetErrorInfo&#x27;, &#x27;P&#x27; ) IS NOT NULL DROP PROCEDURE usp_GetErrorInfo; --GO ---- Create procedure to retrieve error information.",
+          "profile": {
+            "name": "Stack Overflow",
+            "url": "https://stackoverflow.com/questions/3668506/efficient-sql-test-query-or-validation-query-that-will-work-across-all-or-most",
+            "long_name": "stackoverflow.com",
+            "img": "https://imgs.search.brave.com/4WRMec_wn8Q9LO6DI43kkBvIL6wD5TYCXztC9C9kEI0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWU3Zjg0ZjA1/YjQ3ZTlkNjQ1ODA1/MjAwODhiNjhjYWU0/OTc4MjM4ZDJlMTBi/ODExYmNiNTkzMjdh/YjM3MGExMS9zdGFj/a292ZXJmbG93LmNv/bS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "stackoverflow.com",
+            "hostname": "stackoverflow.com",
+            "favicon": "https://imgs.search.brave.com/4WRMec_wn8Q9LO6DI43kkBvIL6wD5TYCXztC9C9kEI0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWU3Zjg0ZjA1/YjQ3ZTlkNjQ1ODA1/MjAwODhiNjhjYWU0/OTc4MjM4ZDJlMTBi/ODExYmNiNTkzMjdh/YjM3MGExMS9zdGFj/a292ZXJmbG93LmNv/bS8",
+            "path": "\u203a questions  \u203a 3668506  \u203a efficient-sql-test-query-or-validation-query-that-will-work-across-all-or-most"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/7xYts7jy_f89pn-IFVr8VxO1jMDhot5Ln0Buo0It8EM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zdGFj/a292ZXJmbG93LmNv/bS9Db250ZW50L1Np/dGVzL3N0YWNrb3Zl/cmZsb3cvSW1nL2Fw/cGxlLXRvdWNoLWlj/b25AMi5wbmc_dj03/M2Q3OWE4OWJkZWQ",
+            "original": "https://stackoverflow.com/Content/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
+            "logo": true
+          }
+        },
+        {
+          "title": "r/SQL on Reddit: How do you test SQL queries?",
+          "url": "https://www.reddit.com/r/SQL/comments/1kpo7ci/how_do_you_test_sql_queries/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Just wondering what you think is the best SQL testing paradigm. I know there isn&#x27;t really a standard SQL testing framework but at work, we currently run tests on queries through Pytest against databases set up in containers.",
+          "page_age": "2025-05-18T16:38:10",
+          "profile": {
+            "name": "Reddit",
+            "url": "https://www.reddit.com/r/SQL/comments/1kpo7ci/how_do_you_test_sql_queries/",
+            "long_name": "reddit.com",
+            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "reddit.com",
+            "hostname": "www.reddit.com",
+            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
+            "path": "  \u203a r/sql  \u203a how do you test sql queries?"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/faVNuHNPddl4Qj_53EzkA7ooTR_-WXjsoUJQlhDGEW0/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zaGFy/ZS5yZWRkLml0L3By/ZXZpZXcvcG9zdC8x/a3BvN2Np",
+            "original": "https://share.redd.it/preview/post/1kpo7ci",
+            "logo": false
+          },
+          "age": "May 18, 2025"
+        },
+        {
+          "title": "GitHub - danicat/testquery: Test query is a command line tool to query test results with a SQL interface",
+          "url": "https://github.com/danicat/testquery",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Test query is <strong>a command line tool to query test results with a SQL interface</strong> - danicat/testquery",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/danicat/testquery",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "software",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a danicat  \u203a testquery"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/_Dj1k0I5A_jG70g3DdcTIEUcHiHvMGowHXgey80n3Ks/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS81/YjVhYmExNDNiNjJj/MjNmMmUyNzk0YWFk/M2EzNzEyNmMyZThh/NGExNWNlZTNmM2M0/MTExOTIyNzU4ZDJh/MjQ5L2RhbmljYXQv/dGVzdHF1ZXJ5",
+            "original": "https://opengraph.githubassets.com/5b5aba143b62c23f2e2794aad3a37126c2e8a4a15cee3f3c4111922758d2a249/danicat/testquery",
+            "logo": false
+          }
+        },
+        {
+          "title": "Test a query",
+          "url": "https://www.servicenow.com/docs/bundle/yokohama-api-reference/page/integrate/odbc-driver/task/t_TestingAQuery.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Skip to main contentSkip to search \u00b7 Powered by Zoomin Software. For more details please contactZoomin \u00b7 Log in to get a better experience \u00b7 Log in \u00b7 The world works with ServiceNow.\u2122 \u00b7 Terms and conditions \u00b7 Privacy statement \u00b7 AI Acceptable Use Policy \u00b7 \u00a92025 ServiceNow.",
+          "profile": {
+            "name": "ServiceNow",
+            "url": "https://www.servicenow.com/docs/bundle/yokohama-api-reference/page/integrate/odbc-driver/task/t_TestingAQuery.html",
+            "long_name": "servicenow.com",
+            "img": "https://imgs.search.brave.com/EvQ3Do55_ayWJOsVN9cwg_Nh6xeBNpbUohpcIo0QAAs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGM4YTg5Y2M0/Zjk2NmFmZTI1NzQy/Y2EyZWNiMTBhNzgx/YWMxMzBlNDhjOTdm/YmNhZjY2ZTYzZTRl/ZmFhNTRkZC93d3cu/c2VydmljZW5vdy5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "servicenow.com",
+            "hostname": "www.servicenow.com",
+            "favicon": "https://imgs.search.brave.com/EvQ3Do55_ayWJOsVN9cwg_Nh6xeBNpbUohpcIo0QAAs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGM4YTg5Y2M0/Zjk2NmFmZTI1NzQy/Y2EyZWNiMTBhNzgx/YWMxMzBlNDhjOTdm/YmNhZjY2ZTYzZTRl/ZmFhNTRkZC93d3cu/c2VydmljZW5vdy5j/b20v",
+            "path": "\u203a docs  \u203a bundle  \u203a yokohama-api-reference  \u203a page  \u203a integrate  \u203a odbc-driver  \u203a task  \u203a t_TestingAQuery.html"
+          }
+        },
+        {
+          "title": "RunSQL - Online SQL Playground for MySQL, PostgreSQL, and SQL Server",
+          "url": "https://runsql.com/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Explore, learn, and share SQL queries in our free online SQL playground. Support for MySQL, PostgreSQL, and SQL Server, perfect for testing and enhancing your SQL skills.",
+          "profile": {
+            "name": "Runsql",
+            "url": "https://runsql.com/",
+            "long_name": "runsql.com",
+            "img": "https://imgs.search.brave.com/GGkZuYXtKX9GP5w6Nf5e9-15xlK9uawGH3dHKaJKb8A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2Y5M2UzOTc1/NzNiMTAwMDVhNDI3/NmUzMmExOWRjZDY4/OTMzMWFlZmY3OGI5/OGFmZTRmNjRlZmYy/NmFmOWI0OC9ydW5z/cWwuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "runsql.com",
+            "hostname": "runsql.com",
+            "favicon": "https://imgs.search.brave.com/GGkZuYXtKX9GP5w6Nf5e9-15xlK9uawGH3dHKaJKb8A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2Y5M2UzOTc1/NzNiMTAwMDVhNDI3/NmUzMmExOWRjZDY4/OTMzMWFlZmY3OGI5/OGFmZTRmNjRlZmYy/NmFmOWI0OC9ydW5z/cWwuY29tLw",
+            "path": ""
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/zBYH6jpBCmXkLloudHeGmbRN9JAqnULpq10ZTJ4K1nA/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/aG9saXN0aWNzLmlv/L3Byb2R1Y3QvbGFu/ZGluZy1wYWdlLXJ1/bnNxbC1wcmV2aWV3/LWltYWdlLTIwMjUw/MzE0LTcwNS5qcGc",
+            "original": "https://cdn.holistics.io/product/landing-page-runsql-preview-image-20250314-705.jpg",
+            "logo": false
+          }
+        },
+        {
+          "title": "About Queries | Testing Library",
+          "url": "https://testing-library.com/docs/queries/about/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>Queries are the methods that Testing Library gives you to find elements on the page</strong>. There are several types of queries (&quot;get&quot;, &quot;find&quot;, &quot;query&quot;); the difference between them is whether the query will throw an error if no element is found or ...",
+          "profile": {
+            "name": "Testing Library",
+            "url": "https://testing-library.com/docs/queries/about/",
+            "long_name": "testing-library.com",
+            "img": "https://imgs.search.brave.com/VbPEb_ZcqNmhugM0mjiP_IpzrcVLWVENE8EQk4Kd50c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvY2Q2YmEwODYx/M2FlNjRlOTdkYTk2/OTQwMzNhNzVjZjFj/MDA2NmIyOGU0N2M5/ZTFlOGJiNWMwZTNh/YzEyNTIxMS90ZXN0/aW5nLWxpYnJhcnku/Y29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "testing-library.com",
+            "hostname": "testing-library.com",
+            "favicon": "https://imgs.search.brave.com/VbPEb_ZcqNmhugM0mjiP_IpzrcVLWVENE8EQk4Kd50c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvY2Q2YmEwODYx/M2FlNjRlOTdkYTk2/OTQwMzNhNzVjZjFj/MDA2NmIyOGU0N2M5/ZTFlOGJiNWMwZTNh/YzEyNTIxMS90ZXN0/aW5nLWxpYnJhcnku/Y29tLw",
+            "path": "  \u203a about queries"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/jpqEExZMR3kaeUc-HIjVorQyglKRgDaQWUK352ReuXo/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly90ZXN0/aW5nLWxpYnJhcnku/Y29tL2ltZy9vY3Rv/cHVzLTEyOHgxMjgu/cG5n",
+            "original": "https://testing-library.com/img/octopus-128x128.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Online SQL Validator & SQL Syntax Checker | Free SQL Query Validator",
+          "url": "https://runsql.com/sql-validator/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Free online SQL validator and SQL syntax checker. Validate SQL queries, check SQL syntax, and optimize complex SQL statements for MySQL, PostgreSQL, Oracle &amp; SQL Server.",
+          "profile": {
+            "name": "Runsql",
+            "url": "https://runsql.com/sql-validator/",
+            "long_name": "runsql.com",
+            "img": "https://imgs.search.brave.com/GGkZuYXtKX9GP5w6Nf5e9-15xlK9uawGH3dHKaJKb8A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2Y5M2UzOTc1/NzNiMTAwMDVhNDI3/NmUzMmExOWRjZDY4/OTMzMWFlZmY3OGI5/OGFmZTRmNjRlZmYy/NmFmOWI0OC9ydW5z/cWwuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "runsql.com",
+            "hostname": "runsql.com",
+            "favicon": "https://imgs.search.brave.com/GGkZuYXtKX9GP5w6Nf5e9-15xlK9uawGH3dHKaJKb8A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2Y5M2UzOTc1/NzNiMTAwMDVhNDI3/NmUzMmExOWRjZDY4/OTMzMWFlZmY3OGI5/OGFmZTRmNjRlZmYy/NmFmOWI0OC9ydW5z/cWwuY29tLw",
+            "path": "\u203a sql-validator"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/V3tUuXwMmz27FaBjCpjOvVqQDT6pA0lKsJ65tHQAt24/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/aG9saXN0aWNzLmlv/L3Byb2R1Y3QvbGFu/ZGluZy1wYWdlLXNx/bC12YWxpZGF0b3It/cHJldmlldy1pbWct/MjAyNTAzMTctNzE4/LmpwZw",
+            "original": "https://cdn.holistics.io/product/landing-page-sql-validator-preview-img-20250317-718.jpg",
+            "logo": false
+          }
+        },
+        {
+          "title": "Defining a query-based test",
+          "url": "https://www.ibm.com/docs/en/gdp/12.x?topic=assessments-defining-query-based-test",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>Create a test based on a query that runs an SQL statement</strong>.",
+          "profile": {
+            "name": "IBM",
+            "url": "https://www.ibm.com/docs/en/gdp/12.x?topic=assessments-defining-query-based-test",
+            "long_name": "ibm.com",
+            "img": "https://imgs.search.brave.com/WtFphd-kJr-JtTbMqTUV8D4gBvSovY56CfvQYWvRbAw/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMWI0MWQyYmEy/MTNmNWVkODQ2ODFj/ZjYxMjk4YjI3NmY5/Yjk5M2E0YjhjNWZi/OGUyODMzNzllOTQx/M2I4ZDc2My93d3cu/aWJtLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "ibm.com",
+            "hostname": "www.ibm.com",
+            "favicon": "https://imgs.search.brave.com/WtFphd-kJr-JtTbMqTUV8D4gBvSovY56CfvQYWvRbAw/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMWI0MWQyYmEy/MTNmNWVkODQ2ODFj/ZjYxMjk4YjI3NmY5/Yjk5M2E0YjhjNWZi/OGUyODMzNzllOTQx/M2I4ZDc2My93d3cu/aWJtLmNvbS8",
+            "path": "\u203a docs  \u203a en  \u203a gdp  \u203a 12.x"
+          }
+        },
+        {
+          "title": "sql server - how to test query - Database Administrators Stack Exchange",
+          "url": "https://dba.stackexchange.com/questions/223425/how-to-test-query",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "BEGIN TRANSACTION SET XACT_ABORT OFF GO -- statements to test the current state of the data for instance SELECT COUNT(*) FROM TableThatShouldBeEmpty -- statements to update data DELETE TableThatShouldBeEmpty -- statements to test the current state of the data after the changes SELECT COUNT(*) FROM TableThatShouldBeEmpty GO ROLLBACK TRANSACTION",
+          "profile": {
+            "name": "Stack Exchange",
+            "url": "https://dba.stackexchange.com/questions/223425/how-to-test-query",
+            "long_name": "dba.stackexchange.com",
+            "img": "https://imgs.search.brave.com/Fs5DeVdkAkVONb5pO6HdyleJ212OGdA6gIIHtiYBqgg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNzZmNmE5ZGUz/MTc0MDgyYjBiN2E4/MmQwYzY0NGJjMWIw/OTA0NGIwOTdjNWQx/ZTgyOTczYTdlZDk2/NmJkMzExNC9kYmEu/c3RhY2tleGNoYW5n/ZS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "dba.stackexchange.com",
+            "hostname": "dba.stackexchange.com",
+            "favicon": "https://imgs.search.brave.com/Fs5DeVdkAkVONb5pO6HdyleJ212OGdA6gIIHtiYBqgg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNzZmNmE5ZGUz/MTc0MDgyYjBiN2E4/MmQwYzY0NGJjMWIw/OTA0NGIwOTdjNWQx/ZTgyOTczYTdlZDk2/NmJkMzExNC9kYmEu/c3RhY2tleGNoYW5n/ZS5jb20v",
+            "path": "\u203a questions  \u203a 223425  \u203a how-to-test-query"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/hPlO3sG_ReZQA6g-dhGNyeqX364ZBWnefE-EeWiR4Ms/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9kYmEu/c3RhY2tleGNoYW5n/ZS5jb20vQ29udGVu/dC9TaXRlcy9kYmEv/SW1nL2FwcGxlLXRv/dWNoLWljb25AMi5w/bmc_dj0yNDZlMmNi/MjQzOWM",
+            "original": "https://dba.stackexchange.com/Content/Sites/dba/Img/apple-touch-icon@2.png?v=246e2cb2439c",
+            "logo": true
+          }
+        },
+        {
+          "title": "SQL Fiddle - Online SQL Compiler for learning & practice",
+          "url": "https://sqlfiddle.com",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Real-time Code Execution: Test your SQL queries instantly and see the results in real time.",
+          "profile": {
+            "name": "SQL Fiddle",
+            "url": "https://sqlfiddle.com",
+            "long_name": "sqlfiddle.com",
+            "img": "https://imgs.search.brave.com/V6gSN5mJP46n1eSf2OMd6syLYmuofM2yiIG_UQmiQR8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTdmNjMxNzE5/M2Y5NTMxMGVmOTkz/YmVjZjU1N2MxMjMy/NDk1YTFkY2U2NjU4/ZDQ3NjQwNzA0MmZl/NzA2YzEzMS9zcWxm/aWRkbGUuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "sqlfiddle.com",
+            "hostname": "sqlfiddle.com",
+            "favicon": "https://imgs.search.brave.com/V6gSN5mJP46n1eSf2OMd6syLYmuofM2yiIG_UQmiQR8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTdmNjMxNzE5/M2Y5NTMxMGVmOTkz/YmVjZjU1N2MxMjMy/NDk1YTFkY2U2NjU4/ZDQ3NjQwNzA0MmZl/NzA2YzEzMS9zcWxm/aWRkbGUuY29tLw",
+            "path": ""
+          }
+        },
+        {
+          "title": "SQL Online Test | TestDome",
+          "url": "https://www.testdome.com/tests/sql-online-test/12",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Given the following data definition, write a query that returns the number of students whose first name is John.",
+          "profile": {
+            "name": "TestDome",
+            "url": "https://www.testdome.com/tests/sql-online-test/12",
+            "long_name": "testdome.com",
+            "img": "https://imgs.search.brave.com/NDhSqVAXZ02BjakcG0AXA3vsLPq88DsnmV9IWS2tGOs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMDY1Zjg1Mzhh/YzA3NjlhNDM4OWZk/MWQ4MjNhMWYxMjhl/YzM2Y2M4M2U4Nzky/OGZiMTU1Nzg5ZWFh/NDYxNDJmNi93d3cu/dGVzdGRvbWUuY29t/Lw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "testdome.com",
+            "hostname": "www.testdome.com",
+            "favicon": "https://imgs.search.brave.com/NDhSqVAXZ02BjakcG0AXA3vsLPq88DsnmV9IWS2tGOs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMDY1Zjg1Mzhh/YzA3NjlhNDM4OWZk/MWQ4MjNhMWYxMjhl/YzM2Y2M4M2U4Nzky/OGZiMTU1Nzg5ZWFh/NDYxNDJmNi93d3cu/dGVzdGRvbWUuY29t/Lw",
+            "path": "\u203a tests  \u203a sql-online-test  \u203a 12"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/TQbIkQNM7t2DBGhf6PeV--fYKwwF5AHuECZNXLm0KHU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/dGVzdGRvbWUuY29t/L2NvbnRlbnQvaW1h/Z2VzL2xvZ28vZmF2/aWNvbl8xOTZ4MTk2/LnBuZw",
+            "original": "https://www.testdome.com/content/images/logo/favicon_196x196.png",
+            "logo": true
+          }
+        },
+        {
+          "title": "Test of a query - PC SOFT - Online documentation",
+          "url": "https://doc.windev.com/en-US/?2019011=",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Test of a query - The query editor allows you to run the test of query result...",
+          "page_age": "2025-10-03T00:00:00",
+          "profile": {
+            "name": "PC SOFT",
+            "url": "https://doc.windev.com/en-US/?2019011=",
+            "long_name": "doc.windev.com",
+            "img": "https://imgs.search.brave.com/FD4l4TO7o9RzKsJcJhCDH5FTnM2hxOwN32CtqYogdyk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGEwNzZlMjk2/MTBhM2Y1ZGI2MjFi/ZTRkZTA0NmRlNjM1/NGUzOTkzYWZjMGM3/NzQ2YjlkOTY5NmE0/YmZjMTk5Ni9kb2Mu/d2luZGV2LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "doc.windev.com",
+            "hostname": "doc.windev.com",
+            "favicon": "https://imgs.search.brave.com/FD4l4TO7o9RzKsJcJhCDH5FTnM2hxOwN32CtqYogdyk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGEwNzZlMjk2/MTBhM2Y1ZGI2MjFi/ZTRkZTA0NmRlNjM1/NGUzOTkzYWZjMGM3/NzQ2YjlkOTY5NmE0/YmZjMTk5Ni9kb2Mu/d2luZGV2LmNvbS8",
+            "path": "\u203a en-US"
+          },
+          "age": "October 3, 2025"
+        },
+        {
+          "title": "Testing React Query | TkDodo's blog",
+          "url": "https://tkdodo.eu/blog/testing-react-query",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Whenever you use React Query, you need a QueryClientProvider and give it a queryClient - a vessel which holds the QueryCache. The cache will in turn hold the data of your queries. I prefer to give each test its own QueryClientProvider and create a new QueryClient for each test.",
+          "profile": {
+            "name": "TkDodo",
+            "url": "https://tkdodo.eu/blog/testing-react-query",
+            "long_name": "tkdodo.eu",
+            "img": "https://imgs.search.brave.com/Qf94EsGAtY9g9Q7CeZ0OTHnzhkVU7Jb8fqWdoiCkxR4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjlkMjc1NTAy/ZmU1ZjhlY2QwMmZl/NDFiNzFjOTAwMWY4/NDViMjUyY2E4MjUw/OTFmZjUxNDMxNjNj/MzgyYjcyMC90a2Rv/ZG8uZXUv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "tkdodo.eu",
+            "hostname": "tkdodo.eu",
+            "favicon": "https://imgs.search.brave.com/Qf94EsGAtY9g9Q7CeZ0OTHnzhkVU7Jb8fqWdoiCkxR4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjlkMjc1NTAy/ZmU1ZjhlY2QwMmZl/NDFiNzFjOTAwMWY4/NDViMjUyY2E4MjUw/OTFmZjUxNDMxNjNj/MzgyYjcyMC90a2Rv/ZG8uZXUv",
+            "path": "\u203a blog  \u203a testing-react-query"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/MvAecshj3XEy5P3S6x4NIGCrQq1IwhAVp_TFRisYgS8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly90a2Rv/ZG8uZXUvYmxvZy9v/Zy1pbWFnZXMvdGVz/dGluZy1yZWFjdC1x/dWVyeS5wbmc",
+            "original": "https://tkdodo.eu/blog/og-images/testing-react-query.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Structured Query Language (SQL) Test",
+          "url": "https://www.oit.va.gov/services/trm/ToolPage.aspx?tid=11228",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Structured Query Language (SQL) Dependency Tracker - Authorized w/ Constraints",
+          "profile": {
+            "name": "VA",
+            "url": "https://www.oit.va.gov/services/trm/ToolPage.aspx?tid=11228",
+            "long_name": "oit.va.gov",
+            "img": "https://imgs.search.brave.com/vf9GB9PzNSpSRn_xNovfmkfZzUoHZcT6ZUVzNmXGVlk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODM5NzJkNTEw/ZGI2MzYyZjFkNTYw/ZTFkZTJlYTAzOGRm/MGM0ZDcwYWMxMDQ4/OThlM2ZiODhlNjRh/NGRkNmM5NS93d3cu/b2l0LnZhLmdvdi8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "oit.va.gov",
+            "hostname": "www.oit.va.gov",
+            "favicon": "https://imgs.search.brave.com/vf9GB9PzNSpSRn_xNovfmkfZzUoHZcT6ZUVzNmXGVlk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODM5NzJkNTEw/ZGI2MzYyZjFkNTYw/ZTFkZTJlYTAzOGRm/MGM0ZDcwYWMxMDQ4/OThlM2ZiODhlNjRh/NGRkNmM5NS93d3cu/b2l0LnZhLmdvdi8",
+            "path": "\u203a services  \u203a trm  \u203a ToolPage.aspx"
+          }
+        },
+        {
+          "title": "SQL Test",
+          "url": "https://sqltest.net/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "FREE online SQL query test tool.",
+          "profile": {
+            "name": "SQL Test",
+            "url": "https://sqltest.net/",
+            "long_name": "sqltest.net",
+            "img": "https://imgs.search.brave.com/5jKluOrIo-tr2bW17PqBL0B2p2UGhUDv0cPhy87q4-A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQzMmQ2NWJl/NGMzY2VlZWZjMjgw/MDg0ZDNlYWQzY2Uz/MmI1YTVhMjRjOWI5/NWZmNjYxMDI3M2Nj/YTE5ODY3OS9zcWx0/ZXN0Lm5ldC8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "sqltest.net",
+            "hostname": "sqltest.net",
+            "favicon": "https://imgs.search.brave.com/5jKluOrIo-tr2bW17PqBL0B2p2UGhUDv0cPhy87q4-A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQzMmQ2NWJl/NGMzY2VlZWZjMjgw/MDg0ZDNlYWQzY2Uz/MmI1YTVhMjRjOWI5/NWZmNjYxMDI3M2Nj/YTE5ODY3OS9zcWx0/ZXN0Lm5ldC8",
+            "path": ""
+          }
+        },
+        {
+          "title": "W3Schools.com",
+          "url": "https://www.w3schools.com/sql/sql_quiz.asp",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "You can test your SQL skills with W3Schools&#x27; Quiz.",
+          "profile": {
+            "name": "W3Schools",
+            "url": "https://www.w3schools.com/sql/sql_quiz.asp",
+            "long_name": "w3schools.com",
+            "img": "https://imgs.search.brave.com/D9KKNW7B_PBGo-trytMGRrRqvqMVW5Q5mDruXSPmBO4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjVlMGVkZDVj/ZGMyZWRmMzAwODRi/ZDAwZGE4NWI3NmU4/MjRhNjEzOGFhZWY3/ZGViMjY1OWY2ZDYw/YTZiOGUyZS93d3cu/dzNzY2hvb2xzLmNv/bS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3schools.com",
+            "hostname": "www.w3schools.com",
+            "favicon": "https://imgs.search.brave.com/D9KKNW7B_PBGo-trytMGRrRqvqMVW5Q5mDruXSPmBO4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjVlMGVkZDVj/ZGMyZWRmMzAwODRi/ZDAwZGE4NWI3NmU4/MjRhNjEzOGFhZWY3/ZGViMjY1OWY2ZDYw/YTZiOGUyZS93d3cu/dzNzY2hvb2xzLmNv/bS8",
+            "path": "\u203a sql  \u203a sql_quiz.asp"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/9mJENdKXrTwGf6-xbqPvs47GTLiuqxHqcFfNEei0o3w/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/dzNzY2hvb2xzLmNv/bS9pbWFnZXMvdzNz/Y2hvb2xzX2xvZ29f/NDM2XzIucG5n",
+            "original": "https://www.w3schools.com/images/w3schools_logo_436_2.png",
+            "logo": true
+          }
+        },
+        {
+          "title": "SQL Proficiency Test & Skills Assessment | Coursera",
+          "url": "https://www.coursera.org/resources/sql-skill-assessment",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Take our free SQL skills test and find out your level. Receive a score and recommended courses to help you advance from beginner to expert.",
+          "page_age": "2025-08-04T19:43:28",
+          "profile": {
+            "name": "Coursera",
+            "url": "https://www.coursera.org/resources/sql-skill-assessment",
+            "long_name": "coursera.org",
+            "img": "https://imgs.search.brave.com/bvN41yfOLyA2hbEBAGq643eVKe6UyWKd8_-JFQVH59k/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMWE2Y2E2MWQ0/ZjZkZjIyNTQwY2Q2/YzhiMjk5NTJmMzQ1/MzdhZTJlYTA5OTRk/OTcwNjMxYzQyODk5/ZjAzN2I4Zi93d3cu/Y291cnNlcmEub3Jn/Lw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "coursera.org",
+            "hostname": "www.coursera.org",
+            "favicon": "https://imgs.search.brave.com/bvN41yfOLyA2hbEBAGq643eVKe6UyWKd8_-JFQVH59k/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMWE2Y2E2MWQ0/ZjZkZjIyNTQwY2Q2/YzhiMjk5NTJmMzQ1/MzdhZTJlYTA5OTRk/OTcwNjMxYzQyODk5/ZjAzN2I4Zi93d3cu/Y291cnNlcmEub3Jn/Lw",
+            "path": "  \u203a coursera resources  \u203a resources - skill assessments  \u203a sql skill assessment"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/7aywfsPz5saXRCG89W2dXXWbQMDAdSEZz-wksYFHp9s/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuY3RmYXNzZXRz/Lm5ldC93cDFsY3dk/YXYxcDEvM1NtcHJS/aWNISUdmVGtMRWJE/RkhoMi81ZWVhNTY5/MzMyZGRlOWI4OWI0/OGE1YTIwMjVhYTAx/ZS9TUUxfU2tpbGxf/QXNzZXNzbWVudC53/ZWJwP3c9MTUwMCZh/bXA7aD02ODAmYW1w/O3E9NjAmYW1wO2Zp/dD1maWxsJmFtcDtm/PWZhY2VzJmFtcDtm/bT1qcGcmYW1wO2Zs/PXByb2dyZXNzaXZl",
+            "original": "https://images.ctfassets.net/wp1lcwdav1p1/3SmprRicHIGfTkLEbDFHh2/5eea569332dde9b89b48a5a2025aa01e/SQL_Skill_Assessment.webp?w=1500&amp;h=680&amp;q=60&amp;fit=fill&amp;f=faces&amp;fm=jpg&amp;fl=progressive",
+            "logo": false
+          },
+          "age": "August 4, 2025"
+        },
+        {
+          "title": "Learn SQL - Online SQL Terminal - Practice SQL Querys",
+          "url": "https://www.sql-practice.com/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "We cannot provide a description for this page right now",
+          "profile": {
+            "name": "SQL Practice",
+            "url": "https://www.sql-practice.com/",
+            "long_name": "sql-practice.com",
+            "img": "https://imgs.search.brave.com/1tzdrDI-ttMJVYg0tp5INpC4TR4MflfVRjDvwL9H9fU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjFmM2E1OTQ0/NGJjOWE2OGRhYWY4/NGViYzUyNjM2Y2Jl/ZGY5NTI3NzcyMGQw/MDlmMzg3YjBiZWI5/ZGFjMmExNS93d3cu/c3FsLXByYWN0aWNl/LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "sql-practice.com",
+            "hostname": "www.sql-practice.com",
+            "favicon": "https://imgs.search.brave.com/1tzdrDI-ttMJVYg0tp5INpC4TR4MflfVRjDvwL9H9fU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjFmM2E1OTQ0/NGJjOWE2OGRhYWY4/NGViYzUyNjM2Y2Jl/ZGY5NTI3NzcyMGQw/MDlmMzg3YjBiZWI5/ZGFjMmExNS93d3cu/c3FsLXByYWN0aWNl/LmNvbS8",
+            "path": ""
+          }
+        },
+        {
+          "title": "Online API Testing Tool | Test Your API Online",
+          "url": "https://reqbin.com/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>ReqBin is an online API testing tool for REST and SOAP APIs</strong>. Test API endpoints by making API requests directly from your browser. Test API responses with built-in JSON and XML validators.",
+          "profile": {
+            "name": "ReqBin",
+            "url": "https://reqbin.com/",
+            "long_name": "reqbin.com",
+            "img": "https://imgs.search.brave.com/puaaGnbOCpPViVP_deBkTKbtYEJM0oADiMT5AE8SSgE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDFiNzNjNTVi/OTRkNmIwNjM5MWVh/NTA4N2FlNzNmM2Nj/ZjFmNTY4N2NjMDc3/ZjQ3NGU1ZDRiYWJi/OWMxNTczYi9yZXFi/aW4uY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "reqbin.com",
+            "hostname": "reqbin.com",
+            "favicon": "https://imgs.search.brave.com/puaaGnbOCpPViVP_deBkTKbtYEJM0oADiMT5AE8SSgE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDFiNzNjNTVi/OTRkNmIwNjM5MWVh/NTA4N2FlNzNmM2Nj/ZjFmNTY4N2NjMDc3/ZjQ3NGU1ZDRiYWJi/OWMxNTczYi9yZXFi/aW4uY29tLw",
+            "path": ""
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/oDcSJzivyplL-NEOyAi5Pv-W-blj0m9sHlJzKqsr75c/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9yZXFi/aW4uY29tL3N0YXRp/Yy9pbWcvbG9nbzk2/LnBuZw",
+            "original": "https://reqbin.com/static/img/logo96.png",
+            "logo": true
+          }
+        }
+      ],
+      "family_friendly": true
+    }
+  },
+  "repo": {
+    "error": "name 'subprocess' is not defined"
+  },
+  "timestamp": "2026-01-10T02:23:58.434698"
+}

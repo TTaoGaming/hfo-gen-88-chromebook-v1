@@ -4,11 +4,12 @@
   "reporters": [
     "html",
     "clear-text",
-    "progress"
+    "progress",
+    "json"
   ],
   "testRunner": "command",
   "commandRunner": {
-    "command": "npx playwright test -c hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/playwright.config.ts hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/tests/math.test.ts"
+    "command": "npx playwright test -c hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/playwright.config.ts hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/tests/exhaustive_fsm_active.test.ts"
   },
   "coverageAnalysis": "off",
   "ignorePatterns": [
@@ -25,7 +26,7 @@
     "**/rapier/src/**"
   ],
   "mutate": [
-    "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/lib/math_utils.ts"
+    "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/p3_deliver/gesture_fsm_active.ts"
   ],
   "checkers": [
     "typescript"

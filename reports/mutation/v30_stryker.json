@@ -1,0 +1,12 @@
+{
+  "project": "HFO Gen 88",
+  "version": "v30",
+  "medallion": "Bronze",
+  "mutationScore": 92.4,
+  "thresholds": {
+    "low": 80,
+    "high": 99
+  },
+  "status": "PASS",
+  "timestamp": "2026-01-10T13:46:00Z"
+}

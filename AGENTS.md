@@ -31,10 +31,12 @@ Every action must be aligned with one of these two primary mission threads:
 We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alpha Bootstrapping**.
 
 **Active Mission Projects**:
-- `0_p0_observe.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha).
-- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V14 Pending**.
-    - **V12 Vertical Slice**: MediaPipe Tasks (Restored UMD) + One Euro Filters + W3C Dispatch.
-    - **Status**: [Forensic Analysis V12.3](hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/forensics/forensic_analysis_v12_3.md) active. Path back to stable UMD achieved.
+- `0_p0_observe.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha) - **Dynamic Hardware Sensing V1 Active + Resource-Aware Stryker (stryker_boot.sh)**.
+- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V30 Active (Hardened Minimalist Drill)**.
+    - **V30 Substrate**: Same-origin Trans-Boundary Drill with robustness hardening and minimalist FSM.
+    - **Features**: Fixed coordinate mapping for iframe containers, added `LOST` hand state for immediate cancellation. Strictly following V26 FSM with zero pressure in ARMED state to ensure clean PointerW3C separation between "Move" and "Down".
+    - **Validation**: Reverted Right-Click (Thumb_Up) bloat as per user directive.
+    - **Status**: V29 promoted to **Cold Bronze**. V30 is the current Hot iteration.
 
 **Active Defenses**:
 - **PORT-5-IMMUNIZE (THE 8 SHIELDS)**:

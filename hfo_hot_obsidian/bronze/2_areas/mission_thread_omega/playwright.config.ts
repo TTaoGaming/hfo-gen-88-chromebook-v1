@@ -10,6 +10,13 @@ export default defineConfig({
     use: {
         trace: 'on-first-retry',
     },
+    webServer: {
+        command: 'python3 p0_server.py',
+        port: 8094,
+        reuseExistingServer: !process.env.CI,
+        cwd: './',
+        timeout: 120000
+    },
     projects: [
         {
             name: 'chromium',

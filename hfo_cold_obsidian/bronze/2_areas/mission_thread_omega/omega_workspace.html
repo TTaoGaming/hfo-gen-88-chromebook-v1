@@ -1,19 +1,18 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO Omega: Physics Cursor Workspace V12</title>
-
-    <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
-    <!-- 🏗️ Styles -->
+    <title>HFO Omega V24: [LEAKING BUCKET] Physics Cursor</title>
     <link type="text/css" rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
     <link type="text/css" rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
     <style>
-        body {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100vh;
@@ -34,6 +33,7 @@
             height: 100%;
             overflow: auto;
             box-sizing: border-box;
+            background: #1a1a1a;
         }
 
         video {
@@ -45,461 +45,538 @@
 
         canvas {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             transform: scaleX(-1);
+        }
+
+        .data-card {
+            background: #222;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #00ccff;
+            margin-bottom: 15px;
+        }
+
+        .data-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff88;
+        }
+
+        #gesture-visualizer {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .state-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-right: 5px;
+        }
+
+        .tag-idle {
+            background: #444;
+            color: #aaa;
+        }
+
+        .tag-arming {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .tag-armed {
+            background: #0088ff;
+            color: #fff;
+        }
+
+        .tag-committing {
+            background: #ffcc00;
+            color: #000;
+        }
+
+        .tag-committed {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .tag-releasing {
+            background: #ff00ff;
+            color: #fff;
         }
     </style>
 </head>
 
 <body>
     <div id="layout-container"></div>
-
-    <!-- 📦 Dependencies -->
-    <!-- 🧪 MediaPipe Tasks API (Official Gesture Implementation) -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
-        crossorigin="anonymous"></script>
-
     <script type="importmap">
     {
         "imports": {
             "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
-            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm"
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
         }
     }
     </script>
-
     <script type="module">
-        import { GoldenLayout, LayoutConfig } from 'golden-layout';
+        import { GoldenLayout } from 'golden-layout';
         import GUI from 'lil-gui';
+        import { GestureRecognizer as MPGestureRecognizer, HandLandmarker, FilesetResolver as MPFilesetResolver, DrawingUtils as MPDrawingUtils } from '@mediapipe/tasks-vision';
+        import Matter from 'matter-js';
+        import { z } from 'zod';
 
-        // 🧪 Official MediaPipe Tasks (extracted from global bundle)
-        const GestureRecognizer = window.GestureRecognizer || (window.gesture && window.gesture.GestureRecognizer);
-        const FilesetResolver = window.FilesetResolver || (window.gesture && window.gesture.FilesetResolver);
-        const { drawConnectors, drawLandmarks } = window;
+        const GestureRecognizer = window.GestureRecognizer || MPGestureRecognizer;
+        const FilesetResolver = window.FilesetResolver || MPFilesetResolver;
+        const DrawingUtils = window.DrawingUtils || MPDrawingUtils;
 
-        const HAND_CONNECTIONS = [
-            [0, 1], [1, 2], [2, 3], [3, 4],
-            [0, 5], [5, 6], [6, 7], [7, 8],
-            [0, 9], [9, 10], [10, 11], [11, 12],
-            [0, 13], [13, 14], [14, 15], [15, 16],
-            [0, 17], [17, 18], [18, 19], [19, 20],
-            [5, 9], [9, 13], [13, 17]
-        ];
+        // 🛡️ Contracts
+        const CursorSchema = z.object({ x: z.number(), y: z.number(), color: z.string(), label: z.string() });
+        const HandSchema = z.object({
+            id: z.number(), active: z.boolean(), lastSeen: z.number(), fsm: z.string(),
+            cursors: z.record(CursorSchema),
+            gestures: z.object({ active: z.string(), score: z.number(), isDown: z.boolean(), pointerEvent: z.string() })
+        });
+        const CloudEventSchema = z.object({
+            specversion: z.literal("1.0"), type: z.string(), source: z.string(), id: z.string(), time: z.string(), data: z.record(HandSchema)
+        });
 
-        // �🧠 One Euro Filter Implementation
-        class LowPassFilter {
-            constructor(alpha) {
-                this.alpha = alpha;
-                this.s = null;
+        // 🤖 V24 Leaking Bucket Logic (IDLE -> ARMING -> ARMED -> COMMITTING -> COMMITTED -> RELEASING)
+        class GestureFSM {
+            constructor() {
+                this.state = 'IDLE';
+                this.progress = 0;
+                this.recoveryStartTime = 0;
+                this.dwellStartTime = 0;
+                this.pointerEvent = 'none';
+                this.ARMING_THRESHOLD = 1000;
+                this.RECOVERY_TIMEOUT = 300;
+                this.CANCEL_DWELL = 50;
+                this.lastTimestamp = 0;
             }
-            call(value) {
-                if (this.s === null) {
-                    this.s = value;
-                } else {
-                    this.s = this.alpha * value + (1.0 - this.alpha) * this.s;
+
+            process(gesture, timestamp) {
+                const currentGesture = gesture.toUpperCase().replace(/[\s_]/g, '_');
+                const dt = this.lastTimestamp ? timestamp - this.lastTimestamp : 0;
+                this.lastTimestamp = timestamp;
+                this.pointerEvent = 'none';
+
+                switch (this.state) {
+                    case 'IDLE':
+                        if (currentGesture === 'OPEN_PALM') {
+                            this.state = 'ARMING';
+                            this.progress = 0;
+                        }
+                        break;
+
+                    case 'ARMING':
+                        if (currentGesture === 'OPEN_PALM') {
+                            this.progress += dt;
+                        } else {
+                            this.progress -= dt * 2;
+                        }
+                        this.progress = Math.max(0, this.progress);
+
+                        if (this.progress >= this.ARMING_THRESHOLD) {
+                            this.state = 'ARMED';
+                            this.progress = 0;
+                        } else if (this.progress === 0 && currentGesture !== 'OPEN_PALM') {
+                            this.state = 'IDLE';
+                        }
+                        break;
+
+                    case 'ARMED':
+                        this.pointerEvent = 'pointermove';
+                        if (currentGesture === 'POINTING_UP') {
+                            this.state = 'COMMITTED';
+                            this.pointerEvent = 'pointerdown';
+                        } else if (currentGesture === 'NONE') {
+                            this.state = 'COMMITTING';
+                            this.recoveryStartTime = timestamp;
+                        } else if (currentGesture === 'OPEN_PALM') {
+                            this.recoveryStartTime = 0;
+                        } else {
+                            if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
+                            else if (timestamp - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                this.recoveryStartTime = 0;
+                            }
+                        }
+                        break;
+
+                    case 'COMMITTING':
+                        this.pointerEvent = 'pointermove';
+                        if (currentGesture === 'POINTING_UP') {
+                            this.state = 'COMMITTED';
+                            this.pointerEvent = 'pointerdown';
+                            this.recoveryStartTime = 0;
+                        } else if (currentGesture === 'OPEN_PALM') {
+                            this.state = 'ARMED';
+                            this.recoveryStartTime = 0;
+                        } else if (currentGesture === 'NONE') {
+                            if (timestamp - (this.recoveryStartTime || 0) > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                this.recoveryStartTime = 0;
+                            }
+                        } else {
+                            this.state = 'IDLE';
+                            this.pointerEvent = 'pointercancel';
+                            this.recoveryStartTime = 0;
+                        }
+                        break;
+
+                    case 'COMMITTED':
+                        this.pointerEvent = 'pointermove';
+                        if (currentGesture === 'OPEN_PALM') {
+                            this.state = 'RELEASING';
+                            this.recoveryStartTime = timestamp;
+                            this.dwellStartTime = timestamp;
+                        } else if (currentGesture === 'POINTING_UP') {
+                            this.recoveryStartTime = 0;
+                        } else {
+                            if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
+                            else if (timestamp - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                this.recoveryStartTime = 0;
+                            }
+                        }
+                        break;
+
+                    case 'RELEASING':
+                        this.pointerEvent = 'pointermove';
+                        if (currentGesture === 'OPEN_PALM') {
+                            this.state = 'ARMED';
+                            this.pointerEvent = 'pointerup';
+                            this.recoveryStartTime = 0;
+                        } else if (currentGesture === 'POINTING_UP') {
+                            this.state = 'COMMITTED';
+                            this.recoveryStartTime = 0;
+                        } else if (currentGesture === 'NONE') {
+                            if (timestamp - (this.recoveryStartTime || 0) > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                this.recoveryStartTime = 0;
+                            }
+                        } else {
+                            if (!this.dwellStartTime) this.dwellStartTime = timestamp;
+                            else if (timestamp - this.dwellStartTime > this.CANCEL_DWELL) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                this.dwellStartTime = 0;
+                            }
+                        }
+                        break;
                 }
-                return this.s;
+                return { state: this.state, pointerEvent: this.pointerEvent };
             }
         }
 
+        // 🧠 Multi-Resolution Filters
+        class LowPassFilter { constructor(alpha) { this.alpha = alpha; this.s = null; } call(v) { if (this.s === null) this.s = v; else this.s = this.alpha * v + (1 - this.alpha) * this.s; return this.s; } }
         class OneEuroFilter {
             constructor(freq, minCutoff = 1.0, beta = 0.0, dCutoff = 1.0) {
-                this.freq = freq;
-                this.minCutoff = minCutoff;
-                this.beta = beta;
-                this.dCutoff = dCutoff;
-                this.xFilter = new LowPassFilter(this.alpha(minCutoff));
-                this.dxFilter = new LowPassFilter(this.alpha(dCutoff));
-                this.lastTime = null;
+                this.freq = freq; this.minCutoff = minCutoff; this.beta = beta; this.dCutoff = dCutoff;
+                this.xFilter = new LowPassFilter(this.alpha(minCutoff)); this.dxFilter = new LowPassFilter(this.alpha(dCutoff)); this.lastTime = null;
             }
-
-            alpha(cutoff) {
-                const te = 1.0 / this.freq;
-                const tau = 1.0 / (2 * Math.PI * cutoff);
-                return 1.0 / (1.0 + tau / te);
-            }
-
-            call(x, timestamp = null) {
-                if (this.lastTime !== null && timestamp !== null) {
-                    this.freq = 1.0 / ((timestamp - this.lastTime) / 1000);
-                }
-                this.lastTime = timestamp;
-
-                const prevX = this.xFilter.s;
-                const dx = prevX === null ? 0.0 : (x - prevX) * this.freq;
-                const edx = this.dxFilter.call(dx);
-
-                const cutoff = this.minCutoff + this.beta * Math.abs(edx);
-                this.xFilter.alpha = this.alpha(cutoff);
-                return this.xFilter.call(x);
+            alpha(c) { const te = 1 / this.freq; const tau = 1 / (2 * Math.PI * c); return 1 / (1 + tau / te); }
+            call(x, t = null) {
+                if (this.lastTime !== null && t !== null) { const dt = (t - this.lastTime) / 1000; if (dt > 0) this.freq = 1 / dt; }
+                this.lastTime = t; const prevX = this.xFilter.s; const dx = prevX === null ? 0 : (x - prevX) * this.freq;
+                const edx = this.dxFilter.call(dx); const c = this.minCutoff + this.beta * Math.abs(edx);
+                this.xFilter.alpha = this.alpha(c); return this.xFilter.call(x);
             }
         }
 
-        let gestureRecognizer = null;
-
-        // 🎥 MediaPipe State
-        const state = {
-            active: true,
-            smoothing: 0.5,
-            debug: true,
-            stats: { fps: 0 },
-            mpOptions: {
-                maxNumHands: 1,
-                minDetectionConfidence: 0.5,
-                minTrackingConfidence: 0.5
-            },
-            cursors: {
-                smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth Cursor' },
-                snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy Cursor' }
-            },
-            gestures: {
-                active: 'None',
-                score: 0,
-                pinchDistance: 0,
-                pinchThreshold: 0.05,
-                isPinching: false,
-                isFist: false,
-                isOpen: false,
-                wasDown: false
-            }
+        const hfoState = {
+            active: true, debug: true,
+            mpOptions: { numHands: 2, minHandDetectionConfidence: 0.5, minHandPresenceConfidence: 0.5, minTrackingConfidence: 0.5, dwellMs: 1000 },
+            physics: { stiffness: 0.2, stiffnessArmed: 0.6, damping: 0.1, lookAhead: 1.5, springSource: 'snappy', predSource: 'snappy', persistence: { snapDistance: 0.15, coastFrames: 15 } },
+            hands: {}, bridge: { lastEvent: null, errorCount: 0, status: 'IDLE' }
         };
 
-        // 🤏 Gesture Logic (Now with Official Categories)
-        const detectGestures = (landmarks, mpGestures) => {
-            // Reset official booleans
-            state.gestures.isFist = false;
-            state.gestures.isOpen = false;
-
-            // Priority 1: Official Classifier
-            if (mpGestures && mpGestures.length > 0) {
-                const topGesture = mpGestures[0].categoryName;
-                const score = mpGestures[0].score;
-
-                if (score > 0.5) {
-                    state.gestures.active = topGesture;
-                    state.gestures.score = score;
-                    // Map official to internal booleans for physics integration
-                    state.gestures.isFist = topGesture === 'Closed_Fist';
-                    state.gestures.isOpen = topGesture === 'Open_Palm';
-                }
-            }
-
-            // Priority 2: HFO Heuristics (for Pinch mapping)
-            const thumbTip = landmarks[4];
-            const indexTip = landmarks[8];
-            const dx = thumbTip.x - indexTip.x;
-            const dy = thumbTip.y - indexTip.y;
-            const dz = thumbTip.z - indexTip.z;
-            state.gestures.pinchDistance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            state.gestures.isPinching = state.gestures.pinchDistance < state.gestures.pinchThreshold;
-
-            if (state.gestures.isPinching) {
-                state.gestures.active = 'PINCH';
-            }
-        };
-
-        // Initialize Filters
-        state.cursors.smooth.filterX = new OneEuroFilter(30, 0.5, 0.001);
-        state.cursors.smooth.filterY = new OneEuroFilter(30, 0.5, 0.001);
-        state.cursors.snappy.filterX = new OneEuroFilter(30, 2.0, 0.1);
-        state.cursors.snappy.filterY = new OneEuroFilter(30, 2.0, 0.1);
-
-        // 🛠️ GUI Logic
-        const initGUI = (container) => {
-            const gui = new GUI({ container, autoPlace: false });
-
-            const mpFolder = gui.addFolder('P0: SENSOR (MediaPipe)');
-            mpFolder.add(state.mpOptions, 'maxNumHands', 1, 4, 1).name('Max Hands').onChange(updateMP);
-            mpFolder.add(state.mpOptions, 'modelComplexity', { 'Lite (0)': 0, 'Full (1)': 1 }).name('Complexity').onChange(updateMP);
-            mpFolder.add(state.mpOptions, 'minDetectionConfidence', 0, 1).name('Detection Thresh').onChange(updateMP);
-            mpFolder.add(state.mpOptions, 'minTrackingConfidence', 0, 1).name('Tracking Thresh').onChange(updateMP);
-            mpFolder.open();
-
-            const cursorsFolder = gui.addFolder('P2: SHAPE (One Euro Filters)');
-            const sFolder = cursorsFolder.addFolder('Smooth Preset');
-            sFolder.add(state.cursors.smooth.filterX, 'minCutoff', 0.1, 10).name('Min Cutoff').onChange(v => state.cursors.smooth.filterY.minCutoff = v);
-            sFolder.add(state.cursors.smooth.filterX, 'beta', 0, 1).name('Beta').onChange(v => state.cursors.smooth.filterY.beta = v);
-
-            const snFolder = cursorsFolder.addFolder('Snappy Preset');
-            snFolder.add(state.cursors.snappy.filterX, 'minCutoff', 0.1, 10).name('Min Cutoff').onChange(v => state.cursors.snappy.filterY.minCutoff = v);
-            snFolder.add(state.cursors.snappy.filterX, 'beta', 0, 1).name('Beta').onChange(v => state.cursors.snappy.filterY.beta = v);
-            cursorsFolder.open();
-
-            const gestFolder = gui.addFolder('P3: DELIVER (Gestures)');
-            gestFolder.add(state.gestures, 'pinchThreshold', 0.01, 0.2).name('Pinch Thresh');
-            gestFolder.add(state.gestures, 'active').name('Current Gesture').listen();
-            gestFolder.open();
-
-            const vizFolder = gui.addFolder('Visualization');
-            vizFolder.add(state, 'active').name('Sensing Active');
-            vizFolder.add(state, 'debug').name('Show Skeleton');
-            vizFolder.add(state, 'smoothing', 0, 1).name('Global Smoothing');
-            vizFolder.add(state.stats, 'fps').name('MP FPS').listen();
-            vizFolder.open();
-
-            container.appendChild(gui.domElement);
-        };
-
-        const updateMP = () => {
-            if (gestureRecognizer) {
-                gestureRecognizer.setOptions({
-                    numHands: state.mpOptions.maxNumHands,
-                    minHandDetectionConfidence: state.mpOptions.minDetectionConfidence,
-                    minHandPresenceConfidence: state.mpOptions.minTrackingConfidence,
-                    minTrackingConfidence: state.mpOptions.minTrackingConfidence
+        const port1Bridge = (hands) => {
+            try {
+                const telemetryData = {};
+                Object.keys(hands).forEach(id => {
+                    const h = hands[id];
+                    telemetryData[id] = {
+                        id: h.id, active: h.active, lastSeen: h.lastSeen, fsm: h.fsm.state,
+                        cursors: {
+                            raw: { x: h.cursors.raw.x, y: h.cursors.raw.y, color: h.cursors.raw.color, label: h.cursors.raw.label },
+                            smooth: { x: h.cursors.smooth.x, y: h.cursors.smooth.y, color: h.cursors.smooth.color, label: h.cursors.smooth.label },
+                            snappy: { x: h.cursors.snappy.x, y: h.cursors.snappy.y, color: h.cursors.snappy.color, label: h.cursors.snappy.label },
+                            spring: { x: h.cursors.spring.x, y: h.cursors.spring.y, color: h.cursors.spring.color, label: h.cursors.spring.label },
+                            pred: { x: h.cursors.predictive.x, y: h.cursors.predictive.y, color: h.cursors.predictive.color, label: h.cursors.predictive.label }
+                        },
+                        gestures: { ...h.gestures, pointerEvent: h.fsm.pointerEvent }
+                    };
                 });
-                console.log('GestureRecognizer Options Updated:', state.mpOptions);
+                const event = { specversion: "1.0", type: "hfo.omega.v24.hand_update", source: "hfo.port.0.sense", id: crypto.randomUUID(), time: new Date().toISOString(), data: telemetryData };
+                const validated = CloudEventSchema.parse(event);
+                hfoState.bridge.lastEvent = validated; hfoState.bridge.status = 'VALID'; return validated;
+            } catch (e) {
+                hfoState.bridge.status = 'ERROR'; hfoState.bridge.errorCount++;
+                if (hfoState.debug) console.error("P1 Bridge Validation Error:", e);
+                return null;
             }
         };
 
-        // 📽️ MediaPipe Logic (Official Tasks API)
-        const initMediaPipe = async (container) => {
-            const video = document.createElement('video');
-            video.autoplay = true;
-            video.playsinline = true;
-            video.style.display = 'none';
-            container.appendChild(video);
-
-            const canvas = document.createElement('canvas');
-            canvas.style.width = '100%';
-            canvas.style.height = 'auto';
-            container.appendChild(canvas);
-            const ctx = canvas.getContext('2d');
-
-            const vision = await FilesetResolver.forVisionTasks(
-                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
-            );
-            gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
-                baseOptions: {
-                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
-                    delegate: "GPU"
+        const createCursorSet = (handId, hue) => {
+            const h = {
+                id: handId, lastSeen: 0, active: true, coastCount: 0, fsm: new GestureFSM(),
+                cursors: {
+                    raw: { x: 0.5, y: 0.5, color: `hsl(${hue}, 100%, 100%)`, label: `H${handId} Raw` },
+                    smooth: { x: 0.5, y: 0.5, color: `hsl(${hue}, 100%, 70%)`, label: `H${handId} Smooth` },
+                    snappy: { x: 0.5, y: 0.5, color: `hsl(${hue}, 100%, 50%)`, label: `H${handId} Snappy` },
+                    spring: { x: 0.5, y: 0.5, body: null, anchor: null, constraint: null, color: `hsl(${hue}, 100%, 40%)`, label: `H${handId} Spring` },
+                    predictive: { x: 0.5, y: 0.5, body: null, color: `hsl(${hue}, 100%, 30%)`, label: `H${handId} Pred` }
                 },
-                runningMode: "VIDEO",
-                numHands: state.mpOptions.maxNumHands,
-                minHandDetectionConfidence: state.mpOptions.minDetectionConfidence,
-                minHandPresenceConfidence: state.mpOptions.minTrackingConfidence,
-                minTrackingConfidence: state.mpOptions.minTrackingConfidence
+                filters: { sx: new OneEuroFilter(30, 0.5, 0.001), sy: new OneEuroFilter(30, 0.5, 0.001), nx: new OneEuroFilter(30, 2.0, 0.1), ny: new OneEuroFilter(30, 2.0, 0.1) },
+                gestures: { active: 'None', score: 0, isDown: false, pointerEvent: 'none' }
+            };
+            if (engine) {
+                const { Bodies, Composite, Constraint } = Matter;
+                h.cursors.spring.anchor = Bodies.circle(0.5, 0.5, 1, { isStatic: true, isSensor: true });
+                h.cursors.spring.body = Bodies.circle(0.5, 0.5, 10, { frictionAir: 0.1, label: `H${handId}-SpringB` });
+                h.cursors.spring.constraint = Constraint.create({ bodyA: h.cursors.spring.anchor, bodyB: h.cursors.spring.body, stiffness: hfoState.physics.stiffness, damping: hfoState.physics.damping, length: 0 });
+                h.cursors.predictive.body = Bodies.circle(0.5, 0.5, 10, { isStatic: true, label: `H${handId}-PredB` });
+                Composite.add(engine.world, [h.cursors.spring.anchor, h.cursors.spring.body, h.cursors.spring.constraint, h.cursors.predictive.body]);
+            }
+            return h;
+        };
+
+        let engine, runner, gestureRecognizer;
+        const initPhysics = () => {
+            engine = Matter.Engine.create(); engine.gravity.scale = 0;
+            runner = Matter.Runner.create(); Matter.Runner.run(runner, engine);
+            hfoState.hands[0] = createCursorSet(0, 200); hfoState.hands[1] = createCursorSet(1, 30);
+        };
+
+        const initMediaPipe = async (container) => {
+            const video = document.createElement('video'); video.autoplay = true; video.playsinline = true; video.style.opacity = '0.3'; container.appendChild(video);
+            const canvas = document.createElement('canvas'); container.appendChild(canvas); const ctx = canvas.getContext('2d');
+            const dw = new DrawingUtils(ctx);
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm");
+            gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task", delegate: "GPU" },
+                runningMode: "VIDEO", ...hfoState.mpOptions
             });
-
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
-            video.srcObject = stream;
-
-            let lastTime = 0;
             const render = () => {
                 const now = performance.now();
-                state.stats.fps = lastTime ? Math.round(1000 / (now - lastTime)) : 0;
+                if (hfoState.active && video.readyState >= 2) {
+                    const res = gestureRecognizer.recognizeForVideo(video, now); ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const landmarks = res.landmarks || []; const handIds = Object.keys(hfoState.hands); const asg = [];
 
-                if (state.active && video.readyState >= 2) {
-                    const results = gestureRecognizer.recognizeVideo(video, now);
-
-                    ctx.save();
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    // Note: Results in Tasks API are different from Solution API
-                    if (results.landmarks && results.landmarks.length > 0) {
-                        results.landmarks.forEach((landmarks, index) => {
-                            if (state.debug) {
-                                drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { color: '#00FF0033', lineWidth: 2 });
-                                drawLandmarks(ctx, landmarks, { color: '#FF000033', lineWidth: 1, radius: 2 });
-                            }
-
-                            const tip = landmarks[8];
-                            const gest = results.gestures[index];
-
-                            // 🤏 Detect Gestures
-                            detectGestures(landmarks, gest);
-
-                            // Apply Filters
-                            state.cursors.smooth.x = state.cursors.smooth.filterX.call(tip.x, now);
-                            state.cursors.smooth.y = state.cursors.smooth.filterY.call(tip.y, now);
-                            state.cursors.snappy.x = state.cursors.snappy.filterX.call(tip.x, now);
-                            state.cursors.snappy.y = state.cursors.snappy.filterY.call(tip.y, now);
-
-                            // 📡 Bridge P3: DELIVER (Pointer Dispatch)
-                            const emitX = (1 - state.cursors.smooth.x) * window.innerWidth; // Mirroring check
-                            const emitY = state.cursors.smooth.y * window.innerHeight;
-                            const isDown = state.gestures.isPinching || state.gestures.isFist;
-
-                            let eventType = 'pointermove';
-                            if (isDown && !state.gestures.wasDown) eventType = 'pointerdown';
-                            if (!isDown && state.gestures.wasDown) eventType = 'pointerup';
-                            state.gestures.wasDown = isDown;
-
-                            const pointerEvent = new PointerEvent(eventType, {
-                                bubbles: true,
-                                cancelable: true,
-                                pointerType: 'touch',
-                                clientX: emitX,
-                                clientY: emitY,
-                                pressure: isDown ? 1.0 : 0.0
-                            });
-                            document.elementFromPoint(emitX, emitY)?.dispatchEvent(pointerEvent);
-
-                            // Render Cursors
-                            [state.cursors.smooth, state.cursors.snappy].forEach(cursor => {
-                                ctx.beginPath();
-                                ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 10, 0, 2 * Math.PI);
-                                ctx.fillStyle = cursor.color;
-                                ctx.fill();
-                                ctx.strokeStyle = '#fff';
-                                ctx.lineWidth = 2;
-                                ctx.stroke();
-
-                                // Label
-                                ctx.fillStyle = '#fff';
-                                ctx.font = '12px Courier New';
-                                ctx.fillText(cursor.label, cursor.x * canvas.width + 15, cursor.y * canvas.height + 5);
-                            });
+                    landmarks.forEach((lm, lIdx) => {
+                        const tip = lm[8]; let bestD = Infinity, bestId = null;
+                        handIds.forEach(id => {
+                            const h = hfoState.hands[id]; const d = Math.sqrt((tip.x - h.cursors.raw.x) ** 2 + (tip.y - h.cursors.raw.y) ** 2);
+                            if (d < bestD && d < hfoState.physics.persistence.snapDistance) { bestD = d; bestId = id; }
                         });
-                    }
-                    ctx.restore();
+                        asg.push({ lIdx, handId: bestId, dist: bestD });
+                    });
+
+                    const uH = new Set(), uL = new Set();
+                    asg.sort((a, b) => a.dist - b.dist).forEach(a => {
+                        if (a.handId !== null && !uH.has(a.handId) && !uL.has(a.lIdx)) {
+                            const h = hfoState.hands[a.handId]; const lm = landmarks[a.lIdx]; const tip = lm[8];
+                            h.cursors.raw.x = tip.x; h.cursors.raw.y = tip.y; h.lastSeen = now; h.coastCount = 0; h.active = true;
+                            h.cursors.smooth.x = h.filters.sx.call(tip.x, now); h.cursors.smooth.y = h.filters.sy.call(tip.y, now);
+                            h.cursors.snappy.x = h.filters.nx.call(tip.x, now); h.cursors.snappy.y = h.filters.ny.call(tip.y, now);
+
+                            if (res.gestures?.[a.lIdx]) {
+                                const g = res.gestures[a.lIdx][0];
+                                const fsmRes = h.fsm.process(g.categoryName, now);
+                                h.gestures = {
+                                    active: g.categoryName,
+                                    score: g.score,
+                                    isDown: (h.fsm.state === 'COMMITTED'),
+                                    pointerEvent: fsmRes.pointerEvent
+                                };
+                            }
+                            uH.add(a.handId); uL.add(a.lIdx);
+                        }
+                    });
+
+                    Object.keys(hfoState.hands).forEach(id => {
+                        const h = hfoState.hands[id];
+                        if (!uH.has(id)) {
+                            h.coastCount++;
+                            const fsmRes = (h.coastCount > hfoState.physics.persistence.coastFrames)
+                                ? h.fsm.process('LOST', now)
+                                : h.fsm.process('NONE', now);
+                            
+                            h.gestures.isDown = (h.fsm.state === 'COMMITTED');
+                            h.gestures.pointerEvent = fsmRes.pointerEvent;
+                            
+                            if (h.coastCount > hfoState.physics.persistence.coastFrames) h.active = false;
+                        }
+
+                        if (h.active && hfoState.debug) {
+                            const lIdx = asg.find(a => a.handId === id)?.lIdx;
+                            if (lIdx !== undefined) dw.drawConnectors(landmarks[lIdx], HandLandmarker.HAND_CONNECTIONS, { color: "#00FF00", lineWidth: 5 });
+                        }
+
+                        if (engine && h.active) {
+                            const isEngaged = h.fsm.state === 'ARMED' || h.fsm.state === 'COMMITTED';
+                            h.cursors.spring.constraint.stiffness = isEngaged ? hfoState.physics.stiffnessArmed : hfoState.physics.stiffness;
+                            Matter.Body.setPosition(h.cursors.spring.anchor, { x: h.cursors[hfoState.physics.springSource].x * canvas.width, y: h.cursors[hfoState.physics.springSource].y * canvas.height });
+                            const lead = { x: (h.cursors.snappy.x - h.cursors.smooth.x) * hfoState.physics.lookAhead, y: (h.cursors.snappy.y - h.cursors.smooth.y) * hfoState.physics.lookAhead };
+                            Matter.Body.setPosition(h.cursors.predictive.body, { x: (h.cursors[hfoState.physics.predSource].x + lead.x) * canvas.width, y: (h.cursors[hfoState.physics.predSource].y + lead.y) * canvas.height });
+                            h.cursors.spring.x = h.cursors.spring.body.position.x / canvas.width; h.cursors.spring.y = h.cursors.spring.body.position.y / canvas.height;
+                            h.cursors.predictive.x = h.cursors.predictive.body.position.x / canvas.width; h.cursors.predictive.y = h.cursors.predictive.body.position.y / canvas.height;
+                        }
+
+                        [h.cursors.raw, h.cursors.smooth, h.cursors.snappy, h.cursors.spring, h.cursors.predictive].forEach(c => {
+                            ctx.beginPath(); ctx.arc(c.x * canvas.width, c.y * canvas.height, 12, 0, 2 * Math.PI);
+                            ctx.fillStyle = c.color; ctx.globalAlpha = h.active ? 1.0 : 0.4; ctx.fill();
+                            ctx.strokeStyle = (h.fsm.state === 'COMMITTED') ? '#00ff88' : (h.fsm.state === 'ARMED' ? '#0088ff' : 'transparent');
+                            ctx.lineWidth = 4; ctx.stroke();
+                            ctx.globalAlpha = 1.0; ctx.fillStyle = '#fff'; ctx.font = '10px Courier'; ctx.fillText(c.label, c.x * canvas.width + 15, c.y * canvas.height + 5);
+                        });
+                    });
+                    port1Bridge(hfoState.hands);
                 }
-                lastTime = now;
                 requestAnimationFrame(render);
             };
 
-            video.onloadedmetadata = () => {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                render();
-            };
+            video.onloadedmetadata = () => { 
+                canvas.width = video.videoWidth; 
+                canvas.height = video.videoHeight; 
+                initPhysics(); 
+                render(); 
+            }; 
+            video.srcObject = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
         };
 
         const initPhysicsPanel = (container) => {
-            const div = document.createElement('div');
-            div.className = 'component-container';
-            div.innerHTML = `
-                <div style="background: #222; padding: 15px; border-radius: 8px; border-left: 4px solid #00ccff; margin-bottom: 10px;">
-                    <h3 style="margin-top:0">🔵 Smooth Cursor</h3>
-                    <code id="smooth-data">X: 0.000, Y: 0.000</code>
-                </div>
-                <div style="background: #222; padding: 15px; border-radius: 8px; border-left: 4px solid #ffcc00;">
-                    <h3 style="margin-top:0">🟡 Snappy Cursor</h3>
-                    <code id="snappy-data">X: 0.000, Y: 0.000</code>
-                </div>
-            `;
-            container.appendChild(div);
-
-            const smoothEl = div.querySelector('#smooth-data');
-            const snappyEl = div.querySelector('#snappy-data');
-
+            const div = document.createElement('div'); div.className = 'component-container'; container.appendChild(div);
             const update = () => {
-                smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(4)}, Y: ${state.cursors.smooth.y.toFixed(4)}`;
-                snappyEl.innerText = `X: ${state.cursors.snappy.x.toFixed(4)}, Y: ${state.cursors.snappy.y.toFixed(4)}`;
+                const data = hfoState.bridge.lastEvent?.data || {}; const ids = Object.keys(data);
+                if (ids.length === 0) div.innerHTML = '<div class="data-card">Waiting...</div>';
+                else {
+                    if (div.querySelectorAll('.hand-section').length !== ids.length) {
+                        div.innerHTML = '';
+                        ids.sort().forEach(id => {
+                            const s = document.createElement('div'); s.className = 'hand-section'; s.id = `section-h${id}`;
+                            s.innerHTML = `<h2 style="font-size: 11px; color: #888; margin: 10px 0 5px 0;">HAND ID: ${id}</h2>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px;">
+                                    <div class="data-card" style="border-left-color: #ffffff; padding: 4px; border-radius: 4px;"><h3 style="font-size:9px;">Raw</h3><code class="val-raw" style="font-size:9px;">...</code></div>
+                                    <div class="data-card" style="border-left-color: #00ccff; padding: 4px; border-radius: 4px;"><h3 style="font-size:9px;">Smooth</h3><code class="val-smooth" style="font-size:9px;">...</code></div>
+                                    <div class="data-card" style="border-left-color: #ffcc00; padding: 4px; border-radius: 4px;"><h3 style="font-size:9px;">Snappy</h3><code class="val-snappy" style="font-size:9px;">...</code></div>
+                                    <div class="data-card" style="border-left-color: #ff00ff; padding: 4px; border-radius: 4px;"><h3 style="font-size:9px;">Spring</h3><code class="val-spring" style="font-size:9px;">...</code></div>
+                                    <div class="data-card" style="border-left-color: #00ff00; padding: 4px; border-radius: 4px; grid-column: span 2;"><h3 style="font-size:9px;">Pred</h3><code class="val-pred" style="font-size:9px;">...</code></div>
+                                </div>`;
+                            div.appendChild(s);
+                        });
+                    }
+                    ids.forEach(id => {
+                        const h = data[id]; const s = div.querySelector(`#section-h${id}`);
+                        if (s) {
+                            s.querySelector('.val-raw').innerText = `X:${h.cursors.raw.x.toFixed(3)}`;
+                            s.querySelector('.val-smooth').innerText = `X:${h.cursors.smooth.x.toFixed(3)}`;
+                            s.querySelector('.val-snappy').innerText = `X:${h.cursors.snappy.x.toFixed(3)}`;
+                            s.querySelector('.val-spring').innerText = `X:${h.cursors.spring.x.toFixed(3)}`;
+                            s.querySelector('.val-pred').innerText = `X:${h.cursors.pred.x.toFixed(3)}, Y:${h.cursors.pred.y.toFixed(3)}`;
+                        }
+                    });
+                }
                 requestAnimationFrame(update);
-            };
-            update();
+            }; update();
         };
 
         const initGesturesPanel = (container) => {
-            const div = document.createElement('div');
-            div.className = 'component-container';
-            div.innerHTML = `
-                <div style="background: #222; padding: 15px; border-radius: 8px; border-left: 4px solid #cc00ff; margin-bottom: 10px;">
-                    <h3 style="margin-top:0">🤏 Gesture Intent</h3>
-                    <div id="gesture-active" style="font-size: 24px; font-weight: bold; color: #cc00ff;">NONE</div>
-                    <div id="gesture-score" style="font-size: 13px; color: #888; margin-top: 5px;">Score: 0.00</div>
-                    <div style="margin-top: 10px;">
-                        Pinch Distance: <progress id="pinch-progress" value="0.1" max="0.2" style="width: 100%;"></progress>
-                    </div>
-                </div>
-                <div id="gesture-visualizer" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px;">
-                    <div id="icon-PINCH" style="opacity: 0.2; background: #cc00ff; padding: 10px; border-radius: 4px; text-align:center;">PINCH</div>
-                    <div id="icon-Closed_Fist" style="opacity: 0.2; background: #cc00ff; padding: 10px; border-radius: 4px; text-align:center;">FIST</div>
-                    <div id="icon-Open_Palm" style="opacity: 0.2; background: #cc00ff; padding: 10px; border-radius: 4px; text-align:center;">OPEN</div>
-                    <div id="icon-Pointing_Up" style="opacity: 0.2; background: #cc00ff; padding: 10px; border-radius: 4px; text-align:center;">POINT</div>
-                    <div id="icon-Thumb_Up" style="opacity: 0.2; background: #cc00ff; padding: 10px; border-radius: 4px; text-align:center;">THUMBS↑</div>
-                    <div id="icon-Victory" style="opacity: 0.2; background: #cc00ff; padding: 10px; border-radius: 4px; text-align:center;">VICTORY</div>
-                </div>
-            `;
-            container.appendChild(div);
-
-            const activeEl = div.querySelector('#gesture-active');
-            const scoreEl = div.querySelector('#gesture-score');
-            const pinchEl = div.querySelector('#pinch-progress');
-            const iconIds = ['PINCH', 'Closed_Fist', 'Open_Palm', 'Pointing_Up', 'Thumb_Up', 'Victory'];
-            const icons = {};
-            iconIds.forEach(id => icons[id] = div.querySelector(`#icon-${id}`));
-
+            const div = document.createElement('div'); div.className = 'component-container'; container.appendChild(div);
             const update = () => {
-                activeEl.innerText = state.gestures.active;
-                scoreEl.innerText = `Confidence: ${(state.gestures.score * 100).toFixed(1)}%`;
-                pinchEl.value = state.gestures.pinchDistance;
-
-                Object.keys(icons).forEach(key => {
-                    icons[key].style.opacity = (state.gestures.active === key) ? '1.0' : '0.2';
-                    icons[key].style.boxShadow = (state.gestures.active === key) ? '0 0 10px #cc00ff' : 'none';
-                });
-
+                const data = hfoState.bridge.lastEvent?.data || {}; const ids = Object.keys(data);
+                if (ids.length === 0) div.innerHTML = '<div class="data-card">Waiting...</div>';
+                else {
+                    if (div.querySelectorAll('.hand-gesture-section').length !== ids.length) {
+                        div.innerHTML = '';
+                        ids.sort().forEach(id => {
+                            const s = document.createElement('div'); s.className = 'hand-gesture-section'; s.id = `gesture-section-h${id}`;
+                            s.innerHTML = `<div class="data-card" style="border-left-color: #cc00ff; padding: 10px; margin-bottom:10px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <h3 style="margin:0; font-size:12px;">HAND ${id}</h3>
+                                    <span class="val-tag state-tag tag-idle">IDLE</span>
+                                </div>
+                                <h1 class="val-gesture" style="font-size: 24px; margin: 10px 0;">NONE</h1>
+                                <div style="display:flex; gap: 5px; align-items:center;">
+                                    <div class="val-event" style="background:#000; padding: 2px 5px; border-radius:3px; color:#00ff88; font-size:10px; font-family:monospace;">none</div>
+                                    <div class="val-score" style="color: #666; font-size: 10px;">Conf: 0%</div>
+                                </div>
+                           </div>`;
+                            div.appendChild(s);
+                        });
+                    }
+                    ids.forEach(id => {
+                        const h = data[id]; const s = div.querySelector(`#gesture-section-h${id}`);
+                        if (s) {
+                            const tag = s.querySelector('.val-tag');
+                            tag.innerText = h.fsm;
+                            tag.className = `val-tag state-tag tag-${h.fsm.toLowerCase().split('_')[0]}`;
+                            s.querySelector('.val-gesture').innerText = h.gestures.active;
+                            s.querySelector('.val-event').innerText = h.gestures.pointerEvent;
+                            s.querySelector('.val-score').innerText = `Conf: ${(h.gestures.score * 100).toFixed(1)}%`;
+                        }
+                    });
+                }
                 requestAnimationFrame(update);
-            };
-            update();
+            }; update();
         };
 
-        // 🏗️ Layout Config
+        const initSettings = (container) => {
+            const gui = new GUI({ container, autoPlace: false });
+            const phys = gui.addFolder('V24 Dynamics');
+            phys.add(hfoState.physics, 'springSource', ['snappy', 'smooth', 'raw']).name('Anchor');
+            phys.add(hfoState.physics, 'stiffness', 0, 1).name('Stiffness');
+            phys.add(hfoState.physics, 'stiffnessArmed', 0, 1).name('Armed Stiffness');
+            phys.add(hfoState.physics, 'lookAhead', 0, 10).name('Pred Time');
+            phys.open();
+            const mp = gui.addFolder('MediaPipe');
+            mp.add(hfoState, 'debug').name('Show Connections');
+            mp.open();
+            container.appendChild(gui.domElement);
+        };
+
         const config = {
             root: {
-                type: 'column',
-                content: [
+                type: 'column', content: [
                     {
-                        type: 'row',
-                        height: 70,
-                        content: [
-                            {
-                                type: 'component',
-                                componentType: 'MediaPipe',
-                                title: 'P0: SENSE (MediaPipe)',
-                                width: 50
-                            },
-                            {
-                                type: 'component',
-                                componentType: 'Physics',
-                                title: 'P2: SHAPE (Physics Data)',
-                                width: 25
-                            },
-                            {
-                                type: 'component',
-                                componentType: 'Gestures',
-                                title: 'P3: DELIVER (Gesture Intent)',
-                                width: 25
-                            }
+                        type: 'row', height: 75, content: [
+                            { type: 'component', componentType: 'MediaPipe', title: 'P0: SENSE', width: 60 },
+                            { type: 'component', componentType: 'Gestures', title: 'P3: DELIVER', width: 20 },
+                            { type: 'component', componentType: 'Physics', title: 'P2: SHAPE', width: 20 }
                         ]
                     },
-                    {
-                        type: 'component',
-                        componentType: 'Settings',
-                        title: 'P7: NAVIGATE (System Control)',
-                        height: 30
-                    }
+                    { type: 'component', componentType: 'Settings', title: 'P7: NAVIGATE', height: 25 }
                 ]
             }
         };
-
         const layout = new GoldenLayout(document.getElementById('layout-container'));
-
-        layout.registerComponentFactoryFunction('MediaPipe', (container) => {
-            initMediaPipe(container.element);
-        });
-
-        layout.registerComponentFactoryFunction('Physics', (container) => {
-            initPhysicsPanel(container.element);
-        });
-
-        layout.registerComponentFactoryFunction('Gestures', (container) => {
-            initGesturesPanel(container.element);
-        });
-
-        layout.registerComponentFactoryFunction('Settings', (container) => {
-            initGUI(container.element);
-        });
-
-        layout.loadLayout(config);
-
-        window.addEventListener('resize', () => layout.updateSize());
+        layout.registerComponentFactoryFunction('MediaPipe', c => initMediaPipe(c.element));
+        layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
+        layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
+        layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
+        layout.loadLayout(config); window.addEventListener('resize', () => layout.updateSize());
     </script>
 </body>
 

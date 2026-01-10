@@ -1,0 +1,649 @@
+{
+  "query": "SOTA web virtual cursor pointer event injection best practices injecting pointer events into excalidraw iframe cross origin excalidraw umd cdn unload policy error fix MediaPipe to W3C PointerEvent mapping state of the art",
+  "tavily": {
+    "query": "SOTA web virtual cursor pointer event injection best practices injecting pointer events into excalidraw iframe cross origin excalidraw umd cdn unload policy error fix MediaPipe to W3C PointerEvent mapping state of the art",
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props/excalidraw-api",
+        "title": "excalidrawAPI - Excalidraw developer docs",
+        "content": "| resetCursor | `function` | This API can be used to reset to default mouse cursor on the canvas |\n| toggleSidebar | `function` | Toggles specific sidebar on/off |\n| onChange | `function` | Subscribes to change events |\n| onPointerDown | `function` | Subscribes to `pointerdown` events |\n| onPointerUp | `function` | Subscribes to `pointerup` events | [...] | Name | Type | Default | Description |\n ---  --- |\n| `type` | ToolType | `selection` | The tool type which should be set as active tool |\n| `locked` | `boolean` | `false` | Indicates whether the the active tool should be locked. It behaves the same way when using the `lock` tool in the editor interface |\n\n## setCursor\u200b\n\nThis API can be used to customise the mouse cursor on the canvas and has the below signature. It sets the mouse cursor to the cursor passed in param.\n\n```\n(cursor: string) => void(cursor:  string)  =>  void\n```\n\n## toggleSidebar\u200b\n\n```\n(opts: { name: string; tab?: string; force?: boolean }) => boolean;(opts:  { name:  string;  tab ?:  string;  force ?:  boolean  })  =>  boolean;\n``` [...] | scrollToContent | `function` | Scroll the nearest element out of the elements supplied to the center. Defaults to the elements on the scene. |\n| refresh | `function` | Updates the offsets for the Excalidraw component so that the coordinates are computed correctly (for example the cursor position). |\n| setToast | `function` | This API can be used to show the toast with custom message. |\n| id | `string` | Unique ID for the excalidraw component. |\n| getFiles | `function` | This API can be used to get the files present in the scene. |\n| setActiveTool | `function` | This API can be used to set the active tool |\n| setCursor | `function` | This API can be used to set customise the mouse cursor on the canvas |",
+        "score": 0.990732,
+        "raw_content": null
+      },
+      {
+        "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/integration",
+        "title": "Integration | Excalidraw developer docs",
+        "content": "\"  href=\"  href = \" \"  />  />  <link rel=\"stylesheet\" href=\"./index.css\" />  < link  rel = \" stylesheet \"  href = \"./index.css \"  />  <script>  < script>  window.EXCALIDRAW_ASSET_PATH = \"  window. EXCALIDRAW_ASSET_PATH  =  \"  script>   script>  <script type=\"importmap\">  < script  type = \" importmap \">  { { \"imports\": { \"imports\":  { \"react\": \"  \"react\":  \"  \"react/jsx-runtime\": \"  \"react/jsx-runtime\":  \"  \"react-dom\": \"  \"react-dom\":  \"  }  }  }  }  script>   script>  head>   head>   <body>  < body>  <div class=\"container\">  < div  class = \" container \">  <h1>Excalidraw Embed Exampleh1>  < h1> Excalidraw Embed Example h1>  <div id=\"app\">div>  < div  id = \" app \"> div>  div>   div>  <script type=\"text/javascript\" src=\"packages/excalidraw/index.js\">script>  < script  type = [...] const  root =  ReactDOM. createRoot(excalidrawWrapper); root.render(React.createElement(App)); root.render(React.createElement(App)); root. render(React. createElement(App)); [...] type:  \"rectangle\",  id: \"rect-1\",  id: \"rect-1\",  id:  \"rect-1\",  width: 186.47265625,  width: 186.47265625,  width:  186.47265625,  height: 141.9765625,  height: 141.9765625,  height:  141.9765625,  },]));  },]));  },]));  return ( return ( return  ( <div style={{height:\"500px\", width:\"500px\"}}>  <div style={{height:\"500px\", width:\"500px\"}}>  < div  style ={{height: \"500px\",  width: \"500px\"}}>  <Excalidraw />  <Excalidraw />  < Excalidraw  />  div>  div>   div>  );  );  ); }; }; }; export default ExcalidrawWrapper; export default ExcalidrawWrapper; export  default  ExcalidrawWrapper;",
+        "score": 0.9697854,
+        "raw_content": null
+      },
+      {
+        "url": "https://forum.obsidian.md/t/iframe-in-excalidraw/56724",
+        "title": "Iframe in Excalidraw - Help - Obsidian Forum",
+        "content": "# Iframe in Excalidraw\n\nFirst, search the help docs and this forum. Maybe your question has been answered! The debugging steps can help, too. Still stuck? Delete this line and proceed.\n\n### What I\u2019m trying to do\n\nI would like to view the website as an iframe inside excalidraw. Is it at all possible ? if not , what might be the challenges here from the plugin developer\u2019s point of view?\n\n### Things I have tried\n\nAs a workaround, you could export images from Excalidraw, put them on a canvas (core plugin), which can display web pages as well. [...] @zanodor . Thanks for your reply. It is just that i wanted the feature to be able to write whenever I want to using a touch pen inside the Visual PKM. Sadly that is not yet available in Canvas as per my knowledge. It is there in Excalidraw. So, I just want a single PKM which has both these features - the Iframe and the touch pen writing. Please suggest if some other workaround either in canvas or excalidraw can help achieve these two together. [...] I have not yet fiddled around much with Excalidraw but it seems powerful. Canvas in some ways is considered a competitor to Zsolt\u2019s plugin and if you ask him nicely, he might be able to find some solution.  \nWhy don\u2019t you head over to his GitHub and file a feature request here. Make sure you search before you ask because other people might have asked for a similar feature already.\n\nCheers\n\nSure, I\u2019ll do that. Thanks\n\nCheers\n\nThis topic was automatically closed 90 days after the last reply. New replies are no longer allowed.\n\nPowered by Discourse, best viewed with JavaScript enabled",
+        "score": 0.8940517,
+        "raw_content": null
+      },
+      {
+        "url": "https://github.com/excalidraw/excalidraw/issues/3846",
+        "title": "Creating Shareable link fails with CORS error on plus.excalidraw.com",
+        "content": "## Description\n\n@essential-randomness\n\nUnsure whether this is the right place to report issues with plus. Do redirect as needed :)\n\nI've been trying to create shareable links for my drawings on Chrome, but it simply hangs. The url for the drawing is .\n\nLooking at the dev console, the following error appears when trying to share:\n\n`Access to fetch at ' from origin ' has been blocked by CORS policy: Method PATCH is not allowed by Access-Control-Allow-Methods in preflight response.\n22.8d2bc220.chunk.js:2 PATCH  net::ERR_FAILED\n36CryJwGVzo:1 Uncaught (in promise) TypeError: Failed to fetch`\n\n## Metadata\n\n## Metadata\n\n### Assignees\n\n### Labels\n\n### Type\n\n### Projects\n\n### Milestone\n\n### Relationships\n\n### Development\n\n## Issue actions\n\n## Footer\n\n### Footer navigation [...] ## Navigation Menu\n\n# Search code, repositories, users, issues, pull requests...\n\n# Provide feedback\n\nWe read every piece of feedback, and take your input very seriously.\n\n# Saved searches\n\n## Use saved searches to filter your results more quickly\n\nTo see all available qualifiers, see our documentation.\n\n### Uh oh!\n\nThere was an error while loading. Please reload this page.\n\nThere was an error while loading. Please reload this page.\n\n### Uh oh!\n\nThere was an error while loading. Please reload this page.\n\nThere was an error while loading. Please reload this page.\n\n# Creating Shareable link fails with CORS error on plus.excalidraw.com #3846\n\n@essential-randomness\n\n## Description\n\n@essential-randomness",
+        "score": 0.26435834,
+        "raw_content": null
+      },
+      {
+        "title": "GitHub - Deci-AI/super-gradients: Easily train or fine-tune SOTA ...",
+        "url": "https://github.com/Deci-AI/super-gradients",
+        "content": "``` [...] ``` [...] ```",
+        "score": 0.08694165,
+        "raw_content": null
+      }
+    ],
+    "response_time": 2.78,
+    "request_id": "fd4261b2-23bc-4b2d-b9f8-2f253fd2ddc7"
+  },
+  "brave": {
+    "query": {
+      "original": "SOTA web virtual cursor pointer event injection best practices injecting pointer events into excalidraw iframe cross origin excalidraw umd cdn unload policy error fix MediaPipe to W3C PointerEvent mapping state of the art",
+      "show_strict_warning": false,
+      "is_navigational": false,
+      "is_news_breaking": false,
+      "spellcheck_off": true,
+      "country": "us",
+      "bad_results": false,
+      "should_fallback": false,
+      "postal_code": "",
+      "city": "",
+      "header_country": "",
+      "more_results_available": true,
+      "state": ""
+    },
+    "mixed": {
+      "type": "mixed",
+      "main": [
+        {
+          "type": "web",
+          "index": 0,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 1,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 2,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 3,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 4,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 5,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 6,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 7,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 8,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 9,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 10,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 11,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 12,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 13,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 14,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 15,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 16,
+          "all": false
+        }
+      ],
+      "top": [],
+      "side": []
+    },
+    "type": "search",
+    "web": {
+      "type": "search",
+      "results": [
+        {
+          "title": "Pointer Events",
+          "url": "https://w3c.github.io/pointerevents/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The features in this specification extend or modify those found in Pointer Events, a W3C Recommendation that describes events and related interfaces for handling hardware-agnostic pointer input from devices including a mouse, pen, or touchscreen. For compatibility with existing mouse-based content, this specification also describes a mapping to fire Mouse Events for other pointer device types. This specification is an update to [[PointerEvents3]]. It includes editorial clarifications and new features that facilitate more use cases.",
+          "profile": {
+            "name": "W3C",
+            "url": "https://w3c.github.io/pointerevents/",
+            "long_name": "w3c.github.io",
+            "img": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3c.github.io",
+            "hostname": "w3c.github.io",
+            "favicon": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw",
+            "path": "\u203a pointerevents"
+          }
+        },
+        {
+          "title": "Pointer events - Web APIs | MDN",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Additionally, a pointer event contains the usual properties present in mouse events (client coordinates, target element, button states, etc.) in addition to new properties for other forms of input: pressure, contact geometry, tilt, etc. In fact, the PointerEvent interface inherits all of the MouseEvent properties, thus facilitating the migration of content from mouse events to pointer events.",
+          "profile": {
+            "name": "MDN Web Docs",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events",
+            "long_name": "developer.mozilla.org",
+            "img": "https://imgs.search.brave.com/4tUMaE-wrDFe-VfOV22wfV58-Q6q7X3MRdR7gVojXzY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2EzZDA1YmEz/N2E0NWUwMzEyMjg2/NjY1Y2ZmMTNkYWM1/MDdjZjhjMGI5MGZh/NDRhMTFkYmM3ODE2/NDUwODY1MS9kZXZl/bG9wZXIubW96aWxs/YS5vcmcv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "developer.mozilla.org",
+            "hostname": "developer.mozilla.org",
+            "favicon": "https://imgs.search.brave.com/4tUMaE-wrDFe-VfOV22wfV58-Q6q7X3MRdR7gVojXzY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2EzZDA1YmEz/N2E0NWUwMzEyMjg2/NjY1Y2ZmMTNkYWM1/MDdjZjhjMGI5MGZh/NDRhMTFkYmM3ODE2/NDUwODY1MS9kZXZl/bG9wZXIubW96aWxs/YS5vcmcv",
+            "path": "\u203a en-US  \u203a docs  \u203a Web  \u203a API  \u203a Pointer_events"
+          }
+        },
+        {
+          "title": "CSS pointer-events property",
+          "url": "https://www.w3schools.com/cssref/css3_pr_pointer-events.php",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": ".ex1 { pointer-events: auto; } .ex2 { cursor: not-allowed; pointer-events: none; } Try it Yourself \u00bb",
+          "profile": {
+            "name": "W3Schools",
+            "url": "https://www.w3schools.com/cssref/css3_pr_pointer-events.php",
+            "long_name": "w3schools.com",
+            "img": "https://imgs.search.brave.com/D9KKNW7B_PBGo-trytMGRrRqvqMVW5Q5mDruXSPmBO4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjVlMGVkZDVj/ZGMyZWRmMzAwODRi/ZDAwZGE4NWI3NmU4/MjRhNjEzOGFhZWY3/ZGViMjY1OWY2ZDYw/YTZiOGUyZS93d3cu/dzNzY2hvb2xzLmNv/bS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3schools.com",
+            "hostname": "www.w3schools.com",
+            "favicon": "https://imgs.search.brave.com/D9KKNW7B_PBGo-trytMGRrRqvqMVW5Q5mDruXSPmBO4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjVlMGVkZDVj/ZGMyZWRmMzAwODRi/ZDAwZGE4NWI3NmU4/MjRhNjEzOGFhZWY3/ZGViMjY1OWY2ZDYw/YTZiOGUyZS93d3cu/dzNzY2hvb2xzLmNv/bS8",
+            "path": "\u203a cssref  \u203a css3_pr_pointer-events.php"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/9mJENdKXrTwGf6-xbqPvs47GTLiuqxHqcFfNEei0o3w/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/dzNzY2hvb2xzLmNv/bS9pbWFnZXMvdzNz/Y2hvb2xzX2xvZ29f/NDM2XzIucG5n",
+            "original": "https://www.w3schools.com/images/w3schools_logo_436_2.png",
+            "logo": true
+          }
+        },
+        {
+          "title": "PointerEvent - Web APIs | MDN",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The PointerEvent interface represents the state of a DOM event produced by a pointer such as the geometry of the contact point, the device type that generated the event, the amount of pressure that was applied on the contact surface, etc.",
+          "profile": {
+            "name": "MDN Web Docs",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent",
+            "long_name": "developer.mozilla.org",
+            "img": "https://imgs.search.brave.com/4tUMaE-wrDFe-VfOV22wfV58-Q6q7X3MRdR7gVojXzY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2EzZDA1YmEz/N2E0NWUwMzEyMjg2/NjY1Y2ZmMTNkYWM1/MDdjZjhjMGI5MGZh/NDRhMTFkYmM3ODE2/NDUwODY1MS9kZXZl/bG9wZXIubW96aWxs/YS5vcmcv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "developer.mozilla.org",
+            "hostname": "developer.mozilla.org",
+            "favicon": "https://imgs.search.brave.com/4tUMaE-wrDFe-VfOV22wfV58-Q6q7X3MRdR7gVojXzY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2EzZDA1YmEz/N2E0NWUwMzEyMjg2/NjY1Y2ZmMTNkYWM1/MDdjZjhjMGI5MGZh/NDRhMTFkYmM3ODE2/NDUwODY1MS9kZXZl/bG9wZXIubW96aWxs/YS5vcmcv",
+            "path": "\u203a en-US  \u203a docs  \u203a Web  \u203a API  \u203a PointerEvent"
+          }
+        },
+        {
+          "title": "setPointerCapture should be disabled in sandboxed iframes by default \u00b7 Issue #16 \u00b7 w3c/pointerevents",
+          "url": "https://github.com/w3c/pointerevents/issues/16",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>Restrict setPointerCapture to occurring only within the scope of a pointer event handler</strong>. Since you can only synchronously communicate between frames when they&#x27;re the same origin, this should be adequate to eliminate any attack.",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/w3c/pointerevents/issues/16",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "software",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a w3c  \u203a pointerevents  \u203a issues  \u203a 16"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/Gup_KCQ3-LDlUrcDVNDwmyASVDTKuG7uuiXWLtE65_A/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS84/MTM3MWYyOTVlODM0/OWEwNmYxMDUyZmYy/YjI0OTc3ZGU2YTZm/MDE3NTZhM2YzNTdj/OGZkMGU1ZWE5OGQz/YWIyL3czYy9wb2lu/dGVyZXZlbnRzL2lz/c3Vlcy8xNg",
+            "original": "https://opengraph.githubassets.com/81371f295e8349a06f1052ff2b24977de6a6f01756a3f357c8fd0e5ea98d3ab2/w3c/pointerevents/issues/16",
+            "logo": false
+          }
+        },
+        {
+          "title": "excalidrawAPI | Excalidraw developer docs",
+          "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props/excalidraw-api",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "( callback: ( activeTool: AppState[&quot;activeTool&quot;], pointerDownState: PointerDownState, event: PointerEvent, ) =&gt; void, ) =&gt; () =&gt; void",
+          "profile": {
+            "name": "Excalidraw",
+            "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props/excalidraw-api",
+            "long_name": "docs.excalidraw.com",
+            "img": "https://imgs.search.brave.com/xX-X9ua1CH4Kk60pkZczTQ2nXyqFV_T0oJA9s7OjESs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTIyYjg1MjAx/YmI4M2U1MTc4MWRh/ZDc3MDcwN2YzMjRk/YzVmYmM1ZGJkY2Jj/N2QwNzJiMWE0ZmY0/ODc4ZmIwOS9kb2Nz/LmV4Y2FsaWRyYXcu/Y29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "docs.excalidraw.com",
+            "hostname": "docs.excalidraw.com",
+            "favicon": "https://imgs.search.brave.com/xX-X9ua1CH4Kk60pkZczTQ2nXyqFV_T0oJA9s7OjESs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTIyYjg1MjAx/YmI4M2U1MTc4MWRh/ZDc3MDcwN2YzMjRk/YzVmYmM1ZGJkY2Jj/N2QwNzJiMWE0ZmY0/ODc4ZmIwOS9kb2Nz/LmV4Y2FsaWRyYXcu/Y29tLw",
+            "path": "  \u203a api  \u203a props  \u203a excalidrawapi"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/Y9eUFOiAFrRctTGo2zTp2myK3HgwBYicWL6LaaNzf2s/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9kb2Nz/LmV4Y2FsaWRyYXcu/Y29tL2ltZy9vZy1p/bWFnZS0yLnBuZw",
+            "original": "https://docs.excalidraw.com/img/og-image-2.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Using Pointer Events - Web APIs | MDN",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Using_Pointer_Events",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "This guide demonstrates how to use pointer events and the HTML element to build a multi-touch enabled drawing application. This example is based on the one in the touch events overview, except it uses the pointer events input event model. Another difference is that because pointer events are ...",
+          "profile": {
+            "name": "MDN Web Docs",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Using_Pointer_Events",
+            "long_name": "developer.mozilla.org",
+            "img": "https://imgs.search.brave.com/4tUMaE-wrDFe-VfOV22wfV58-Q6q7X3MRdR7gVojXzY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2EzZDA1YmEz/N2E0NWUwMzEyMjg2/NjY1Y2ZmMTNkYWM1/MDdjZjhjMGI5MGZh/NDRhMTFkYmM3ODE2/NDUwODY1MS9kZXZl/bG9wZXIubW96aWxs/YS5vcmcv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "developer.mozilla.org",
+            "hostname": "developer.mozilla.org",
+            "favicon": "https://imgs.search.brave.com/4tUMaE-wrDFe-VfOV22wfV58-Q6q7X3MRdR7gVojXzY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2EzZDA1YmEz/N2E0NWUwMzEyMjg2/NjY1Y2ZmMTNkYWM1/MDdjZjhjMGI5MGZh/NDRhMTFkYmM3ODE2/NDUwODY1MS9kZXZl/bG9wZXIubW96aWxs/YS5vcmcv",
+            "path": "\u203a en-US  \u203a docs  \u203a Web  \u203a API  \u203a Pointer_events  \u203a Using_Pointer_Events"
+          }
+        },
+        {
+          "title": "Pointer events \u2013 Webflow Help Center",
+          "url": "https://university.webflow.com/lesson/pointer-events",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>Use pointer events to prevent unwanted click and touch interactions</strong>.Designs with overlapping elements or hover animations can sometimes trigger unintended mouse interactions and contribute to a poo...",
+          "profile": {
+            "name": "Webflow Help Center",
+            "url": "https://university.webflow.com/lesson/pointer-events",
+            "long_name": "university.webflow.com",
+            "img": "https://imgs.search.brave.com/CZ9MurLmfQ-Q_orE0Wa5x1ny7Lo-Y3s4TfhSH3JmFYg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYmM1NjZmZmVj/MGJjNmE5NmE2ZjIw/ZDg1MTg3YzkzM2Y4/YWFmNTUxYTE3ODI3/ZDRmMzNiYTdlMjYx/ZDY5ZDA3MC91bml2/ZXJzaXR5LndlYmZs/b3cuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "university.webflow.com",
+            "hostname": "university.webflow.com",
+            "favicon": "https://imgs.search.brave.com/CZ9MurLmfQ-Q_orE0Wa5x1ny7Lo-Y3s4TfhSH3JmFYg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYmM1NjZmZmVj/MGJjNmE5NmE2ZjIw/ZDg1MTg3YzkzM2Y4/YWFmNTUxYTE3ODI3/ZDRmMzNiYTdlMjYx/ZDY5ZDA3MC91bml2/ZXJzaXR5LndlYmZs/b3cuY29tLw",
+            "path": "\u203a lesson  \u203a pointer-events"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/ZNc2zRvigd0s9G73pNP9VmxhbI4TIvW316JU7ovH_JU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/cHJvZC53ZWJzaXRl/LWZpbGVzLmNvbS82/NmU4ODc0NjgzNGI4/MDUwN2NkZjc5MzMv/NjcwNmVmM2M3MjE1/YTc2OTIyOWQ3YWFk/X2ZlYXR1cmVzLU9H/LmpwZw",
+            "original": "https://cdn.prod.website-files.com/66e88746834b80507cdf7933/6706ef3c7215a769229d7aad_features-OG.jpg",
+            "logo": false
+          }
+        },
+        {
+          "title": "React v16.4.0: Pointer Events \u2013 React Blog",
+          "url": "https://legacy.reactjs.org/blog/2018/05/23/react-v-16-4.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "This blog site has been archived. Go to react.dev/blog to see the recent posts. The latest minor release adds support for an oft-requested feature: pointer events! It also includes a bugfix for . Check out the full changelog below. Pointer Events The following event types are now available ...",
+          "profile": {
+            "name": "React",
+            "url": "https://legacy.reactjs.org/blog/2018/05/23/react-v-16-4.html",
+            "long_name": "legacy.reactjs.org",
+            "img": "https://imgs.search.brave.com/GT7dw0oPcKCpye_bm04ZIgsSp6v9KiXb21MANbo8Yrs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjc4YTFjYzRi/ZmEwMTNiYjhlYzFm/MzVhNTNhZGIwZmEy/YTgyYjI1MjQ3NGQw/NjMwYWExNTE3ZjRm/MDg4ZjhlMy9sZWdh/Y3kucmVhY3Rqcy5v/cmcv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "legacy.reactjs.org",
+            "hostname": "legacy.reactjs.org",
+            "favicon": "https://imgs.search.brave.com/GT7dw0oPcKCpye_bm04ZIgsSp6v9KiXb21MANbo8Yrs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjc4YTFjYzRi/ZmEwMTNiYjhlYzFm/MzVhNTNhZGIwZmEy/YTgyYjI1MjQ3NGQw/NjMwYWExNTE3ZjRm/MDg4ZjhlMy9sZWdh/Y3kucmVhY3Rqcy5v/cmcv",
+            "path": "\u203a blog  \u203a 2018  \u203a 05  \u203a 23  \u203a react-v-16-4.html"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/dleYS_UYMlbWx30UTYBfEVC5SHbG8-zsxoYdMqZkKe0/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWdh/Y3kucmVhY3Rqcy5v/cmcvbG9nby1vZy5w/bmc",
+            "original": "https://legacy.reactjs.org/logo-og.png",
+            "logo": true
+          }
+        },
+        {
+          "title": "Pointer Events Specification",
+          "url": "https://www.w3.org/submissions/pointer-events/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Document Status Update 2013-05-09: The Pointer Events Working Group has published a document, based on this Member Submission, that is intended to become a W3C Recommendation \u00b7 This document is available under the W3C Document License. See the W3C Intellectual Rights Notice and Legal Disclaimers ...",
+          "profile": {
+            "name": "W3C",
+            "url": "https://www.w3.org/submissions/pointer-events/",
+            "long_name": "w3.org",
+            "img": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3.org",
+            "hostname": "www.w3.org",
+            "favicon": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw",
+            "path": "\u203a submissions  \u203a pointer-events"
+          }
+        },
+        {
+          "title": "Props | Excalidraw developer docs",
+          "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "(activeTool: AppState[&quot;activeTool&quot;], pointerDownState: PointerDownState) =&gt; void",
+          "profile": {
+            "name": "Excalidraw",
+            "url": "https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props",
+            "long_name": "docs.excalidraw.com",
+            "img": "https://imgs.search.brave.com/xX-X9ua1CH4Kk60pkZczTQ2nXyqFV_T0oJA9s7OjESs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTIyYjg1MjAx/YmI4M2U1MTc4MWRh/ZDc3MDcwN2YzMjRk/YzVmYmM1ZGJkY2Jj/N2QwNzJiMWE0ZmY0/ODc4ZmIwOS9kb2Nz/LmV4Y2FsaWRyYXcu/Y29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "docs.excalidraw.com",
+            "hostname": "docs.excalidraw.com",
+            "favicon": "https://imgs.search.brave.com/xX-X9ua1CH4Kk60pkZczTQ2nXyqFV_T0oJA9s7OjESs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTIyYjg1MjAx/YmI4M2U1MTc4MWRh/ZDc3MDcwN2YzMjRk/YzVmYmM1ZGJkY2Jj/N2QwNzJiMWE0ZmY0/ODc4ZmIwOS9kb2Nz/LmV4Y2FsaWRyYXcu/Y29tLw",
+            "path": "  \u203a api  \u203a props"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/Y9eUFOiAFrRctTGo2zTp2myK3HgwBYicWL6LaaNzf2s/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9kb2Nz/LmV4Y2FsaWRyYXcu/Y29tL2ltZy9vZy1p/bWFnZS0yLnBuZw",
+            "original": "https://docs.excalidraw.com/img/og-image-2.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "PointerEvent - Web APIs",
+          "url": "https://udn.realityripple.com/docs/Web/API/PointerEvent",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The PointerEvent interface represents the state of a DOM event produced by a pointer such as the geometry of the contact point, the device type that generated the event, the amount of pressure that was applied on the contact surface, etc \u00b7 A pointer is a hardware agnostic representation of ...",
+          "profile": {
+            "name": "Reality Ripple",
+            "url": "https://udn.realityripple.com/docs/Web/API/PointerEvent",
+            "long_name": "udn.realityripple.com",
+            "img": "https://imgs.search.brave.com/1X_DGdwst_96P7j8cs1hFgsl-WtXSsmf0EdxmeRP-5s/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYmQwNjA4Mjk2/Yjk4Zjg0NjQ4MzA1/ZThkNzhiYjdmYjJl/MmYyNDRjMjIyZDU4/Mzc2YzU3MDEwNWE2/YjhlNmRlMi91ZG4u/cmVhbGl0eXJpcHBs/ZS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "udn.realityripple.com",
+            "hostname": "udn.realityripple.com",
+            "favicon": "https://imgs.search.brave.com/1X_DGdwst_96P7j8cs1hFgsl-WtXSsmf0EdxmeRP-5s/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYmQwNjA4Mjk2/Yjk4Zjg0NjQ4MzA1/ZThkNzhiYjdmYjJl/MmYyNDRjMjIyZDU4/Mzc2YzU3MDEwNWE2/YjhlNmRlMi91ZG4u/cmVhbGl0eXJpcHBs/ZS5jb20v",
+            "path": "\u203a docs  \u203a Web  \u203a API  \u203a PointerEvent"
+          }
+        },
+        {
+          "title": "r/webdev on Reddit: Why is 'pointer-events' a CSS property?",
+          "url": "https://www.reddit.com/r/webdev/comments/1d6z2k5/why_is_pointerevents_a_css_property/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Here is the current w3c standard for pointer-events.",
+          "page_age": "2024-06-03T07:52:32",
+          "profile": {
+            "name": "Reddit",
+            "url": "https://www.reddit.com/r/webdev/comments/1d6z2k5/why_is_pointerevents_a_css_property/",
+            "long_name": "reddit.com",
+            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "reddit.com",
+            "hostname": "www.reddit.com",
+            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
+            "path": "  \u203a r/webdev  \u203a why is 'pointer-events' a css property?"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/9mox47Y3PkYi5CfQ40_CQOt6nRa44eBk4vi6xMJtEKc/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zaGFy/ZS5yZWRkLml0L3By/ZXZpZXcvcG9zdC8x/ZDZ6Mms1",
+            "original": "https://share.redd.it/preview/post/1d6z2k5",
+            "logo": false
+          },
+          "age": "June 3, 2024"
+        },
+        {
+          "title": "Newest 'pointer-events' Questions - Stack Overflow",
+          "url": "https://stackoverflow.com/questions/tagged/pointer-events",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "In the snippet below, the circle disappears if either (1) I click inside the circle and move the mouse or (2) I click outside the circle and move the cursor into the circle while holding down the ...",
+          "profile": {
+            "name": "Stack Overflow",
+            "url": "https://stackoverflow.com/questions/tagged/pointer-events",
+            "long_name": "stackoverflow.com",
+            "img": "https://imgs.search.brave.com/4WRMec_wn8Q9LO6DI43kkBvIL6wD5TYCXztC9C9kEI0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWU3Zjg0ZjA1/YjQ3ZTlkNjQ1ODA1/MjAwODhiNjhjYWU0/OTc4MjM4ZDJlMTBi/ODExYmNiNTkzMjdh/YjM3MGExMS9zdGFj/a292ZXJmbG93LmNv/bS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "stackoverflow.com",
+            "hostname": "stackoverflow.com",
+            "favicon": "https://imgs.search.brave.com/4WRMec_wn8Q9LO6DI43kkBvIL6wD5TYCXztC9C9kEI0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWU3Zjg0ZjA1/YjQ3ZTlkNjQ1ODA1/MjAwODhiNjhjYWU0/OTc4MjM4ZDJlMTBi/ODExYmNiNTkzMjdh/YjM3MGExMS9zdGFj/a292ZXJmbG93LmNv/bS8",
+            "path": "\u203a questions  \u203a tagged  \u203a pointer-events"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/4eF1Hc63ppYaxZ4e5vCKJVQtFhMkuzdk3kpY3MGOCjs/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/c3N0YXRpYy5uZXQv/U2l0ZXMvc3RhY2tv/dmVyZmxvdy9JbWcv/YXBwbGUtdG91Y2gt/aWNvbkAyLnBuZz92/PTczZDc5YTg5YmRl/ZA",
+            "original": "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
+            "logo": true
+          }
+        },
+        {
+          "title": "pointer-events - CSS - MDN Web Docs",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>SVG only (experimental for HTML).</strong> The element can be the target of a pointer event when the visibility property is set to visible and e.g., the mouse cursor is over either the interior (i.e., fill) or the perimeter (i.e., stroke) of the element.",
+          "profile": {
+            "name": "MDN Web Docs",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events",
+            "long_name": "developer.mozilla.org",
+            "img": "https://imgs.search.brave.com/4tUMaE-wrDFe-VfOV22wfV58-Q6q7X3MRdR7gVojXzY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2EzZDA1YmEz/N2E0NWUwMzEyMjg2/NjY1Y2ZmMTNkYWM1/MDdjZjhjMGI5MGZh/NDRhMTFkYmM3ODE2/NDUwODY1MS9kZXZl/bG9wZXIubW96aWxs/YS5vcmcv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "developer.mozilla.org",
+            "hostname": "developer.mozilla.org",
+            "favicon": "https://imgs.search.brave.com/4tUMaE-wrDFe-VfOV22wfV58-Q6q7X3MRdR7gVojXzY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2EzZDA1YmEz/N2E0NWUwMzEyMjg2/NjY1Y2ZmMTNkYWM1/MDdjZjhjMGI5MGZh/NDRhMTFkYmM3ODE2/NDUwODY1MS9kZXZl/bG9wZXIubW96aWxs/YS5vcmcv",
+            "path": "\u203a en-US  \u203a docs  \u203a Web  \u203a CSS  \u203a pointer-events"
+          }
+        },
+        {
+          "title": "r/css on Reddit: Weird interaction with a faux-cursor and iFrame",
+          "url": "https://www.reddit.com/r/css/comments/kf0m5m/weird_interaction_with_a_fauxcursor_and_iframe/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>If you dont need to interact with the iframe you can use pointer-events: none on it</strong>. Also, I don&#x27;t exactly know what you&#x27;re trying to accomplish but do you know about the css cursor property?",
+          "page_age": "2020-12-17T16:28:53",
+          "profile": {
+            "name": "Reddit",
+            "url": "https://www.reddit.com/r/css/comments/kf0m5m/weird_interaction_with_a_fauxcursor_and_iframe/",
+            "long_name": "reddit.com",
+            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "reddit.com",
+            "hostname": "www.reddit.com",
+            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
+            "path": "  \u203a r/css  \u203a weird interaction with a faux-cursor and iframe"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/A5H_aQiEBuUODR0lNeU8iDfhrWUvO8oEmRGE_mcS_gM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cmVkZGl0c3RhdGlj/LmNvbS9pY29uLnBu/Zw",
+            "original": "https://www.redditstatic.com/icon.png",
+            "logo": true
+          },
+          "age": "December 17, 2020"
+        },
+        {
+          "title": "Pointer Events in JavaScript - DEV Community",
+          "url": "https://dev.to/supminn/pointer-events-in-javascript-1lol",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "In fact, <strong>the PointerEvent interface inherits all of the MouseEvent properties, thus facilitating the migration of content from mouse events to pointer events</strong>.",
+          "page_age": "2023-03-04T12:43:18",
+          "profile": {
+            "name": "DEV Community",
+            "url": "https://dev.to/supminn/pointer-events-in-javascript-1lol",
+            "long_name": "dev.to",
+            "img": "https://imgs.search.brave.com/UUpF8I85K--vkQzrhameM7iRPRU5VCTXyWbS4sk6G2g/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTg5MTcxNDBh/N2U4ODc4MDg0NWQ4/MzU0YWJkNDY3ZWRm/MjUxY2U1YjY5MzJm/YWRlOTI4YjAyZDI1/ZjU0MmJjNi9kZXYu/dG8v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "dev.to",
+            "hostname": "dev.to",
+            "favicon": "https://imgs.search.brave.com/UUpF8I85K--vkQzrhameM7iRPRU5VCTXyWbS4sk6G2g/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTg5MTcxNDBh/N2U4ODc4MDg0NWQ4/MzU0YWJkNDY3ZWRm/MjUxY2U1YjY5MzJm/YWRlOTI4YjAyZDI1/ZjU0MmJjNi9kZXYu/dG8v",
+            "path": "\u203a supminn  \u203a pointer-events-in-javascript-1lol"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/dRd-owvmX-88fm55YUaWV-zcY5EBkDY5BJ06wZjavyE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9tZWRp/YTIuZGV2LnRvL2R5/bmFtaWMvaW1hZ2Uv/d2lkdGg9MTA4MCxo/ZWlnaHQ9MTA4MCxm/aXQ9Y292ZXIsZ3Jh/dml0eT1hdXRvLGZv/cm1hdD1hdXRvL2h0/dHBzJTNBJTJGJTJG/ZGV2LXRvLXVwbG9h/ZHMuczMuYW1hem9u/YXdzLmNvbSUyRnVw/bG9hZHMlMkZhcnRp/Y2xlcyUyRmVveTZ1/ZWVwbDg4d2d3NXhl/OWUxLnBuZw",
+            "original": "https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Feoy6ueepl88wgw5xe9e1.png",
+            "logo": false
+          },
+          "age": "March 4, 2023"
+        }
+      ],
+      "family_friendly": true
+    }
+  },
+  "repo": {
+    "error": "name 'subprocess' is not defined"
+  },
+  "timestamp": "2026-01-10T05:40:48.308900"
+}
