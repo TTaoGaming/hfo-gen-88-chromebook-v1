@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Port 4 (DISRUPT) - Verification Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff88;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #ff0066;
+            text-align: center;
+        }
+        
+        .panel {
+            background: #1a1a1a;
+            border: 2px solid #00ff88;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        button {
+            background: #00ff88;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button:hover {
+            background: #00cc66;
+        }
+        
+        button.danger {
+            background: #ff0066;
+            color: white;
+        }
+        
+        button.danger:hover {
+            background: #cc0055;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .status.online {
+            background: #00ff88;
+            color: #0a0a0a;
+        }
+        
+        .status.offline {
+            background: #666;
+            color: white;
+        }
+        
+        .telemetry {
+            background: #0d0d0d;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .cursor-demo {
+            width: 100%;
+            height: 300px;
+            background: #0d0d0d;
+            border: 2px dashed #00ff88;
+            position: relative;
+            margin: 20px 0;
+            cursor: crosshair;
+        }
+        
+        .virtual-cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff0066;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px #ff0066;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ PORT 4 (DISRUPT) - VERIFICATION TEST</h1>
+        
+        <div class="panel">
+            <h2>Control Panel</h2>
+            <button id="btn-initialize">Initialize Port 4</button>
+            <button id="btn-activate">Activate Disruption</button>
+            <button id="btn-deactivate" class="danger">Deactivate</button>
+            <button id="btn-stats">Log Statistics</button>
+            <button id="btn-test-jitter">Test Jitter Dampener</button>
+            <br><br>
+            <div>
+                Port 4 Status: <span class="status offline" id="p4-status">OFFLINE</span>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>Cursor Demo Area</h2>
+            <p>Move your mouse over this area. When Port 4 is active, native cursor should be hidden and native events blocked.</p>
+            <div class="cursor-demo" id="cursor-demo">
+                <div class="virtual-cursor" id="virtual-cursor"></div>
+            </div>
+            <div>
+                <strong>Native Events Detected:</strong> <span id="native-count">0</span><br>
+                <strong>Last Native Event:</strong> <span id="last-native">None</span>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>Port 4 Telemetry</h2>
+            <div class="telemetry" id="telemetry">
+                <div class="log-entry">Waiting for Port 4 initialization...</div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>Event Log</h2>
+            <div class="telemetry" id="event-log">
+                <div class="log-entry">No events yet...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Port 4 Modules -->
+    <script src="p4_disrupt/pointer_suppressor.js"></script>
+    <script src="p4_disrupt/hardware_locker.js"></script>
+    <script src="p4_disrupt/jitter_dampener.js"></script>
+    <script src="p4_disrupt/native_rejector.js"></script>
+    <script src="p4_disrupt/port4_orchestrator.js"></script>
+
+    <script>
+        // Global Port 4 instance
+        let p4 = null;
+        let nativeEventCount = 0;
+        let eventLogEntries = [];
+
+        // UI Elements
+        const statusEl = document.getElementById('p4-status');
+        const telemetryEl = document.getElementById('telemetry');
+        const eventLogEl = document.getElementById('event-log');
+        const nativeCountEl = document.getElementById('native-count');
+        const lastNativeEl = document.getElementById('last-native');
+        const cursorDemo = document.getElementById('cursor-demo');
+        const virtualCursor = document.getElementById('virtual-cursor');
+
+        // Track native events on demo area
+        cursorDemo.addEventListener('mousemove', (e) => {
+            nativeEventCount++;
+            nativeCountEl.innerText = nativeEventCount;
+            lastNativeEl.innerText = `mousemove at (${e.clientX}, ${e.clientY})`;
+            
+            // Update virtual cursor position
+            const rect = cursorDemo.getBoundingClientRect();
+            virtualCursor.style.left = (e.clientX - rect.left) + 'px';
+            virtualCursor.style.top = (e.clientY - rect.top) + 'px';
+        });
+
+        // Initialize Port 4
+        document.getElementById('btn-initialize').addEventListener('click', async () => {
+            logEvent('🔧 Initializing Port 4...');
+            p4 = new Port4Disrupt();
+            const result = await p4.initialize();
+            
+            if (result.success) {
+                logEvent('✅ Port 4 initialized successfully');
+                updateTelemetry();
+            } else {
+                logEvent('❌ Port 4 initialization failed');
+            }
+        });
+
+        // Activate Port 4
+        document.getElementById('btn-activate').addEventListener('click', async () => {
+            if (!p4) {
+                logEvent('❌ Port 4 not initialized');
+                return;
+            }
+            
+            logEvent('🚀 Activating Port 4 disruption suite...');
+            const result = await p4.activate();
+            
+            if (result.success) {
+                logEvent('✅ Port 4 active - native events should now be blocked');
+                statusEl.innerText = 'ONLINE';
+                statusEl.className = 'status online';
+                updateTelemetry();
+                
+                // Reset native event counter
+                nativeEventCount = 0;
+                nativeCountEl.innerText = nativeEventCount;
+            } else {
+                logEvent('❌ Activation failed: ' + result.reason);
+            }
+        });
+
+        // Deactivate Port 4
+        document.getElementById('btn-deactivate').addEventListener('click', () => {
+            if (!p4) {
+                logEvent('❌ Port 4 not initialized');
+                return;
+            }
+            
+            logEvent('🛑 Deactivating Port 4...');
+            const result = p4.deactivate();
+            
+            if (result.success) {
+                logEvent('✅ Port 4 deactivated - native events restored');
+                statusEl.innerText = 'OFFLINE';
+                statusEl.className = 'status offline';
+                updateTelemetry();
+            } else {
+                logEvent('❌ Deactivation failed: ' + result.reason);
+            }
+        });
+
+        // Log Statistics
+        document.getElementById('btn-stats').addEventListener('click', () => {
+            if (!p4) {
+                logEvent('❌ Port 4 not initialized');
+                return;
+            }
+            
+            logEvent('📊 Logging Port 4 statistics to console...');
+            p4.logStats();
+            updateTelemetry();
+        });
+
+        // Test Jitter Dampener
+        document.getElementById('btn-test-jitter').addEventListener('click', () => {
+            if (!p4) {
+                logEvent('❌ Port 4 not initialized');
+                return;
+            }
+            
+            logEvent('🧪 Testing jitter dampener with simulated data...');
+            
+            // Simulate 100 position updates with small jitter
+            let passed = 0;
+            let blocked = 0;
+            
+            for (let i = 0; i < 100; i++) {
+                const position = {
+                    x: 0.5 + (Math.random() - 0.5) * 0.01, // Small jitter
+                    y: 0.5 + (Math.random() - 0.5) * 0.01
+                };
+                
+                const result = p4.dampener.dampen(position, Date.now() + i);
+                if (result.shouldUpdate) {
+                    passed++;
+                } else {
+                    blocked++;
+                }
+            }
+            
+            logEvent(`✅ Jitter test complete: ${passed} passed, ${blocked} blocked`);
+            updateTelemetry();
+        });
+
+        // Update telemetry display
+        function updateTelemetry() {
+            if (!p4) return;
+            
+            const telemetry = p4.getTelemetry();
+            
+            let html = '<div class="log-entry"><strong>Port Status:</strong> ' + telemetry.port_status + '</div>';
+            html += '<div class="log-entry"><strong>Active:</strong> ' + telemetry.is_active + '</div>';
+            html += '<div class="log-entry"><strong>Total Disruptions:</strong> ' + telemetry.total_disruptions + '</div>';
+            html += '<div class="log-entry"><strong>Effectiveness:</strong> ' + (telemetry.disruption_effectiveness * 100).toFixed(1) + '%</div>';
+            html += '<div class="log-entry"><strong>Violations:</strong> ' + telemetry.violations_detected + '</div>';
+            
+            if (telemetry.modules) {
+                html += '<div class="log-entry"><br><strong>--- Modules ---</strong></div>';
+                html += '<div class="log-entry"><strong>Suppressor Active:</strong> ' + telemetry.modules.suppressor.is_active + '</div>';
+                html += '<div class="log-entry"><strong>Events Blocked:</strong> ' + telemetry.modules.suppressor.native_events_blocked + '</div>';
+                html += '<div class="log-entry"><strong>Hardware Locked:</strong> ' + telemetry.modules.locker.is_locked + '</div>';
+                html += '<div class="log-entry"><strong>Jitter Corrections:</strong> ' + telemetry.modules.dampener.corrections_applied + '</div>';
+                html += '<div class="log-entry"><strong>Rejections:</strong> ' + telemetry.modules.rejector.rejection_count + '</div>';
+            }
+            
+            telemetryEl.innerHTML = html;
+        }
+
+        // Log events
+        function logEvent(message) {
+            const timestamp = new Date().toISOString().substr(11, 12);
+            const entry = `[${timestamp}] ${message}`;
+            
+            eventLogEntries.unshift(entry);
+            if (eventLogEntries.length > 50) {
+                eventLogEntries.pop();
+            }
+            
+            let html = '';
+            eventLogEntries.forEach(entry => {
+                html += `<div class="log-entry">${entry}</div>`;
+            });
+            
+            eventLogEl.innerHTML = html;
+            console.log('[P4-TEST] ' + message);
+        }
+
+        // Auto-update telemetry every 2 seconds when active
+        setInterval(() => {
+            if (p4 && p4.isActive) {
+                updateTelemetry();
+            }
+        }, 2000);
+
+        // Initial log
+        logEvent('🎯 Port 4 verification test loaded. Click "Initialize Port 4" to begin.');
+    </script>
+</body>
+</html>
