@@ -40,6 +40,8 @@ ENV/
 !.vscode/extensions.json
 
 # Tooling / Temporary
+node_modules/
+package-lock.json
 .pre-commit-config.yaml.bak
 *.tmp
 *.log
