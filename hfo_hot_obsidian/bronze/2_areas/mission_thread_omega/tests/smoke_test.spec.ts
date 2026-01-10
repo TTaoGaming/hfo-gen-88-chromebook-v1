@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('HFO Omega V17 Smoke Test', () => {
+test.describe('HFO Omega V18 Smoke Test', () => {
     test.beforeEach(async ({ page }) => {
         await page.addInitScript(() => {
             if (!navigator.mediaDevices) {
@@ -27,7 +27,7 @@ test.describe('HFO Omega V17 Smoke Test', () => {
         });
         page.on('pageerror', err => console.log('BROWSER EXCEPTION:', err.message));
 
-        await page.goto('http://localhost:8092/omega_workspace_v17.html');
+        await page.goto('http://localhost:8092/omega_workspace_v18.html');
 
         await page.waitForSelector('#layout-container');
         
@@ -36,9 +36,12 @@ test.describe('HFO Omega V17 Smoke Test', () => {
         const cards = await page.locator('.data-card h3').allInnerTexts();
         console.log('Detected Cards:', cards);
         
-        // Match V16 titles
+        // Match V18 titles
         const upperCards = cards.map(c => c.toUpperCase());
-        expect(upperCards).toContain('SPRING (MATTER)');
-        expect(upperCards).toContain('PREDICTIVE (MATTER)');
+        expect(upperCards).toContain('RAW');
+        expect(upperCards).toContain('SMOOTH');
+        expect(upperCards).toContain('SNAPPY');
+        expect(upperCards).toContain('SPRING');
+        expect(upperCards).toContain('PRED');
     });
 });
