@@ -11,10 +11,16 @@
 V34 transitions to a **Hero Pattern Layout** to maximize the interaction area for Excalidraw while maintaining diagnostic visibility for the 8-Port sensing pipeline.
 
 ```mermaid
-grid-layout
-    title V34 Workspace Layout (Hero Pattern)
-    [Excalidraw (Left 70%)] [Diagnostic Stack (Right Top 30% / 50% H)]
-    [Excalidraw (Left 70%)] [MediaPipe P0 Sense (Right Bottom 30% / 50% H)]
+graph TD
+    subgraph Workspace["V34 Workspace (Hero Pattern)"]
+        direction LR
+        L[Excalidraw HERO - 70%] --- R
+        subgraph R["Diagnostic Column - 30%"]
+            direction TB
+            RT[Diagnostic STACK - Top 50%]
+            RB[MediaPipe P0 SENSE - Bottom 50%]
+        end
+    end
 ```
 
 ### Layout Strategy
@@ -31,33 +37,35 @@ The primary challenge in V34 is the unreliability of MediaPipe's `Left/Right` la
 ```mermaid
 graph TD
     A[Raw Landmarks from MediaPipe] --> B{Discovery vs Tracking}
-    B -->|Calculate Costs| C[Cost Matrix: Distance between Hand[ID] and Landmark]
+    B --> C[Calculate Costs]
     
-    subgraph Cost Barriers
-    C1[Active Hand: Cost = Distance]
-    C2[Inactive Hand: Cost = Distance + 0.5 Barrier]
-    C3[Teleport Reject: Distance > 0.3 = Reject]
+    subgraph Cost_Barriers["Cost Constraints"]
+        C1[Active Hand: Cost = Distance]
+        C2["Inactive Hand: Cost = Distance + 0.5 Barrier"]
+        C3["Teleport Reject: Distance > 0.3 = Reject"]
     end
     
     C --> C1
     C --> C2
     C --> C3
     
-    B --> D[Sort Matrix by Cost ASC]
-    D --> E[Bipartite Assignment Loop]
+    C1 --> D[Sort Matrix by Cost ASC]
+    C2 --> D
     
-    subgraph Mutual Exclusion
-    E1{Is Physical Proximity < 0.12?}
-    E2{Is Hand ID assigned?}
-    E3{Is Landmark assigned?}
+    D --> E{Bipartite Assignment}
+    
+    subgraph Mutual_Exclusion["Mutual Exclusion Rules"]
+        E1{"Prox < 0.12?"}
+        E2{"Hand Assigned?"}
+        E3{"Landmark Assigned?"}
     end
     
     E --> E1
-    E1 -- Yes --> F[Reject: Landmark Doubling]
+    E1 -- Yes --> F[Reject Phantom]
     E1 -- No --> E2
     E2 -- No --> E3
-    E3 -- No --> G[Assign ID to Landmark]
-    G --> H[Update Coordinates & Filter State]
+    E3 -- No --> G[Final Assignment]
+    G --> H[Update Filters]
 ```
 
 ### Key Constants
@@ -73,18 +81,26 @@ To survive noisy sensing frames where landmarks may vanish temporarily, V34 impl
 
 ```mermaid
 stateDiagram-v2
-    [*] --> TRACKING: Landmark Seen
-    TRACKING --> TRACKING: assignment[ID] exists
-    TRACKING --> COASTING: assignment[ID] LOST
+    [*] --> TRACKING
     
-    COASTING --> TRACKING: Re-acquired within 60 frames
-    COASTING --> INACTIVE: frames > 60
+    state TRACKING {
+        [*] --> Active
+        Active --> Active: Landmark Matched
+    }
     
-    subgraph Interaction Persistence
-    TRACKING: Interaction Active
-    COASTING: Interaction STICKY (IsDown preserved)
-    INACTIVE: Released
-    end
+    TRACKING --> COASTING: Landmark LOST
+    
+    state COASTING {
+        [*] --> Sticky
+        Sticky --> Sticky: Frames < 60
+    }
+    
+    COASTING --> TRACKING: Re-acquired
+    COASTING --> INACTIVE: Frames > 60
+    
+    state INACTIVE {
+        [*] --> Released
+    }
 ```
 
 ---
@@ -94,20 +110,20 @@ The interaction data flows through a series of filters and physics engines befor
 
 ```mermaid
 sequenceDiagram
-    participant Camera
-    participant P0: SENSE (MediaPipe)
-    participant P1: BRIDGE (Geometric Solver)
-    participant P2: SHAPE (Matter.js / Filters)
-    participant P3: INJECT (W3C Pointer Events)
-    participant OMEGA: EXCALIDRAW
+    participant Cam as Camera
+    participant P0 as SENSE (MediaPipe)
+    participant P1 as BRIDGE (Solver)
+    participant P2 as SHAPE (Matter.js)
+    participant P3 as INJECT (W3C Events)
+    participant HW as OMEGA (Excalidraw)
     
-    Camera->>P0: Raw Pixels
-    P0->>P1: Normalised Landmarks
-    P1->>P1: Apply High-Inertia Barrier
-    P1->>P2: Smooth & Snappy Coords
-    P2->>P2: Predictive Physics (Lookahead)
-    P2->>P3: Corrected X/Y + FSM State
-    P3->>OMEGA: PointerDown / PointerMove
+    Cam->>P0: Raw Pixels
+    P0->>P1: Landmarks
+    Note over P1: High-Inertia Filtering
+    P1->>P2: Normalised Coords
+    Note over P2: Physics Lookahead
+    P2->>P3: FSM + Corrected XY
+    P3->>HW: Dispatch PointerEvent
 ```
 
 ---
