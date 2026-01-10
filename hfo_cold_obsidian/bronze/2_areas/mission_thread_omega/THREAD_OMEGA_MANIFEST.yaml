@@ -3,92 +3,70 @@
 
 mission:
   id: "THREAD_OMEGA"
-  name: "Total Tool Virtualization"
-  status: "active"
-  current_project: "Omega Tool Onboarding (V29)"
-  phase: "HIVE: E (Evolve) - Promotion to Cold Bronze"
+  name: "Total Tool Virtualization & Resource Liberation"
+  status: "active (Symbiotic Canalization)"
+  vision: "Liberation of All Beings from Resource Constraints through Tool Manifestation (Function + Form = Digital Twin)."
+  current_project: "HFO Gen 88 Canalization (V10-V40)"
+  phase: "HIVE: I (Interlock) - Transitioning P3 (Deliver) to P5 (Defend)"
 
-objectives:
-  completed:
-    - id: "P3_V29_DRILL"
-      title: "Trans-Boundary Iframe Drill"
-      desc: "Solved boundary crossing issue using same-origin iframe and internal target drilling. Restored 100% mouse parity (V29)."
-    - id: "P3_V26_MAP"
-      title: "1:1 Persistent Mapping"
-      desc: "Implemented absolute sensor-to-substrate mapping with synchronized mirroring (V26)."
-    - id: "P3_V26_SUB"
-      title: "Tool Substrate Embedding"
-      desc: "Integrated Excalidraw and Piano Genie into Golden Layout (V26)."
-    - id: "P3_V24_FSM"
-      title: "Leaking Bucket FSM"
-      desc: "Implemented 6-state logic (IDLE -> ARMING -> ARMED -> COMMITTING -> COMMITTED -> RELEASING) in V24. Resolved MediaPipe metadata hang."
-    - id: "P3_V22_FSM"
-      title: "Hardened Sequence FSM"
-      desc: "Implemented sticky (Open_Palm -> None -> Pointing_Up) sequence in V22."
-    - id: "P2_V22_PHYS"
-      title: "Physics Restoration"
-      desc: "Restored V20 multi-cursor and Matter.js depth to V22."
-    - id: "P0_V10_1"
-      title: "Cold Source Analysis"
-      desc: "MediaPipe integration patterns mapped from Cold Bronze."
-    - id: "P7_V10_H1"
-      title: "HUNT Phase: Intelligence Gained"
-      desc: "Identified MediaPipe environment requirements for Chromebook V-1."
-    - id: "P2_V10_1"
-      title: "Physics Selection"
-      desc: "Committed to Mass-Spring-Dampener model for digital twin."
-    - id: "P3_V10_UI"
-      title: "Golden Layout & LILGUI"
-      desc: "Solidified the command-center UI with tiling and real-time param tuning."
-    - id: "P1_V11_1"
-      title: "One Euro Dual Cursors"
-      desc: "Implemented 'Smooth' and 'Snappy' presets for index tip tracking."
-    - id: "P0_V12_1"
-      title: "Landmark Gesture Logic"
-      desc: "Implemented pinch, fist, and open hand detection logic."
-  active:
-    - id: "P1_V10_1"
-      title: "Zod 6.0 Interlock"
-      desc: "Defining P0 -> P1 -> P2 -> P3 coordinate & state relay contracts."
-    - id: "P2_V10_2"
-      title: "Rapier Integration"
-      desc: "Implementing mass-spring-dampener logic in Port 2."
-    - id: "P3_V10_1"
-      title: "FSM Spore Storm"
-      desc: "Implementing the Pointer FSM (Idle -> Arming -> Acquiring -> Committed)."
-    - id: "P3_V10_2"
-      title: "W3C Event Dispatcher"
-      desc: "Mechanism to inject PointerEvents into browser targets."
+horizons:
+  short_term: "Canalization: W3C Physics Cursor & Gesture FSM (Excalidraw/Piano Genie)."
+  medium_term: "Virtualization: Tool manifestation warchest; 1:1 functional clones of analog tools."
+  long_term: "Liberation: Any child, any tool, any skill. Manifestation through sensor fusion."
 
-pipeline_status:
-  p0_sensor: "🟠 Hunting (MediaPipe Index Tip)"
-  p1_schema: "🟡 Interlocked (Zod 6.0)"
-  p2_physics: "🟡 Modeling (Mass-Spring-Dampener)"
-  p3_delivery: "🟡 Planning (FSM + W3C)"
+objectives_by_port:
+  p0_sense:
+    status: "88% (Lidless Legion)"
+    achievements: ["MediaPipe Landmark Extraction (21 pts)", "Index Tip Isolation", "Confidence Gating (>0.6)"]
+  p1_fuse:
+    status: "90% (Web Weaver)"
+    achievements: ["Zod 6.0 Bridge Contracts", "Coordinate Normalization (0-1)", "Payload Sanitization"]
+  p2_shape:
+    status: "85% (Mirror Magus)"
+    achievements: ["Rapier.js Physics Manifold", "One-Euro Multi-Resolution Filtering", "Matter.js Spring-Dampener Model"]
+    active: ["Kalman Predictive Filter Integration"]
+  p3_deliver:
+    status: "88% (Spore Storm)"
+    achievements: ["Gesture FSM (V38+)", "W3C PointerEvent Injection", "Multi-Target Routing (IFRAME Drill)", "Pointer Capture (V40)", "postMessage Bridge (Excalidraw API)"]
+    active: ["Hybrid Click-Fallback Integration"]
+  p4_disrupt:
+    status: "30% (Red Regnant)"
+    backlog: ["OS Mouse Interference Mitigation", "Conflict Resolution Protocol"]
+  p5_defend:
+    status: "50% (Pyre Praetorian)"
+    achievements: ["P5 Forensic Harness (Syntax/E2E)", "Mutation Score Sentinel (88-98%)"]
+    backlog: ["Real-time Drift Detection", "Auto-Calibration Verification"]
+  p6_store:
+    status: "20% (Kraken Keeper)"
+    achievements: ["JSONL Blackboard Stigmergy"]
+    backlog: ["1000Hz Interaction Telemetry", "AAR (After-Action Review) Replay"]
+  p7_navigate:
+    status: "40% (Spider Sovereign)"
+    achievements: ["Golden Layout UI Integration"]
+    backlog: ["Domain Handover (Excalidraw ↔ Piano)", "Tool Registry Manifold"]
 
-blockers:
-  - "Need verified MediaPipe environment on Chromebook (Linux V-1)."
-  - "Physics cursor coordinate drift detection requires P5 validation."
-
-backlog_v22_hardening:
-  - id: "TECH_DEBT_P1_1"
-    title: "Fix Provenance Contradiction"
-    desc: "Update source metadata to 'hfo.port.1.bridge' to reflect processing provenance."
-  - id: "TECH_DEBT_P1_2"
-    title: "Harden Zod Contracts"
-    desc: "Enforce finite coordinates, NaN rejection, and [0,1] normalization in schemas."
-  - id: "TECH_DEBT_P2_1"
-    title: "Matter.js Lifecycle Fix"
-    desc: "Switch to Composite.remove(engine.world, ...) to prevent body/constraint leaks."
-  - id: "TECH_DEBT_P3_1"
-    title: "Telemetry Replay Metadata"
-    desc: "Implement monotonic frame_id and dual-stamp (capture vs emit) timing."
-  - id: "TECH_DEBT_P3_2"
-    title: "Decouple FSM Transitions"
-    desc: "Move Robot3 service.send calls out of the P0 render loop into P3/Deliver."
-  - id: "TECH_DEBT_PERF_1"
-    title: "Performance Optimization"
-    desc: "Replace deep copies with stable object updates and throttle runtime validation."
+backlog_v41_stratagem:
+  - id: "V41_S1_UI_FIX"
+    title: "Excalidraw UI Internal Hit-Testing [DONE]"
+    desc: "Resolved via Hybrid Bridge (postMessage + Click fallback). Verified control button activation."
+  - id: "V41_S2_FSM_SIMPLIFY"
+    title: "Predict-Confirm FSM Compression [DONE]"
+    desc: "Simplified to IDLE-ARMED-COMMITTED with Transition Dwell logic. Reduced gesture lag."
+  - id: "V41_S3_W3C_COMPLETION"
+    title: "Full W3C Standardization"
+    desc: "Ensure 1:1 parity with W3C Pointer Events Level 3, including touch/stylus emulation and raw event pass-through."
+  - id: "V41_S4_BONE_ID"
+    title: "Bone Ratio Identity (SNN+) [WIP]"
+    desc: "Implemented placeholder ratio calculation. Integration into ID bias pending."
+  - id: "V41_S5_PALM_WIDTH"
+    title: "Palm Width Depth Scaling"
+    desc: "Implement palm width calculator to dynamically adjust Z-depth influence and physical scaling."
+  - id: "V41_S6_COLLISION"
+    title: "Fingertip Collision Logic"
+    desc: "Calculate physical intersections between fingertip digital twins to trigger haptic feedback or complex gesture commits."
+  - id: "V41_S7_KINETIC_CURL"
+    title: "Composite Joint Kinematics"
+    desc: "Calculate finger curl as a composite of MCP/PIP/DIP joints rather than a single vector to model realistic hand constraints."
 
 provenance:
   created: "2026-01-09T22:30:00Z"

@@ -1,11 +1,11 @@
-<!-- Medallion: Cold Bronze | Mutation: 0% | HIVE: V -->
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO Omega V36: Symbiotic Canalization</title>
+    <title>HFO Omega V40: Symbiotic Canalization</title>
     <link type="text/css" rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
     <link type="text/css" rel="stylesheet"
@@ -204,47 +204,41 @@
             id: z.number(), active: z.boolean(), lastSeen: z.number(), fsm: z.string(),
             cursors: z.record(CursorSchema),
             gestures: z.object({ active: z.string(), score: z.number(), isDown: z.boolean(), pointerEvent: z.string() }),
+            curls: z.object({ index: z.number(), middle: z.number(), ring: z.number(), pinky: z.number() }).optional(),
             palm: z.object({ normal: z.object({ x: z.number(), y: z.number(), z: z.number() }), facingCamera: z.boolean() }).optional()
         });
         const CloudEventSchema = z.object({
             specversion: z.literal("1.0"), type: z.string(), source: z.string(), id: z.string(), time: z.string(), data: z.record(HandSchema)
         });
 
-        // 🤖 V38: Palm-Oriented "Predict then Confirm" FSM
+        // 🤖 V40: Simplified Predict-Confirm FSM
         class GestureFSM {
             constructor() {
                 this.state = 'IDLE';
-                this.progress = 0;
+                this.transitionStartTime = 0;
                 this.departureStartTime = 0;
-                this.coastStartTime = 0;
-                this.dwellStartTime = 0;
                 this.pointerEvent = 'none';
-                this.ARMING_THRESHOLD = 300;
-                this.RECOVERY_TIMEOUT = 1000;
-                this.RELEASE_TIMEOUT = 500;   // Increased for stability
-                this.CANCEL_DWELL = 800; // V38.1.1 Stickier palm identity
-                this.COMMIT_TIMEOUT = 1500; // More forgiving prediction
+                this.TRANSITION_DWELL = 200;
+                this.CANCEL_DWELL = 800;
                 this.lastTimestamp = 0;
             }
 
             process(gesture, timestamp, score = 1.0, isPalmFacing = false) {
                 const currentGesture = gesture.toUpperCase().replace(/[\s_]/g, '_');
-                const dt = this.lastTimestamp ? timestamp - this.lastTimestamp : 0;
                 this.lastTimestamp = timestamp;
                 this.pointerEvent = 'none';
                 const isConfident = score > 0.5;
 
-                // 🛡️ Global Departure Logic: Stickier Palm Recovery
+                // 🛡️ Stickier Palm Recovery
                 if (!isPalmFacing && this.state !== 'IDLE') {
                     if (!this.departureStartTime) this.departureStartTime = timestamp;
                     if (timestamp - this.departureStartTime > this.CANCEL_DWELL) {
                         const oldState = this.state;
                         this.state = 'IDLE';
-                        this.pointerEvent = (oldState === 'COMMITTED' || oldState === 'RELEASING') ? 'pointercancel' : 'none';
+                        this.pointerEvent = (oldState === 'COMMITTED') ? 'pointercancel' : 'none';
                         this.departureStartTime = 0;
                         return { state: this.state, pointerEvent: this.pointerEvent };
                     }
-                    // 🔒 LOCK: No internal transitions while departure in progress
                     return { state: this.state, pointerEvent: this.pointerEvent };
                 } else if (isPalmFacing) {
                     this.departureStartTime = 0;
@@ -253,74 +247,28 @@
                 switch (this.state) {
                     case 'IDLE':
                         if (isPalmFacing) {
-                            this.state = 'ARMING';
-                            this.progress = 0;
+                            this.state = 'TRANSITION';
+                            this.transitionStartTime = timestamp;
                         }
                         break;
 
-                    case 'ARMING':
-                        this.progress += dt;
-                        if (this.progress >= this.ARMING_THRESHOLD) {
+                    case 'TRANSITION':
+                        if (timestamp - this.transitionStartTime > this.TRANSITION_DWELL) {
                             this.state = 'ARMED';
-                            this.progress = 0;
-                        } else if (!isConfident && currentGesture !== 'NONE') {
-                            this.state = 'IDLE';
                         }
                         break;
 
                     case 'ARMED':
                         this.pointerEvent = 'pointermove';
-                        // 🎯 V38.1.1: Responsive Threshold Tuning
-                        if (currentGesture === 'POINTING_UP' && score > 0.8 && isPalmFacing) {
-                            this.state = 'COMMITTING'; // Transition through state for consistency
-                            this.coastStartTime = timestamp;
-                        } else if (currentGesture === 'POINTING_UP' && isConfident) {
-                            this.state = 'COMMITTING';
-                            this.coastStartTime = timestamp;
-                        } else if ((currentGesture === 'NONE' || currentGesture === 'LOST') && isPalmFacing) {
-                            this.state = 'COMMITTING';
-                            this.coastStartTime = timestamp;
-                        }
-                        break;
-
-                    case 'COMMITTING':
-                        this.pointerEvent = 'pointermove';
-                        // 🚀 Faster Commitment
-                        if (currentGesture === 'POINTING_UP' && (score > 0.7 || timestamp - this.coastStartTime > 150)) {
+                        if (currentGesture === 'POINTING_UP' && isConfident) {
                             this.state = 'COMMITTED';
                             this.pointerEvent = 'pointerdown';
-                        } else if (currentGesture !== 'NONE' && currentGesture !== 'LOST' && currentGesture !== 'POINTING_UP' && isConfident) {
-                            this.state = 'ARMED'; // Returned to regular tracking
-                        } else if (timestamp - this.coastStartTime > this.COMMIT_TIMEOUT) {
-                            this.state = 'ARMED'; // Prediction timed out, no click
                         }
                         break;
 
                     case 'COMMITTED':
                         this.pointerEvent = 'pointermove';
-                        if (currentGesture === 'POINTING_UP' && isConfident) {
-                            this.coastStartTime = 0;
-                        } else if (currentGesture === 'NONE' || currentGesture === 'LOST') {
-                            this.state = 'RELEASING';
-                            this.coastStartTime = timestamp;
-                        } else {
-                            if (!this.coastStartTime) this.coastStartTime = timestamp;
-                            if (timestamp - this.coastStartTime > this.RECOVERY_TIMEOUT) {
-                                this.state = 'RELEASING';
-                                this.coastStartTime = timestamp;
-                            }
-                        }
-                        break;
-
-                    case 'RELEASING':
-                        this.pointerEvent = 'pointermove';
-                        if (currentGesture === 'OPEN_PALM' && isConfident) {
-                            this.state = 'ARMED';
-                            this.pointerEvent = 'pointerup';
-                        } else if (currentGesture === 'POINTING_UP' && isConfident) {
-                            this.state = 'COMMITTED';
-                        } else if (timestamp - this.coastStartTime > this.RELEASE_TIMEOUT) {
-                            // If stuck in RELEASING/NONE for too long, finalize release
+                        if ((currentGesture === 'NONE' || currentGesture === 'LOST' || currentGesture === 'OPEN_PALM') && isConfident) {
                             this.state = 'ARMED';
                             this.pointerEvent = 'pointerup';
                         }
@@ -400,7 +348,7 @@
                             spring: h.cursors.spring,
                             pred: h.cursors.predictive
                         },
-                        gestures: h.gestures, palm: h.palm
+                        gestures: h.gestures, palm: h.palm, curls: h.curls
                     };
                 }
                 const event = {
@@ -417,11 +365,15 @@
             }
         };
 
-        const p3InjectPointer = window.p3InjectPointer = (hand) => {
+        const w3cPointerInjector = window.w3cPointerInjector = (hand) => {
             try {
                 if (!hand.active) {
                     if (hand.ghost) hand.ghost.classList.remove('active');
                     if (hand.localCursor) hand.localCursor.style.display = 'none';
+                    if (hand.capturedTarget && hand.capturedTarget.releasePointerCapture) {
+                        try { hand.capturedTarget.releasePointerCapture(Number(hand.id) + 10); } catch (e) { }
+                        hand.capturedTarget = null;
+                    }
                     return;
                 }
 
@@ -448,8 +400,16 @@
                 let x = normX * window.innerWidth;
                 let y = cursor.y * window.innerHeight;
 
-                // Optimization: Skip DOM traversal if same point and no change (Optional, but elementFromPoint is heavy)
-                let target = document.elementFromPoint(x, y) || document.body;
+                // 🎯 V40 EXEMPLAR: Robust Target Capture
+                const pointerId = Number(hand.id) + 10;
+                let target;
+
+                if (hand.capturedTarget) {
+                    target = hand.capturedTarget;
+                } else {
+                    target = document.elementFromPoint(x, y) || document.body;
+                }
+
                 let finalX = x;
                 let finalY = y;
 
@@ -460,12 +420,13 @@
                         const rect = remoteEl.getBoundingClientRect();
                         finalX = normX * rect.width;
                         finalY = cursor.y * rect.height;
-                        target = remoteEl;
+
+                        if (!hand.capturedTarget) target = remoteEl;
 
                         if (remoteEl.tagName === 'IFRAME') {
                             try {
                                 const innerTarget = remoteEl.contentDocument.elementFromPoint(finalX, finalY);
-                                if (innerTarget) target = innerTarget;
+                                if (innerTarget && !hand.capturedTarget) target = innerTarget;
                             } catch (e) {
                                 finalX = rect.left + finalX;
                                 finalY = rect.top + finalY;
@@ -490,7 +451,7 @@
                         const rect = target.getBoundingClientRect();
                         finalX = x - rect.left;
                         finalY = y - rect.top;
-                        if (target.tagName === 'IFRAME') {
+                        if (target.tagName === 'IFRAME' && !hand.capturedTarget) {
                             try {
                                 const inner = target.contentDocument.elementFromPoint(finalX, finalY);
                                 if (inner) target = inner;
@@ -521,11 +482,34 @@
                 hand.ghost.classList.toggle('committed', hand.fsm.state === 'COMMITTED');
                 hand.ghost.classList.toggle('armed', hand.fsm.state === 'ARMED' || hand.fsm.state === 'COMMITTING');
 
-                if (hand.lastTarget && hand.lastTarget !== target) {
-                    hand.lastTarget.dispatchEvent(new PointerEvent('pointerout', { bubbles: true, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
-                    hand.lastTarget.dispatchEvent(new PointerEvent('pointerleave', { bubbles: false, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
-                    target.dispatchEvent(new PointerEvent('pointerover', { bubbles: true, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
-                    target.dispatchEvent(new PointerEvent('pointerenter', { bubbles: false, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
+                // 🧬 BRIDGE INTERCEPTION: Excalidraw API
+                if (activeType === 'pointerdown' && hfoState.physics.remoteTargetId === 'excalidraw-iframe') {
+                    const iframe = document.getElementById(hfoState.physics.remoteTargetId);
+                    const btn = target.closest('button, .ToolIcon, label[title]');
+                    if (iframe && btn) {
+                        // Heuristic: If button title or aria-label matches a tool
+                        const toolLabel = btn.getAttribute('aria-label') || btn.title || "";
+                        const tools = ['selection', 'rectangle', 'diamond', 'ellipse', 'arrow', 'line', 'freedraw', 'text', 'eraser'];
+                        const match = tools.find(t => toolLabel.toLowerCase().includes(t));
+                        if (match) {
+                            iframe.contentWindow.postMessage({ type: 'SET_TOOL', data: { tool: match } }, '*');
+                        }
+                    }
+                }
+
+                // 🎯 CAPTURE LOGIC
+                if (activeType === 'pointerdown' && target.setPointerCapture) {
+                    try {
+                        target.setPointerCapture(pointerId);
+                        hand.capturedTarget = target;
+                    } catch (e) { console.warn("Pointer capture failed", e); }
+                }
+
+                if (hand.lastTarget && hand.lastTarget !== target && !hand.capturedTarget) {
+                    hand.lastTarget.dispatchEvent(new PointerEvent('pointerout', { bubbles: true, pointerId: pointerId, clientX: x, clientY: y }));
+                    hand.lastTarget.dispatchEvent(new PointerEvent('pointerleave', { bubbles: false, pointerId: pointerId, clientX: x, clientY: y }));
+                    target.dispatchEvent(new PointerEvent('pointerover', { bubbles: true, pointerId: pointerId, clientX: x, clientY: y }));
+                    target.dispatchEvent(new PointerEvent('pointerenter', { bubbles: false, pointerId: pointerId, clientX: x, clientY: y }));
                 }
 
                 const movementX = hand.lastX !== undefined ? x - hand.lastX : 0;
@@ -533,33 +517,41 @@
                 hand.lastX = x; hand.lastY = y; hand.lastTarget = target;
 
                 const isDown = (hand.fsm.state === 'COMMITTED');
+                const isPrimary = Number(hand.id) === 0;
                 const ev = new PointerEvent(activeType, {
                     bubbles: true, cancelable: true, pointerType: 'mouse',
                     view: (target.ownerDocument ? target.ownerDocument.defaultView : window),
-                    pointerId: Number(hand.id) + 10, clientX: finalX, clientY: finalY,
+                    pointerId: pointerId, clientX: finalX, clientY: finalY,
                     movementX: movementX, movementY: movementY,
                     pressure: isDown ? 0.9 : 0.0, buttons: isDown ? 1 : 0,
                     button: (activeType === 'pointerdown' || activeType === 'pointerup') ? 0 : -1,
-                    isPrimary: true
+                    isPrimary: isPrimary
                 });
                 target.dispatchEvent(ev);
 
+                // �️ Legacy Polyfill (Option C Standard): 
+                // Only dispatch MouseEvents for Hand 0 (Primary) to maintain compatibility with 
+                // legacy UI frameworks (Excalidraw buttons, etc.) without polluting 2-hand concurrency.
                 if (activeType === 'pointerdown' || activeType === 'pointerup') {
                     const mouseType = activeType === 'pointerdown' ? 'mousedown' : 'mouseup';
                     target.dispatchEvent(new MouseEvent(mouseType, {
                         bubbles: true, cancelable: true, view: (target.ownerDocument ? target.ownerDocument.defaultView : window),
                         clientX: finalX, clientY: finalY, button: 0, buttons: isDown ? 1 : 0
                     }));
+                    if (activeType === 'pointerup') {
+                        const btn = target.tagName === 'BUTTON' ? target : target.closest('button');
+                        if (btn && btn.click) btn.click();
+                    }
                 }
 
-                if (activeType === 'pointerup' && hand.fsm.state === 'ARMED') {
-                    target.dispatchEvent(new MouseEvent('click', {
-                        bubbles: true, cancelable: true, view: (target.ownerDocument ? target.ownerDocument.defaultView : window),
-                        clientX: finalX, clientY: finalY, button: 0
-                    }));
+                // �🎯 RELEASE LOGIC
+                if ((activeType === 'pointerup' || activeType === 'pointercancel') && hand.capturedTarget) {
+                    try { hand.capturedTarget.releasePointerCapture(pointerId); } catch (e) { }
+                    hand.capturedTarget = null;
                 }
+
             } catch (err) {
-                if (hfoState.debug) console.error("P3 Injection Error:", err);
+                if (hfoState.debug) console.error("W3C Injection Error:", err);
             }
         };
 
@@ -640,6 +632,46 @@
                     hfoSystem.initializing = false;
                     if (hfoSystem.loopActive) return;
                     hfoSystem.loopActive = true;
+
+                    // 🧬 Identity: Finger Curl Calculation
+                    const calculateCurl = (landmarks, indices) => {
+                        let totalAngle = 0;
+                        for (let i = 0; i < indices.length - 2; i++) {
+                            const a = landmarks[indices[i]];
+                            const b = landmarks[indices[i + 1]];
+                            const c = landmarks[indices[i + 2]];
+                            const v1 = { x: a.x - b.x, y: a.y - b.y, z: (a.z - b.z) * 0.1 }; // Flatten Z influence
+                            const v2 = { x: c.x - b.x, y: c.y - b.y, z: (c.z - b.z) * 0.1 };
+                            const mag1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z) || 1e-6;
+                            const mag2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y + v2.z * v2.z) || 1e-6;
+                            const dot = (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z) / (mag1 * mag2);
+                            totalAngle += Math.acos(Math.max(-1, Math.min(1, dot)));
+                        }
+                        // Normalize: 0 (flat) to ~1.0 (curled)
+                        return Math.min(1.0, totalAngle / Math.PI);
+                    };
+
+                    // 🧬 V41 placeholder: Bone Ratio Calculation
+                    const getBoneRatios = (lm) => {
+                        const dist = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2 + (p1.z - p2.z) ** 2);
+                        return {
+                            index: dist(lm[5], lm[6]) / (dist(lm[6], lm[7]) || 1),
+                            middle: dist(lm[9], lm[10]) / (dist(lm[10], lm[11]) || 1)
+                        };
+                    };
+
+                    const getCurls = (lm) => ({
+                        index: calculateCurl(lm, [5, 6, 7, 8]),
+                        middle: calculateCurl(lm, [9, 10, 11, 12]),
+                        ring: calculateCurl(lm, [13, 14, 15, 16]),
+                        pinky: calculateCurl(lm, [17, 18, 19, 20])
+                    });
+
+                    const calculateCurlDist = (c1, c2) => {
+                        if (!c1 || !c2) return 0.5; // Neutral
+                        return Math.sqrt((c1.index - c2.index) ** 2 + (c1.middle - c2.middle) ** 2 + (c1.ring - c2.ring) ** 2 + (c1.pinky - c2.pinky) ** 2);
+                    };
+
                     const loop = () => {
                         const now = hfoSystem.lastFrame = performance.now();
                         if (hfoState.active) {
@@ -648,19 +680,24 @@
                                     const res = gestureRecognizer.recognizeForVideo(video, now);
                                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                                     const landmarks = res.landmarks || [];
+                                    const landmarkCurls = landmarks.map(lm => getCurls(lm));
+                                    const landmarkRatios = landmarks.map(lm => getBoneRatios(lm));
+
                                     const handIds = Object.keys(hfoState.hands);
                                     const assignedLandmarks = new Set();
                                     const currentAssignments = {};
 
-                                    // PASS 1: Sticky Tracking
+                                    // PASS 1: Sticky Tracking (SNN with Identity Bias)
                                     handIds.filter(id => hfoState.hands[id].active).forEach(id => {
                                         const h = hfoState.hands[id];
                                         let bestLIdx = -1;
-                                        let minD = hfoState.physics.persistence.teleportLimit;
+                                        let minCost = hfoState.physics.persistence.teleportLimit;
                                         landmarks.forEach((lm, lIdx) => {
                                             if (assignedLandmarks.has(lIdx)) return;
                                             const d = Math.sqrt((lm[8].x - h.cursors.raw.x) ** 2 + (lm[8].y - h.cursors.raw.y) ** 2);
-                                            if (d < minD) { minD = d; bestLIdx = lIdx; }
+                                            // 🧬 V41: Remove curl bias for easier snapping. Pure SNN for now.
+                                            const cost = d; 
+                                            if (cost < minCost) { minCost = cost; bestLIdx = lIdx; }
                                         });
                                         if (bestLIdx !== -1) { assignedLandmarks.add(bestLIdx); currentAssignments[id] = bestLIdx; }
                                     });
@@ -685,9 +722,10 @@
                                             const lIdx = currentAssignments[id];
                                             const lm = landmarks[lIdx];
 
-                                            // 🎯 V37: Palm Orientation Cone (Safe Calc)
+                                            // 🎯 V40.1: Handedness-Agnostic Orientation (Palm or Back)
                                             const v1 = { x: lm[5].x - lm[0].x, y: lm[5].y - lm[0].y, z: lm[5].z - lm[0].z };
                                             const v2 = { x: lm[17].x - lm[0].x, y: lm[17].y - lm[0].y, z: lm[17].z - lm[0].z };
+
                                             const cross = {
                                                 x: (v1.y * v2.z - v1.z * v2.y) || 0,
                                                 y: (v1.z * v2.x - v1.x * v2.z) || 0,
@@ -695,8 +733,14 @@
                                             };
                                             const mag = Math.sqrt(cross.x ** 2 + cross.y ** 2 + cross.z ** 2) || 1;
                                             const normal = { x: cross.x / mag, y: cross.y / mag, z: cross.z / mag };
-                                            const isFacing = normal.z < -0.3;
+
+                                            // Tighter Cone: Accept either side of flat hand (|Z| > 0.5)
+                                            const isFacing = Math.abs(normal.z) > 0.5;
                                             h.palm = { normal, facingCamera: isFacing };
+
+                                            // 🧬 Finger Identity (Pre-calculated)
+                                            h.curls = landmarkCurls[lIdx];
+                                            h.ratios = landmarkRatios[lIdx];
 
                                             h.cursors.raw.x = lm[8].x; h.cursors.raw.y = lm[8].y; h.lastSeen = now; h.coastCount = 0; h.active = true;
                                             h.cursors.smooth.x = h.filters.sx.call(lm[8].x, now); h.cursors.smooth.y = h.filters.sy.call(lm[8].y, now);
@@ -740,7 +784,18 @@
                                                 ctx.lineWidth = 4; ctx.stroke();
                                                 ctx.globalAlpha = 1.0; ctx.fillStyle = '#fff'; ctx.font = '10px Courier'; ctx.fillText(c.label, c.x * canvas.width + 15, c.y * canvas.height + 5);
                                             });
-                                            p3InjectPointer(h);
+
+                                            // 🧬 Identity HUD
+                                            if (hfoState.debug) {
+                                                const tx = h.cursors.raw.x * canvas.width + 15;
+                                                const ty = h.cursors.raw.y * canvas.height + 25;
+                                                ctx.fillStyle = '#00ff88';
+                                                ctx.font = '10px Courier';
+                                                const curlStr = `I:${h.curls.index.toFixed(2)} M:${h.curls.middle.toFixed(2)} R:${h.curls.ring.toFixed(2)} P:${h.curls.pinky.toFixed(2)}`;
+                                                ctx.fillText(curlStr, tx, ty);
+                                                ctx.fillText(`Facing: ${h.palm.facingCamera}`, tx, ty + 12);
+                                            }
+                                            w3cPointerInjector(h);
                                         }
                                     });
                                 } else {
@@ -751,7 +806,7 @@
                                             Matter.Body.setPosition(h.cursors.spring.anchor, { x: source.x * canvas.width, y: source.y * canvas.height });
                                             h.cursors.spring.x = h.cursors.spring.body.position.x / canvas.width; h.cursors.spring.y = h.cursors.spring.body.position.y / canvas.height;
                                         }
-                                        p3InjectPointer(h);
+                                        w3cPointerInjector(h);
                                     });
                                 }
                                 port1Bridge(hfoState.hands);
