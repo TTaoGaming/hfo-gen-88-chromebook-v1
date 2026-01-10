@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO Omega: Port 1 Bridge V20</title>
+    <title>HFO Omega: Matter.js Cursor Tuning V16</title>
 
     <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
     <!-- 🏗️ Styles -->
@@ -104,8 +104,7 @@
             "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
             "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
             "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
-            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm",
-            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
+            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm"
         }
     }
     </script>
@@ -115,26 +114,6 @@
         import GUI from 'lil-gui';
         import { GestureRecognizer, HandLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
         import Matter from 'matter-js';
-        import { z } from 'zod';
-
-        // 🛡️ Port 1: FUSE Contracts (Zod 6.0 Patterns)
-        const Vec2Schema = z.object({ x: z.number(), y: z.number() });
-        const CursorSchema = z.object({ x: z.number(), y: z.number(), color: z.string(), label: z.string() });
-        const HandSchema = z.object({
-            id: z.number(),
-            active: z.boolean(),
-            lastSeen: z.number(),
-            cursors: z.record(CursorSchema),
-            gestures: z.object({ active: z.string(), score: z.number(), isDown: z.boolean() })
-        });
-        const CloudEventSchema = z.object({
-            specversion: z.literal("1.0"),
-            type: z.string(),
-            source: z.string(),
-            id: z.string(),
-            time: z.string(),
-            data: z.record(HandSchema)
-        });
 
         // 🧠 One Euro Filter Implementation
         class LowPassFilter {
@@ -208,57 +187,7 @@
                     coastFrames: 15,    // How long to keep a "dead" hand alive
                 }
             },
-            hands: {}, // Will store 2 hand objects keyed by tracked ID
-            bridge: {
-                lastEvent: null,
-                errorCount: 0,
-                status: 'IDLE'
-            }
-        };
-
-        // 🌉 Port 1 Bridge: Validation & Telemetry normalization
-        const port1Bridge = (hands) => {
-            try {
-                // 1. Construct Internal Data
-                const telemetryData = {};
-                Object.keys(hands).forEach(id => {
-                    const h = hands[id];
-                    telemetryData[id] = {
-                        id: h.id,
-                        active: h.active,
-                        lastSeen: h.lastSeen,
-                        cursors: {
-                            raw: { x: h.cursors.raw.x, y: h.cursors.raw.y, color: h.cursors.raw.color, label: h.cursors.raw.label },
-                            smooth: { x: h.cursors.smooth.x, y: h.cursors.smooth.y, color: h.cursors.smooth.color, label: h.cursors.smooth.label },
-                            snappy: { x: h.cursors.snappy.x, y: h.cursors.snappy.y, color: h.cursors.snappy.color, label: h.cursors.snappy.label },
-                            spring: { x: h.cursors.spring.x, y: h.cursors.spring.y, color: h.cursors.spring.color, label: h.cursors.spring.label },
-                            pred: { x: h.cursors.predictive.x, y: h.cursors.predictive.y, color: h.cursors.predictive.color, label: h.cursors.predictive.label }
-                        },
-                        gestures: h.gestures
-                    };
-                });
-
-                // 2. Wrap in CloudEvent
-                const event = {
-                    specversion: "1.0",
-                    type: "hfo.omega.v20.hand_update",
-                    source: "hfo.port.0.sense",
-                    id: crypto.randomUUID(),
-                    time: new Date().toISOString(),
-                    data: telemetryData
-                };
-
-                // 3. Validate via Zod
-                const validated = CloudEventSchema.parse(event);
-                state.bridge.lastEvent = validated;
-                state.bridge.status = 'VALID';
-                return validated;
-            } catch (e) {
-                state.bridge.status = 'ERROR';
-                state.bridge.errorCount++;
-                console.error("P1 Bridge Validation Failure:", e);
-                return null;
-            }
+            hands: {} // Will store 2 hand objects keyed by tracked ID
         };
 
         // Helper to create a Cursor Set for a hand
@@ -481,9 +410,6 @@
                             ctx.fillText(cursor.label, cursor.x * canvas.width + 15, cursor.y * canvas.height + 5);
                         });
                     });
-
-                    // 🌉 Bridge Integration (Validate State)
-                    port1Bridge(state.hands);
                 }
 
                 lastTime = now;
@@ -507,58 +433,46 @@
             container.appendChild(div);
 
             const update = () => {
-                const event = state.bridge.lastEvent;
-                const handData = event ? event.data : {};
-                const handIds = Object.keys(handData);
-
+                const handIds = Object.keys(state.hands);
                 if (handIds.length === 0) {
-                    if (div.innerHTML !== '<div class="data-card">Waiting for Bridge...</div>') {
-                        div.innerHTML = '<div class="data-card">Waiting for Bridge...</div>';
-                    }
+                    div.innerHTML = '<div class="data-card">Waiting for Hands...</div>';
                 } else {
-                    // Re-sync DOM sections if count mismatch
                     if (div.querySelectorAll('.hand-section').length !== handIds.length) {
                         div.innerHTML = '';
-                        handIds.sort().forEach(id => {
+                        handIds.forEach(id => {
                             const section = document.createElement('div');
                             section.className = 'hand-section';
-                            section.id = `section-h${id}`;
                             section.style.marginBottom = '15px';
                             section.innerHTML = `
                                 <h2 style="font-size: 14px; color: #888; margin: 0 0 5px 0;">HAND ID: ${id}</h2>
                                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
                                     <div class="data-card" style="border-left-color: #ffffff; padding: 8px;">
-                                        <h3 style="font-size:10px;">Raw</h3><code class="val-raw" style="font-size:10px;">...</code>
+                                        <h3 style="font-size:10px;">Raw</h3><code id="raw-${id}" style="font-size:10px;">...</code>
                                     </div>
                                     <div class="data-card" style="border-left-color: #00ccff; padding: 8px;">
-                                        <h3 style="font-size:10px;">Smooth</h3><code class="val-smooth" style="font-size:10px;">...</code>
+                                        <h3 style="font-size:10px;">Smooth</h3><code id="smooth-${id}" style="font-size:10px;">...</code>
                                     </div>
                                     <div class="data-card" style="border-left-color: #ffcc00; padding: 8px;">
-                                        <h3 style="font-size:10px;">Snappy</h3><code class="val-snappy" style="font-size:10px;">...</code>
+                                        <h3 style="font-size:10px;">Snappy</h3><code id="snappy-${id}" style="font-size:10px;">...</code>
                                     </div>
                                     <div class="data-card" style="border-left-color: #ff00ff; padding: 8px;">
-                                        <h3 style="font-size:10px;">Spring</h3><code class="val-spring" style="font-size:10px;">...</code>
+                                        <h3 style="font-size:10px;">Spring</h3><code id="spring-${id}" style="font-size:10px;">...</code>
                                     </div>
                                     <div class="data-card" style="border-left-color: #00ff00; padding: 8px;">
-                                        <h3 style="font-size:10px;">Pred</h3><code class="val-pred" style="font-size:10px;">...</code>
+                                        <h3 style="font-size:10px;">Pred</h3><code id="pred-${id}" style="font-size:10px;">...</code>
                                     </div>
                                 </div>
                             `;
                             div.appendChild(section);
                         });
                     }
-
-                    // Update values
                     handIds.forEach(id => {
-                        const h = handData[id];
-                        const section = div.querySelector(`#section-h${id}`);
-                        if (section) {
-                            section.querySelector('.val-raw').innerText = `X:${h.cursors.raw.x.toFixed(3)}, Y:${h.cursors.raw.y.toFixed(3)}`;
-                            section.querySelector('.val-smooth').innerText = `X:${h.cursors.smooth.x.toFixed(3)}, Y:${h.cursors.smooth.y.toFixed(3)}`;
-                            section.querySelector('.val-snappy').innerText = `X:${h.cursors.snappy.x.toFixed(3)}, Y:${h.cursors.snappy.y.toFixed(3)}`;
-                            section.querySelector('.val-spring').innerText = `X:${h.cursors.spring.x.toFixed(3)}, Y:${h.cursors.spring.y.toFixed(3)}`;
-                            section.querySelector('.val-pred').innerText = `X:${h.cursors.pred.x.toFixed(3)}, Y:${h.cursors.pred.y.toFixed(3)}`;
-                        }
+                        const h = state.hands[id];
+                        const updateEl = (type) => {
+                            const el = div.querySelector(`#${type}-${id}`);
+                            if (el) el.innerText = `X:${h.cursors[type].x.toFixed(3)}, Y:${h.cursors[type].y.toFixed(3)}`;
+                        };
+                        ['raw', 'smooth', 'snappy', 'spring', 'pred'].forEach(updateEl);
                     });
                 }
                 requestAnimationFrame(update);
@@ -572,43 +486,34 @@
             container.appendChild(div);
 
             const update = () => {
-                const event = state.bridge.lastEvent;
-                const handData = event ? event.data : {};
-                const handIds = Object.keys(handData);
-
+                const handIds = Object.keys(state.hands);
                 if (handIds.length === 0) {
-                    if (div.innerHTML !== '<div class="data-card">Waiting for Bridge...</div>') {
-                        div.innerHTML = '<div class="data-card">Waiting for Bridge...</div>';
-                    }
+                    div.innerHTML = '<div class="data-card">Waiting for Hands...</div>';
                 } else {
                     if (div.querySelectorAll('.hand-gesture-section').length !== handIds.length) {
                         div.innerHTML = '';
-                        handIds.sort().forEach(id => {
+                        handIds.forEach(id => {
                             const section = document.createElement('div');
                             section.className = 'hand-gesture-section';
-                            section.id = `gesture-section-h${id}`;
                             section.innerHTML = `
                                 <div class="data-card" style="border-left-color: #cc00ff; text-align:center; padding: 10px; margin-bottom:10px;">
                                     <h3 style="margin:0; font-size:12px;">HAND ${id}</h3>
-                                    <h1 class="val-gesture" style="font-size: 28px; margin: 5px 0;">NONE</h1>
-                                    <div class="val-score" style="color: #666; font-size: 10px;">Confidence: 0%</div>
-                                    <div style="font-size: 8px; color: #444; margin-top: 5px;">Source: ${event.source}</div>
+                                    <h1 id="active-gesture-${id}" style="font-size: 28px; margin: 5px 0;">NONE</h1>
+                                    <div id="gesture-score-${id}" style="color: #666; font-size: 10px;">Confidence: 0%</div>
                                 </div>
                             `;
                             div.appendChild(section);
                         });
                     }
-
                     handIds.forEach(id => {
-                        const h = handData[id];
-                        const section = div.querySelector(`#gesture-section-h${id}`);
-                        if (section) {
-                            const activeEl = section.querySelector('.val-gesture');
-                            const scoreEl = section.querySelector('.val-score');
+                        const h = state.hands[id];
+                        const activeEl = div.querySelector(`#active-gesture-${id}`);
+                        const scoreEl = div.querySelector(`#gesture-score-${id}`);
+                        if (activeEl) {
                             activeEl.innerText = h.gestures.active;
                             activeEl.style.color = h.gestures.isDown ? '#00ff88' : '#fff';
-                            scoreEl.innerText = `Conf: ${(h.gestures.score * 100).toFixed(1)}%`;
                         }
+                        if (scoreEl) scoreEl.innerText = `Conf: ${(h.gestures.score * 100).toFixed(1)}%`;
                     });
                 }
                 requestAnimationFrame(update);

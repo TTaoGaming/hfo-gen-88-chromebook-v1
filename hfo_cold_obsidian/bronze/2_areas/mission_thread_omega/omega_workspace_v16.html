@@ -1,4 +1,3 @@
-<!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -177,14 +176,12 @@
                 minTrackingConfidence: 0.5
             },
             physics: {
-                stiffness: 0.2,
-                damping: 0.1,
-                lookAhead: 1.5,
-                springSource: 'snappy',
-                predSource: 'snappy'
+                stiffness: 0.15,
+                damping: 0.05,
+                lookAhead: 2.0,
+                source: 'snappy'
             },
             cursors: {
-                raw: { x: 0.5, y: 0.5, color: '#ffffff', label: 'Raw (MP)' },
                 smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth (1€)' },
                 snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy (1€)' },
                 spring: { x: 0.5, y: 0.5, body: null, anchor: null, constraint: null, color: '#ff00ff', label: 'Spring (MATTER)' },
@@ -287,9 +284,8 @@
 
                             // 🎯 Focus on Index Tip (8)
                             const tip = landmarks[8];
-
-                            state.cursors.raw.x = tip.x;
-                            state.cursors.raw.y = tip.y;
+                            const px = tip.x * canvas.width;
+                            const py = tip.y * canvas.height;
 
                             state.cursors.smooth.x = state.cursors.smooth.filterX.call(tip.x, now);
                             state.cursors.smooth.y = state.cursors.smooth.filterY.call(tip.y, now);
@@ -306,13 +302,12 @@
 
                             // ⚙️ Matter.js Sync
                             if (engine) {
-                                const springAnchor = state.cursors[state.physics.springSource];
-                                const predBase = state.cursors[state.physics.predSource];
+                                const anchor = state.cursors[state.physics.source];
 
                                 // A. Update Spring Anchor
                                 Matter.Body.setPosition(state.cursors.spring.anchor, {
-                                    x: springAnchor.x * canvas.width,
-                                    y: springAnchor.y * canvas.height
+                                    x: anchor.x * canvas.width,
+                                    y: anchor.y * canvas.height
                                 });
 
                                 // B. Predictive Lead
@@ -321,8 +316,8 @@
                                     y: (state.cursors.snappy.y - state.cursors.smooth.y) * state.physics.lookAhead
                                 };
                                 Matter.Body.setPosition(state.cursors.predictive.body, {
-                                    x: (predBase.x + lead.x) * canvas.width,
-                                    y: (predBase.y + lead.y) * canvas.height
+                                    x: (anchor.x + lead.x) * canvas.width,
+                                    y: (anchor.y + lead.y) * canvas.height
                                 });
 
                                 // Update local state for rendering
@@ -333,7 +328,7 @@
                             }
 
                             // Render Custom Cursors
-                            [state.cursors.raw, state.cursors.smooth, state.cursors.snappy, state.cursors.spring, state.cursors.predictive].forEach(cursor => {
+                            [state.cursors.smooth, state.cursors.snappy, state.cursors.spring, state.cursors.predictive].forEach(cursor => {
                                 ctx.beginPath();
                                 ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 12, 0, 2 * Math.PI);
                                 ctx.fillStyle = cursor.color;
@@ -366,40 +361,27 @@
         const initPhysicsPanel = (container) => {
             const div = document.createElement('div');
             div.className = 'component-container';
-            div.style.gridTemplateColumns = 'repeat(auto-fit, minmax(120px, 1fr))';
             div.innerHTML = `
-                <div class="data-card" style="border-left-color: #ffffff">
-                    <h3>Raw</h3>
-                    <code id="raw-data">X: 0.000, Y: 0.000</code>
-                </div>
                 <div class="data-card" style="border-left-color: #00ccff">
-                    <h3>Smooth</h3>
+                    <h3>Smooth (1€)</h3>
                     <code id="smooth-data">X: 0.000, Y: 0.000</code>
                 </div>
-                <div class="data-card" style="border-left-color: #ffcc00">
-                    <h3>Snappy</h3>
-                    <code id="snappy-data">X: 0.000, Y: 0.000</code>
-                </div>
                 <div class="data-card" style="border-left-color: #ff00ff">
-                    <h3>Spring</h3>
+                    <h3>Spring (Matter)</h3>
                     <code id="spring-data">X: 0.000, Y: 0.000</code>
                 </div>
                 <div class="data-card" style="border-left-color: #00ff00">
-                    <h3>Pred</h3>
+                    <h3>Predictive (Matter)</h3>
                     <code id="pred-data">X: 0.000, Y: 0.000</code>
                 </div>
             `;
             container.appendChild(div);
-            const rawEl = div.querySelector('#raw-data');
             const smoothEl = div.querySelector('#smooth-data');
-            const snappyEl = div.querySelector('#snappy-data');
             const springEl = div.querySelector('#spring-data');
             const predEl = div.querySelector('#pred-data');
 
             const update = () => {
-                rawEl.innerText = `X: ${state.cursors.raw.x.toFixed(4)}, Y: ${state.cursors.raw.y.toFixed(4)}`;
                 smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(4)}, Y: ${state.cursors.smooth.y.toFixed(4)}`;
-                snappyEl.innerText = `X: ${state.cursors.snappy.x.toFixed(4)}, Y: ${state.cursors.snappy.y.toFixed(4)}`;
                 springEl.innerText = `X: ${state.cursors.spring.x.toFixed(4)}, Y: ${state.cursors.spring.y.toFixed(4)}`;
                 predEl.innerText = `X: ${state.cursors.predictive.x.toFixed(4)}, Y: ${state.cursors.predictive.y.toFixed(4)}`;
                 requestAnimationFrame(update);
@@ -444,8 +426,7 @@
             const gui = new GUI({ container, autoPlace: false });
 
             const phys = gui.addFolder('Matter.js Dynamics');
-            phys.add(state.physics, 'springSource', ['snappy', 'smooth']).name('Spring Anchor');
-            phys.add(state.physics, 'predSource', ['snappy', 'smooth']).name('Pred Anchor');
+            phys.add(state.physics, 'source', ['snappy', 'smooth']).name('Physics Anchor');
             phys.add(state.physics, 'stiffness', 0, 1).name('Spring Stiffness').onChange(v => state.cursors.spring.constraint.stiffness = v);
             phys.add(state.physics, 'damping', 0, 1).name('Spring Damping').onChange(v => state.cursors.spring.constraint.damping = v);
             phys.add(state.physics, 'lookAhead', 0, 20).name('Predictive T');

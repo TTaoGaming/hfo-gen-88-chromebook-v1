@@ -1,11 +1,10 @@
-<!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO Omega: Matter.js Cursor Tuning V16</title>
+    <title>HFO Omega: Physics Cursor Workspace V14</title>
 
     <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
     <!-- 🏗️ Styles -->
@@ -104,7 +103,7 @@
             "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
             "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
             "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
-            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm"
+            "@dimforge/rapier2d": "https://cdn.jsdelivr.net/npm/@dimforge/rapier2d@0.11.2/+esm"
         }
     }
     </script>
@@ -113,7 +112,7 @@
         import { GoldenLayout, LayoutConfig } from 'golden-layout';
         import GUI from 'lil-gui';
         import { GestureRecognizer, HandLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
-        import Matter from 'matter-js';
+        import * as RAPIER from '@dimforge/rapier2d';
 
         // 🧠 One Euro Filter Implementation
         class LowPassFilter {
@@ -177,18 +176,15 @@
                 minTrackingConfidence: 0.5
             },
             physics: {
-                stiffness: 0.2,
-                damping: 0.1,
-                lookAhead: 1.5,
-                springSource: 'snappy',
-                predSource: 'snappy'
+                stiffness: 400.0,
+                damping: 20.0,
+                lookAhead: 0.1
             },
             cursors: {
-                raw: { x: 0.5, y: 0.5, color: '#ffffff', label: 'Raw (MP)' },
                 smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth (1€)' },
                 snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy (1€)' },
-                spring: { x: 0.5, y: 0.5, body: null, anchor: null, constraint: null, color: '#ff00ff', label: 'Spring (MATTER)' },
-                predictive: { x: 0.5, y: 0.5, body: null, color: '#00ff00', label: 'Predictive (MATTER)' }
+                spring: { x: 0.5, y: 0.5, body: null, color: '#ff00ff', label: 'Spring (RAPIER)' },
+                predictive: { x: 0.5, y: 0.5, body: null, color: '#00ff00', label: 'Predictive (RAPIER)' }
             },
             gestures: {
                 active: 'None',
@@ -203,40 +199,29 @@
         state.cursors.snappy.filterX = new OneEuroFilter(30, 2.0, 0.1);
         state.cursors.snappy.filterY = new OneEuroFilter(30, 2.0, 0.1);
 
-        // 🏗️ Matter.js Initialization
-        let engine, runner;
-        const initPhysics = () => {
-            const { Engine, Bodies, Composite, Constraint, Runner } = Matter;
-
-            engine = Engine.create();
-            engine.gravity.scale = 0; // No gravity for 2D UI cursors
-
-            // 1. Spring Body (Anchor + Body + Constraint)
-            state.cursors.spring.anchor = Bodies.circle(0.5, 0.5, 1, { isStatic: true, isSensor: true });
-            state.cursors.spring.body = Bodies.circle(0.5, 0.5, 10, { frictionAir: 0.1 });
-            state.cursors.spring.constraint = Constraint.create({
-                bodyA: state.cursors.spring.anchor,
-                bodyB: state.cursors.spring.body,
-                stiffness: state.physics.stiffness,
-                damping: state.physics.damping,
-                length: 0
-            });
-
-            // 2. Predictive Body (Static/Kinematic proxy)
-            state.cursors.predictive.body = Bodies.circle(0.5, 0.5, 10, { isStatic: true });
-
-            Composite.add(engine.world, [
-                state.cursors.spring.anchor,
-                state.cursors.spring.body,
-                state.cursors.spring.constraint,
-                state.cursors.predictive.body
-            ]);
-
-            runner = Runner.create();
-            Runner.run(runner, engine);
-        };
-
+        let world = null;
+        let RAPIER_INST = null;
         let gestureRecognizer = null;
+
+        // 🏗️ Rapier Initialization
+        const initPhysics = async () => {
+            console.log('RAPIER Namespace:', RAPIER);
+            const init = RAPIER.init || (RAPIER.default && RAPIER.default.init);
+            RAPIER_INST = await init();
+            world = new RAPIER_INST.World({ x: 0.0, y: 0.0 });
+
+            // 1. Spring Body (Dynamic)
+            const springDesc = RAPIER_INST.RigidBodyDesc.dynamic()
+                .setTranslation(0.5, 0.5)
+                .setLinearDamping(0.5);
+            state.cursors.spring.body = world.createRigidBody(springDesc);
+            world.createCollider(RAPIER_INST.ColliderDesc.ball(0.02), state.cursors.spring.body);
+
+            // 2. Predictive Body (Kinematic)
+            const predDesc = RAPIER_INST.RigidBodyDesc.kinematicPositionBased()
+                .setTranslation(0.5, 0.5);
+            state.cursors.predictive.body = world.createRigidBody(predDesc);
+        };
 
         // 📽️ MediaPipe Processor
         const initMediaPipe = async (container) => {
@@ -287,10 +272,6 @@
 
                             // 🎯 Focus on Index Tip (8)
                             const tip = landmarks[8];
-
-                            state.cursors.raw.x = tip.x;
-                            state.cursors.raw.y = tip.y;
-
                             state.cursors.smooth.x = state.cursors.smooth.filterX.call(tip.x, now);
                             state.cursors.smooth.y = state.cursors.smooth.filterY.call(tip.y, now);
                             state.cursors.snappy.x = state.cursors.snappy.filterX.call(tip.x, now);
@@ -304,36 +285,39 @@
                                 state.gestures.isDown = (topGesture.categoryName === 'Closed_Fist' || topGesture.categoryName === 'Pointing_Up');
                             }
 
-                            // ⚙️ Matter.js Sync
-                            if (engine) {
-                                const springAnchor = state.cursors[state.physics.springSource];
-                                const predBase = state.cursors[state.physics.predSource];
-
-                                // A. Update Spring Anchor
-                                Matter.Body.setPosition(state.cursors.spring.anchor, {
-                                    x: springAnchor.x * canvas.width,
-                                    y: springAnchor.y * canvas.height
-                                });
-
-                                // B. Predictive Lead
-                                const lead = {
-                                    x: (state.cursors.snappy.x - state.cursors.smooth.x) * state.physics.lookAhead,
-                                    y: (state.cursors.snappy.y - state.cursors.smooth.y) * state.physics.lookAhead
+                            // ⚙️ Physics Step
+                            if (world) {
+                                // A. Spring Dynamics
+                                const springBody = state.cursors.spring.body;
+                                const pos = springBody.translation();
+                                const vel = springBody.linvel();
+                                const force = {
+                                    x: state.physics.stiffness * (state.cursors.smooth.x - pos.x) - state.physics.damping * vel.x,
+                                    y: state.physics.stiffness * (state.cursors.smooth.y - pos.y) - state.physics.damping * vel.y
                                 };
-                                Matter.Body.setPosition(state.cursors.predictive.body, {
-                                    x: (predBase.x + lead.x) * canvas.width,
-                                    y: (predBase.y + lead.y) * canvas.height
+                                springBody.applyImpulse(force, true);
+
+                                // B. Predictive Core
+                                const predBody = state.cursors.predictive.body;
+                                const smoothVel = {
+                                    x: state.cursors.snappy.x - state.cursors.smooth.x,
+                                    y: state.cursors.snappy.y - state.cursors.smooth.y
+                                };
+                                predBody.setNextKinematicTranslation({
+                                    x: state.cursors.smooth.x + smoothVel.x * state.physics.lookAhead * 10,
+                                    y: state.cursors.smooth.y + smoothVel.y * state.physics.lookAhead * 10
                                 });
 
-                                // Update local state for rendering
-                                state.cursors.spring.x = state.cursors.spring.body.position.x / canvas.width;
-                                state.cursors.spring.y = state.cursors.spring.body.position.y / canvas.height;
-                                state.cursors.predictive.x = state.cursors.predictive.body.position.x / canvas.width;
-                                state.cursors.predictive.y = state.cursors.predictive.body.position.y / canvas.height;
+                                world.step();
+
+                                state.cursors.spring.x = springBody.translation().x;
+                                state.cursors.spring.y = springBody.translation().y;
+                                state.cursors.predictive.x = predBody.translation().x;
+                                state.cursors.predictive.y = predBody.translation().y;
                             }
 
                             // Render Custom Cursors
-                            [state.cursors.raw, state.cursors.smooth, state.cursors.snappy, state.cursors.spring, state.cursors.predictive].forEach(cursor => {
+                            [state.cursors.smooth, state.cursors.snappy, state.cursors.spring, state.cursors.predictive].forEach(cursor => {
                                 ctx.beginPath();
                                 ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 12, 0, 2 * Math.PI);
                                 ctx.fillStyle = cursor.color;
@@ -358,7 +342,6 @@
             video.onloadedmetadata = () => {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
-                initPhysics(); // Init Matter.js when canvas dimensions are known
                 render();
             };
         };
@@ -366,40 +349,27 @@
         const initPhysicsPanel = (container) => {
             const div = document.createElement('div');
             div.className = 'component-container';
-            div.style.gridTemplateColumns = 'repeat(auto-fit, minmax(120px, 1fr))';
             div.innerHTML = `
-                <div class="data-card" style="border-left-color: #ffffff">
-                    <h3>Raw</h3>
-                    <code id="raw-data">X: 0.000, Y: 0.000</code>
-                </div>
                 <div class="data-card" style="border-left-color: #00ccff">
-                    <h3>Smooth</h3>
+                    <h3>Smooth (1€)</h3>
                     <code id="smooth-data">X: 0.000, Y: 0.000</code>
                 </div>
-                <div class="data-card" style="border-left-color: #ffcc00">
-                    <h3>Snappy</h3>
-                    <code id="snappy-data">X: 0.000, Y: 0.000</code>
-                </div>
                 <div class="data-card" style="border-left-color: #ff00ff">
-                    <h3>Spring</h3>
+                    <h3>Spring (Rapier)</h3>
                     <code id="spring-data">X: 0.000, Y: 0.000</code>
                 </div>
                 <div class="data-card" style="border-left-color: #00ff00">
-                    <h3>Pred</h3>
+                    <h3>Predictive (Rapier)</h3>
                     <code id="pred-data">X: 0.000, Y: 0.000</code>
                 </div>
             `;
             container.appendChild(div);
-            const rawEl = div.querySelector('#raw-data');
             const smoothEl = div.querySelector('#smooth-data');
-            const snappyEl = div.querySelector('#snappy-data');
             const springEl = div.querySelector('#spring-data');
             const predEl = div.querySelector('#pred-data');
 
             const update = () => {
-                rawEl.innerText = `X: ${state.cursors.raw.x.toFixed(4)}, Y: ${state.cursors.raw.y.toFixed(4)}`;
                 smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(4)}, Y: ${state.cursors.smooth.y.toFixed(4)}`;
-                snappyEl.innerText = `X: ${state.cursors.snappy.x.toFixed(4)}, Y: ${state.cursors.snappy.y.toFixed(4)}`;
                 springEl.innerText = `X: ${state.cursors.spring.x.toFixed(4)}, Y: ${state.cursors.spring.y.toFixed(4)}`;
                 predEl.innerText = `X: ${state.cursors.predictive.x.toFixed(4)}, Y: ${state.cursors.predictive.y.toFixed(4)}`;
                 requestAnimationFrame(update);
@@ -443,12 +413,10 @@
         const initSettings = (container) => {
             const gui = new GUI({ container, autoPlace: false });
 
-            const phys = gui.addFolder('Matter.js Dynamics');
-            phys.add(state.physics, 'springSource', ['snappy', 'smooth']).name('Spring Anchor');
-            phys.add(state.physics, 'predSource', ['snappy', 'smooth']).name('Pred Anchor');
-            phys.add(state.physics, 'stiffness', 0, 1).name('Spring Stiffness').onChange(v => state.cursors.spring.constraint.stiffness = v);
-            phys.add(state.physics, 'damping', 0, 1).name('Spring Damping').onChange(v => state.cursors.spring.constraint.damping = v);
-            phys.add(state.physics, 'lookAhead', 0, 20).name('Predictive T');
+            const phys = gui.addFolder('Rapier Dynamics');
+            phys.add(state.physics, 'stiffness', 0, 1000).name('Spring K');
+            phys.add(state.physics, 'damping', 0, 100).name('Damping D');
+            phys.add(state.physics, 'lookAhead', 0, 0.5).name('Predictive T');
             phys.open();
 
             const mp = gui.addFolder('MediaPipe Tasks');
@@ -456,6 +424,11 @@
             mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({ minHandPresenceConfidence: v }));
             mp.add(state, 'debug').name('Show Mesh');
             mp.open();
+
+            const filters = gui.addFolder('One Euro Filters');
+            filters.add(state.cursors.smooth.filterX, 'minCutoff', 0.01, 10).name('Smooth MinCutoff').onChange(v => state.cursors.smooth.filterY.minCutoff = v);
+            filters.add(state.cursors.smooth.filterX, 'beta', 0, 1).name('Smooth Beta').onChange(v => state.cursors.smooth.filterY.beta = v);
+            filters.open();
 
             container.appendChild(gui.domElement);
         };
@@ -485,7 +458,10 @@
         layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
         layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
 
-        layout.loadLayout(config);
+        initPhysics().then(() => {
+            layout.loadLayout(config);
+        });
+
         window.addEventListener('resize', () => layout.updateSize());
     </script>
 </body>

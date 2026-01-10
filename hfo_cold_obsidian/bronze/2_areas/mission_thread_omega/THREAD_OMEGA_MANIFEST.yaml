@@ -1,12 +1,12 @@
-# Medallion: Cold Bronze | HIVE: V | Mission: Omega
+# Medallion: Bronze | HIVE: I | Mission: Omega
 # 🎯 THREAD_OMEGA_MANIFEST.yaml
 
 mission:
   id: "THREAD_OMEGA"
   name: "Total Tool Virtualization"
   status: "active"
-  current_project: "Physics Cursor Vertical Slice (V18)"
-  phase: "HIVE: E (Evolve)"
+  current_project: "Physics Cursor Vertical Slice (V12)"
+  phase: "HIVE: I (Interlock)"
 
 objectives:
   completed:
@@ -25,9 +25,9 @@ objectives:
     - id: "P1_V11_1"
       title: "One Euro Dual Cursors"
       desc: "Implemented 'Smooth' and 'Snappy' presets for index tip tracking."
-    - id: "P2_V18_1"
-      title: "Ensemble Physics Layout"
-      desc: "V18 5-cursor UI (Raw, Smooth, Snappy, Spring, Pred) hardened with Matter.js."
+    - id: "P0_V12_1"
+      title: "Landmark Gesture Logic"
+      desc: "Implemented pinch, fist, and open hand detection logic."
   active:
     - id: "P1_V10_1"
       title: "Zod 6.0 Interlock"
