@@ -28,10 +28,13 @@ objectives:
     - id: "P0_V12_1"
       title: "Landmark Gesture Logic"
       desc: "Implemented pinch, fist, and open hand detection logic."
+    - id: "P4_V20_1"
+      title: "Port 4 DISRUPT Implementation"
+      desc: "Created full disruption suite with pointer suppression, hardware locking, jitter dampening, and native event rejection. Zod contracts defined for P3→P4→P5 flow."
   active:
     - id: "P1_V10_1"
       title: "Zod 6.0 Interlock"
-      desc: "Defining P0 -> P1 -> P2 -> P3 coordinate & state relay contracts."
+      desc: "Defining P0 -> P1 -> P2 -> P3 -> P4 -> P5 coordinate & state relay contracts."
     - id: "P2_V10_2"
       title: "Rapier Integration"
       desc: "Implementing mass-spring-dampener logic in Port 2."
@@ -41,16 +44,23 @@ objectives:
     - id: "P3_V10_2"
       title: "W3C Event Dispatcher"
       desc: "Mechanism to inject PointerEvents into browser targets."
+    - id: "P4_V21_1"
+      title: "Port 4 Integration"
+      desc: "Integrate P4 disruption modules into v18 workspace to create v21."
 
 pipeline_status:
   p0_sensor: "🟠 Hunting (MediaPipe Index Tip)"
   p1_schema: "🟡 Interlocked (Zod 6.0)"
   p2_physics: "🟡 Modeling (Mass-Spring-Dampener)"
   p3_delivery: "🟡 Planning (FSM + W3C)"
+  p4_disrupt: "🟢 Implemented (v20 Bronze)"
+  p5_defend: "🔴 Awaiting P4 Integration"
 
 blockers:
   - "Need verified MediaPipe environment on Chromebook (Linux V-1)."
   - "Physics cursor coordinate drift detection requires P5 validation."
+  - "Port 4 integration with v18 workspace pending (v21)."
+  - "Pointer Lock API requires user gesture (click/keypress) to activate."
 
 provenance:
   created: "2026-01-09T22:30:00Z"
