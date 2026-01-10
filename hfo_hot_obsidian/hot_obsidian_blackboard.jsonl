@@ -7,3 +7,4 @@
 {"timestamp": "2026-01-10T12:01:06Z", "port": "P7", "mission": "Thread Omega", "phase": "I", "details": {"step": 6}, "thought_hash": "v30_i6"}
 {"timestamp": "2026-01-10T12:01:07Z", "port": "P7", "mission": "Thread Omega", "phase": "I", "details": {"step": 7}, "thought_hash": "v30_i7"}
 {"timestamp": "2026-01-10T12:10:00Z", "port": "P7", "mission": "Thread Omega", "phase": "E", "event": "V30_HARDENING", "payload": {"summary": "V30 Hardened and Verified."}, "thought_hash": "v30_e"}
+{"timestamp": "2026-01-10T13:00:00Z", "port": "P7", "mission": "Thread Omega", "phase": "E", "event": "V31_TRACKING_HARDENED", "payload": {"summary": "Implemented Semantic Snapback + Physics Hybrid in V31. Resolved center ghosting and ID swap collisions."}, "thought_hash": "v31_tracking_fix"}
