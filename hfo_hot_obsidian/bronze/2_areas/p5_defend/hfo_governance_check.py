@@ -4,7 +4,7 @@ import re
 import os
 
 # Medallion: Bronze | Mutation: 0% | HIVE: V
-# P5 DEFEND: ROE Enforcement Script
+# PORT-5-IMMUNIZE: ROE Enforcement Script
 
 PROVENANCE_REGEX = r"(//|#) Medallion: (Bronze|Silver|Gold) \| Mutation: \d+% \| HIVE: (H|I|V|E)"
 LAZY_AI_REGEX = r"\.\.\.existing code\.\.\.|\.\.\.remaining code\.\.\.|// \.\.\."
@@ -45,13 +45,13 @@ def check_file(filepath):
             # Reward Hacking / Spoofing Check
             claimed_layer = prov_line.group(2).lower()
             actual_layer = "bronze"
-            if "silver" in filepath: actual_layer = "silver"
-            elif "gold" in filepath: actual_layer = "gold"
+            if "/silver/" in filepath: actual_layer = "silver"
+            elif "/gold/" in filepath: actual_layer = "gold"
             elif "hfo_cold_obsidian" in filepath:
                 # Cold files can be Bronze/Silver/Gold but must match their internal PARA
-                if "bronze" in filepath: actual_layer = "bronze"
-                elif "silver" in filepath: actual_layer = "silver"
-                elif "gold" in filepath: actual_layer = "gold"
+                if "/bronze/" in filepath: actual_layer = "bronze"
+                elif "/silver/" in filepath: actual_layer = "silver"
+                elif "/gold/" in filepath: actual_layer = "gold"
 
             if claimed_layer != actual_layer:
                 print(f"❌ [P4 SCREAM_3: PHANTOM]: Layer Spoofing Detected! {filepath} claims {claimed_layer} but is in {actual_layer}.")
@@ -64,9 +64,9 @@ def check_file(filepath):
 
             return True
     except Exception as e:
-        print(f"❌ [P5 DEFEND]: Error reading surface {filepath}: {e}")
+        print(f"❌ [PORT-5-IMMUNIZE]: Error reading surface {filepath}: {e}")
         return False
-        print(f"❌ [P5 DEFEND]: Error reading surface {filepath}: {e}")
+        print(f"❌ [PORT-5-IMMUNIZE]: Error reading surface {filepath}: {e}")
         return False
 
 def main():

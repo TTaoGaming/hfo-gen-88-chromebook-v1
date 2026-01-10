@@ -5,10 +5,10 @@ import sys
 from datetime import datetime
 
 # Medallion: Bronze | Mutation: 0% | HIVE: V
-# P5 DEFEND: AI Theater & Workflow Sentinel
+# PORT-5-IMMUNIZE: AI Theater & Workflow Sentinel
 
 BLACKBOARD_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
-GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_defend/BOOK_OF_BLOOD_GRUDGES.jsonl"
+GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_immunize/BOOK_OF_BLOOD_GRUDGES.jsonl"
 
 def log_grudge(scream_id, message):
     entry = {
@@ -47,4 +47,4 @@ def check_blackboard():
 if __name__ == "__main__":
     if not check_blackboard():
         sys.exit(1)
-    print("✅ [P5 DEFEND]: Temporal Integrity Verified.")
+    print("✅ [PORT-5-IMMUNIZE]: Temporal Integrity Verified.")

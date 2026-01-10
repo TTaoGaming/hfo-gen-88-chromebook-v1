@@ -13,6 +13,7 @@ The following heuristics have been harvested from one year of operational hindsi
 
 ### 1. JADC2 Mosaic Warfare Tiles
 Synchronizing disaggregated effects across 8 Commanders. Each port is a "tile" in the mosaic, capable of autonomous action while remaining globally coherent via the blackboard.
+**Grounding**: [P7_GALOIS_GROUNDING.md](P7_GALOIS_GROUNDING.md)
 
 ### 2. MTG Sliver Collective Synergy
 Every tool, agent, and line of code added to the swarm increases the capabilities of the total collective. Capabilities (slivers) flow across the 8-port manifold.

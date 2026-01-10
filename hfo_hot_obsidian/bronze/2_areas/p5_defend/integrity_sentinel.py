@@ -6,9 +6,9 @@ import json
 from datetime import datetime
 
 # Medallion: Bronze | Mutation: 0% | HIVE: V
-# P5 DEFEND: Automated Quarantine & Demotion Manager
+# PORT-5-IMMUNIZE: Automated Quarantine & Demotion Manager
 
-GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_defend/BOOK_OF_BLOOD_GRUDGES.jsonl"
+GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_immunize/BOOK_OF_BLOOD_GRUDGES.jsonl"
 
 def log_grudge(scream_id, filename, message):
     entry = {
@@ -78,7 +78,7 @@ def quarantine(filepath, reason):
             archive_dir = os.path.join("/".join(parts[:i+1]), "4_archive")
             os.makedirs(archive_dir, exist_ok=True)
             target = os.path.join(archive_dir, f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{filename}")
-            print(f"🚨 [P5 DEFEND]: QUARANTINE TRIGGERED. Demoting {filepath} to {target}")
+            print(f"🚨 [PORT-5-IMMUNIZE]: QUARANTINE TRIGGERED. Demoting {filepath} to {target}")
             shutil.move(filepath, target)
             log_grudge(1, filename, f"Quarantined: {reason}") # Scream 1: Breach
             return

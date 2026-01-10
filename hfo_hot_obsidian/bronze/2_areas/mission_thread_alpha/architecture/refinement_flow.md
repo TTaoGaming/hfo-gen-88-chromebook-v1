@@ -15,7 +15,7 @@ This document defines the mandatory 1-way refinement flow for code promotion wit
 ### 1. HOT BRONZE ➔ COLD BRONZE (Freeze)
 - **Constraint**: Code is finalized but not yet mutation-tested.
 - **Artifact**: `[filename].receipt.json`
-- **Utility**: `p5_defend/freeze_to_cold.py`
+- **Utility**: `p5_immunize/freeze_to_cold.py`
 - **Requirements**:
     - Provenance Header (Bronze).
     - No syntax errors (Pylance).
@@ -24,15 +24,15 @@ This document defines the mandatory 1-way refinement flow for code promotion wit
 ### 2. COLD BRONZE ➔ HOT SILVER (Mutation)
 - **Constraint**: Code must be proven resilient against regression.
 - **Artifact**: `[filename].mutation.json`
-- **Utility**: `p5_defend/promote_to_silver.py`
+- **Utility**: `p5_immunize/promote_to_silver.py`
 - **Requirements**:
     - Stryker/Mutation score: **88% - 98% (Goldilocks Zone)**.
     - Property-based tests passed.
 
 ---
 
-## 🛡️ Enforcement (P5 DEFEND)
-The [P5 MEDALLION GUARD](hfo_hot_obsidian/bronze/2_areas/p5_defend/medallion_guard.py) enforces these transitions at commit-time.
+## 🛡️ Enforcement (PORT-5-IMMUNIZE)
+The [P5 MEDALLION GUARD](hfo_hot_obsidian/bronze/2_areas/p5_immunize/medallion_guard.py) enforces these transitions at commit-time.
 - Any file in `hfo_cold_obsidian` WITHOUT a valid receipt will be **Quarantined**.
 - Any file in `hfo_hot_obsidian/silver` WITHOUT a valid Goldilocks mutation receipt will be **Quarantined**.
 

@@ -1,0 +1,22 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+id: P5
+name: PORT-5-IMMUNIZE (Pyre Praetorian)
+mission_thread: Alpha
+status: online
+tasks:
+  - id: P5.1
+    title: Theater Sentinel V1
+    description: Implement temporal and interlock checks for project integrity.
+    status: completed
+  - id: P5.2
+    title: Medallion Flow Guard
+    description: Enforce Hot Bronze -> Cold Bronze -> Silver 1-way path.
+    status: completed
+  - id: P5.3
+    title: Anti-Reward Hacking Validator
+    description: High-fidelity check for tool-use receipts in the blackboard. Flag missing or faked receipts.
+    status: in-progress
+  - id: P5.4
+    title: Sequential Thinking Integrity
+    description: Validate that sequential thinking blocks are present in agent reasoning and tool usage.
+    status: in-progress

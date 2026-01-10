@@ -25,33 +25,53 @@ def run_sentinel(name, path, args=None):
 
 def main():
     base_path = os.path.dirname(os.path.abspath(__file__))
+    failures = []
 
-    # 1. Temporal/Behavioral Sentinel
-    if not run_sentinel("Temporal Sentinel", os.path.join(base_path, "temporal_sentinel.py")):
-        sys.exit(1)
+    def run_check(name, script, args=None):
+        if not run_sentinel(name, os.path.join(base_path, script), args):
+            failures.append(name)
+            return False
+        return True
 
-    # 2. Hive 8 Workflow Sentinel (Dual Search & 8-Step Thinking)
-    if not run_sentinel("Hive 8 Sentinel", os.path.join(base_path, "hive8_workflow_sentinel.py")):
-        sys.exit(1)
+    # 1. P5-CHRONOS (Temporal)
+    run_check("P5-CHRONOS", "temporal_sentinel.py")
 
-    # 3. Integrity Sentinel (Refinement Flow)
-    # We run it across hot_obsidian/silver and cold_obsidian
+    # 2. P0-SENSE (Workflow)
+    run_check("P0-SENSE", "hive8_workflow_sentinel.py")
+
+    # 3. P1-MONOLITH (Architectural)
+    run_check("P1-MONOLITH", "monolith_bypass_sentinel.py")
+
+    # 4. P5-MEDALLION (Integrity)
+    # Check core project files
+    hot_bronze = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze"
     files_to_check = []
-    for root, dirs, files in os.walk("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian"):
+    for root, dirs, files in os.walk(hot_bronze):
         for f in files:
-            if not f.endswith(".receipt.json"):
+            if f.endswith(('.py', '.ts', '.html')):
+                # Filter out the chaos files themselves
+                if "chaos_injector" in f: continue
                 files_to_check.append(os.path.join(root, f))
 
-    for root, dirs, files in os.walk("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/silver"):
-        for f in files:
-            if not f.endswith(".receipt.json") and "3_resources/receipts" not in root:
-                files_to_check.append(os.path.join(root, f))
+    run_check("P5-MEDALLION", "integrity_sentinel.py", files_to_check)
 
-    if files_to_check:
-        if not run_sentinel("Integrity Sentinel", os.path.join(base_path, "integrity_sentinel.py"), files_to_check):
-            sys.exit(1)
+    # 5. P6-GHOST (Stigmergy)
+    run_check("P6-GHOST", "ghost_walk_sentinel.py")
 
-    print("🛡️ [P5 PRAETORIAN]: Immunizer Sequence Complete. System Integrity Verified.")
+    # 6. P1-ZOD (Contract)
+    run_check("P1-ZOD", "zod_gate_sentinel.py")
+
+    # 7. P7-VENGEANCE (Forensic)
+    run_check("P7-VENGEANCE", "blood_grudge_sentinel.py")
+
+    # 8. P5-PRECOMMIT (Gatekeeper)
+    run_check("P5-PRECOMMIT", "pre_commit_shield.py")
+
+    if failures:
+        print(f"\n🚨 [P5 PRAETORIAN]: IMMUNIZER BREACHED! Fails: {', '.join(failures)}")
+        sys.exit(1)
+
+    print("🛡️ [P5 PRAETORIAN]: 8 SHIELDS ACTIVE. System Integrity Fully Immunized.")
 
 if __name__ == "__main__":
     main()

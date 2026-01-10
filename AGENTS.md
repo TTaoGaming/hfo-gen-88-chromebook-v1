@@ -31,24 +31,29 @@ Every action must be aligned with one of these two primary mission threads:
 We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alpha Bootstrapping**.
 
 **Active Mission Projects**:
-- `0_p0_sense.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha).
+- `0_p0_observe.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha).
 - `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega).
-    - **V10 Vertical Slice**: Mass-Spring-Dampener Physics Cursor + FSM.
-    - **Status**: Bronze Interlock complete. Contracts & Physics Logic manifested.
+    - **V10 Vertical Slice**: Mass-Spring-Dampener Physics Cursor + FSM (Enhanced).
+    - **Status**: Bronze Interlock complete. Skeleton Visualization & Dynamic Settings API manifested.
 
 **Active Defenses**:
-- **P4 SCREAM**: Pre-commit governance header enforcement enabled.
-- **P5 DEFEND**: Theater Sentinel (Temporal/Interlock check) operational. **SUCCESS**: Caught BREACH_REWARD_HACK 2026-01-10T01:30:00Z.
-- **P5 HIVE8**: **HARD ENFORCEMENT ACTIVE**. Interaction blocked without Port 0 Dual Search (Tavily+Brave) and 8-Step Sequential Thinking (Port 7).
-- **P5 CONSUL**: Praetorian Immunizer (Consolidated Sentinels) active at [hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_defend/p5_praetorian.py](hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_defend/p5_praetorian.py).
-- **Grudge Ledger**: [BOOK_OF_BLOOD_GRUDGES.jsonl](hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_defend/BOOK_OF_BLOOD_GRUDGES.jsonl) active (1 entry recorded).
+- **PORT-5-IMMUNIZE (THE 8 SHIELDS)**:
+    1. **P5-CHRONOS**: Temporal Log Integrity (Fixed SCREAM_6).
+    2. **PORT-0-OBSERVE**: Workflow Protocol (Dual Search/8-Step).
+    3. **P1-MONOLITH**: Architectural Integrity (Anti-Reward Hack).
+    4. **P5-MEDALLION**: Refinement Flow (Mutation/Provenance).
+    5. **P6-GHOST**: Stigmergy Orphan Detection (Orphan Logic).
+    6. **P1-ZOD**: Contract Compliance (Zod 6.0).
+    7. **P7-VENGEANCE**: Forensic Recurrence (Book of Blood Grudges).
+    8. **P5-PRECOMMIT**: Governance Gate (Final Commit Pass).
+- **P5 PRAETORIAN**: Praetorian Immunizer active at [hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/p5_praetorian.py](hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/p5_praetorian.py).
 
 **Tooling Intelligence**:
-- **P0 SENSE**: Mandatory Dual Search (Tavily + Brave) via `dual_search.py`. Generic `web_fetch` disabled/prohibited.
+- **PORT-0-OBSERVE**: Mandatory Dual Search (Tavily + Brave) via `port_0_observe.py`. Generic `web_fetch` disabled/prohibited.
 - **P7 NAVIGATE**: Github API / runSubagent active. Mandatory 8-step sequential thinking.
 
 **The Pipeline:**
-`Camera (Python/MediaPipe) → Port 0 (Sense) → Port 1 (Fuse) → Port 2 (Physics/Rapier) → Port 3 (Deliver) → W3C Pointer Event.`
+`Camera (Python/MediaPipe) → Port 0 (Observe) → Port 1 (Bridge) → Port 2 (Shape) → Port 3 (Inject) → Port 4 (Disrupt) → Port 5 (Immunize) → Port 6 (Archive) → Port 7 (Navigate) → W3C Pointer Event.`
 
 ---
 

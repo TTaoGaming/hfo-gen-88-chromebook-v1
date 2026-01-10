@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO Omega: Physics Cursor Workspace</title>
+
+    <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
+    <!-- 🏗️ Styles -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <style>
+        body { margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden; background: #111; color: #eee; font-family: sans-serif; }
+        #layout-container { width: 100%; height: 100%; }
+        .component-container { padding: 10px; height: 100%; overflow: auto; box-sizing: border-box; }
+        video { width: 100%; border-radius: 8px; transform: scaleX(-1); background: #000; }
+        canvas { position: absolute; top: 10px; left: 10px; pointer-events: none; transform: scaleX(-1); }
+    </style>
+</head>
+<body>
+    <div id="layout-container"></div>
+
+    <!-- 📦 Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout, LayoutConfig } from 'golden-layout';
+        import GUI from 'lil-gui';
+
+        let handsInstance = null;
+
+        // 🎥 MediaPipe State
+        const state = {
+            active: true,
+            smoothing: 0.5,
+            debug: true,
+            stats: { fps: 0 },
+            mpOptions: {
+                maxNumHands: 2,
+                modelComplexity: 1,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            }
+        };
+
+        // 🛠️ GUI Logic
+        const initGUI = (container) => {
+            const gui = new GUI({ container, autoPlace: false });
+
+            const mpFolder = gui.addFolder('MediaPipe Pipeline');
+            mpFolder.add(state.mpOptions, 'maxNumHands', 1, 4, 1).name('Max Hands').onChange(updateMP);
+            mpFolder.add(state.mpOptions, 'modelComplexity', { 'Lite (0)': 0, 'Full (1)': 1 }).name('Complexity').onChange(updateMP);
+            mpFolder.add(state.mpOptions, 'minDetectionConfidence', 0, 1).name('Detection Thresh').onChange(updateMP);
+            mpFolder.add(state.mpOptions, 'minTrackingConfidence', 0, 1).name('Tracking Thresh').onChange(updateMP);
+            mpFolder.open();
+
+            const vizFolder = gui.addFolder('Visualization');
+            vizFolder.add(state, 'active').name('Sensing Active');
+            vizFolder.add(state, 'debug').name('Show Skeleton');
+            vizFolder.add(state, 'smoothing', 0, 1).name('MSD Smoothing');
+            vizFolder.add(state.stats, 'fps').name('MP FPS').listen();
+            vizFolder.open();
+
+            container.appendChild(gui.domElement);
+        };
+
+        const updateMP = () => {
+            if (handsInstance) {
+                handsInstance.setOptions(state.mpOptions);
+                console.log('MediaPipe Options Updated:', state.mpOptions);
+            }
+        };
+
+        // 📽️ MediaPipe Logic
+        const initMediaPipe = async (container) => {
+            const video = document.createElement('video');
+            video.style.display = 'none'; // Background source
+            container.appendChild(video);
+
+            const canvas = document.createElement('canvas');
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            handsInstance = new Hands({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+            });
+
+            handsInstance.setOptions(state.mpOptions);
+
+            let lastTime = 0;
+            handsInstance.onResults((results) => {
+                const now = performance.now();
+                state.stats.fps = Math.round(1000 / (now - lastTime));
+                lastTime = now;
+
+                if (!state.active) return;
+
+                ctx.save();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+                if (results.multiHandLandmarks && state.debug) {
+                    for (const landmarks of results.multiHandLandmarks) {
+                        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 5});
+                        drawLandmarks(ctx, landmarks, {color: '#FF0000', lineWidth: 2});
+                    }
+                }
+                ctx.restore();
+            });
+
+            const camera = new Camera(video, {
+                onFrame: async () => {
+                    if (state.active) {
+                        await handsInstance.send({image: video});
+                    }
+                },
+                width: 1280,
+                height: 720
+            });
+
+            video.onloadedmetadata = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+            };
+
+            camera.start();
+        };
+
+        // 🏗️ Layout Config
+        const config = {
+            root: {
+                type: 'row',
+                content: [
+                    {
+                        type: 'component',
+                        componentType: 'MediaPipe',
+                        title: 'P0: SENSE (MediaPipe)',
+                        width: 70
+                    },
+                    {
+                        type: 'component',
+                        componentType: 'Settings',
+                        title: 'P7: NAVIGATE (Settings)',
+                        width: 30
+                    }
+                ]
+            }
+        };
+
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+
+        layout.registerComponentFactoryFunction('MediaPipe', (container) => {
+            initMediaPipe(container.element);
+        });
+
+        layout.registerComponentFactoryFunction('Settings', (container) => {
+            initGUI(container.element);
+        });
+
+        layout.loadLayout(config);
+
+        window.addEventListener('resize', () => layout.updateSize());
+    </script>
+</body>
+</html>

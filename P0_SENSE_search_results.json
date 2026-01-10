@@ -1,0 +1,823 @@
+{
+  "query": "HFO Gen 88 Phoenix Project Architecture Hardening",
+  "tavily": {
+    "query": "HFO Gen 88 Phoenix Project Architecture Hardening",
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://srlabs.de/_app/immutable/assets/SRL-Phoenix-Architecture_review-2024.ZGQn_84p.pdf",
+        "title": "[PDF] Phoenix Architecture Review - Security Research Labs",
+        "content": "Corporate Design 2016 Phoenix Architecture Review Threat model and hacking assessment report V.1.0 Prepared for: Phoenix R&D Phoenix Architecture Review Public, Page 1 of 39 1 Executive summary ...................................................................................................... 3 1.1 Engagement overview ........................................................................................................ 3 1.2 Observations and Risks ....................................................................................................... 3 1.3 Recommendations .............................................................................................................. 3 2 Evolution suggestions [...] key material Group state KeyPackage Critical Critical Critical Spam and annoyances Message queue High Critical Critical Phoenix Architecture Review Public, Page 11 of 39 5 Protocol Design This section provides an overview of the Phoenix architecture and its subprotocols for establishing an identity, managing groups, and sending messages. This overview is the basis for the findings presented in the next section. 5.1 Architecture overview The Phoenix architecture is based on MLS. MLS defines how clients interact but deliberately leaves it open how, for example, identities are established or how clients fetch messages. These open ends are tied together by the Phoenix protocol. The Phoenix architectural center is the home server which consists of three components: The Authentication service, [...] a low severity, another potential mitigation is to explain this issue and its potential mitigations at the implementation level. Phoenix Architecture Review Public, Page 34 of 39 8 Detailed recommendations In addition to the high-level recommendations outlined above, we propose a series of more specific and actionable steps to address some key areas of concern. These detailed recommendations are designed to provide further clarity on how to strengthen the development processes. We group our suggestions into three categories: The attacker, the protocol, and the defense. 8.1 Attacker Adversary: Design around an honest-but-curious attacker The Phoenix protocol is designed to primarily defend against the so-called snapshot attacker. The snapshot attacker can read data at a certain point in",
+        "score": 0.89256257,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.linkedin.com/pulse/how-phoenix-project-improved-my-enterprise-skills-jeff-dalton",
+        "title": "How Phoenix Project improved my Enterprise Architecture Skills",
+        "content": "25, 26, and 27. Here I found the most value for my day to day job. Here I found new inspiration to \u201cmake a difference\u201d. Here I found hope that Enterprise Architecture could really add value. [...] The key points I found in The Phoenix Project to give me hope in the value of Enterprise Architecture again are:\n\n Business Outcome Focus\n End to End / Outside \u2013 In, Systems Thinking\n True Stakeholder Understanding\n Outcome / Capability / Risk / Counter-Measure Map\n\nThese points gave me a new way of looking and valuing Enterprise Architecture. Hopefully you practicing Enterprise Architects find value here too.\n\n## Business Outcome Focus [...] ## Sign in to view more content\n\nCreate your free account or sign in to continue your search\n\n## Welcome back\n\nBy clicking Continue to join or sign in, you agree to LinkedIn\u2019s User Agreement, Privacy Policy, and Cookie Policy.\n\nNew to LinkedIn? Join now\n\nor\n\nNew to LinkedIn? Join now\n\nBy clicking Continue to join or sign in, you agree to LinkedIn\u2019s User Agreement, Privacy Policy, and Cookie Policy.\n\nLinkedIn is better on the app\n\nDon\u2019t have the app? Get it in the Microsoft Store.\n\n Open the app\n\n5 min read\n\n# How Phoenix Project improved my Enterprise Architecture Skills\n\n Report this article\n\nJeff D. \n\n### Jeff D.\n\nPublished Apr 2, 2019\n\n+ Follow",
+        "score": 0.87147486,
+        "raw_content": null
+      },
+      {
+        "url": "https://doreenpower.com/pdf/dhakanorthern/1.%20DNPGL%20ESIA_final%20version_13Nov2015.pdf",
+        "title": "[PDF] ENVIRONMENTAL AND SOCIAL IMPACT ASSESSMENT",
+        "content": "(c) Drainage congestion, (d) Surface water pollution, and (e) Environmental pollution from solid/ construction waste. It can be seen that the proposed 55MW HFO-fired power plant will not have any lasting adverse environmental impacts on the project area during the construction phase. Implementation of the proposed project would have a limited amount of, short-term, local impacts on flora and fauna, noise level, water resources, air quality, navigation and traffic movement. It is not expected, however, that any of the above effects would persist over an extended period beyond the installation phase of this project. During the operation phase, a number of adverse environmental impacts will be there on the air and noise environment as well as worker health and safety, some of them may be [...] Promote supply from local suppliers \u2022 If cultural resources are found during excavation \u2022 Follow the \u201cChance Find Procedure\u201d World Bank Operational guidelines OP 4.11 (See Annex F) \u2022 Drainage congestion during construction activities \u2022 Provide adequate diversion channel, if required \u2022 Provide facilities for pumping of congested water, if needed \u2022 Ensure adequate monitoring of drainage effects, especially if construction works are carried out during the wet season. Contractor (Monitoring by DNPGL) Construction of HFO transmission pipeline from bank of Dhaleshwari river to storage space, construction of service jetty \u2022 Water pollution due to sediment suspension (increase in suspended solids) or washing away of slurry to the water bodies, temporary, localized disruption of fish habitat \u2022 Use [...] aggregate) storage areas \u2022 Watering unpaved/dusty roads (at least twice a day; cost estimate provided) \u2022 Sprinkling and covering stockpiles \u2022 Maintain adequate moisture content of soil during transportation, compaction and handling \u2022 Covering top of trucks carrying materials to the site and carrying construction debris away from the site \u2022 Damage/ reduction of native flora, displacement of wildlife, birds etc., impact on vulnerable species such as the Gangetic Dolphin \u2022 Provide proper compensation if there is any destruction of trees outside the project boundary. \u2022 Control intensive movement of heavy construction vehicles. \u2022 Temporary stockpiling of materials should be done on non-vegetative surfaces \u2022 Revegetation, if required, should be done using native, non-invasive species and by",
+        "score": 0.05300977,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.iaea.org/sites/default/files/24/10/cn-327_book_of_abstracts.pdf",
+        "title": "[PDF] small modular reactors - International Atomic Energy Agency",
+        "content": "Advanced Reactors ................................ ................................ ................................ ........... 113 \n\nDevelopment Strategy of HMI and Digital I&C System's Emulator for Korean \n\nInnovative SMR Plant ................................ ................................ ................................ ....... 114 \n\nMaintenance Strategy for i -SMR ................................ ................................ ..................... 115 \n\nTailored MBSE Approach for SMR Gen IV Architecting ................................ ............... 116 \n\nProcess Instrumentation for New Generation of Reactors ................................ ......... 118 \n\nAI for Design, Engineering, Construction and Operation of SMRs ............................. 119 [...] Safety Standards ................................ ................................ ................................ ............... 283 \n\nAchieving resilience through the preservation of functions - safety and security \n\nworking together ................................ ................................ ................................ ............... 284 \n\nTHE MEANING OF RISK FOR SAFETY, SECURITY, AND SAFEGUARDS IN THE \n\nDESIGN OF ADVANCED NUCLEAR REACTORS ................................ ............................ 286 \n\nSafety, Security, and Safeguards (3S) Interface Identification and Characterisation in \n\nGeneration IV Advanced Modular Reactors: A Generation IV International Forum [...] ................................ ................................ ................................ ................................ ............. 232 \n\nBasis for Regulatory Requirements for Design and Safety Analysis of Reactor \n\nFacilities ................................ ................................ ................................ ............................. 233 \n\nTopical Group C: Safety, Security and Safeguards ................................ .............................. 235 \n\nTrack 8: Demonstrating SMR\u2019s Safety Case (C.8) ................................ ............................ 236 \n\nRegulatory Research Activity on Safety Analysis Methodology for Passive Safety",
+        "score": 0.027795622,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.eia.gov/analysis/studies/powerplants/capitalcost/pdf/capital_cost_AEO2025.pdf",
+        "title": "[PDF] Capital Cost and Performance Characteristics for Utility-Scale ... - EIA",
+        "content": "is based on velocity pressure for enclosed, rigid buildings with flat roofs, which is the most widely used building configuration at power generating stations. The baseline was the approximate average velocity pressure for the location data set; therefore, the factor was reduced for locations lower than the average and increased for locations above the average. SL-018001 Final \u2013 Rev A December 6, 2023 U.S. Energy Information Administration and Z Federal Project 14987.001 Capital Cost and Performance Characteristic Estimates for Utility Scale Electric Power Generating Technologies . XI The environmental location factor for seismic is based on the \u201cSeismic Design\u201d category, which is determined based on site-specific coefficients1 and the calculated mapped spectral response or design [...] 86 14.3. OPERATIONS AND MAINTENANCE COST ESTIMATE .................................................................. 88 14.4. ENVIRONMENTAL AND EMISSIONS INFORMATION ..................................................................... 89 CASE 15. OFFSHORE WIND: FIXED-BOTTOM MONOPILE FOUNDATIONS, 900 MW NET ................ 90 15.1. CASE DESCRIPTION ........................................................................................................................ 90 15.1.1. MECHANICAL EQUIPMENT AND SYSTEMS ................................................................................ 90 SL-018001 Final \u2013 Rev A December 6, 2023 U.S. Energy Information Administration and Z Federal Project 14987.001 Capital Cost and Performance Characteristic Estimates for Utility Scale Electric Power [...] ADJUSTMENTS SL-018001 Final \u2013 Rev A December 6, 2023 U.S. Energy Information Administration and Z Federal Project 14987.001 Capital Cost and Performance Characteristic Estimates for Utility Scale Electric Power Generating Technologies xii A C R O N Y M S A N D A B B R E V I A T I O N S Acronym/Abbreviation Definition/Clarification AC Alternating Current ACC Air-Cooled Condenser ASCE American Society of Civil Engineers BESS Battery Energy Storage System BFB Bubbling Fluidized Bed BOP Balance-of-Plant Btu/kWh British Thermal Units Per Kilowatthour Btu/lb British Thermal Unit Per Pound Btu/scf British Thermal Unit Per Standard Cubic Foot CC Combined-Cycle CCS Carbon Capture and Sequestration CFR Code of Federal Regulations CO2 Carbon Dioxide COD Commercial Operation Date CT Combustion",
+        "score": 0.01627746,
+        "raw_content": null
+      }
+    ],
+    "response_time": 2.78,
+    "request_id": "3d37621e-fd7f-4bab-93d6-ddffd2a071da"
+  },
+  "brave": {
+    "query": {
+      "original": "HFO Gen 88 Phoenix Project Architecture Hardening",
+      "show_strict_warning": false,
+      "is_navigational": false,
+      "is_geolocal": true,
+      "local_decision": "mix",
+      "is_news_breaking": false,
+      "spellcheck_off": true,
+      "country": "us",
+      "bad_results": false,
+      "should_fallback": false,
+      "postal_code": "",
+      "city": "",
+      "header_country": "",
+      "more_results_available": true,
+      "state": ""
+    },
+    "mixed": {
+      "type": "mixed",
+      "main": [
+        {
+          "type": "web",
+          "index": 0,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 1,
+          "all": false
+        },
+        {
+          "type": "videos",
+          "all": true
+        },
+        {
+          "type": "web",
+          "index": 2,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 3,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 4,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 5,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 6,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 7,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 8,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 9,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 10,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 11,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 12,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 13,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 14,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 15,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 16,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 17,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 18,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 19,
+          "all": false
+        }
+      ],
+      "top": [],
+      "side": []
+    },
+    "type": "search",
+    "videos": {
+      "type": "videos",
+      "results": [
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=jiTz7a9URpY",
+          "title": "PHX Public Safety and Justice Subcommittee Meeting, November 17, ...",
+          "description": "PHX Public Safety and Justice Subcommittee Meeting, November 17, 2020Stay up to date with city news and information, bookmark phoenix.gov/newsroom and check ...",
+          "age": "November 17, 2020",
+          "page_age": "2020-11-17T00:00:00",
+          "fetched_content_timestamp": 1677180004,
+          "video": {
+            "duration": "01:28:41",
+            "views": 252,
+            "creator": "CityofPhoenixAZ",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/vZHzre2WFctHEfHJsAmkvSNBe9zkovx57G7H85e5o1o/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9q/aVR6N2E5VVJwWS9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/jiTz7a9URpY/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=BLlwjDJDT3k",
+          "title": "Phoenix City Council Policy Session, June 30, 2020 - YouTube",
+          "description": "Phoenix City Council Policy Session, June 30, 2020Stay up to date with city news and information, bookmark phoenix.gov/newsroom and check daily! Here are oth...",
+          "age": "July 1, 2020",
+          "page_age": "2020-07-01T18:09:33",
+          "fetched_content_timestamp": 1712520588,
+          "video": {
+            "duration": "01:56:19",
+            "views": 295,
+            "creator": "CityofPhoenixAZ",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/ffwKX6Yiu2J2HMKFW42QTqJm63WPL-PDv_CqM7C1oMw/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9C/TGx3akRKRFQzay9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/BLlwjDJDT3k/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=6IXy7OMEQbQ",
+          "title": "Phoenix City Council Formal Meeting - November 18, 2020 - YouTube",
+          "description": "Phoenix City Council Formal Meeting - November 18, 2020Stay up to date with city news and information, bookmark phoenix.gov/newsroom and check daily! Here ar...",
+          "age": "November 18, 2020",
+          "page_age": "2020-11-18T00:00:00",
+          "fetched_content_timestamp": 1685052409,
+          "video": {
+            "duration": "02:57:22",
+            "views": 509,
+            "creator": "CityofPhoenixAZ",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/T8fnayPIQo5bfw7YL7cpJd23zS0LUqusc6Cmq-pipZg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS82/SVh5N09NRVFiUS9o/cWRlZmF1bHQuanBn",
+            "original": "https://i.ytimg.com/vi/6IXy7OMEQbQ/hqdefault.jpg"
+          }
+        }
+      ],
+      "mutated_by_goggles": false
+    },
+    "web": {
+      "type": "search",
+      "results": [
+        {
+          "title": "Project Phoenix \u2013 88 Energy Ltd",
+          "url": "https://88energy.com/project-phoenix/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Project Phoenix is <strong>an oil-bearing conventional reservoir play identified during the drilling and logging of Icewine-1 and Hickory-1 and adjacent offset drilling</strong>. Strategically located along the Dalton Highway, Project Phoenix is adjacent to the Trans-Alaskan Pipeline System (TAPS).",
+          "profile": {
+            "name": "88energy",
+            "url": "https://88energy.com/project-phoenix/",
+            "long_name": "88energy.com",
+            "img": "https://imgs.search.brave.com/33dOsX16caKxQ-jJBmJt3JDYaUIbHkJdlkv94NZyJDc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTlhOWE1ZDZm/ZmNlZjM0ZDk1MzQy/YTllMzA0MGVjMDVl/OGIyYWYxZTAwYjE2/MWQzODIxZWQ3MTM1/MTMxNWQ0MS84OGVu/ZXJneS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "88energy.com",
+            "hostname": "88energy.com",
+            "favicon": "https://imgs.search.brave.com/33dOsX16caKxQ-jJBmJt3JDYaUIbHkJdlkv94NZyJDc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTlhOWE1ZDZm/ZmNlZjM0ZDk1MzQy/YTllMzA0MGVjMDVl/OGIyYWYxZTAwYjE2/MWQzODIxZWQ3MTM1/MTMxNWQ0MS84OGVu/ZXJneS5jb20v",
+            "path": "\u203a project-phoenix"
+          }
+        },
+        {
+          "title": "Phoenix | HKS Architects",
+          "url": "https://www.hksinc.com/our-offices/phoenix/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "For a curated selection of projects tailored to your needs, please contact Office Director at [email protected] or +1 602 218 3853 See more projects",
+          "page_age": "2025-08-22T17:24:06",
+          "profile": {
+            "name": "HKS",
+            "url": "https://www.hksinc.com/our-offices/phoenix/",
+            "long_name": "hksinc.com",
+            "img": "https://imgs.search.brave.com/eOzZVKfdArgNxoxkRyQCXHh_DjPh7RaY8I-lzJKIKBc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjdjODc2Nzcx/YmU5ZDAxN2UzZmVh/ZDdkMjdlZmUwNzk5/NzgxNGEyZjc1ZWJh/M2Q1YTE4NjUwMDY0/NDViYjNlZi93d3cu/aGtzaW5jLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "hksinc.com",
+            "hostname": "www.hksinc.com",
+            "favicon": "https://imgs.search.brave.com/eOzZVKfdArgNxoxkRyQCXHh_DjPh7RaY8I-lzJKIKBc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjdjODc2Nzcx/YmU5ZDAxN2UzZmVh/ZDdkMjdlZmUwNzk5/NzgxNGEyZjc1ZWJh/M2Q1YTE4NjUwMDY0/NDViYjNlZi93d3cu/aGtzaW5jLmNvbS8",
+            "path": "\u203a our-offices  \u203a phoenix"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/Mu2mMIvIWbAYMDdEY4XJfxnv67WQXCvJB6v5VpiZfFw/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/aGtzaW5jLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvMjAxOC8w/OS9QaG9lbml4Mi5q/cGc",
+            "original": "https://www.hksinc.com/wp-content/uploads/2018/09/Phoenix2.jpg",
+            "logo": false
+          },
+          "age": "August 22, 2025"
+        },
+        {
+          "title": "mix phx.new \u2014 Phoenix v1.8.3",
+          "url": "https://hexdocs.pm/phoenix/Mix.Tasks.Phx.New.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "For example, you could generate a cache by running: mix phx.new mycache --no-install &amp;&amp; cd mycache &amp;&amp; mix deps.get &amp;&amp; mix deps.compile &amp;&amp; mix assets.setup &amp;&amp; rm -rf assets config lib priv test mix.exs README.md ... The entire cache directory will be copied to the new project, replacing any existing files where conflicts exist.",
+          "profile": {
+            "name": "HexDocs",
+            "url": "https://hexdocs.pm/phoenix/Mix.Tasks.Phx.New.html",
+            "long_name": "hexdocs.pm",
+            "img": "https://imgs.search.brave.com/DfzPqO31Clx7L84kqddwLOZFl-RpvA8q5lrB2RI-u-c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTBiNWEyYWEy/ZmQ4NzhlZmQ3OWU3/ODAwOGQwOGU0NjNj/OGE4YzQ0NWY0YzZm/YTQ1NDEzYWVhNTZj/ZTU3NmQxNi9oZXhk/b2NzLnBtLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "hexdocs.pm",
+            "hostname": "hexdocs.pm",
+            "favicon": "https://imgs.search.brave.com/DfzPqO31Clx7L84kqddwLOZFl-RpvA8q5lrB2RI-u-c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTBiNWEyYWEy/ZmQ4NzhlZmQ3OWU3/ODAwOGQwOGU0NjNj/OGE4YzQ0NWY0YzZm/YTQ1NDEzYWVhNTZj/ZTU3NmQxNi9oZXhk/b2NzLnBtLw",
+            "path": "\u203a phoenix  \u203a Mix.Tasks.Phx.New.html"
+          }
+        },
+        {
+          "title": "US: 88 Energy provides Project Phoenix update",
+          "url": "https://www.energy-pedia.com/news/usa/88-energy-provides-project-phoenix-update-198430",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Burgundy&#x27;s stated intention remains to provide a full carry for the anticipated CY25/26 work program in exchange for an additional working interest from 88E. Project Phoenix de-risking: Planning and design for an extended horizontal well flow test of the SMD-B reservoir, utilising the existing Franklin Bluffs gravel pad is progressing in collaboration with Burgundy, with finalisation expected to align with any potential farm-out and associated carry.",
+          "profile": {
+            "name": "Energy-Pedia",
+            "url": "https://www.energy-pedia.com/news/usa/88-energy-provides-project-phoenix-update-198430",
+            "long_name": "energy-pedia.com",
+            "img": "https://imgs.search.brave.com/UwfsQLjZ7VYI0XxZkk7rfwr9H8_DxObxPVahD4pqkc8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE5NmYzMDU3/MWVjODU2NzNhNmQ1/MWFjOWQxZjMzNjNm/M2M0OWI1NDJlNjY3/ZjY2NjQ4NzhkNzU0/MDMwOTg0MS93d3cu/ZW5lcmd5LXBlZGlh/LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "energy-pedia.com",
+            "hostname": "www.energy-pedia.com",
+            "favicon": "https://imgs.search.brave.com/UwfsQLjZ7VYI0XxZkk7rfwr9H8_DxObxPVahD4pqkc8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE5NmYzMDU3/MWVjODU2NzNhNmQ1/MWFjOWQxZjMzNjNm/M2M0OWI1NDJlNjY3/ZjY2NjQ4NzhkNzU0/MDMwOTg0MS93d3cu/ZW5lcmd5LXBlZGlh/LmNvbS8",
+            "path": "\u203a news  \u203a usa  \u203a 88-energy-provides-project-phoenix-update-198430"
+          }
+        },
+        {
+          "title": "US: 88 Energy provides update on Project Phoenix and 2026 production test program",
+          "url": "https://www.energy-pedia.com/news/usa/88-energy-limited-(asx-88e--aim-88e--otc-eeenf)-(88-energy-or-the-company)-is-pleased-to-provide-an-update-on-project-phoenix-(~75pc-working-intere-20",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Phase 2: Upon Phase 1 Success; Burgundy to fund up to US$10 million (approx. A$15 million) for an additional well or other CAPEX program (88E carry up to US$7.5 million (based on its current 75% WI), resulting in a 25% WI post-Phase 2. Project Phoenix Pilot Hole, Horizontal Well and Production Test",
+          "profile": {
+            "name": "Energy-Pedia",
+            "url": "https://www.energy-pedia.com/news/usa/88-energy-limited-(asx-88e--aim-88e--otc-eeenf)-(88-energy-or-the-company)-is-pleased-to-provide-an-update-on-project-phoenix-(~75pc-working-intere-20",
+            "long_name": "energy-pedia.com",
+            "img": "https://imgs.search.brave.com/UwfsQLjZ7VYI0XxZkk7rfwr9H8_DxObxPVahD4pqkc8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE5NmYzMDU3/MWVjODU2NzNhNmQ1/MWFjOWQxZjMzNjNm/M2M0OWI1NDJlNjY3/ZjY2NjQ4NzhkNzU0/MDMwOTg0MS93d3cu/ZW5lcmd5LXBlZGlh/LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "energy-pedia.com",
+            "hostname": "www.energy-pedia.com",
+            "favicon": "https://imgs.search.brave.com/UwfsQLjZ7VYI0XxZkk7rfwr9H8_DxObxPVahD4pqkc8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE5NmYzMDU3/MWVjODU2NzNhNmQ1/MWFjOWQxZjMzNjNm/M2M0OWI1NDJlNjY3/ZjY2NjQ4NzhkNzU0/MDMwOTg0MS93d3cu/ZW5lcmd5LXBlZGlh/LmNvbS8",
+            "path": "\u203a news  \u203a usa  \u203a 88-energy-limited-(asx-88e--aim-88e--otc-eeenf)-(88-energy-or-the-company)-is-pleased-to-provide-an-update-on-project-phoenix-(~75pc-working-intere-20"
+          }
+        },
+        {
+          "title": "US: 88 Energy publishes updated Project Phoenix Presentation",
+          "url": "https://www.energy-pedia.com/news/usa/88-energy-limited---project-phoenix-presentation-197611",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "88 Energy has confirmed that following the resource update announced on <strong>18th September 2024</strong>, the Company has today published an updated presentation on Project Phoenix, which is available on the Company&#x27;s website.",
+          "profile": {
+            "name": "Energy-Pedia",
+            "url": "https://www.energy-pedia.com/news/usa/88-energy-limited---project-phoenix-presentation-197611",
+            "long_name": "energy-pedia.com",
+            "img": "https://imgs.search.brave.com/UwfsQLjZ7VYI0XxZkk7rfwr9H8_DxObxPVahD4pqkc8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE5NmYzMDU3/MWVjODU2NzNhNmQ1/MWFjOWQxZjMzNjNm/M2M0OWI1NDJlNjY3/ZjY2NjQ4NzhkNzU0/MDMwOTg0MS93d3cu/ZW5lcmd5LXBlZGlh/LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "energy-pedia.com",
+            "hostname": "www.energy-pedia.com",
+            "favicon": "https://imgs.search.brave.com/UwfsQLjZ7VYI0XxZkk7rfwr9H8_DxObxPVahD4pqkc8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE5NmYzMDU3/MWVjODU2NzNhNmQ1/MWFjOWQxZjMzNjNm/M2M0OWI1NDJlNjY3/ZjY2NjQ4NzhkNzU0/MDMwOTg0MS93d3cu/ZW5lcmd5LXBlZGlh/LmNvbS8",
+            "path": "\u203a news  \u203a usa  \u203a 88-energy-limited---project-phoenix-presentation-197611"
+          }
+        },
+        {
+          "title": "\u201cThe Phoenix Project\u201d - Learning you can apply as an Architect",
+          "url": "https://www.linkedin.com/pulse/phoenix-project-learning-you-can-apply-architect-harshal-bhave",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "As described in the book, <strong>IT Security team isn&#x27;t invited to IT or product meetings because they&#x27;re seen as impeding progress</strong>. With a Fast Fail approach and a transient nature of Architecture, you need appropriate Security controls in place, ...",
+          "page_age": "2019-09-10T14:53:10",
+          "profile": {
+            "name": "LinkedIn",
+            "url": "https://www.linkedin.com/pulse/phoenix-project-learning-you-can-apply-architect-harshal-bhave",
+            "long_name": "linkedin.com",
+            "img": "https://imgs.search.brave.com/B3dmoKTAgUkkbrvzAxFg_MfHAm5WmWy0N-4kH1AGWOo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGE1YzZjOWNj/NmNiODQ4NzI0ODg1/MGY5ZGQ2YzhjZTRm/N2NjOGIzZjc1NTlj/NDM2ZGI5Yjk3ZWI1/YzBmNzJmZS93d3cu/bGlua2VkaW4uY29t/Lw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "linkedin.com",
+            "hostname": "www.linkedin.com",
+            "favicon": "https://imgs.search.brave.com/B3dmoKTAgUkkbrvzAxFg_MfHAm5WmWy0N-4kH1AGWOo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGE1YzZjOWNj/NmNiODQ4NzI0ODg1/MGY5ZGQ2YzhjZTRm/N2NjOGIzZjc1NTlj/NDM2ZGI5Yjk3ZWI1/YzBmNzJmZS93d3cu/bGlua2VkaW4uY29t/Lw",
+            "path": "\u203a pulse  \u203a phoenix-project-learning-you-can-apply-architect-harshal-bhave"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/ckxl_asCndNogkyv7bzosLsrmSH--80eBhsBEgT50DE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5saWNkbi5jb20v/ZG1zL2ltYWdlL0M1/MTEyQVFIczdCdEtH/SGo4T2cvYXJ0aWNs/ZS1jb3Zlcl9pbWFn/ZS1zaHJpbmtfNjAw/XzIwMDAvMC8xNTY4/MTI2MzgzMzg2P2U9/MjE0NzQ4MzY0NyZ2/PWJldGEmdD0wcHd3/cERQQVpUSmVfYzR4/dXFvUEhjeEtRVEdI/dlYwMUUzdEswSGtD/eEN3",
+            "original": "https://media.licdn.com/dms/image/C5112AQHs7BtKGHj8Og/article-cover_image-shrink_600_2000/0/1568126383386?e=2147483647&v=beta&t=0pwwpDPAZTJe_c4xuqoPHcxKQTGHvV01E3tK0HkCxCw",
+            "logo": false
+          },
+          "age": "September 10, 2019"
+        },
+        {
+          "title": "Up and Running \u2014 Phoenix v1.8.3",
+          "url": "https://hexdocs.pm/phoenix/up_and_running.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Once our dependencies are installed, the task will prompt us to change into our project directory and start our application. Phoenix assumes that our PostgreSQL database will have a postgres user account with the correct permissions and a password of &quot;postgres&quot;. Let&#x27;s give it a try. First, we&#x27;ll cd into the hello/ directory we&#x27;ve just created: ... $ mix ecto.create Compiling 13 files (.ex) Generated hello app The database for Hello.Repo has been created",
+          "profile": {
+            "name": "HexDocs",
+            "url": "https://hexdocs.pm/phoenix/up_and_running.html",
+            "long_name": "hexdocs.pm",
+            "img": "https://imgs.search.brave.com/DfzPqO31Clx7L84kqddwLOZFl-RpvA8q5lrB2RI-u-c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTBiNWEyYWEy/ZmQ4NzhlZmQ3OWU3/ODAwOGQwOGU0NjNj/OGE4YzQ0NWY0YzZm/YTQ1NDEzYWVhNTZj/ZTU3NmQxNi9oZXhk/b2NzLnBtLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "hexdocs.pm",
+            "hostname": "hexdocs.pm",
+            "favicon": "https://imgs.search.brave.com/DfzPqO31Clx7L84kqddwLOZFl-RpvA8q5lrB2RI-u-c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTBiNWEyYWEy/ZmQ4NzhlZmQ3OWU3/ODAwOGQwOGU0NjNj/OGE4YzQ0NWY0YzZm/YTQ1NDEzYWVhNTZj/ZTU3NmQxNi9oZXhk/b2NzLnBtLw",
+            "path": "\u203a phoenix  \u203a up_and_running.html"
+          }
+        },
+        {
+          "title": "Phoenix Framework",
+          "url": "https://www.phoenixframework.org/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Package your app and (optionally) generate a Dockerfile for hassle-free deployment, wherever you choose to run your apps.",
+          "profile": {
+            "name": "Phoenix Framework",
+            "url": "https://www.phoenixframework.org/",
+            "long_name": "phoenixframework.org",
+            "img": "https://imgs.search.brave.com/1JspwzeJVugBMsVGZuP24R3-ji6h1Rm5ajlO5eUuiAQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDQzNGE2ODE3/NWUyM2FkYzU3MDg0/N2VmMTY5N2ZjZGY0/ZDg4MmU2OWU0Mjdj/ZjUxMzRiY2NiYzQ4/YWViNGNjYS93d3cu/cGhvZW5peGZyYW1l/d29yay5vcmcv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "phoenixframework.org",
+            "hostname": "www.phoenixframework.org",
+            "favicon": "https://imgs.search.brave.com/1JspwzeJVugBMsVGZuP24R3-ji6h1Rm5ajlO5eUuiAQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDQzNGE2ODE3/NWUyM2FkYzU3MDg0/N2VmMTY5N2ZjZGY0/ZDg4MmU2OWU0Mjdj/ZjUxMzRiY2NiYzQ4/YWViNGNjYS93d3cu/cGhvZW5peGZyYW1l/d29yay5vcmcv",
+            "path": ""
+          }
+        },
+        {
+          "title": "Postwar Architecture Task Force of Greater Phoenix | Modern Phoenix",
+          "url": "https://modernphoenix.net/patf/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The Postwar Architecture Task Force of Greater Phoenix (PATF) promotes, protects and preserves our midcentury architectural heritage for the enjoyment of future generations. We partner with civic, cultural, educational and preservation-minded organizations on both a local and national level ...",
+          "profile": {
+            "name": "Modernphoenix",
+            "url": "https://modernphoenix.net/patf/",
+            "long_name": "modernphoenix.net",
+            "img": "https://imgs.search.brave.com/G48p7PgCubJ5z1Lbw49eOxapGQWEK1H45DAFROJS8vU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMDVlNTQzYzI5/YmJkYzkwZDkxOTg2/ZTkzY2ZhZmYwZmJm/YjA0MzdkODBmYmE5/NDdjNDZmMDNlMDc0/OTE5N2Y5Ny9tb2Rl/cm5waG9lbml4Lm5l/dC8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "modernphoenix.net",
+            "hostname": "modernphoenix.net",
+            "favicon": "https://imgs.search.brave.com/G48p7PgCubJ5z1Lbw49eOxapGQWEK1H45DAFROJS8vU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMDVlNTQzYzI5/YmJkYzkwZDkxOTg2/ZTkzY2ZhZmYwZmJm/YjA0MzdkODBmYmE5/NDdjNDZmMDNlMDc0/OTE5N2Y5Ny9tb2Rl/cm5waG9lbml4Lm5l/dC8",
+            "path": "\u203a patf"
+          }
+        },
+        {
+          "title": "Commercial Building Hardening Projects | Phoenix Precast Products",
+          "url": "https://www.phoenixprecastproducts.com/building-hardening",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "When it comes to protecting your project, we have many options to help harden and protect with the use of precast concrete. Some of the items used for hardening can be the <strong>Spheres, Bollards, Benches and/or Planters</strong>. Below are some projects incorporating products manufactured by Phoenix Precast ...",
+          "profile": {
+            "name": "Phoenixprecastproducts",
+            "url": "https://www.phoenixprecastproducts.com/building-hardening",
+            "long_name": "phoenixprecastproducts.com",
+            "img": "https://imgs.search.brave.com/wiLuKsz4623JAa-d9VZ5ocwassG5wguWY9waqNDuDoE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2IyNzBiYzgz/NjFmNDdiZThkZjNk/NThkYmUzMWQyOGE0/ZGQ5OWZlYmJiNzhh/NmVkZTJjYmE1MjJk/OTA2ZDFmMi93d3cu/cGhvZW5peHByZWNh/c3Rwcm9kdWN0cy5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "phoenixprecastproducts.com",
+            "hostname": "www.phoenixprecastproducts.com",
+            "favicon": "https://imgs.search.brave.com/wiLuKsz4623JAa-d9VZ5ocwassG5wguWY9waqNDuDoE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2IyNzBiYzgz/NjFmNDdiZThkZjNk/NThkYmUzMWQyOGE0/ZGQ5OWZlYmJiNzhh/NmVkZTJjYmE1MjJk/OTA2ZDFmMi93d3cu/cGhvZW5peHByZWNh/c3Rwcm9kdWN0cy5j/b20v",
+            "path": "\u203a building-hardening"
+          }
+        },
+        {
+          "title": "Project Phoenix | PMI",
+          "url": "https://www.pmi.org/learning/library/project-phoenix-case-study-13165",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The Pentagon is a building of great significance in American history and architecture. This building and the people within it were tested by the terrorist attack of September 11, 2001. Out of this tragedy was born the Phoenix Project\u2014an extraordinary effort to restore the Pentagon in a manner consistent with its status as a National Historic Landmark.",
+          "profile": {
+            "name": "PMI",
+            "url": "https://www.pmi.org/learning/library/project-phoenix-case-study-13165",
+            "long_name": "pmi.org",
+            "img": "https://imgs.search.brave.com/Y3PXKWdNS1am1-z6nTTiXw9mIBr4mamp2461f9D6YSs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjRlZDNjOTg0/NmZjY2I0YWNkNGIy/MTI3MjcxNTUxNzA4/YTE5MTM2ZmE1NDEw/ZGM2NjY0ODExN2Zk/ZGI5NDI3ZC93d3cu/cG1pLm9yZy8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "pmi.org",
+            "hostname": "www.pmi.org",
+            "favicon": "https://imgs.search.brave.com/Y3PXKWdNS1am1-z6nTTiXw9mIBr4mamp2461f9D6YSs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjRlZDNjOTg0/NmZjY2I0YWNkNGIy/MTI3MjcxNTUxNzA4/YTE5MTM2ZmE1NDEw/ZGM2NjY0ODExN2Zk/ZGI5NDI3ZC93d3cu/cG1pLm9yZy8",
+            "path": "\u203a learning  \u203a library  \u203a project-phoenix-case-study-13165"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/4eoiGR0oNkuGGAOqOnZjZjibRa2LYuNabB4yPUxQqbY/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cG1pLm9yZy8tL21l/ZGlhL3BtaS9vdGhl/ci1pbWFnZXMvbG9n/b3MvcG1pX2xvZ29f/b2dzaGFyZS5wbmc_/aD02MzAmYW1wO2lh/cj0wJmFtcDt3PTEy/MDAmYW1wO3Jldj1h/OWVhMjczYTY4MWM0/MmI5YjExMmUzNWYy/MmRiZDc5NSZhbXA7/ZGlhbm9nYT1mYWxz/ZQ",
+            "original": "https://www.pmi.org/-/media/pmi/other-images/logos/pmi_logo_ogshare.png?h=630&amp;iar=0&amp;w=1200&amp;rev=a9ea273a681c42b9b112e35f22dbd795&amp;dianoga=false",
+            "logo": true
+          }
+        },
+        {
+          "title": "Project Phoenix modular housing: Sustainable living",
+          "url": "https://www.autodesk.com/design-make/videos/project-phoenix-modular-housing",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Meagher: By using generative design, we can take all of those complex forces and look at them simultaneously, so you\u2019re not doing it in an iterative lengthy process that can drag out to a year.",
+          "profile": {
+            "name": "Autodesk",
+            "url": "https://www.autodesk.com/design-make/videos/project-phoenix-modular-housing",
+            "long_name": "autodesk.com",
+            "img": "https://imgs.search.brave.com/WMM_b93pgsivMysxaaVgsxybwM-09l9QMQ3WLl2NKYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmE0NmNhY2Iw/MzA4YmRkZThlN2Mw/ZGQ1NWMxNTY3OTBm/YzdmZGFjZGIxMjQ4/ZGFmMWY3MzUyNzEz/NTk0N2U4Ni93d3cu/YXV0b2Rlc2suY29t/Lw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "autodesk.com",
+            "hostname": "www.autodesk.com",
+            "favicon": "https://imgs.search.brave.com/WMM_b93pgsivMysxaaVgsxybwM-09l9QMQ3WLl2NKYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmE0NmNhY2Iw/MzA4YmRkZThlN2Mw/ZGQ1NWMxNTY3OTBm/YzdmZGFjZGIxMjQ4/ZGFmMWY3MzUyNzEz/NTk0N2U4Ni93d3cu/YXV0b2Rlc2suY29t/Lw",
+            "path": "\u203a design-make  \u203a videos  \u203a project-phoenix-modular-housing"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/zCYi9GLJrA4ABV8E8jwAHFZY_eN1NN1HC8bmEzYV9Lw/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuY3RmYXNzZXRz/Lm5ldC92N3dyMTZu/cnIwbXovNDZ3Zkg4/MFUzdm9lblh2Q0FV/d0lQaS8yZDhjYzRh/OTgyYTBjMmUxMzFj/OGI2MmZkN2EzYTI2/ZC90ZWFzZXItcHJv/amVjdC1waG9lbml4/LW1vZHVsYXItaG91/c2luZy5qcGc",
+            "original": "https://images.ctfassets.net/v7wr16nrr0mz/46wfH80U3voenXvCAUwIPi/2d8cc4a982a0c2e131c8b62fd7a3a26d/teaser-project-phoenix-modular-housing.jpg",
+            "logo": false
+          }
+        },
+        {
+          "title": "88 Energy looks to ignite Project Phoenix \u2013 The Armchair Trader",
+          "url": "https://www.thearmchairtrader.com/uk-shares/88-energy-project-phoenix/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "88 Energy [LON:88E], the small-cap ... The company\u2019s latest update outlines <strong>plans for a horizontal well and extended flow test in 2026 at its Franklin Bluffs acreage on the North Slope</strong>....",
+          "page_age": "2025-11-26T10:50:25",
+          "profile": {
+            "name": "The Armchair Trader",
+            "url": "https://www.thearmchairtrader.com/uk-shares/88-energy-project-phoenix/",
+            "long_name": "thearmchairtrader.com",
+            "img": "https://imgs.search.brave.com/8WndTsaq401EokIcat27DY01LyfrAuvHGu_R3vYC8pQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjJhMmFiYmZj/ZDM2YjI2MThhMzRi/MjczOTg4ZmY4NTdh/MTg2N2RhMDhlZTlm/ODQyMDg5MjFhNmM0/N2E0NjRjNS93d3cu/dGhlYXJtY2hhaXJ0/cmFkZXIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "thearmchairtrader.com",
+            "hostname": "www.thearmchairtrader.com",
+            "favicon": "https://imgs.search.brave.com/8WndTsaq401EokIcat27DY01LyfrAuvHGu_R3vYC8pQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjJhMmFiYmZj/ZDM2YjI2MThhMzRi/MjczOTg4ZmY4NTdh/MTg2N2RhMDhlZTlm/ODQyMDg5MjFhNmM0/N2E0NjRjNS93d3cu/dGhlYXJtY2hhaXJ0/cmFkZXIuY29tLw",
+            "path": "  \u203a home  \u203a uk stock market news  \u203a 88 energy looks to ignite project phoenix"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/70aN45YhTfQKhm648AUgb6SLZ4WkNoi0s44FLHuCAwA/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/dGhlYXJtY2hhaXJ0/cmFkZXIuY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDIyLzAz/L2NhbmFkaWFuLW92/ZXJzZWFzLXBldHJv/bGV1bS1jb3BsLmpw/Zw",
+            "original": "https://www.thearmchairtrader.com/wp-content/uploads/2022/03/canadian-overseas-petroleum-copl.jpg",
+            "logo": false
+          },
+          "age": "November 26, 2025"
+        },
+        {
+          "title": "88 Energy has announced a new 50% increase in resources for Project Phoenix. - Share Talk",
+          "url": "https://www.share-talk.com/88-energy-has-announced-a-new-50-increase-in-resources-for-project-phoenix/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "88 Energy Ltd (AIM: 88E, ASX: 88E, OTC: EEENF) has announced a significant update to Project Phoenix in Alaska. The facility now holds approximately 378 million barrels of gross 2C",
+          "page_age": "2024-09-18T08:29:33",
+          "profile": {
+            "name": "Share Talk",
+            "url": "https://www.share-talk.com/88-energy-has-announced-a-new-50-increase-in-resources-for-project-phoenix/",
+            "long_name": "share-talk.com",
+            "img": "https://imgs.search.brave.com/BV-3S6x4wFXMrRJtJwsvUYNvJqLgsaM5OgRoVFbzx2w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODFmNWUwMzY2/OTQ4ZjJhNzEzNmM4/M2RiMDFmNmE5OTYy/ODdkOTU3N2U5NmYx/Yjk3MjQ3ZDk1YTlm/N2IzZjljMC93d3cu/c2hhcmUtdGFsay5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "share-talk.com",
+            "hostname": "www.share-talk.com",
+            "favicon": "https://imgs.search.brave.com/BV-3S6x4wFXMrRJtJwsvUYNvJqLgsaM5OgRoVFbzx2w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODFmNWUwMzY2/OTQ4ZjJhNzEzNmM4/M2RiMDFmNmE5OTYy/ODdkOTU3N2U5NmYx/Yjk3MjQ3ZDk1YTlm/N2IzZjljMC93d3cu/c2hhcmUtdGFsay5j/b20v",
+            "path": "\u203a 88-energy-has-announced-a-new-50-increase-in-resources-for-project-phoenix"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/0He9J6x8S-gWETsnRR_xR3bTAZ1iWINVHEU3lJtH2H0/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pMC53/cC5jb20vd3d3LnNo/YXJlLXRhbGsuY29t/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDI0/LzA5Lzg4RS0xOC1T/RVAuanBnP2ZpdD0x/MjAwJTJDODAwJiMw/Mzg7c3NsPTE",
+            "original": "https://i0.wp.com/www.share-talk.com/wp-content/uploads/2024/09/88E-18-SEP.jpg?fit=1200%2C800&#038;ssl=1",
+            "logo": false
+          },
+          "age": "September 18, 2024"
+        },
+        {
+          "title": "phx-1.5-upgrade.md \u00b7 GitHub",
+          "url": "https://gist.github.com/chrismccord/e53e79ef8b34adf5d8122a47db44d22f",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Structs have to specifically implement enumerable protocol. https://github.com/phoenixframework/phoenix/blob/v1.5.7/lib/phoenix/view.ex#L298 \u00b7 @epinault, features being added would be upgrading, which is not required when migrating. Though I agree it is helpful to mention here. ... Hey, I was looking for some more info on how to migrate from 1.4 to 1.5 specifically regarding the inner_content situation, and with the lack of examples, I generated a new phoenix projects, and then ran mix phx.gen.html Accounts User users name:string age:integer From the docs, and this still generates the files the &quot;old&quot; way, with render in the templates.",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://gist.github.com/chrismccord/e53e79ef8b34adf5d8122a47db44d22f",
+            "long_name": "gist.github.com",
+            "img": "https://imgs.search.brave.com/xZ1QeMRUaD4Rb2PRlguFbHNXkQKQJMGrNr6XEBVeFkc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNzdmZjEzNDE3/NDlmMDc4NDRlMGJl/YTdmYzUxNGNkNDdk/OGE5YmRiOWQ0NGVl/NDU4MzZlNzg3OTYy/M2YzOTZiMS9naXN0/LmdpdGh1Yi5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "gist.github.com",
+            "hostname": "gist.github.com",
+            "favicon": "https://imgs.search.brave.com/xZ1QeMRUaD4Rb2PRlguFbHNXkQKQJMGrNr6XEBVeFkc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNzdmZjEzNDE3/NDlmMDc4NDRlMGJl/YTdmYzUxNGNkNDdk/OGE5YmRiOWQ0NGVl/NDU4MzZlNzg3OTYy/M2YzOTZiMS9naXN0/LmdpdGh1Yi5jb20v",
+            "path": "\u203a chrismccord  \u203a e53e79ef8b34adf5d8122a47db44d22f"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/xibc_mhoVZOIJZ8WpN5zLmMhFjHG43_6n7CZ-4y25kI/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9naXRo/dWIuZ2l0aHViYXNz/ZXRzLmNvbS9hc3Nl/dHMvZ2lzdC1vZy1p/bWFnZS01NGZkN2Rj/MDcxM2UucG5n",
+            "original": "https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "The Phoenix Project: Human Habitat : April 2020 : Features & Reports : Architecture in profile the building environment in Scotland - Urban Realm",
+          "url": "https://www.urbanrealm.com/features/681/The_Phoenix_Project:_Human_Habitat.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The fire undoubtedly reduced the site\u2019s townscape and architectural heritage value, but it also revealed a strong intangible social heritage in the emotional connection local people had with the site, where many had spent their formative years, building friendships and learning about life. To some degree, the site has an iconic status among the community, representing the decay of a traditional past and its potential for a better future. After 88% voted for a community-led future for the site, the Architectural Heritage Fund, Fife Council and the Scottish Land Fund financed a feasibility study, led by a partnership of the Inverkeithing Trust and the Vivarium Trust, a housing charity.",
+          "profile": {
+            "name": "Urban Realm",
+            "url": "https://www.urbanrealm.com/features/681/The_Phoenix_Project:_Human_Habitat.html",
+            "long_name": "urbanrealm.com",
+            "img": "https://imgs.search.brave.com/ANGy6fw4U7aoopGNLVuy_NfxKWlVl1y8yNgqKQ3f7WM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTkwYTk1OTk0/NjEzYjdjMmU1YWYz/NTI1MGQ5NWQ4MmQ0/OWE1N2IzYzE1NDNk/M2JkY2JiOGIyMTJl/YzViYTBhZi93d3cu/dXJiYW5yZWFsbS5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "urbanrealm.com",
+            "hostname": "www.urbanrealm.com",
+            "favicon": "https://imgs.search.brave.com/ANGy6fw4U7aoopGNLVuy_NfxKWlVl1y8yNgqKQ3f7WM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTkwYTk1OTk0/NjEzYjdjMmU1YWYz/NTI1MGQ5NWQ4MmQ0/OWE1N2IzYzE1NDNk/M2JkY2JiOGIyMTJl/YzViYTBhZi93d3cu/dXJiYW5yZWFsbS5j/b20v",
+            "path": "\u203a features  \u203a 681  \u203a The_Phoenix_Project:_Human_Habitat.html"
+          }
+        },
+        {
+          "title": "US: 88 Energy agrees farm-out for Project Phoenix horizontal test well",
+          "url": "https://www.energy-pedia.com/news/usa/88-energy-agrees-farm-out-for-project-phoenix-horizontal-test-well-198870",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>Provides a clear funding avenue to advance Project Phoenix towards a final development decision via a two-phase farm-in arrangement</strong>. Phase 1: Burgundy to fund US$29 million (approx. A$45 million) for CY25/26 work programme, including drilling of a horizontal well and production testing scheduled ...",
+          "profile": {
+            "name": "Energy-Pedia",
+            "url": "https://www.energy-pedia.com/news/usa/88-energy-agrees-farm-out-for-project-phoenix-horizontal-test-well-198870",
+            "long_name": "energy-pedia.com",
+            "img": "https://imgs.search.brave.com/UwfsQLjZ7VYI0XxZkk7rfwr9H8_DxObxPVahD4pqkc8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE5NmYzMDU3/MWVjODU2NzNhNmQ1/MWFjOWQxZjMzNjNm/M2M0OWI1NDJlNjY3/ZjY2NjQ4NzhkNzU0/MDMwOTg0MS93d3cu/ZW5lcmd5LXBlZGlh/LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "energy-pedia.com",
+            "hostname": "www.energy-pedia.com",
+            "favicon": "https://imgs.search.brave.com/UwfsQLjZ7VYI0XxZkk7rfwr9H8_DxObxPVahD4pqkc8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE5NmYzMDU3/MWVjODU2NzNhNmQ1/MWFjOWQxZjMzNjNm/M2M0OWI1NDJlNjY3/ZjY2NjQ4NzhkNzU0/MDMwOTg0MS93d3cu/ZW5lcmd5LXBlZGlh/LmNvbS8",
+            "path": "\u203a news  \u203a usa  \u203a 88-energy-agrees-farm-out-for-project-phoenix-horizontal-test-well-198870"
+          }
+        },
+        {
+          "title": "The Phoenix \u2014 Feldman Architecture",
+          "url": "https://feldmanarchitecture.com/project/the-phoenix/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The project asked our team to rethink the home\u2019s placement, creatively and sensitively responding to the sloping site. <strong>The house and landscape plans are defined by a series of elongated, stacked, rectilinear forms stretching from east to west</strong>.",
+          "profile": {
+            "name": "Feldman Architecture",
+            "url": "https://feldmanarchitecture.com/project/the-phoenix/",
+            "long_name": "feldmanarchitecture.com",
+            "img": "https://imgs.search.brave.com/F7plmCgZLOFZusD3A0jjcVoMovwH8laU356J-GdzeOg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOGFhZWQzZTc3/ZTM4NjA3N2Q3OThm/NDc0ZDFlMjg5NDgy/MjUzMmE0ODBlMzVi/MmJjNWNmMmE3OTVl/MGNhYTZmMC9mZWxk/bWFuYXJjaGl0ZWN0/dXJlLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "feldmanarchitecture.com",
+            "hostname": "feldmanarchitecture.com",
+            "favicon": "https://imgs.search.brave.com/F7plmCgZLOFZusD3A0jjcVoMovwH8laU356J-GdzeOg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOGFhZWQzZTc3/ZTM4NjA3N2Q3OThm/NDc0ZDFlMjg5NDgy/MjUzMmE0ODBlMzVi/MmJjNWNmMmE3OTVl/MGNhYTZmMC9mZWxk/bWFuYXJjaGl0ZWN0/dXJlLmNvbS8",
+            "path": "\u203a project  \u203a the-phoenix"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/ZyTvMCrvrDpIcHWHwa8oRSE1XZ_5mYWhwF6xYE0Prbo/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/c2FuaXR5LmlvL2lt/YWdlcy9xdzN4a3Jn/OS9wcm9kdWN0aW9u/LzBhZTQzMDQ5ZGEz/YTQ5ZTBiOTQzYmI2/ZTAyYjU2OGVjNTEw/OTliMzItMzQwMHgy/MjY4LmpwZz9hdXRv/PWZvcm1hdCZhbXA7/Y3JvcD1lbnRyb3B5/JmFtcDtmaXQ9Y3Jv/cCZhbXA7aD02MDAm/YW1wO3E9NzUmYW1w/O3c9MTI4MA",
+            "original": "https://cdn.sanity.io/images/qw3xkrg9/production/0ae43049da3a49e0b943bb6e02b568ec51099b32-3400x2268.jpg?auto=format&amp;crop=entropy&amp;fit=crop&amp;h=600&amp;q=75&amp;w=1280",
+            "logo": false
+          }
+        },
+        {
+          "title": "The Phoenix Housing Oakland | MBH Architects",
+          "url": "https://www.mbharch.com/thephoenix",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "In 1989, The Phoenix Ironworks Steel Factory in West Oakland, CA, demolished its buildings, leaving an empty plot of land nestled between Interstate 880 and a BART track. It was a site impacted by congestion, noise, and pollution. Soon, a new project, known as The Phoenix, will rise out of this underused 5-acre patch of concrete.",
+          "profile": {
+            "name": "MBH Architects",
+            "url": "https://www.mbharch.com/thephoenix",
+            "long_name": "mbharch.com",
+            "img": "https://imgs.search.brave.com/roZKyn8cUUv_ApueH9Ws6Yt7RXDNC2qX7eOZlhwAN3Q/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZDhmMDQzOGQ3/OGViMTg2OGQ3MDcy/OWIyNGU1ZGY5MzI0/OThkOWY0ZjhlNzIw/ZjBiOGY4ZjRkZGQ3/ZmVkODg4My93d3cu/bWJoYXJjaC5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "mbharch.com",
+            "hostname": "www.mbharch.com",
+            "favicon": "https://imgs.search.brave.com/roZKyn8cUUv_ApueH9Ws6Yt7RXDNC2qX7eOZlhwAN3Q/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZDhmMDQzOGQ3/OGViMTg2OGQ3MDcy/OWIyNGU1ZGY5MzI0/OThkOWY0ZjhlNzIw/ZjBiOGY4ZjRkZGQ3/ZmVkODg4My93d3cu/bWJoYXJjaC5jb20v",
+            "path": "\u203a thephoenix"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/A3-Aml4tdwxfySYd9626fvNpa5gDW0bwOcu1xj5UW7o/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMud2l4c3RhdGlj/LmNvbS9tZWRpYS9k/MWM5YmRfYmRhZjBh/YTEyMzQ3NDA1MTg5/OTA5YzExOTQwODVh/MGQlN0VtdjIuanBn/L3YxL2ZpdC93XzI1/MDAsaF8xMzMwLGFs/X2MvZDFjOWJkX2Jk/YWYwYWExMjM0NzQw/NTE4OTkwOWMxMTk0/MDg1YTBkJTdFbXYy/LmpwZw",
+            "original": "https://static.wixstatic.com/media/d1c9bd_bdaf0aa12347405189909c1194085a0d%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/d1c9bd_bdaf0aa12347405189909c1194085a0d%7Emv2.jpg",
+            "logo": false
+          }
+        }
+      ],
+      "family_friendly": true
+    }
+  },
+  "timestamp": "2026-01-09T18:14:37.018074"
+}
