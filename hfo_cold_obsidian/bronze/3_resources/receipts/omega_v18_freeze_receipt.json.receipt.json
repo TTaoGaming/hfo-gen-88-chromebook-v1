@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-10T05:08:22.647928Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/receipts/omega_v18_freeze_receipt.json",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/receipts/omega_v18_freeze_receipt.json",
+    "hash": "e8ff60dcd5c39eb8e18bd69607ac294133955a4c5250ba250cffdce0f1907669",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}
