@@ -40,10 +40,18 @@ def generate_report(results):
     return report_path
 
 if __name__ == "__main__":
+    # Load Abstraction Layer
+    config_path = "scripts/hfo_config.json"
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    
+    version = config["activeVersion"]
+    target_file = f"hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v{version}.html"
+    
     steps = [
-        ("P5 Syntax Gate", ["python3", "scripts/p5_syntax_gate.py", "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v37.html"]),
-        ("V37 E2E Test", ["npx", "playwright", "test", "scripts/v37_e2e.spec.ts"]),
-        ("V37 Sticky Drag Test", ["npx", "playwright", "test", "scripts/v37_sticky_drag.spec.ts"])
+        ("P5 Syntax Gate", ["python3", "scripts/p5_syntax_gate.py", target_file]),
+        ("Active E2E Test", ["npx", "playwright", "test", "scripts/omega_active_e2e.spec.ts"]),
+        ("Active Sticky Drag Test", ["npx", "playwright", "test", "scripts/omega_active_sticky_drag.spec.ts"])
     ]
     
     final_results = []

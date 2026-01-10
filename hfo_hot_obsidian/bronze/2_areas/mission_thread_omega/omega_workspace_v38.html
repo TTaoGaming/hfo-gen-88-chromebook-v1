@@ -287,18 +287,16 @@
 
                     case 'COMMITTED':
                         this.pointerEvent = 'pointermove';
-                        if (!isPalmFacing) {
-                            this.state = 'IDLE';
-                            this.pointerEvent = 'pointerup';
-                            break;
-                        }
-                        if (currentGesture === 'OPEN_PALM' && isConfident) {
+                        
+                        const isHolding = (currentGesture === 'POINTING_UP' && isConfident) || (isPalmFacing && currentGesture !== 'OPEN_PALM');
+
+                        if (isHolding) {
+                            this.recoveryStartTime = 0;
+                        } else if (currentGesture === 'OPEN_PALM' && isConfident) {
                             this.state = 'RELEASING';
                             this.recoveryStartTime = 0;
-                        } else if (currentGesture === 'POINTING_UP' && isConfident) {
-                            this.recoveryStartTime = 0;
                         } else {
-                            // Sticky Drag logic
+                            // Sticky Drag / Recovery for both lost gesture and lost palm
                             if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
                             if (timestamp - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
                                 this.state = 'IDLE';

@@ -1,5 +1,6 @@
 // Medallion: Bronze | Mutation: 0% | HIVE: V
 import { test as base, Page } from '@playwright/test';
+import config from './hfo_config.json';
 
 export interface HFOPage extends Page {
     initHFO(): Promise<void>;
@@ -7,6 +8,11 @@ export interface HFOPage extends Page {
     getHandState(id: number): Promise<any>;
     waitForHand(id: number): Promise<void>;
 }
+
+export const getActiveUrl = (version?: string) => {
+    const v = version || config.activeVersion;
+    return `${config.baseUrl}${v}${config.suffix}`;
+};
 
 export const test = base.extend<{ hfoPage: HFOPage }>({
     hfoPage: async ({ page }, use) => {
