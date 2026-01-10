@@ -11,12 +11,10 @@
 V34 transitions to a **Hero Pattern Layout** to maximize the interaction area for Excalidraw while maintaining diagnostic visibility for the 8-Port sensing pipeline.
 
 ```mermaid
-graph TD
-    subgraph Workspace["V34 Workspace (Hero Pattern)"]
-        direction LR
-        L[Excalidraw HERO - 70%] --- R
-        subgraph R["Diagnostic Column - 30%"]
-            direction TB
+graph LR
+    subgraph "V34 Workspace"
+        H[Excalidraw HERO - 70%]
+        subgraph "Diagnostic Column - 30%"
             RT[Diagnostic STACK - Top 50%]
             RB[MediaPipe P0 SENSE - Bottom 50%]
         end
@@ -39,7 +37,7 @@ graph TD
     A[Raw Landmarks from MediaPipe] --> B{Discovery vs Tracking}
     B --> C[Calculate Costs]
     
-    subgraph Cost_Barriers["Cost Constraints"]
+    subgraph Cost_Constraints
         C1[Active Hand: Cost = Distance]
         C2["Inactive Hand: Cost = Distance + 0.5 Barrier"]
         C3["Teleport Reject: Distance > 0.3 = Reject"]
@@ -54,10 +52,10 @@ graph TD
     
     D --> E{Bipartite Assignment}
     
-    subgraph Mutual_Exclusion["Mutual Exclusion Rules"]
+    subgraph Mutual_Exclusion
         E1{"Prox < 0.12?"}
-        E2{"Hand Assigned?"}
-        E3{"Landmark Assigned?"}
+        E2[Hand Assigned?]
+        E3[Landmark Assigned?]
     end
     
     E --> E1
@@ -82,25 +80,10 @@ To survive noisy sensing frames where landmarks may vanish temporarily, V34 impl
 ```mermaid
 stateDiagram-v2
     [*] --> TRACKING
-    
-    state TRACKING {
-        [*] --> Active
-        Active --> Active: Landmark Matched
-    }
-    
-    TRACKING --> COASTING: Landmark LOST
-    
-    state COASTING {
-        [*] --> Sticky
-        Sticky --> Sticky: Frames < 60
-    }
-    
-    COASTING --> TRACKING: Re-acquired
-    COASTING --> INACTIVE: Frames > 60
-    
-    state INACTIVE {
-        [*] --> Released
-    }
+    TRACKING --> COASTING: "Landmark LOST"
+    COASTING --> TRACKING: "Re-acquired (< 60f)"
+    COASTING --> INACTIVE: "Timed Out (> 60f)"
+    INACTIVE --> [*]
 ```
 
 ---
