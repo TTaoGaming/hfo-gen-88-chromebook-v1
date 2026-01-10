@@ -32,11 +32,11 @@ We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alp
 
 **Active Mission Projects**:
 - `0_p0_observe.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha) - **Dynamic Hardware Sensing V1 Active + Resource-Aware Stryker (stryker_boot.sh)**.
-- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V30 Hardened + Verified**.
-    - **V30 Substrate**: Same-origin Trans-Boundary Drill with shadow-event synthesis (Pointer + Mouse + Click).
-    - **Features**: Restored v26 RELEASING parity. Fixed React/Chrome event gap for menu selection.
-    - **Validation**: `scripts/v30_e2e.spec.ts` verified tool selection in Excalidraw sub-frame.
-    - **Status**: V30 promoted to **Cold Bronze**. Mission Thread Omega V10 slice complete.
+- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V33 Frozen + V34 Tuning**.
+    - **V33 Stabilization**: Implemented Geometric Identity Lock (Bipartite Solver), 1s Coastal Persistence, and territorial Identity Repulsion (0.12). 
+    - **V34 Development**: Tuning High-Inertia Tracker and barrier-based discovery to resolve movement noise.
+    - **Validation**: `scripts/p5_forensic_harness.py` verified V33.
+    - **Status**: V33 promoted to **Cold Bronze** (Golden Example). V34 active in **Hot Bronze**.
 
 **Active Defenses**:
 - **PORT-5-IMMUNIZE (THE 8 SHIELDS)**:
@@ -48,7 +48,7 @@ We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alp
     6. **P1-ZOD**: Contract Compliance (Zod 6.0).
     7. **P7-VENGEANCE**: Forensic Recurrence (Book of Blood Grudges).
     8. **P5-PRECOMMIT**: Governance Gate (Final Commit Pass).
-- **P5 PRAETORIAN**: Praetorian Immunizer active at [hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/p5_praetorian.py](hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/p5_praetorian.py).
+- **P5 PRAETORIAN**: Praetorian Immunizer active. **P5 Forensic Harness (v33)** and **Syntax Gate** enabled via `scripts/p5_forensic_harness.py`.
 - **P5 GOLDILOCKS**: Hard enforcement of 88%-98% mutation score via `mutation_sentinel.py`. Blocking 100% "AI Theater" breaches.
 - **P0 QUAD SENSE**: Restored P0 tool integrity with Tavily, Brave, and Local Repo Search.
 

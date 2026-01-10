@@ -1,0 +1,893 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: H -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO Omega V34: High-Inertia Identity Tuning</title>
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #111;
+            color: #eee;
+            font-family: sans-serif;
+        }
+
+        #layout-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .component-container {
+            padding: 10px;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+            background: #1a1a1a;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scaleX(-1);
+            border-radius: 8px;
+            background: #000;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scaleX(-1);
+            pointer-events: none;
+        }
+
+        .data-card {
+            background: #222;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #00ccff;
+            margin-bottom: 15px;
+        }
+
+        .data-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff88;
+        }
+
+        #gesture-visualizer {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .state-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-right: 5px;
+        }
+
+        .tag-idle {
+            background: #444;
+            color: #aaa;
+        }
+
+        .tag-arming {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .tag-armed {
+            background: #0088ff;
+            color: #fff;
+        }
+
+        .tag-committing {
+            background: #ffcc00;
+            color: #000;
+        }
+
+        .tag-committed {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .tag-releasing {
+            background: #ff00ff;
+            color: #fff;
+        }
+
+        .ghost-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s linear, background 0.1s;
+            display: none;
+        }
+
+        .ghost-cursor.active {
+            display: block;
+        }
+
+        .ghost-cursor.committed {
+            background: rgba(0, 255, 136, 0.6);
+            border-color: #00ff88;
+            transform: scale(0.8);
+        }
+
+        .ghost-cursor.armed {
+            border-color: #0088ff;
+            background: rgba(0, 136, 255, 0.3);
+        }
+
+        .local-cursor {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff0055;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 0 5px rgba(255, 0, 85, 0.8);
+        }
+
+        .local-cursor.committed {
+            background: #00ff88;
+            transform: scale(1.5);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 1);
+        }
+
+        .local-cursor.armed {
+            background: #0088ff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout-container"></div>
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
+        }
+    }
+    </script>
+    <script type="module">
+        import { GoldenLayout } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer as MPGestureRecognizer, HandLandmarker, FilesetResolver as MPFilesetResolver, DrawingUtils as MPDrawingUtils } from '@mediapipe/tasks-vision';
+        import Matter from 'matter-js';
+        import { z } from 'zod';
+
+        const GestureRecognizer = window.GestureRecognizer || MPGestureRecognizer;
+        const FilesetResolver = window.FilesetResolver || MPFilesetResolver;
+        const DrawingUtils = window.DrawingUtils || MPDrawingUtils;
+
+        // 🛡️ Contracts
+        const CursorSchema = z.object({ x: z.number(), y: z.number(), color: z.string(), label: z.string() });
+        const HandSchema = z.object({
+            id: z.number(), active: z.boolean(), lastSeen: z.number(), fsm: z.string(),
+            cursors: z.record(CursorSchema),
+            gestures: z.object({ active: z.string(), score: z.number(), isDown: z.boolean(), pointerEvent: z.string() })
+        });
+        const CloudEventSchema = z.object({
+            specversion: z.literal("1.0"), type: z.string(), source: z.string(), id: z.string(), time: z.string(), data: z.record(HandSchema)
+        });
+
+        // 🤖 V25 Leaking Bucket Logic (IDLE -> ARMING -> ARMED -> COMMITTING -> COMMITTED -> RELEASING)
+        class GestureFSM {
+            constructor() {
+                this.state = 'IDLE';
+                this.progress = 0;
+                this.recoveryStartTime = 0;
+                this.dwellStartTime = 0;
+                this.pointerEvent = 'none';
+                this.ARMING_THRESHOLD = 300; 
+                this.RECOVERY_TIMEOUT = 1000; // V33: Sticky Drag - Coastal Persistence
+                this.RELEASE_TIMEOUT = 200;   // Buffer for button-up cushioning
+                this.CANCEL_DWELL = 50;
+                this.lastTimestamp = 0;
+            }
+
+            process(gesture, timestamp, score = 1.0) {
+                const currentGesture = gesture.toUpperCase().replace(/[\s_]/g, '_');
+                const dt = this.lastTimestamp ? timestamp - this.lastTimestamp : 0;
+                this.lastTimestamp = timestamp;
+                this.pointerEvent = 'none';
+                const isConfident = score > 0.5;
+
+                switch (this.state) {
+                    case 'IDLE':
+                        if (currentGesture === 'OPEN_PALM' && isConfident) {
+                            this.state = 'ARMING';
+                            this.progress = 0;
+                        }
+                        break;
+
+                    case 'ARMING':
+                        if (currentGesture === 'OPEN_PALM' && isConfident) {
+                            this.progress += dt;
+                        } else {
+                            this.progress -= dt * 2;
+                        }
+                        this.progress = Math.max(0, this.progress);
+
+                        if (this.progress >= this.ARMING_THRESHOLD) {
+                            this.state = 'ARMED';
+                            this.progress = 0;
+                        } else if (this.progress === 0 && (currentGesture !== 'OPEN_PALM' || !isConfident)) {
+                            this.state = 'IDLE';
+                        }
+                        break;
+
+                    case 'ARMED':
+                        this.pointerEvent = 'pointermove';
+                        if (currentGesture === 'POINTING_UP' && isConfident) {
+                            this.state = 'COMMITTED';
+                            this.pointerEvent = 'pointerdown';
+                            this.recoveryStartTime = 0;
+                        } else if (currentGesture === 'OPEN_PALM' && isConfident) {
+                            this.recoveryStartTime = 0;
+                        } else {
+                            // Coastal Persistence: Landmark loss or confidence drop enters recovery window
+                            if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
+                            if (timestamp - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                this.recoveryStartTime = 0;
+                            }
+                        }
+                        break;
+
+                    case 'COMMITTED':
+                        this.pointerEvent = 'pointermove';
+                        if (currentGesture === 'OPEN_PALM' && isConfident) {
+                            this.state = 'RELEASING';
+                            this.recoveryStartTime = timestamp;
+                            this.dwellStartTime = timestamp;
+                        } else if (currentGesture === 'POINTING_UP' && isConfident) {
+                            this.recoveryStartTime = 0;
+                        } else {
+                            // Sticky Drag: Maintain state during landmark loss/occlusion until timeout
+                            if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
+                            if (timestamp - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointerup'; 
+                                this.recoveryStartTime = 0;
+                            }
+                        }
+                        break;
+
+                    case 'RELEASING':
+                        this.pointerEvent = 'pointermove';
+                        if (currentGesture === 'OPEN_PALM' && isConfident) {
+                            this.state = 'ARMED';
+                            this.pointerEvent = 'pointerup';
+                            this.recoveryStartTime = 0;
+                        } else if (currentGesture === 'POINTING_UP' && isConfident) {
+                            this.state = 'COMMITTED';
+                            this.pointerEvent = 'pointerdown'; 
+                            this.recoveryStartTime = 0;
+                        } else if (currentGesture === 'LOST' || currentGesture === 'NONE' || !isConfident) {
+                            if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
+                            if (timestamp - this.recoveryStartTime > this.RELEASE_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointerup';
+                                this.recoveryStartTime = 0;
+                            }
+                        } else {
+                            if (!this.dwellStartTime) this.dwellStartTime = timestamp;
+                            else if (timestamp - this.dwellStartTime > this.CANCEL_DWELL) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointerup';
+                                this.dwellStartTime = 0;
+                            }
+                        }
+                        break;
+                }
+                return { state: this.state, pointerEvent: this.pointerEvent };
+            }
+        }
+
+        // 🧠 Multi-Resolution Filters
+        class LowPassFilter { constructor(alpha) { this.alpha = alpha; this.s = null; } call(v) { if (this.s === null) this.s = v; else this.s = this.alpha * v + (1 - this.alpha) * this.s; return this.s; } }
+        class OneEuroFilter {
+            constructor(freq, minCutoff = 1.0, beta = 0.0, dCutoff = 1.0) {
+                this.freq = freq; this.minCutoff = minCutoff; this.beta = beta; this.dCutoff = dCutoff;
+                this.xFilter = new LowPassFilter(this.alpha(minCutoff)); this.dxFilter = new LowPassFilter(this.alpha(dCutoff)); this.lastTime = null;
+            }
+            alpha(c) { const te = 1 / this.freq; const tau = 1 / (2 * Math.PI * c); return 1 / (1 + tau / te); }
+            call(x, t = null) {
+                if (this.lastTime !== null && t !== null) { const dt = (t - this.lastTime) / 1000; if (dt > 0) this.freq = 1 / dt; }
+                this.lastTime = t; const prevX = this.xFilter.s; const dx = prevX === null ? 0 : (x - prevX) * this.freq;
+                const edx = this.dxFilter.call(dx); const c = this.minCutoff + this.beta * Math.abs(edx);
+                this.xFilter.alpha = this.alpha(c); return this.xFilter.call(x);
+            }
+        }
+
+        const hfoState = window.hfoState = {
+            active: true, debug: true,
+            mpOptions: { numHands: 2, minHandDetectionConfidence: 0.6, minHandPresenceConfidence: 0.6, minTrackingConfidence: 0.6, dwellMs: 1000 },
+            physics: {
+                stiffness: 0.2, stiffnessArmed: 0.6, damping: 0.1, lookAhead: 1.5,
+                springSource: 'snappy', predSource: 'snappy',
+                p3Source: 'predictive', p3Mirror: true,
+                showGlobalCursor: false,
+                remoteMode: true,
+                remoteTargetId: 'excalidraw-iframe',
+                persistence: { snapDistance: 0.15, coastFrames: 60, repulsionDistance: 0.12, teleportLimit: 0.3 }
+            },
+            hands: {}, bridge: { lastEvent: null, errorCount: 0, status: 'IDLE' }
+        };
+
+        const port1Bridge = (hands) => {
+            try {
+                const telemetryData = {};
+                Object.keys(hands).forEach(id => {
+                    const h = hands[id];
+                    telemetryData[id] = {
+                        id: h.id, active: h.active, lastSeen: h.lastSeen, fsm: h.fsm.state,
+                        cursors: {
+                            raw: { x: h.cursors.raw.x, y: h.cursors.raw.y, color: h.cursors.raw.color, label: h.cursors.raw.label },
+                            smooth: { x: h.cursors.smooth.x, y: h.cursors.smooth.y, color: h.cursors.smooth.color, label: h.cursors.smooth.label },
+                            snappy: { x: h.cursors.snappy.x, y: h.cursors.snappy.y, color: h.cursors.snappy.color, label: h.cursors.snappy.label },
+                            spring: { x: h.cursors.spring.x, y: h.cursors.spring.y, color: h.cursors.spring.color, label: h.cursors.spring.label },
+                            pred: { x: h.cursors.predictive.x, y: h.cursors.predictive.y, color: h.cursors.predictive.color, label: h.cursors.predictive.label }
+                        },
+                        gestures: { ...h.gestures, pointerEvent: h.fsm.pointerEvent }
+                    };
+                });
+                const event = { specversion: "1.0", type: "hfo.omega.v25.hand_update", source: "hfo.port.0.sense", id: crypto.randomUUID(), time: new Date().toISOString(), data: telemetryData };
+                const validated = CloudEventSchema.parse(event);
+                hfoState.bridge.lastEvent = validated; hfoState.bridge.status = 'VALID'; return validated;
+            } catch (e) {
+                hfoState.bridge.status = 'ERROR'; hfoState.bridge.errorCount++;
+                if (hfoState.debug) console.error("P1 Bridge Validation Error:", e);
+                return null;
+            }
+        };
+
+        const p3InjectPointer = window.p3InjectPointer = (hand) => {
+            if (!hand.active) {
+                if (hand.ghost) hand.ghost.classList.remove('active');
+                if (hand.localCursor) hand.localCursor.style.display = 'none';
+                return;
+            }
+
+            if (!hand.ghost) {
+                hand.ghost = document.createElement('div');
+                hand.ghost.className = 'ghost-cursor';
+                document.body.appendChild(hand.ghost);
+            }
+
+            const types = { 'pointerdown': 'pointerdown', 'pointermove': 'pointermove', 'pointerup': 'pointerup', 'pointercancel': 'pointercancel' };
+            const type = types[hand.fsm.pointerEvent];
+            const activeType = type || (hand.fsm.state !== 'IDLE' ? 'pointermove' : null);
+
+            if (!activeType || !hand.active) {
+                hand.ghost.classList.remove('active');
+                if (hand.localCursor) hand.localCursor.style.display = 'none';
+                return;
+            }
+
+            const cursor = hand.cursors[hfoState.physics.p3Source] || hand.cursors.predictive;
+            let normX = cursor.x;
+            if (hfoState.physics.p3Mirror) normX = 1 - normX;
+
+            let x = normX * window.innerWidth;
+            let y = cursor.y * window.innerHeight;
+
+            let target = document.elementFromPoint(x, y) || document.body;
+            let finalX = x;
+            let finalY = y;
+
+            // 🎯 V30: Robust Coordinate Mapping & Drill
+            if (hfoState.physics.remoteMode && hfoState.physics.remoteTargetId) {
+                const remoteEl = document.getElementById(hfoState.physics.remoteTargetId);
+                if (remoteEl) {
+                    const rect = remoteEl.getBoundingClientRect();
+                    // 1:1 Mapping to Substrate
+                    finalX = normX * rect.width;
+                    finalY = cursor.y * rect.height;
+
+                    target = remoteEl;
+
+                    // 🛠️ DRILL: If same-origin iframe, find internal target
+                    if (remoteEl.tagName === 'IFRAME') {
+                        try {
+                            const innerTarget = remoteEl.contentDocument.elementFromPoint(finalX, finalY);
+                            if (innerTarget) {
+                                target = innerTarget;
+                            } else {
+                                // Fallback to absolute if drill returns null
+                                finalX = rect.left + finalX;
+                                finalY = rect.top + finalY;
+                            }
+                        } catch (e) {
+                            if (hfoState.debug) console.warn("Iframe Drill Failed:", e.message);
+                            finalX = rect.left + finalX;
+                            finalY = rect.top + finalY;
+                        }
+                    } else {
+                        // Not an iframe, map to absolute relative to element
+                        finalX = rect.left + finalX;
+                        finalY = rect.top + finalY;
+                    }
+
+                    // Visual feedback
+                    if (!hand.localCursor) {
+                        hand.localCursor = document.createElement('div');
+                        hand.localCursor.className = 'local-cursor';
+                        document.body.appendChild(hand.localCursor);
+                    }
+                    hand.localCursor.style.display = 'block';
+                    hand.localCursor.style.left = `${rect.left + (normX * rect.width) - 5}px`;
+                    hand.localCursor.style.top = `${rect.top + (cursor.y * rect.height) - 5}px`;
+                    hand.localCursor.className = `local-cursor ${hand.fsm.state.toLowerCase()}`;
+                }
+            } else {
+                // ... Legacy ElementFromPoint Mode ...
+                if (target.tagName === 'IFRAME' || target.classList.contains('canvas-gate')) {
+                    const rect = target.getBoundingClientRect();
+                    finalX = x - rect.left;
+                    finalY = y - rect.top;
+                    if (target.tagName === 'IFRAME') {
+                        try {
+                            const inner = target.contentDocument.elementFromPoint(finalX, finalY);
+                            if (inner) target = inner;
+                            else { finalX = x; finalY = y; }
+                        } catch(e) { finalX = x; finalY = y; }
+                    }
+                } else {
+                    finalX = x; finalY = y;
+                }
+                
+                if (target.tagName === 'IFRAME' || target.classList.contains('canvas-gate')) {
+                    if (!hand.localCursor) {
+                        hand.localCursor = document.createElement('div');
+                        hand.localCursor.className = 'local-cursor';
+                        document.body.appendChild(hand.localCursor);
+                    }
+                    hand.localCursor.style.display = 'block';
+                    hand.localCursor.style.left = `${x - 5}px`;
+                    hand.localCursor.style.top = `${y - 5}px`;
+                    hand.localCursor.className = `local-cursor ${hand.fsm.state.toLowerCase()}`;
+                } else {
+                    if (hand.localCursor) hand.localCursor.style.display = 'none';
+                }
+            }
+
+            if (hfoState.physics.showGlobalCursor) {
+                hand.ghost.classList.add('active');
+                hand.ghost.style.left = `${x - 10}px`;
+                hand.ghost.style.top = `${y - 10}px`;
+            } else {
+                hand.ghost.classList.remove('active');
+            }
+
+            hand.ghost.classList.toggle('committed', hand.fsm.state === 'COMMITTED');
+            hand.ghost.classList.toggle('armed', hand.fsm.state === 'ARMED' || hand.fsm.state === 'COMMITTING');
+
+            if (hand.lastTarget && hand.lastTarget !== target) {
+                hand.lastTarget.dispatchEvent(new PointerEvent('pointerout', { bubbles: true, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
+                hand.lastTarget.dispatchEvent(new PointerEvent('pointerleave', { bubbles: false, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
+                target.dispatchEvent(new PointerEvent('pointerover', { bubbles: true, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
+                target.dispatchEvent(new PointerEvent('pointerenter', { bubbles: false, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
+            }
+
+            const movementX = hand.lastX !== undefined ? x - hand.lastX : 0;
+            const movementY = hand.lastY !== undefined ? y - hand.lastY : 0;
+            hand.lastX = x;
+            hand.lastY = y;
+            hand.lastTarget = target;
+
+            const isDown = (hand.fsm.state === 'COMMITTED');
+            const ev = new PointerEvent(activeType, {
+                bubbles: true, cancelable: true, pointerType: 'mouse',
+                view: (target.ownerDocument ? target.ownerDocument.defaultView : window),
+                pointerId: Number(hand.id) + 10,
+                clientX: finalX, clientY: finalY,
+                screenX: finalX, screenY: finalY,
+                pageX: finalX, pageY: finalY,
+                movementX: movementX, movementY: movementY,
+                width: 10, height: 10,
+                pressure: isDown ? 0.9 : 0.0,
+                buttons: isDown ? 1 : 0,
+                button: (activeType === 'pointerdown' || activeType === 'pointerup') ? 0 : -1,
+                isPrimary: true
+            });
+            target.dispatchEvent(ev);
+
+            // 🎯 Synthesis: Mouse events for legacy/React compatibility
+            if (activeType === 'pointerdown' || activeType === 'pointerup') {
+                const mouseType = activeType === 'pointerdown' ? 'mousedown' : 'mouseup';
+                const mouseEv = new MouseEvent(mouseType, {
+                    bubbles: true, cancelable: true, view: (target.ownerDocument ? target.ownerDocument.defaultView : window),
+                    clientX: finalX, clientY: finalY,
+                    button: 0, buttons: isDown ? 1 : 0,
+                    detail: 1
+                });
+                target.dispatchEvent(mouseEv);
+            }
+
+            // 🎯 Synthesis: Discrete Click for UI elements
+            if (activeType === 'pointerup' && hand.fsm.state === 'ARMED') {
+                const clickEv = new MouseEvent('click', {
+                    bubbles: true, cancelable: true, view: (target.ownerDocument ? target.ownerDocument.defaultView : window),
+                    clientX: finalX, clientY: finalY,
+                    button: 0, buttons: 0,
+                    detail: 1
+                });
+                target.dispatchEvent(clickEv);
+                if (hfoState.debug) console.log(`[P3] Synthetic Click on <${target.tagName.toLowerCase()}> at ${finalX.toFixed(0)},${finalY.toFixed(0)}`);
+            }
+
+            if (hfoState.debug && type) console.log(`[P3] ${type} on <${target.tagName.toLowerCase()}> @ ${finalX.toFixed(0)},${finalY.toFixed(0)}`);
+        };
+
+        const createCursorSet = (handId, hue) => {
+            const h = {
+                id: handId, lastSeen: 0, active: false, coastCount: 0, fsm: new GestureFSM(),
+                cursors: {
+                    raw: { x: 0.5, y: 0.5, color: `hsl(${hue}, 100%, 100%)`, label: `H${handId} Raw` },
+                    smooth: { x: 0.5, y: 0.5, color: `hsl(${hue}, 100%, 70%)`, label: `H${handId} Smooth` },
+                    snappy: { x: 0.5, y: 0.5, color: `hsl(${hue}, 100%, 50%)`, label: `H${handId} Snappy` },
+                    spring: { x: 0.5, y: 0.5, body: null, anchor: null, constraint: null, color: `hsl(${hue}, 100%, 40%)`, label: `H${handId} Spring` },
+                    predictive: { x: 0.5, y: 0.5, body: null, color: `hsl(${hue}, 100%, 30%)`, label: `H${handId} Pred` }
+                },
+                filters: { sx: new OneEuroFilter(30, 0.5, 0.001), sy: new OneEuroFilter(30, 0.5, 0.001), nx: new OneEuroFilter(30, 2.0, 0.1), ny: new OneEuroFilter(30, 2.0, 0.1) },
+                gestures: { active: 'None', score: 0, isDown: false, pointerEvent: 'none' },
+                lastTarget: null
+            };
+            if (engine) {
+                const { Bodies, Composite, Constraint } = Matter;
+                h.cursors.spring.anchor = Bodies.circle(0.5, 0.5, 1, { isStatic: true, isSensor: true });
+                h.cursors.spring.body = Bodies.circle(0.5, 0.5, 10, { frictionAir: 0.1, label: `H${handId}-SpringB` });
+                h.cursors.spring.constraint = Constraint.create({ bodyA: h.cursors.spring.anchor, bodyB: h.cursors.spring.body, stiffness: hfoState.physics.stiffness, damping: hfoState.physics.damping, length: 0 });
+                h.cursors.predictive.body = Bodies.circle(0.5, 0.5, 10, { isStatic: true, label: `H${handId}-PredB` });
+                Composite.add(engine.world, [h.cursors.spring.anchor, h.cursors.spring.body, h.cursors.spring.constraint, h.cursors.predictive.body]);
+            }
+            return h;
+        };
+
+        let engine, runner, gestureRecognizer;
+        const initPhysics = window.initPhysics = () => {
+            engine = Matter.Engine.create(); engine.gravity.scale = 0;
+            runner = Matter.Runner.create(); Matter.Runner.run(runner, engine);
+            hfoState.hands[0] = createCursorSet(0, 200); hfoState.hands[1] = createCursorSet(1, 30);
+        };
+
+        const initMediaPipe = async (container) => {
+            const video = document.createElement('video'); video.autoplay = true; video.playsinline = true; video.style.opacity = '0.3'; container.appendChild(video);
+            const canvas = document.createElement('canvas'); container.appendChild(canvas); const ctx = canvas.getContext('2d');
+            const dw = new DrawingUtils(ctx);
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm");
+            gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task", delegate: "GPU" },
+                runningMode: "VIDEO", ...hfoState.mpOptions
+            });
+            const render = () => {
+                const now = performance.now();
+                if (hfoState.active && video.readyState >= 2) {
+                    const res = gestureRecognizer.recognizeForVideo(video, now); ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const landmarks = res.landmarks || []; const handIds = Object.keys(hfoState.hands);
+                    
+                    // 🎯 V33: Identity Security (High-Inertia Geometric Solver)
+                    const costMatrix = []; const assignments = {};
+                    landmarks.forEach((lm, lIdx) => {
+                        const tip = lm[8];
+                        handIds.forEach(id => {
+                            const h = hfoState.hands[id];
+                            const d = Math.sqrt((tip.x - h.cursors.raw.x) ** 2 + (tip.y - h.cursors.raw.y) ** 2);
+                            
+                            // TRACKING: Active hands have affinity (cost = d)
+                            // DISCOVERY: Inactive hands have penalty (cost = d + 0.5) to prevent theft
+                            let cost = d;
+                            if (!h.active) {
+                                cost = d + 0.5; 
+                            } else if (d > hfoState.physics.persistence.teleportLimit) {
+                                cost = 1000; // Teleport protection
+                            }
+                            
+                            costMatrix.push({ lIdx, handId: id, cost });
+                        });
+                    });
+
+                    const uH = new Set(), uL = new Set(), assignedPos = [];
+                    costMatrix.sort((a, b) => a.cost - b.cost).forEach(m => {
+                        if (m.cost > 999) return;
+                        if (!uH.has(m.handId) && !uL.has(m.lIdx)) {
+                            const lm = landmarks[m.lIdx]; const tip = lm[8];
+
+                            // 🛡️ Identity Repulsion: Ensure this discovery is not just noise on the same physical hand
+                            const isPhantom = assignedPos.some(p => Math.sqrt((tip.x - p.x) ** 2 + (tip.y - p.y) ** 2) < hfoState.physics.persistence.repulsionDistance);
+                            if (isPhantom) return;
+
+                            const h = hfoState.hands[m.handId];
+                            // Match if within snap distance OR if it's a discovery snap for an inactive hand
+                            if (!h.active || m.cost < hfoState.physics.persistence.snapDistance) {
+                                h.cursors.raw.x = tip.x; h.cursors.raw.y = tip.y; h.lastSeen = now; h.coastCount = 0; h.active = true;
+                                h.cursors.smooth.x = h.filters.sx.call(tip.x, now); h.cursors.smooth.y = h.filters.sy.call(tip.y, now);
+                                h.cursors.snappy.x = h.filters.nx.call(tip.x, now); h.cursors.snappy.y = h.filters.ny.call(tip.y, now);
+
+                                if (res.gestures?.[m.lIdx]) {
+                                    const g = res.gestures[m.lIdx][0];
+                                    const fsmRes = h.fsm.process(g.categoryName, now, g.score);
+                                    h.gestures = {
+                                        active: g.categoryName,
+                                        score: g.score,
+                                        isDown: (h.fsm.state === 'COMMITTED'),
+                                        pointerEvent: fsmRes.pointerEvent
+                                    };
+                                }
+                                uH.add(m.handId); uL.add(m.lIdx); assignments[m.handId] = m.lIdx;
+                                assignedPos.push({ x: tip.x, y: tip.y });
+                            }
+                        }
+                    });
+
+                    Object.keys(hfoState.hands).forEach(id => {
+                        const h = hfoState.hands[id];
+                        if (!uH.has(id)) {
+                            h.coastCount++;
+                            const fsmRes = h.fsm.process('LOST', now, 0); // V33: Sticky Drag (Coastal Persistence)
+
+                            h.gestures.isDown = (h.fsm.state === 'COMMITTED');
+                            h.gestures.pointerEvent = fsmRes.pointerEvent;
+
+                            if (h.coastCount > hfoState.physics.persistence.coastFrames) h.active = false;
+                        }
+
+                        if (h.active && hfoState.debug) {
+                            const lIdx = assignments[id];
+                            if (lIdx !== undefined) dw.drawConnectors(landmarks[lIdx], HandLandmarker.HAND_CONNECTIONS, { color: "#00FF00", lineWidth: 5 });
+                        }
+
+                        if (engine && h.active) {
+                            const isEngaged = h.fsm.state === 'ARMED' || h.fsm.state === 'COMMITTED';
+                            h.cursors.spring.constraint.stiffness = isEngaged ? hfoState.physics.stiffnessArmed : hfoState.physics.stiffness;
+                            Matter.Body.setPosition(h.cursors.spring.anchor, { x: h.cursors[hfoState.physics.springSource].x * canvas.width, y: h.cursors[hfoState.physics.springSource].y * canvas.height });
+                            const lead = { x: (h.cursors.snappy.x - h.cursors.smooth.x) * hfoState.physics.lookAhead, y: (h.cursors.snappy.y - h.cursors.smooth.y) * hfoState.physics.lookAhead };
+                            Matter.Body.setPosition(h.cursors.predictive.body, { x: (h.cursors[hfoState.physics.predSource].x + lead.x) * canvas.width, y: (h.cursors[hfoState.physics.predSource].y + lead.y) * canvas.height });
+                            h.cursors.spring.x = h.cursors.spring.body.position.x / canvas.width; h.cursors.spring.y = h.cursors.spring.body.position.y / canvas.height;
+                            h.cursors.predictive.x = h.cursors.predictive.body.position.x / canvas.width; h.cursors.predictive.y = h.cursors.predictive.body.position.y / canvas.height;
+                        }
+
+                        [h.cursors.raw, h.cursors.smooth, h.cursors.snappy, h.cursors.spring, h.cursors.predictive].forEach(c => {
+                            if (!h.active) return; // 🎯 V31 Hardened: No ghosting on canvas if inactive
+                            ctx.beginPath(); ctx.arc(c.x * canvas.width, c.y * canvas.height, 12, 0, 2 * Math.PI);
+                            ctx.fillStyle = c.color; ctx.globalAlpha = 1.0; ctx.fill();
+                            ctx.strokeStyle = (h.fsm.state === 'COMMITTED') ? '#00ff88' : (h.fsm.state === 'ARMED' ? '#0088ff' : 'transparent');
+                            ctx.lineWidth = 4; ctx.stroke();
+                            ctx.globalAlpha = 1.0; ctx.fillStyle = '#fff'; ctx.font = '10px Courier'; ctx.fillText(c.label, c.x * canvas.width + 15, c.y * canvas.height + 5);
+                        });
+
+                        p3InjectPointer(h);
+                    });
+                    port1Bridge(hfoState.hands);
+                }
+                requestAnimationFrame(render);
+            };
+
+            video.onloadedmetadata = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                initPhysics();
+                render();
+            };
+            video.srcObject = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
+        };
+
+        const initPhysicsPanel = (container) => {
+            const div = document.createElement('div'); div.className = 'component-container'; container.appendChild(div);
+            const update = () => {
+                const data = hfoState.bridge.lastEvent?.data || {}; const ids = Object.keys(data);
+                if (ids.length === 0) div.innerHTML = '<div class="data-card">Waiting...</div>';
+                else {
+                    if (div.querySelectorAll('.hand-section').length !== ids.length) {
+                        div.innerHTML = '';
+                        ids.sort().forEach(id => {
+                            const s = document.createElement('div'); s.className = 'hand-section'; s.id = `section-h${id}`;
+                            s.innerHTML = `<h2 style="font-size: 11px; color: #888; margin: 10px 0 5px 0;">HAND ID: ${id}</h2>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px;">
+                                    <div class="data-card" style="border-left-color: #ffffff; padding: 4px; border-radius: 4px;"><h3 style="font-size:9px;">Raw</h3><code class="val-raw" style="font-size:9px;">...</code></div>
+                                    <div class="data-card" style="border-left-color: #00ccff; padding: 4px; border-radius: 4px;"><h3 style="font-size:9px;">Smooth</h3><code class="val-smooth" style="font-size:9px;">...</code></div>
+                                    <div class="data-card" style="border-left-color: #ffcc00; padding: 4px; border-radius: 4px;"><h3 style="font-size:9px;">Snappy</h3><code class="val-snappy" style="font-size:9px;">...</code></div>
+                                    <div class="data-card" style="border-left-color: #ff00ff; padding: 4px; border-radius: 4px;"><h3 style="font-size:9px;">Spring</h3><code class="val-spring" style="font-size:9px;">...</code></div>
+                                    <div class="data-card" style="border-left-color: #00ff00; padding: 4px; border-radius: 4px; grid-column: span 2;"><h3 style="font-size:9px;">Pred</h3><code class="val-pred" style="font-size:9px;">...</code></div>
+                                </div>`;
+                            div.appendChild(s);
+                        });
+                    }
+                    ids.forEach(id => {
+                        const h = data[id]; const s = div.querySelector(`#section-h${id}`);
+                        if (s) {
+                            s.querySelector('.val-raw').innerText = `X:${h.cursors.raw.x.toFixed(3)}`;
+                            s.querySelector('.val-smooth').innerText = `X:${h.cursors.smooth.x.toFixed(3)}`;
+                            s.querySelector('.val-snappy').innerText = `X:${h.cursors.snappy.x.toFixed(3)}`;
+                            s.querySelector('.val-spring').innerText = `X:${h.cursors.spring.x.toFixed(3)}`;
+                            s.querySelector('.val-pred').innerText = `X:${h.cursors.pred.x.toFixed(3)}, Y:${h.cursors.pred.y.toFixed(3)}`;
+                        }
+                    });
+                }
+                requestAnimationFrame(update);
+            }; update();
+        };
+
+        const initGesturesPanel = (container) => {
+            const div = document.createElement('div'); div.className = 'component-container'; container.appendChild(div);
+            const update = () => {
+                const data = hfoState.bridge.lastEvent?.data || {}; const ids = Object.keys(data);
+                if (ids.length === 0) div.innerHTML = '<div class="data-card">Waiting...</div>';
+                else {
+                    if (div.querySelectorAll('.hand-gesture-section').length !== ids.length) {
+                        div.innerHTML = '';
+                        ids.sort().forEach(id => {
+                            const s = document.createElement('div'); s.className = 'hand-gesture-section'; s.id = `gesture-section-h${id}`;
+                            s.innerHTML = `<div class="data-card" style="border-left-color: #cc00ff; padding: 10px; margin-bottom:10px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <h3 style="margin:0; font-size:12px;">HAND ${id}</h3>
+                                    <span class="val-tag state-tag tag-idle">IDLE</span>
+                                </div>
+                                <h1 class="val-gesture" style="font-size: 24px; margin: 10px 0;">NONE</h1>
+                                <div style="display:flex; gap: 5px; align-items:center;">
+                                    <div class="val-event" style="background:#000; padding: 2px 5px; border-radius:3px; color:#00ff88; font-size:10px; font-family:monospace;">none</div>
+                                    <div class="val-score" style="color: #666; font-size: 10px;">Conf: 0%</div>
+                                </div>
+                           </div>`;
+                            div.appendChild(s);
+                        });
+                    }
+                    ids.forEach(id => {
+                        const h = data[id]; const s = div.querySelector(`#gesture-section-h${id}`);
+                        if (s) {
+                            const tag = s.querySelector('.val-tag');
+                            tag.innerText = h.fsm;
+                            tag.className = `val-tag state-tag tag-${h.fsm.toLowerCase().split('_')[0]}`;
+                            s.querySelector('.val-gesture').innerText = h.gestures.active;
+                            s.querySelector('.val-event').innerText = h.gestures.pointerEvent;
+                            s.querySelector('.val-score').innerText = `Conf: ${(h.gestures.score * 100).toFixed(1)}%`;
+                        }
+                    });
+                }
+                requestAnimationFrame(update);
+            }; update();
+        };
+
+        const initInteractionTest = (container) => {
+            const div = document.createElement('div'); div.className = 'component-container';
+            div.innerHTML = `
+                <div class="data-card" style="border-left-color: #ff0055;">
+                    <h3>P3 Injection Target</h3>
+                    <button id="test-btn" style="width:100%; height:80px; background:#333; color:#fff; border:2px solid #ff0055; border-radius:8px; font-size:18px; cursor:pointer;">CLICK ME</button>
+                    <div id="click-status" style="margin-top:10px; font-family:monospace; font-size:12px; color:#aaa;">Last Action: None</div>
+                </div>
+                <div class="data-card" style="border-left-color: #00ff88;">
+                    <h3>Slider Test</h3>
+                    <input type="range" id="test-slider" style="width:100%;">
+                </div>
+            `;
+            container.appendChild(div);
+            const btn = div.querySelector('#test-btn');
+            const status = div.querySelector('#click-status');
+            btn.addEventListener('pointerdown', () => {
+                btn.style.background = '#ff0055';
+                status.innerText = 'Last Action: pointerdown';
+            });
+            btn.addEventListener('pointerup', () => {
+                btn.style.background = '#333';
+                status.innerText = 'Last Action: pointerup';
+            });
+            btn.addEventListener('click', () => {
+                status.innerText = 'Last Action: click! 🚀';
+                setTimeout(() => { if (status.innerText.includes('click')) status.innerText = 'Last Action: waiting...'; }, 2000);
+            });
+        };
+
+        const initExcalidraw = (container) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'canvas-gate';
+            wrapper.style.width = '100%';
+            wrapper.style.height = '100%';
+            wrapper.style.position = 'relative';
+            wrapper.style.background = '#fff';
+
+            const iframe = document.createElement('iframe');
+            iframe.src = './excalidraw_v30_wrapper.html';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.id = 'excalidraw-iframe';
+            wrapper.appendChild(iframe);
+
+            container.appendChild(wrapper);
+        };
+
+        const initSettings = (container) => {
+            const gui = new GUI({ container, autoPlace: false });
+            const phys = gui.addFolder('V25 Dynamics');
+            phys.add(hfoState.physics, 'springSource', ['snappy', 'smooth', 'raw']).name('Anchor');
+            phys.add(hfoState.physics, 'stiffness', 0, 1).name('Stiffness');
+            phys.add(hfoState.physics, 'stiffnessArmed', 0, 1).name('Armed Stiffness');
+            phys.add(hfoState.physics, 'lookAhead', 0, 10).name('Pred Time');
+            phys.open();
+
+            const p3 = gui.addFolder('P3 Injection');
+            p3.add(hfoState.physics, 'p3Source', ['raw', 'smooth', 'snappy', 'spring', 'predictive']).name('Inject Source');
+            p3.add(hfoState.physics, 'p3Mirror').name('Mirror X Coordinates');
+            p3.open();
+
+            const mp = gui.addFolder('MediaPipe');
+            mp.add(hfoState, 'debug').name('Show Connections');
+            mp.add(hfoState.physics, 'showGlobalCursor').name('Global Cursor');
+            mp.open();
+            container.appendChild(gui.domElement);
+        };
+
+        const config = {
+            root: {
+                type: 'column', content: [
+                    {
+                        type: 'row', height: 60, content: [
+                            { type: 'component', componentType: 'MediaPipe', title: 'P0: SENSE', width: 30 },
+                            { type: 'component', componentType: 'Gestures', title: 'P3: FSM', width: 20 },
+                            { type: 'component', componentType: 'Physics', title: 'P2: SHAPE', width: 20 },
+                            { type: 'component', componentType: 'Excalidraw', title: 'OMEGA: EXCALIDRAW', width: 30 }
+                        ]
+                    },
+                    {
+                        type: 'row', height: 40, content: [
+                            { type: 'component', componentType: 'Interaction', title: 'P3: TEST', width: 50 },
+                            { type: 'component', componentType: 'Settings', title: 'P7: NAVIGATE', width: 50 }
+                        ]
+                    }
+                ]
+            }
+        };
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        layout.registerComponentFactoryFunction('MediaPipe', c => initMediaPipe(c.element));
+        layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
+        layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
+        layout.registerComponentFactoryFunction('Interaction', c => initInteractionTest(c.element));
+        layout.registerComponentFactoryFunction('Excalidraw', c => initExcalidraw(c.element));
+        layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
+        layout.loadLayout(config); window.addEventListener('resize', () => layout.updateSize());
+    </script>
+</body>
+
+</html>
