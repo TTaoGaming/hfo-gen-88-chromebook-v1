@@ -1,24 +1,13 @@
 # Medallion: Bronze | Mutation: 0% | HIVE: H
-# 🧬 OMEGA WORKSPACE V34: Architectural Analysis & Logic Mapping
+# OMEGA Workspace V34 Analysis
 
-**Date**: 2026-01-10  
-**Context**: Mission Thread Omega (Total Tool Virtualization)  
-**Goal**: Analyze High-Inertia Identity Tracking and Hero Pattern Layout in V34.
-
----
-
-## 1. 🏗️ Architecture Overview: The Hero Pattern
-V34 transitions to a **Hero Pattern Layout** to maximize the interaction area for Excalidraw while maintaining diagnostic visibility for the 8-Port sensing pipeline.
+## 1. Architecture Overview
+V34 transitions to a Hero Pattern Layout.
 
 ```mermaid
 graph LR
-    subgraph "V34 Workspace"
-        H[Excalidraw HERO - 70%]
-        subgraph "Diagnostic Column - 30%"
-            RT[Diagnostic STACK - Top 50%]
-            RB[MediaPipe P0 SENSE - Bottom 50%]
-        end
-    end
+    H[Excalidraw] --- RT[Stack]
+    H --- RB[Sense]
 ```
 
 ### Layout Strategy
@@ -28,42 +17,27 @@ graph LR
 
 ---
 
-## 2. 🧩 Identity Security: The High-Inertia Tracker
+## 2. Identity Security: The High-Inertia Tracker
 The primary challenge in V34 is the unreliability of MediaPipe's `Left/Right` labels. We utilize a **Geometric Bipartite Solver** with High-Inertia constraints to maintain hand identity.
 
 ### Assignment Logic Flow
 ```mermaid
 graph TD
-    A[Raw Landmarks from MediaPipe] --> B{Discovery vs Tracking}
+    A[Raw Landmarks] --> B{Discovery}
     B --> C[Calculate Costs]
-    
-    subgraph Cost_Constraints
-        C1[Active Hand: Cost = Distance]
-        C2["Inactive Hand: Cost = Distance + 0.5 Barrier"]
-        C3["Teleport Reject: Distance > 0.3 = Reject"]
-    end
-    
-    C --> C1
-    C --> C2
-    C --> C3
-    
-    C1 --> D[Sort Matrix by Cost ASC]
+
+    C --> C1[Active: Dist]
+    C --> C2[Inactive: Dist + 0.5]
+    C --> C3[Reject: Dist > 0.3]
+
+    C1 --> D[Sort Matrix]
     C2 --> D
-    
-    D --> E{Bipartite Assignment}
-    
-    subgraph Mutual_Exclusion
-        E1{"Prox < 0.12?"}
-        E2[Hand Assigned?]
-        E3[Landmark Assigned?]
-    end
-    
-    E --> E1
-    E1 -- Yes --> F[Reject Phantom]
-    E1 -- No --> E2
-    E2 -- No --> E3
-    E3 -- No --> G[Final Assignment]
-    G --> H[Update Filters]
+
+    D --> E{Assignment}
+
+    E --> E1{Prox < 0.12?}
+    E1 -- Yes --> F[Reject]
+    E1 -- No --> G[Final ID]
 ```
 
 ### Key Constants
@@ -74,21 +48,21 @@ graph TD
 
 ---
 
-## 3. 🛡️ Persistence: Coastal Recovery
+## 3. Persistence: Coastal Recovery
 To survive noisy sensing frames where landmarks may vanish temporarily, V34 implements **Coastal Persistence**.
 
 ```mermaid
 stateDiagram-v2
     [*] --> TRACKING
-    TRACKING --> COASTING: "Landmark LOST"
-    COASTING --> TRACKING: "Re-acquired (< 60f)"
-    COASTING --> INACTIVE: "Timed Out (> 60f)"
+    TRACKING --> COASTING : Lost
+    COASTING --> TRACKING : Found
+    COASTING --> INACTIVE : Timeout
     INACTIVE --> [*]
 ```
 
 ---
 
-## 4. 🚀 Data Flow: Pipeline P0 -> P7
+## 4. Data Flow: Pipeline P0 -> P7
 The interaction data flows through a series of filters and physics engines before reaching the virtual surface.
 
 ```mermaid
@@ -99,7 +73,7 @@ sequenceDiagram
     participant P2 as SHAPE (Matter.js)
     participant P3 as INJECT (W3C Events)
     participant HW as OMEGA (Excalidraw)
-    
+
     Cam->>P0: Raw Pixels
     P0->>P1: Landmarks
     Note over P1: High-Inertia Filtering
