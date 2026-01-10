@@ -41,9 +41,9 @@ def generate_report(results):
 
 if __name__ == "__main__":
     steps = [
-        ("P5 Syntax Gate", ["python3", "scripts/p5_syntax_gate.py", "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v36.html"]),
-        ("V36 E2E Test", ["npx", "playwright", "test", "scripts/v33_e2e.spec.ts"]),
-        ("V36 Sticky Drag Test", ["npx", "playwright", "test", "scripts/v33_sticky_drag.spec.ts"])
+        ("P5 Syntax Gate", ["python3", "scripts/p5_syntax_gate.py", "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v37.html"]),
+        ("V37 E2E Test", ["npx", "playwright", "test", "scripts/v37_e2e.spec.ts"]),
+        ("V37 Sticky Drag Test", ["npx", "playwright", "test", "scripts/v37_sticky_drag.spec.ts"])
     ]
     
     final_results = []

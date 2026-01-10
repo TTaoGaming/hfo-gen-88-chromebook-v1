@@ -59,6 +59,20 @@ class Port0Sense:
     def execute_all(query: str):
         # Pillars 1-8: Tavily, Brave, Stigmergy, Repo, Docs, Arxiv, Wiki, Git
         load_env()
+        
+        # 🎯 PHYSICAL SENSING: Execute the real search Hunt
+        print(f"📡 [P0-SENSE]: Launching QUAD Hunt for query...")
+        res = subprocess.run([
+            "python3", 
+            "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/P0_SENSE_SEARCH.py", 
+            query
+        ], capture_output=True, text=True)
+        
+        data = {}
+        if os.path.exists("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/P0_SENSE_search_results.json"):
+            with open("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/P0_SENSE_search_results.json", "r") as f:
+                data = json.load(f)
+
         pillars = {
             "p1_tavily": os.getenv("TAVILY_API_KEY") is not None,
             "p2_brave": os.getenv("BRAVE_API_KEY") is not None,
@@ -77,6 +91,7 @@ class Port0Sense:
             "pillars": pillars,
             "ready_count": ready_count,
             "receipt": receipt,
+            "data": data, # Return the real data
             "receipt_hash": receipt
         }
 

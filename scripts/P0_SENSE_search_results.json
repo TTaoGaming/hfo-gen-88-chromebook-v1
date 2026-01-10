@@ -1,53 +1,53 @@
 {
-  "query": "Microsoft MRTK hand interaction state machine vs Ultraleap TouchFree air push FSM predictive latency",
+  "query": "Explain: Ports and Adapters (Hexagonal Architecture) in AI Agent orchestration. Search for production exemplars (e.g. Agno, LangGraph, PydanticAI) that use unified manifolds/hubs for tool management. Compare with JADC2 J-Function command structures. Identify the non-bespoke industry name for HFO-8.",
   "tavily": {
-    "query": "Microsoft MRTK hand interaction state machine vs Ultraleap TouchFree air push FSM predictive latency",
+    "query": "Explain: Ports and Adapters (Hexagonal Architecture) in AI Agent orchestration. Search for production exemplars (e.g. Agno, LangGraph, PydanticAI) that use unified manifolds/hubs for tool management. Compare with JADC2 J-Function command structures. Identify the non-bespoke industry name for HFO-8.",
     "follow_up_questions": null,
     "answer": null,
     "images": [],
     "results": [
       {
-        "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
-        "title": "Using Leap Motion and Ultraleap - MRTK 2 - Microsoft Learn",
-        "content": "``` [...] ``` [...] Note\n\nUnity Modules 4.9.1 require the Gemini 5.2 tracking service or higher. The Unity plugin V4.9.1 is only officially supported on Unity 2019. See release notes for 4.9.1.\n\nThe Unity Modules were renamed the The Unity Plugin in V5.0.0.\n\n| MRTK Version | Ultraleap Unity Plugin Versions Supported |\n --- |\n| 2.8.0 | 5.3.0 (see note) |\n\nNote\n\nThe Unity Plugin versions 5.0.0, 5.1.0 and 5.2.0 are not supported in any version of MRTK. Users are recommended to upgrade to 5.3.0. Unity Plugin 5.3.0 requires the Gemini 5.2 tracking service or higher.\n\n## Using Leap Motion (by Ultraleap) hand tracking in MRTK\n\n1. Importing MRTK and the Leap Motion Unity Modules / Unity Plugin",
-        "score": 0.42763633,
+        "url": "https://latenode.com/blog/ai-frameworks-technical-infrastructure/langgraph-multi-agent-orchestration/langgraph-multi-agent-orchestration-complete-framework-guide-architecture-analysis-2025",
+        "title": "LangGraph Multi-Agent Orchestration: Complete Framework Guide ...",
+        "content": "LangGraph is a powerful choice for situations requiring advanced, modular, and scalable multi-agent systems. It shines in coordinating multiple AI agents that have intricate relationships, need strong fault tolerance, and demand reliable workflow management. This makes it particularly effective for managing large-scale, distributed AI setups where simpler tools might not meet the challenge. [...] Try again\n\nLangGraph is a system designed for managing workflows involving multiple AI agents. By organizing tasks in a graph-based structure, it enables agents to work in parallel, handle conditional steps, and share information through a centralized state. This approach is particularly useful for complex operations like document analysis or research coordination. However, its technical demands - such as debugging distributed agents, managing state consistency, and scaling workflows - can be a challenge for teams without experience in distributed systems. [...] To enhance modularity, LangGraph uses subgraphs, which group related agents into reusable components. For instance, a document processing subgraph might include agents for text extraction, formatting analysis, and content classification. These subgraphs can operate independently while contributing to the broader workflow.\n\nLangGraph also supports loop constructs, implemented through recursive graph patterns with clear termination criteria. This allows workflows to repeat specific tasks until defined conditions are met.\n\n### External Integrations and Human Oversight\n\nLangGraph extends its capabilities with external integrations and manual oversight options, ensuring flexibility without compromising the core graph architecture.",
+        "score": 0.2938455,
         "raw_content": null
       },
       {
-        "url": "https://docs.ultraleap.com/xr-and-tabletop/xr/unity/mrtk-support.html",
-        "title": "MRTK Support - Ultraleap documentation",
-        "content": "Light Logo\nDark Logo\n\nXR Development, Tools & Plugins\n\nTabletop Development, Tools & Plugins\n\nAPI Reference\n\nIntegrations\n\nLinks\n\n# MRTK Support\u00b6\n\nMRTK is a great collection of cross-input interactions that serve a broad range of use cases.\n\nThere are a few ways to use Ultraleap tracking with MRTK, this page will discuss how to implement each.\n\nan MRTK3 banner\n../../../_images/mrtk3-banner.png\n\n## Introduction\u00b6\n\nMRTK is an interaction system build on top of Unity\u2019s XR Interaction Toolkit. Read more about MRTK\n\nThere are two approaches when using Ultraleap tracking with MRTK. This page will discuss how to use MRTK\u2019s Hand Interaction Example scene with Ultraleap hand tracking.\n\nPlease Select your chosen route from the tabs below:\n\n## Setting up your project\u00b6\n\n### Prerequisites\u00b6 [...] ../../../_images/mrtk-openxr-plugin-enabled.png\n\nRun the HandInteractionExamples scene to see hands tracking and interactions occurring\n\n## Things to Look Out For\u00b6\n\nControllers may interfere with the Input Actions for interactions in MRTK. Make sure you are only using the Interaction Profiles that you require\n\nGaze-based interactions may interfere with nput Actions for interactions in MRTK. Make sure these are only enabled if they are required\n\nIf your headset supports passthrough, hand visuals will not render. If this is required, you may need to change the settings on the openxr\\_left\\_hand and openxr\\_right\\_hand prefab to enable it [...] ## Setting up your project\u00b6\n\n### Prerequisites\u00b6\n\nA Unity Project that meets the requirements for MRTK3\n\nA project that uses MRTK3 (In this example we will use the sample project)\n\nThe Ultraleap Tracking Service installed\n\nNote\n\nEnsure the Ultraleap Tracking Plugin for Unity is imported (available here)\n\nEnsure the Ultraleap (Non-OpenXR) Subsystem is enabled for MRTK\n\n../../../_images/mrtk-settings-ul.png\n\nRun the HandInteractionExamples scene to see hands tracking and interactions occurring\n\nNote\n\nEnsure you have an active OpenXR Runtime\n\nEnsure the OpenXR Subsystem is enabled for MRTK\n\n../../../_images/mrtk-settings-openxr.png\n\nEnable the Mixed Reality feature in the OpenXR Plug-in Management window\n\n../../../_images/mrtk-openxr-plugin-enabled.png",
-        "score": 0.34356245,
+        "url": "https://medium.com/@akankshasinha247/agent-orchestration-when-to-use-langchain-langgraph-autogen-or-build-an-agentic-rag-system-cc298f785ea4",
+        "title": "Agent Orchestration: When to Use LangChain, LangGraph, AutoGen",
+        "content": "## 1. What are Agent Orchestration Frameworks?\n\nAgent Orchestration Frameworks are systems designed to manage and coordinate the interactions between multiple specialized Artificial Intelligence (AI) agents. Instead of relying on a single, general-purpose AI model to handle a complex task, orchestration employs a network of agents, each potentially optimized for specific functions (like planning, data retrieval, analysis, user interaction, tool usage, etc.). [...] Agent Definition: Specifying an agent\u2019s role, instructions, capabilities, tools, and potentially personality or profile.\n Planning: Enabling agents to devise strategies or sequences of actions to achieve goals (e.g., using techniques like Chain-of-Thought or ReAct).\n Tool Use: Integrating agents with external tools, APIs, databases, or functions to interact with the outside world or perform specific actions.\n Memory: Storing and retrieving information from past interactions to maintain context. Can be short-term (within a session) or long-term.\n Control Flow Mechanisms: Defining how tasks move between agents (e.g., using graphs like in LangGraph, pipelines, event-driven systems). [...] Complexity Ceiling: A single AI agent can become overwhelmed or inefficient when tasked with increasingly complex, multi-step problems that require diverse skills or access to many different tools.\n Lack of Specialization: A single agent trying to be a \u201cjack-of-all-trades\u201d may not perform specific sub-tasks as well as a specialized agent would.\n Scalability Issues: As the scope of tasks grows, managing the logic, tools, and context within a single agent becomes difficult to maintain, debug, and scale. Performance can degrade.\n Modularity and Maintenance: Breaking down a problem allows for easier development, testing, and updating of individual agent components without disrupting the entire system.",
+        "score": 0.26414284,
         "raw_content": null
       },
       {
-        "url": "https://eprints.bournemouth.ac.uk/37480/1/CLARK%2C%20Rory_D.Eng._2021.pdf",
-        "title": "[PDF] Understanding Hand Interactions and Mid-Air Haptic Responses ...",
-        "content": "many of the advancements that were released in with the large push for VR devices in 2016. Even devices such as the Microsoft Hololens, which was released in 2016, had rudimentary hand tracking that did successfully track the hand, but with significant latency and poor finger segmentation. Many older technologies would have to pick between either accuracy or speed, however newer offerings have helped reduce these issues significantly. 30 2.1.3.2 Passive Interactions Many modern VR systems make heavy use of ray-cast techniques, with ecosystems such as SteamVR and Oculus using these for their menu and interface interactions, and toolkits such as the MRTK (Microsoft 2019b) using them for a hybrid approach to object interaction. In the case of interface interactions, these are generally a [...] the case of interface interactions, these are generally a simple ray that directly and linearly extends from a controller or hand and is then actioned through generic button or gesture. Object interaction is a more varied field, where systems are often seen to be adding additional helper functions to the rays. For example, the MRTK warps and bends the ray to snap towards an object within close vicinity. Crucially ray-cast based interactions tend to be most favourable when they are instantaneous to react and linked to a hand based-origin. A study by (Nukarinen et al. 2018) found that the rays with time based hover interactions were less favourable than instantaneous button based interactions, while hand origins were favoured over head. This builds upon prior research by (Cournia et al. [...] in the center of the image to the left of the keyboard, demonstrating hand tracking. (Ultraleap 2013) Hand tracking hardware and software has been commercially available for a number of years. Devices such as the Leap Motion Controller (Leap Motion 2013), shown in Figure 11, and Microsoft Azure Kinect (Microsoft 2019a), and prior iterations, have allowed users to track their hands (Hald 2013). Several computing platforms are now starting to integrate hand tracking directly into the hardware of the device such as: the Oculus Quest (Oculus 2019b) Figure 12, Hololens 2, and Varjo VR-2 Pro (Varjo 2019), removing the necessity for users to obtain additional hardware. This seamless integration will not only help improve the adoption but also massively increase the user base of the tech. Figure",
-        "score": 0.28469083,
+        "url": "https://www.youtube.com/watch?v=hH6AlfbnWWA",
+        "title": "Agentic AI Architecture: RAG, Tools, and Multi-Agent Orchestration",
+        "content": "### Transcript: [...] running a company you may have a CEO that CEO say hey that's breaking down the mission maybe to your marketing department maybe to your engineing department then sub agent will taking care subst task for you right that's one approach of it we'll cover many many more architecture there do you recognize all the organization chart from the social media I don't want to name the company I maybe uh insult them but you may recognize this chapter this organization diagram imagine when you designing a gentic system a janking AI sometimes it may feel like you're designing organization how you put those master or maybe the agent together how you put who taking care of the charge how you frame your architecture in a way what largely influences how this outcome become right all All right then I want [...] that into more complex Like example, imagine you may have a one master agent that may be taking care of your master uh the goal, the main mission. For example, I want to master Japanese. Then the master agent will say, \"Hey, okay, cool. Let's breaking down to sub aent for you, subtask for you.\" The first you want to learn some characters, you want to learn some sentences, you want to learn other things. Those sub agent will taking care what breaking down into submission. Then we'll be attached with different tools. For example, the tool can be going to your microservices, your API endpoint or maybe your database or internal document. Those will be the whole architecture look like hey if you want to put one mission just like in you're running a company you may have a CEO that CEO say hey",
+        "score": 0.1902425,
         "raw_content": null
       },
       {
-        "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/design/direct-manipulation",
-        "title": "Direct manipulation with hands - Mixed Reality | Microsoft Learn",
-        "content": "## Manipulation in MRTK (Mixed Reality Toolkit) for Unity\n\nWith MRTK, you can easily achieve common manipulation behavior using the script ObjectManipulator. With ObjectManipulator, you can grab and move objects directly with hands or with hand ray. It also supports two-handed manipulation for scaling and rotating an object.\n\n MRTK - Manipulation\n\n## See also\n\n Head-gaze and commit\n Point and commit with hands\n Instinctual interactions\n\n## Feedback\n\nWas this page helpful?\n\nNo \n\nNeed help with this topic?\n\nWant to try using Ask Learn to clarify or guide you through this topic?\n\n## Additional resources\n\n Last updated on  2022-09-22 [...] While eye tracking on HoloLens 2 has limitations based on how accurately it can determine your eye gaze, this can still be helpful for near interactions because of depth disparity when interacting with hand input. This means it's sometimes difficult to determine whether your hand is behind or in front of a hologram to precisely grab a manipulation widget, for example.\n Where to: Use information about what a user is looking at with quick-throwing gestures. Grab a hologram and roughly toss it toward your intended destination.\n\n  While this sometimes works, quickly doing hand gestures may result in highly inaccurate destinations. However, eye tracking could improve the accuracy of the gesture.\n\n## Manipulation in MRTK (Mixed Reality Toolkit) for Unity [...] The first mechanism is a bounding box with a proximity shader, which is detailed in the previous section. It gives users a better sense of proximity when they approach and make contact with a button.\n The second mechanism is depression. Depression creates a sense of pressing down after a fingertip contacts a button. The mechanism ensures that the button tightly moves with the fingertip along the depth axis. The button can be triggered when it reaches a chosen depth (on press) or leaves the depth (on release) after passing through it.\n The sound effect should be added to enhance feedback when the button is triggered.\n\nFinger is far away\n\nFinger approaches\n\nContact begins\n\nPress down\n\n## 2D slate interaction",
-        "score": 0.16418147,
+        "url": "https://accelerated-ai.medium.com/multi-agent-orchestration-496ff7aa012b",
+        "title": "Multi-Agent Orchestration. Simply Explained w/ Code, LangGraph\u2026",
+        "content": "Sitemap\n\nOpen in app\n\nSign in\n\nWrite\n\nSearch\n\nSign in\n\nMember-only story\n\n# Multi-Agent Orchestration\n\n## Simply Explained w/ Code, LangGraph, and a Notebook\n\nAccelerated AI\n\n7 min read\n\n\u00b7\n\nNov 27, 2025\n\n-- [...] Accelerated AI\n\n7 min read\n\n\u00b7\n\nNov 27, 2025\n\n--\n\nAs software developers, coding might seem like a diminishing role we play, but not so much with orchestration. In fact, multi-agent orchestration might even give a developer some purpose when building an AI system. It might even seem overwhelming as a coding task. It is the most deterministic part of an multi-agent system\u2026and fun to implement. The way I see it, orchestration has two main pieces (1) State (2) Routing. But even more than that, (1) State (2) Routing (3) Logic [for the routing] (4) Supervision [of the graph nodes]. This is staring to sound a lot like old school software engineering \u2014 data, logic, conditions. [...] To better understand orchestration , I built two identical, overly simple, 2-Node coding graphs using LangGraph API. And then I added orchestration to one graph. Again I made it as simple as I could so I could isolate the orchestration mechanism. Then I ran the two graphs with identical prompts and compared the results. I also made a notebook version to better understand the overlap and again, compared the results:\n\n## Written by Accelerated AI\n\n91 followers\n\n\u00b7212 following\n\nSharing my passion for AI, ML simply explained, going as fast as possible.  \n\n## No responses yet\n\nHelp\n\nStatus\n\nAbout\n\nText to speech",
+        "score": 0.18281944,
         "raw_content": null
       },
       {
-        "url": "https://forums.flightsimulator.com/t/hand-tracking-in-msfs-leap-motion-ultraleap-native-support-for-wmr-openxr/475308",
-        "title": "Hand Tracking in MSFS - Leap Motion / UltraLeap native support for ...",
-        "content": "The tracking device is very affordable, under $100. And most of us use hardware yokes and throttles, so even though VR Controllers are much better than mouse, they are still not very convenient. Just using our hands would be so much better for real immersion and convenience.\n\nAsobo, please develop hand tracking support with UltraLeap!\n\nHere is a video of LeapMotion already working in MSFS. Imagine this with direct interaction, hands visible in MSFS:\n\nImage 3: Play FS2020 with Hand Tracking!\n\nPlay FS2020 with Hand Tracking!\n\n(video reposted from here)\n\nAnd here\u2019s new generation of UltraLeap tracking - imagine this working in MSFS - that would be a game changer! [...] post by AmiableGalaxy9 on Nov 25, 2021\n\npost by RomanDesign on Nov 25, 2021\n\npost by AmiableGalaxy9 on Nov 26, 2021\n\npost by RomanDesign on Nov 26, 2021\n\n 8 days later \n\npost by mbucchia on Dec 5, 2021\n\npost by mbucchia on Dec 6, 2021\n\npost by RomanDesign on Dec 6, 2021\n\npost by Bushpilot6054 on Dec 6, 2021\n\npost by RomanDesign on Dec 6, 2021\n\npost by mbucchia on Dec 7, 2021\n\npost by RomanDesign on Dec 7, 2021\n\npost by RomanDesign on Dec 7, 2021\n\npost by wheeliemonsta on Dec 7, 2021\n\npost by wheeliemonsta on Dec 7, 2021\n\nLoad more posts below\n\n Invalid date  Invalid date [...] Hand Tracking in MSFS - Leap Motion / UltraLeap native support for WMR/OpenXR - Official Microsoft Flight Simulator / Wishlist - Microsoft Flight Simulator Forums\n\nSkip to last replySkip to top\n\nSkip to main content\n\nImage 1: Microsoft Flight Simulator Forums\n\n   Website\n   News\n   Events\n   Sim Support\n   Dev Forums\n\nSign Up Log In\n    \u200b \n\n   Topics\n   Code of Conduct\n   Online Services\n   Upcoming events\n    More \n\n Categories \n\n   Official Microsoft Flight Simulator\n   Wishlist\n   Bug Reporting Hub\n   All categories\n\n Tags \n\n   bug-logged\n   feedback-logged\n   official-discussion\n   release-notes\n   All tags\n\n \u200b \n\n 196 \n\nVote\n\nHand Tracking in MSFS - Leap Motion / UltraLeap native support for WMR/OpenXR\n\nOfficial Microsoft Flight SimulatorWishlist",
-        "score": 0.16402072,
+        "url": "https://www.ibm.com/think/tutorials/llm-agent-orchestration-with-langchain-and-granite",
+        "title": "LLM Agent Orchestration: A Step by Step Guide - IBM",
+        "content": "AI Advocate | Technical Content Author\n\nLLM agent orchestration refers to the process of managing and coordinating the interactions between a large language model (LLM) and various tools, APIs or processes to perform complex tasks within AI systems. It involves structuring workflows where an AI agent, powered by artificial intelligence, acts as the central decision-maker or reasoning engine, orchestrating its actions based on inputs, context and outputs from external systems. Using an orchestration framework, LLMs can seamlessly integrate with APIs, databases and other AI applications, enabling functionalities such as chatbots and automation tools. Open-source agent frameworks further enhance the adaptability of these systems, making LLMs more effective in real-world scenarios. [...] ``` [...] ```",
+        "score": 0.11669376,
         "raw_content": null
       }
     ],
-    "response_time": 2.19,
-    "request_id": "26b9aed7-b892-4461-a0c2-8328e4767202"
+    "response_time": 1.58,
+    "request_id": "bb9d075b-0270-4f57-b019-5f029479a335"
   },
   "brave": {
     "query": {
-      "original": "Microsoft MRTK hand interaction state machine vs Ultraleap TouchFree air push FSM predictive latency",
+      "original": "Explain: Ports and Adapters (Hexagonal Architecture) in AI Agent orchestration. Search for production exemplars (e.g. Agno, LangGraph, PydanticAI) that use unified manifolds/hubs for tool management. Compare with JADC2 J-Function command structures. Identify the non-bespoke industry name for HFO-8.",
       "show_strict_warning": false,
       "is_navigational": false,
       "is_news_breaking": false,
@@ -158,6 +158,11 @@
           "type": "web",
           "index": 18,
           "all": false
+        },
+        {
+          "type": "web",
+          "index": 19,
+          "all": false
         }
       ],
       "top": [],
@@ -168,16 +173,16 @@
       "type": "search",
       "results": [
         {
-          "title": "Interactions - Ultraleap documentation",
-          "url": "https://docs.ultraleap.com/TouchFree/touchless-interfaces/interactions.html",
+          "title": "Best AI Agent Frameworks in 2025: Comparing LangGraph, DSPy, CrewAI, Agno, and More",
+          "url": "https://langwatch.ai/blog/best-ai-agent-frameworks-in-2025-comparing-langgraph-dspy-crewai-agno-and-more",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "So that TouchFree interactions don\u2019t interfere with people using the touchscreen, we recommend using AirPush with Scroll &amp; Drag enabled. Scroll &amp; Drag performs the click when the user pulls back their hand from the same location as they pushed forward.",
+          "description": "Not yet a drop-in solution for production orchestration. PydanticAI leans into type safety, using familiar decorators and schema definitions to drive agent behavior. While intuitive for Python developers, its constraints become apparent in more dynamic workflows. ... Bottom line: PydanticAI is great for structured task agents and quick prototypes, but lacks ergonomic depth for large-scale agentic systems. Agno offers one of the most intuitive developer experiences, combining clarity in docs with a well-structured API.",
           "profile": {
-            "name": "Ultraleap",
-            "url": "https://docs.ultraleap.com/TouchFree/touchless-interfaces/interactions.html",
-            "long_name": "docs.ultraleap.com",
-            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
+            "name": "Langwatch",
+            "url": "https://langwatch.ai/blog/best-ai-agent-frameworks-in-2025-comparing-langgraph-dspy-crewai-agno-and-more",
+            "long_name": "langwatch.ai",
+            "img": "https://imgs.search.brave.com/ywBr2j1E4_QhmVQWErbby1mCKSl3ooVKPih3x9zP5es/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmUzZTU1YmUy/ZmE1ZjU4NGMwZWIx/YmQ3OGFiOTkxZGY5/NTAzM2E1NWFjZTdl/MDgwMWVkMmNkNzZl/YzY3MzkxOS9sYW5n/d2F0Y2guYWkv"
           },
           "language": "en",
           "family_friendly": true,
@@ -186,21 +191,507 @@
           "is_live": false,
           "meta_url": {
             "scheme": "https",
-            "netloc": "docs.ultraleap.com",
-            "hostname": "docs.ultraleap.com",
-            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
-            "path": "\u203a TouchFree  \u203a touchless-interfaces  \u203a interactions.html"
+            "netloc": "langwatch.ai",
+            "hostname": "langwatch.ai",
+            "favicon": "https://imgs.search.brave.com/ywBr2j1E4_QhmVQWErbby1mCKSl3ooVKPih3x9zP5es/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmUzZTU1YmUy/ZmE1ZjU4NGMwZWIx/YmQ3OGFiOTkxZGY5/NTAzM2E1NWFjZTdl/MDgwMWVkMmNkNzZl/YzY3MzkxOS9sYW5n/d2F0Y2guYWkv",
+            "path": "\u203a blog  \u203a best-ai-agent-frameworks-in-2025-comparing-langgraph-dspy-crewai-agno-and-more"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/kSWFVrK8ueDR2miR8S2WCy8kxOYBM6IAaGvXYkEXdt8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9mcmFt/ZXJ1c2VyY29udGVu/dC5jb20vaW1hZ2Vz/L1ZrRnhicmM3ZTE1/YlQ5NUhyaXMwS2lG/VS5wbmc_d2lkdGg9/MTI3MCZhbXA7aGVp/Z2h0PTc2MA",
+            "original": "https://framerusercontent.com/images/VkFxbrc7e15bT95Hris0KiFU.png?width=1270&amp;height=760",
+            "logo": false
           }
         },
         {
-          "title": "Using Leap Motion and Ultraleap - MRTK 2 | Microsoft Learn",
-          "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
+          "title": "Agentic AI Frameworks: Architectures, Protocols, and Design Challenges",
+          "url": "https://arxiv.org/html/2508.10146v1",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "Getting joints using the Leap Motion Data Provider is identical to hand joint retrieval for an MRTK Articulated Hand.",
+          "description": "LangGraph offers deterministic, fault-tolerant orchestration and can support discovery through simple catalog adapters, making it a strong runner-up. By contrast, CrewAI, AutoGen, Agno, and MetaGPT excel at multi-agent planning or code generation but require an auxiliary service registry (e.g., OpenAPI gateway or service mesh) to participate in fully dynamic service ecosystems.",
+          "page_age": "2025-08-13T19:16:52",
+          "profile": {
+            "name": "arXiv",
+            "url": "https://arxiv.org/html/2508.10146v1",
+            "long_name": "arxiv.org",
+            "img": "https://imgs.search.brave.com/l36MWBCdhb-teoPlxGGMWEenj3njVas--CoLjN2ciHU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjcxZDU5ZmZl/ZmIwNzY4NTUyZDg1/ZTVjNGNhMzE2NjUz/MjljMzQwZTA0MThm/NTdjN2Q0N2I3NjFm/ZjIwZmU5MC9hcnhp/di5vcmcv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "arxiv.org",
+            "hostname": "arxiv.org",
+            "favicon": "https://imgs.search.brave.com/l36MWBCdhb-teoPlxGGMWEenj3njVas--CoLjN2ciHU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjcxZDU5ZmZl/ZmIwNzY4NTUyZDg1/ZTVjNGNhMzE2NjUz/MjljMzQwZTA0MThm/NTdjN2Q0N2I3NjFm/ZjIwZmU5MC9hcnhp/di5vcmcv",
+            "path": "\u203a html  \u203a 2508.10146v1"
+          },
+          "age": "August 13, 2025"
+        },
+        {
+          "title": "AI Agent Orchestration Frameworks: Which One Works Best for You? \u2013 n8n Blog",
+          "url": "https://blog.n8n.io/ai-agent-orchestration-frameworks/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The article covers architectural principles and implementation strategies in detail. We&#x27;ve organized our analysis into three categories that reflect how the market has evolved: Visual and low-code tools (n8n, Flowise, Zapier Agents) come first \u2013 these platforms let business teams and developers build agent coordination through graphical interfaces while maintaining technical flexibility. Code-first SDKs (LangGraph, CrewAI, OpenAI Agents SDK, Google ADK, MS Semantic Kernel Agent Framework) follow next \u2013 code-first frameworks that give technical teams precise control over agent behavior, state management, and communication patterns.",
+          "page_age": "2025-10-22T10:20:45",
+          "profile": {
+            "name": "n8n",
+            "url": "https://blog.n8n.io/ai-agent-orchestration-frameworks/",
+            "long_name": "blog.n8n.io",
+            "img": "https://imgs.search.brave.com/TQZTwno2gtIVQqc0JzFA_ejW09Ek1yjX5YgcsWfo__c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjMzYWFjYzFm/YjY0NjhmMTJlODY2/NzQ1MWE1ZmIwNDFk/ZWI4MDkxNDUyMGYy/NmNlNWZiNjBhZDli/YzcxOWFlNS9ibG9n/Lm44bi5pby8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "blog.n8n.io",
+            "hostname": "blog.n8n.io",
+            "favicon": "https://imgs.search.brave.com/TQZTwno2gtIVQqc0JzFA_ejW09Ek1yjX5YgcsWfo__c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjMzYWFjYzFm/YjY0NjhmMTJlODY2/NzQ1MWE1ZmIwNDFk/ZWI4MDkxNDUyMGYy/NmNlNWZiNjBhZDli/YzcxOWFlNS9ibG9n/Lm44bi5pby8",
+            "path": "\u203a ai-agent-orchestration-frameworks"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/-EqBVmVyFQo_6YI73lPrMQTHznJ7vLukUratOeFF2a8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9ibG9n/Lm44bi5pby9jb250/ZW50L2ltYWdlcy9z/aXplL3cxMjAwLzIw/MjUvMTAvVXNlci1N/ZWV0dXBzLS0tSGFu/Z291dHNfMTkyMC0t/MTA4MF8wMy0tMS0t/LTEtLnBuZw",
+            "original": "https://blog.n8n.io/content/images/size/w1200/2025/10/User-Meetups---Hangouts_1920--1080_03--1---1-.png",
+            "logo": false
+          },
+          "age": "October 22, 2025"
+        },
+        {
+          "title": "The Developer's Guide to AI Agent Frameworks in 2025: MCP-Native vs Traditional Approaches - DEV Community",
+          "url": "https://dev.to/hani__8725b7a/agentic-ai-frameworks-comparison-2025-mcp-agent-langgraph-ag2-pydanticai-crewai-h40",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Building with MCP? \u2192 mcp-agent (native) or PydanticAI (native + A2A) ... # LangGraph - explicit checkpointing checkpointer = SqliteSaver.from_conn_string(&quot;:memory:&quot;) app = workflow.compile(checkpointer=checkpointer)",
+          "page_age": "2025-12-04T19:43:30",
+          "profile": {
+            "name": "DEV Community",
+            "url": "https://dev.to/hani__8725b7a/agentic-ai-frameworks-comparison-2025-mcp-agent-langgraph-ag2-pydanticai-crewai-h40",
+            "long_name": "dev.to",
+            "img": "https://imgs.search.brave.com/UUpF8I85K--vkQzrhameM7iRPRU5VCTXyWbS4sk6G2g/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTg5MTcxNDBh/N2U4ODc4MDg0NWQ4/MzU0YWJkNDY3ZWRm/MjUxY2U1YjY5MzJm/YWRlOTI4YjAyZDI1/ZjU0MmJjNi9kZXYu/dG8v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "dev.to",
+            "hostname": "dev.to",
+            "favicon": "https://imgs.search.brave.com/UUpF8I85K--vkQzrhameM7iRPRU5VCTXyWbS4sk6G2g/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTg5MTcxNDBh/N2U4ODc4MDg0NWQ4/MzU0YWJkNDY3ZWRm/MjUxY2U1YjY5MzJm/YWRlOTI4YjAyZDI1/ZjU0MmJjNi9kZXYu/dG8v",
+            "path": "\u203a hani__8725b7a  \u203a agentic-ai-frameworks-comparison-2025-mcp-agent-langgraph-ag2-pydanticai-crewai-h40"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/MTgWSyvr6cHYZKJqrQVzH02H1Tp3IZUf0MgEtnV25Xg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9tZWRp/YTIuZGV2LnRvL2R5/bmFtaWMvaW1hZ2Uv/d2lkdGg9MTA4MCxo/ZWlnaHQ9MTA4MCxm/aXQ9Y292ZXIsZ3Jh/dml0eT1hdXRvLGZv/cm1hdD1hdXRvL2h0/dHBzJTNBJTJGJTJG/ZGV2LXRvLXVwbG9h/ZHMuczMuYW1hem9u/YXdzLmNvbSUyRnVw/bG9hZHMlMkZhcnRp/Y2xlcyUyRnJkOHZp/bHQ2bzgzdXBtYXpj/N2d6LnBuZw",
+            "original": "https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Frd8vilt6o83upmazc7gz.png",
+            "logo": false
+          },
+          "age": "December 4, 2025"
+        },
+        {
+          "title": "AI Agent Systems: Architectures, Applications, and Evaluation",
+          "url": "https://arxiv.org/html/2601.01743",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "This survey synthesizes the emerging landscape of AI agent architectures for (i) deliberation and reasoning (e.g., chain-of-thought style decomposition, self-reflection and verification, and constraint-aware decision making), (ii) planning and control (from reactive policies to hierarchical and multi-step planners), and (iii) tool calling and environment interaction (retrieval, code execution, APIs, and multimodal perception). We organize prior work into a unified taxonomy spanning agent components (policy/LLM core, memory, world models, planners, tool routers, and critics), orchestration patterns (single-agent vs.",
+          "page_age": "2026-01-05T02:39:40",
+          "profile": {
+            "name": "arXiv",
+            "url": "https://arxiv.org/html/2601.01743",
+            "long_name": "arxiv.org",
+            "img": "https://imgs.search.brave.com/l36MWBCdhb-teoPlxGGMWEenj3njVas--CoLjN2ciHU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjcxZDU5ZmZl/ZmIwNzY4NTUyZDg1/ZTVjNGNhMzE2NjUz/MjljMzQwZTA0MThm/NTdjN2Q0N2I3NjFm/ZjIwZmU5MC9hcnhp/di5vcmcv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "arxiv.org",
+            "hostname": "arxiv.org",
+            "favicon": "https://imgs.search.brave.com/l36MWBCdhb-teoPlxGGMWEenj3njVas--CoLjN2ciHU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjcxZDU5ZmZl/ZmIwNzY4NTUyZDg1/ZTVjNGNhMzE2NjUz/MjljMzQwZTA0MThm/NTdjN2Q0N2I3NjFm/ZjIwZmU5MC9hcnhp/di5vcmcv",
+            "path": "\u203a html  \u203a 2601.01743"
+          },
+          "age": "6 days ago"
+        },
+        {
+          "title": "Hexagonal Architecture: Easy Integration Using Ports and Adapters | Armakuni",
+          "url": "https://www.armakuni.com/insights/hexagonal-architecture",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The hexagonal architecture (aka the ports and adapters architecture) is a way to structure your applications. This architecture is drawn as one hexagon inside another. The code inside the inner hexagon is your pure business logic (domain model) and the code in the outer hexagon is your infrastructure integration code (known as adapters).",
+          "profile": {
+            "name": "Armakuni",
+            "url": "https://www.armakuni.com/insights/hexagonal-architecture",
+            "long_name": "armakuni.com",
+            "img": "https://imgs.search.brave.com/rcd6GtsVNe53EBlyyUHeHyvasZHsMAmh93NNUICzZS4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjk5Mjc4ZjU5/M2JmYjEyYjBjMWU0/NTNhZjU5MTI2N2M0/NDExMmY4ZjdkOTYx/NGQwNjE1NGUzYTMy/N2I0MjNjNC93d3cu/YXJtYWt1bmkuY29t/Lw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "armakuni.com",
+            "hostname": "www.armakuni.com",
+            "favicon": "https://imgs.search.brave.com/rcd6GtsVNe53EBlyyUHeHyvasZHsMAmh93NNUICzZS4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjk5Mjc4ZjU5/M2JmYjEyYjBjMWU0/NTNhZjU5MTI2N2M0/NDExMmY4ZjdkOTYx/NGQwNjE1NGUzYTMy/N2I0MjNjNC93d3cu/YXJtYWt1bmkuY29t/Lw",
+            "path": "\u203a insights  \u203a hexagonal-architecture"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/dBJgUbEE-6tcvACAfyS1WCMvdb2hIRjiQb5o7YVSfuo/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/cHJvZC53ZWJzaXRl/LWZpbGVzLmNvbS82/NjcyOWFkNjkwMWM0/MDA3ODZlYjNhZWMv/NjZlMjkxYWU2Nzkx/NDU2MzFjMDkwM2Vi/X0hleGFnb25hbCUy/MEFyY2hpdGVjdHVy/ZS5wbmc",
+            "original": "https://cdn.prod.website-files.com/66729ad6901c400786eb3aec/66e291ae679145631c0903eb_Hexagonal%20Architecture.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Comparing AI Agent Frameworks: A Guide to Building Reliable Agents",
+          "url": "https://www.atla-ai.com/post/ai-agent-frameworks",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "\u200dGreat for: Structured multi-agent flows, content generation pipelines \u200dNot ideal for: Dynamic workflows or logic-heavy planning \u200dCrewAI Docs ... Agno (formerly Phidata) is an agent framework designed for composability, performance, and clean integration. It avoids boilerplate orchestration layers and instead offers direct, unified interfaces to 23+ model providers, multiple memory strategies, and toolchains, plus a powerful CLI and extensive out-of-the-box tools with strong type validation.",
+          "profile": {
+            "name": "Atla-ai",
+            "url": "https://www.atla-ai.com/post/ai-agent-frameworks",
+            "long_name": "atla-ai.com",
+            "img": "https://imgs.search.brave.com/MzvjhoDk0A2Qw8rzeqcWPv-nPed8Ox0youoGsU6c-JM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjNjNGE2Y2Zh/ZGU3ZThlZmRmNjI3/MTkzMDAxNDE0YWVj/YTc0YWZhOTkzNGFh/ZDNlMDA0NmQ2MmVk/ZDliM2Q4Yi93d3cu/YXRsYS1haS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "atla-ai.com",
+            "hostname": "www.atla-ai.com",
+            "favicon": "https://imgs.search.brave.com/MzvjhoDk0A2Qw8rzeqcWPv-nPed8Ox0youoGsU6c-JM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjNjNGE2Y2Zh/ZGU3ZThlZmRmNjI3/MTkzMDAxNDE0YWVj/YTc0YWZhOTkzNGFh/ZDNlMDA0NmQ2MmVk/ZDliM2Q4Yi93d3cu/YXRsYS1haS5jb20v",
+            "path": "\u203a post  \u203a ai-agent-frameworks"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/TkC0W9C9ZTh-eqqs4nnHngXuYDtefDWnaKGmAhx941M/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/cHJvZC53ZWJzaXRl/LWZpbGVzLmNvbS82/NjVmMmZhMmQ3NDdk/YjhkZWI4NWEzZmMv/NjhhNWEwYjI2YWI0/ZTEzMzcxMjRhNzdk/XzUucG5n",
+            "original": "https://cdn.prod.website-files.com/665f2fa2d747db8deb85a3fc/68a5a0b26ab4e1337124a77d_5.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Agent Orchestration: When to Use LangChain, LangGraph, AutoGen \u2014 or Build an Agentic RAG System | by Akanksha Sinha | Medium",
+          "url": "https://medium.com/@akankshasinha247/agent-orchestration-when-to-use-langchain-langgraph-autogen-or-build-an-agentic-rag-system-cc298f785ea4",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Scalability: Architectures designed to handle an increasing number of agents or growing workloads. ... LangChain / LangGraph: Introduced in early to mid-2023, LangChain provides building blocks for AI applications, while LangGraph (built on LangChain) focuses specifically on creating stateful, cyclical agent workflows using a graph structure.",
+          "page_age": "2025-04-26T04:16:31",
+          "profile": {
+            "name": "Medium",
+            "url": "https://medium.com/@akankshasinha247/agent-orchestration-when-to-use-langchain-langgraph-autogen-or-build-an-agentic-rag-system-cc298f785ea4",
+            "long_name": "medium.com",
+            "img": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "medium.com",
+            "hostname": "medium.com",
+            "favicon": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw",
+            "path": "\u203a @akankshasinha247  \u203a agent-orchestration-when-to-use-langchain-langgraph-autogen-or-build-an-agentic-rag-system-cc298f785ea4"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/y2f3nH_SzJJWI15NOwTVMfG_HpOcdjO6bAFKHJGHkOE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9taXJv/Lm1lZGl1bS5jb20v/MSp1akw1ejZVN1VW/MTVoZXZjTW9wTmZn/LnBuZw",
+            "original": "https://miro.medium.com/1*ujL5z6U7UV15hevcMopNfg.png",
+            "logo": false
+          },
+          "age": "April 26, 2025"
+        },
+        {
+          "title": "Agentic AI Architecture: A Practical, Production-Ready Guide | by Monoj Kanti Saha | AgenticAI\u2014 The Autonomous Intelligence | Medium",
+          "url": "https://medium.com/agenticai-the-autonomous-intelligence/agentic-ai-architecture-a-practical-production-ready-guide-2b2aa6d16118",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "LangChain\u2019s Agents decide and call tools; LangGraph provides durable, stateful execution (checkpoints, HITL, persistence, streaming). You keep library breadth while gaining explicit graph control. Google AI for Developers \u00b7 Where it fits. Teams that want the LangChain ecosystem plus reliable state machines for complex, multi-step tasks. What it is. Managed agent runtime: threads/conversations, tool orchestration, content safety, identity, networking, and observability integrated with Azure platform services.",
+          "page_age": "2025-08-30T20:23:07",
+          "profile": {
+            "name": "Medium",
+            "url": "https://medium.com/agenticai-the-autonomous-intelligence/agentic-ai-architecture-a-practical-production-ready-guide-2b2aa6d16118",
+            "long_name": "medium.com",
+            "img": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "medium.com",
+            "hostname": "medium.com",
+            "favicon": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw",
+            "path": "\u203a agenticai-the-autonomous-intelligence  \u203a agentic-ai-architecture-a-practical-production-ready-guide-2b2aa6d16118"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/B_gWCQjo3TnsKDkxR-1WPGDMJQNURg9zaHMcWRQDsds/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9taXJv/Lm1lZGl1bS5jb20v",
+            "original": "https://miro.medium.com/",
+            "logo": false
+          },
+          "age": "August 30, 2025"
+        },
+        {
+          "title": "AI Agent Systems: Architectures & Evaluation",
+          "url": "https://www.emergentmind.com/papers/2601.01743",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "We organize prior work into a unified taxonomy spanning agent components (policy/LLM core, memory, world models, planners, tool routers, and critics), orchestration patterns (single-agent vs.\\ multi-agent; centralized vs.\\ decentralized coordination), and deployment settings (offline analysis vs.\\ online interactive assistance; safety-critical vs.\\ open-ended tasks).",
+          "profile": {
+            "name": "Emergent Mind",
+            "url": "https://www.emergentmind.com/papers/2601.01743",
+            "long_name": "emergentmind.com",
+            "img": "https://imgs.search.brave.com/Zc521AqQwkFLu4dxf7NKn1ehs161lCdjAkhkjS4ySGI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGM4NjVhOTE1/YjRiZTJmNWRlOTZj/ZjRhZmYxZWMwMWFj/ZDAzNTk0Y2MxZDc1/MTBiYWJmODlmZTE1/N2EwMWUxZS93d3cu/ZW1lcmdlbnRtaW5k/LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "emergentmind.com",
+            "hostname": "www.emergentmind.com",
+            "favicon": "https://imgs.search.brave.com/Zc521AqQwkFLu4dxf7NKn1ehs161lCdjAkhkjS4ySGI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGM4NjVhOTE1/YjRiZTJmNWRlOTZj/ZjRhZmYxZWMwMWFj/ZDAzNTk0Y2MxZDc1/MTBiYWJmODlmZTE1/N2EwMWUxZS93d3cu/ZW1lcmdlbnRtaW5k/LmNvbS8",
+            "path": "\u203a papers  \u203a 2601.01743"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/K8jnmZPNdMeWoSa5EXkTOTXDUqE7xJulK0_vb-xBIyk/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9kMnpr/OHFkeDJ5MWJlci5j/bG91ZGZyb250Lm5l/dC9hc3NldHMvNjAw/cHgtYTYxMzIwNDQ5/YjhjODQ4YmNjNTZl/MDI4MjZiMDMzYjVl/ZmEwOWZhNTJjYzQ4/YjQ4N2U4ZjlhMmVi/OGVmZDcwNS5wbmc",
+            "original": "https://d2zk8qdx2y1ber.cloudfront.net/assets/600px-a61320449b8c848bcc56e02826b033b5efa09fa52cc48b487e8f9a2eb8efd705.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Aidemy: Building Multi-Agent Systems with LangGraph, EDA, and Generative AI on Google Cloud | Google Codelabs",
+          "url": "https://codelabs.developers.google.com/aidemy-multi-agent/instructions",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "LangChain &amp; LangGraph: Frameworks for LLM Application Development \u00b7 Facilitates the creation of complex multi-agent workflows. Enables the intelligent orchestration of tools (API calls, database queries, web searches). Implements event-driven architecture for system scalability and flexibility. In essence, our architecture combines the power of LLMs with structured data and event-driven communication, all running on Google Cloud.",
+          "profile": {
+            "name": "Google Codelabs",
+            "url": "https://codelabs.developers.google.com/aidemy-multi-agent/instructions",
+            "long_name": "codelabs.developers.google.com",
+            "img": "https://imgs.search.brave.com/nBoPEH5o7Br1aPYQHp329-xPD_VTogA8-tkctuE4iN0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjdjZmI3NDQ4/YjNlODFmZjMyZTA5/YzkxYjg3MmU1ZDY1/ZDEyYTc1MTkzYTA5/OWMxOWExZDhlMTVl/YzNkNjM0OS9jb2Rl/bGFicy5kZXZlbG9w/ZXJzLmdvb2dsZS5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "codelabs.developers.google.com",
+            "hostname": "codelabs.developers.google.com",
+            "favicon": "https://imgs.search.brave.com/nBoPEH5o7Br1aPYQHp329-xPD_VTogA8-tkctuE4iN0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYjdjZmI3NDQ4/YjNlODFmZjMyZTA5/YzkxYjg3MmU1ZDY1/ZDEyYTc1MTkzYTA5/OWMxOWExZDhlMTVl/YzNkNjM0OS9jb2Rl/bGFicy5kZXZlbG9w/ZXJzLmdvb2dsZS5j/b20v",
+            "path": "\u203a aidemy-multi-agent  \u203a instructions"
+          }
+        },
+        {
+          "title": "LangGraph Multi-Agent Orchestration: Complete Framework Guide + Architecture Analysis 2025",
+          "url": "https://latenode.com/blog/ai-frameworks-technical-infrastructure/langgraph-multi-agent-orchestration/langgraph-multi-agent-orchestration-complete-framework-guide-architecture-analysis-2025",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "LangGraph is a system designed for managing workflows involving multiple AI agents. By organizing tasks in a graph-based structure, it enables agents to work in parallel, handle conditional steps, and share information through a centralized state. This approach is particularly useful for complex operations like document analysis or research coordination.",
+          "profile": {
+            "name": "Latenode",
+            "url": "https://latenode.com/blog/ai-frameworks-technical-infrastructure/langgraph-multi-agent-orchestration/langgraph-multi-agent-orchestration-complete-framework-guide-architecture-analysis-2025",
+            "long_name": "latenode.com",
+            "img": "https://imgs.search.brave.com/dXP3QOsG_ykirxgX3Pht7vdzEGV6exBBybE40OrtDu4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzM1MGZhMDdh/OTg4ZGJmNDg5MDBm/YWYzNTVjNWUwYmFm/YWI4ZTJiMmM5NDc1/ZmNlMmZmZDQ3ZTE2/Y2I3YmM3Ni9sYXRl/bm9kZS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "faq",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "latenode.com",
+            "hostname": "latenode.com",
+            "favicon": "https://imgs.search.brave.com/dXP3QOsG_ykirxgX3Pht7vdzEGV6exBBybE40OrtDu4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzM1MGZhMDdh/OTg4ZGJmNDg5MDBm/YWYzNTVjNWUwYmFm/YWI4ZTJiMmM5NDc1/ZmNlMmZmZDQ3ZTE2/Y2I3YmM3Ni9sYXRl/bm9kZS5jb20v",
+            "path": "  \u203a home  \u203a blog about no-code integrations with latenode - the ultimate no-code automation platform  \u203a undefined  \u203a langgraph (multi-agent orchestration) in ai frameworks & technical infrastructure - explore no-code automation with latenode  \u203a langgraph multi-agent orchestration: complete framework guide + architecture analysis 2025"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/OqM-APo2KQNEHL3qbE90RlxO07ClDlC1i2VDxP2IHe0/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/cHJvZC53ZWJzaXRl/LWZpbGVzLmNvbS82/MmM0MGU0NTEzZGEz/MjBiNjBmMzI5NDEv/NjhiNzRmZDI5YTU1/Mjc0ZGFjNmI2OGQ0/XzY4Yjc0MTFjNjhi/YjVlMzgzMjQzY2Q3/OS0xNzU2ODQyMTYz/NTQ2LmpwZWc",
+            "original": "https://cdn.prod.website-files.com/62c40e4513da320b60f32941/68b74fd29a55274dac6b68d4_68b7411c68bb5e383243cd79-1756842163546.jpeg",
+            "logo": false
+          }
+        },
+        {
+          "title": "Best 5 Frameworks To Build Multi-Agent AI Applications",
+          "url": "https://getstream.io/blog/multiagent-ai-frameworks/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Build multi-agents: You can use Agno to build a team of agents that can transfer tasks to one another and collaborate to perform complex tasks. Agno will seamlessly handle the orchestration of the agents at the backend.",
+          "page_age": "2025-11-12T07:42:02",
+          "profile": {
+            "name": "GetStream",
+            "url": "https://getstream.io/blog/multiagent-ai-frameworks/",
+            "long_name": "getstream.io",
+            "img": "https://imgs.search.brave.com/_R58rDVjCE883YFnK0R4ioodn0-qgUn-F_DjeT4aaog/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZThmNjVhZWEy/Nzc1YzQ2NjMzOTVm/OTgwNmExYzliOTFl/OTljODFkYWYwOGM0/NjZmYmQwNmUyZDM2/OTFhYzU1MS9nZXRz/dHJlYW0uaW8v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "getstream.io",
+            "hostname": "getstream.io",
+            "favicon": "https://imgs.search.brave.com/_R58rDVjCE883YFnK0R4ioodn0-qgUn-F_DjeT4aaog/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZThmNjVhZWEy/Nzc1YzQ2NjMzOTVm/OTgwNmExYzliOTFl/OTljODFkYWYwOGM0/NjZmYmQwNmUyZDM2/OTFhYzU1MS9nZXRz/dHJlYW0uaW8v",
+            "path": "  \u203a ai"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/ygbb8e8cc8cfAm_ZvnqKSQsIt-hXHivOdoEYAM466d8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zdHJl/YW0tYmxvZy12Mi5p/bWdpeC5uZXQvYmxv/Zy93cC1jb250ZW50/L3VwbG9hZHMvOTQ2/ZWZmOWJmNTgxNzhj/NDU1MmIyMDdhOTll/MmJiMzAvYWlfYWdl/bnQucG5nP2F1dG89/Y29tcHJlc3MlMkNm/b3JtYXQmYW1wO2l4/bGliPXBocC0zLjMu/MA",
+            "original": "https://stream-blog-v2.imgix.net/blog/wp-content/uploads/946eff9bf58178c4552b207a99e2bb30/ai_agent.png?auto=compress%2Cformat&amp;ixlib=php-3.3.0",
+            "logo": false
+          },
+          "age": "November 12, 2025"
+        },
+        {
+          "title": "Top 10+ Agentic Orchestration Frameworks & Tools in 2026",
+          "url": "https://research.aimultiple.com/agentic-orchestration/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "LangGraph emerges as the fastest framework with the fewest tokens. Its graph-based architecture passes only necessary state deltas between nodes rather than full conversation histories, resulting in minimal token usage and reduced latency. Activity Agent: Most frameworks demonstrate relatively close performance. Without tool calls, all frameworks converge to similar ranges (6-8 sec for latency, 650-744 for tokens), suggesting the variation is primarily LLM generation time with minimal orchestration overhead.",
+          "profile": {
+            "name": "AIMultiple",
+            "url": "https://research.aimultiple.com/agentic-orchestration/",
+            "long_name": "research.aimultiple.com",
+            "img": "https://imgs.search.brave.com/nFKuuIwoXdfXLv_Q1mPIwpxB-4Xoho_okw25Wt6tdLM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDA4MDUwMjkw/NGM0MDhmNTJjZTgz/ZTg1ZmU2YWEwZmI1/MDhhNzQwMDA4ZGJk/MWRiOGE0OGEzYTA0/YTg2YzJhYy9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "research.aimultiple.com",
+            "hostname": "research.aimultiple.com",
+            "favicon": "https://imgs.search.brave.com/nFKuuIwoXdfXLv_Q1mPIwpxB-4Xoho_okw25Wt6tdLM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDA4MDUwMjkw/NGM0MDhmNTJjZTgz/ZTg1ZmU2YWEwZmI1/MDhhNzQwMDA4ZGJk/MWRiOGE0OGEzYTA0/YTg2YzJhYy9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS8",
+            "path": "  \u203a home  \u203a aimultiple research  \u203a agentic ai"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/4LM9Oy-Uru3ssggropWUWpPNPfbTP0qZk5EqXnv9XuE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyNS8wOS9D/ZW50cmFsaXplZC12/cy1kZWNlbnRyYWxp/emVkLW9yY2hlc3Ry/YXRpb24tMTIwMHg0/OTUucG5n",
+            "original": "https://research.aimultiple.com/wp-content/uploads/2025/09/Centralized-vs-decentralized-orchestration-1200x495.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Navigating the Landscape of AI Agent Orchestrators: A Comprehensive Guide - Cohorte Projects",
+          "url": "https://www.cohorte.co/blog/navigating-the-landscape-of-ai-agent-orchestrators-a-comprehensive-guide",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "AI agents are multiplying fast \u2014 but without orchestration, they create chaos. This guide breaks down every major agent orchestrator on the market, from AWS and Azure to open-source frameworks like AutoGen and Semantic Kernel. Packed with Python examples and real-world use cases in customer ...",
+          "profile": {
+            "name": "Cohorte",
+            "url": "https://www.cohorte.co/blog/navigating-the-landscape-of-ai-agent-orchestrators-a-comprehensive-guide",
+            "long_name": "cohorte.co",
+            "img": "https://imgs.search.brave.com/UW0X6qQ0s1erSm9iSeHAQMeI12S8i2nr2OFnOdxq4-4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjcwZGNlZDlm/ZTU0YjUxNzk1ZDBk/NDMxMmFlMmYyMGY4/MDg3NDJhN2YxNGJj/M2ZlMGIxZjJmNjJm/MzJiODAyNC93d3cu/Y29ob3J0ZS5jby8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "cohorte.co",
+            "hostname": "www.cohorte.co",
+            "favicon": "https://imgs.search.brave.com/UW0X6qQ0s1erSm9iSeHAQMeI12S8i2nr2OFnOdxq4-4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjcwZGNlZDlm/ZTU0YjUxNzk1ZDBk/NDMxMmFlMmYyMGY4/MDg3NDJhN2YxNGJj/M2ZlMGIxZjJmNjJm/MzJiODAyNC93d3cu/Y29ob3J0ZS5jby8",
+            "path": "\u203a blog  \u203a navigating-the-landscape-of-ai-agent-orchestrators-a-comprehensive-guide"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/HwrYSgOp5eBaIYFboBBT7Tavuo3Hg3B0MsGKmkvoFlU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/cHJvZC53ZWJzaXRl/LWZpbGVzLmNvbS82/Njg0MWMyYTk1NDA1/MjI2YTYwZDMzMmUv/NjgyNDk0YjliZTQ5/YjIxNzlhOGE3ZmI0/X0FnZW50X09yY2hl/c3RyYXRvcl9jb21w/cmVzc2VkLndlYnA",
+            "original": "https://cdn.prod.website-files.com/66841c2a95405226a60d332e/682494b9be49b2179a8a7fb4_Agent_Orchestrator_compressed.webp",
+            "logo": false
+          }
+        },
+        {
+          "title": "Backend Coding AI Context Coding Agents: DDD and Hexagonal Architecture | by Bardia Khosravi | Medium",
+          "url": "https://medium.com/@bardia.khosravi/backend-coding-rules-for-ai-coding-agents-ddd-and-hexagonal-architecture-ecafe91c753f",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Use cases implement primary ports and orchestrate domain objects",
+          "page_age": "2025-08-06T15:55:37",
+          "profile": {
+            "name": "Medium",
+            "url": "https://medium.com/@bardia.khosravi/backend-coding-rules-for-ai-coding-agents-ddd-and-hexagonal-architecture-ecafe91c753f",
+            "long_name": "medium.com",
+            "img": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "medium.com",
+            "hostname": "medium.com",
+            "favicon": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw",
+            "path": "\u203a @bardia.khosravi  \u203a backend-coding-rules-for-ai-coding-agents-ddd-and-hexagonal-architecture-ecafe91c753f"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/B_gWCQjo3TnsKDkxR-1WPGDMJQNURg9zaHMcWRQDsds/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9taXJv/Lm1lZGl1bS5jb20v",
+            "original": "https://miro.medium.com/",
+            "logo": false
+          },
+          "age": "August 6, 2025"
+        },
+        {
+          "title": "Top 5 Open-Source Agentic Frameworks in 2026",
+          "url": "https://research.aimultiple.com/agentic-frameworks/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Prompt orchestration: Building, managing, and routing complex prompts to LLMs \u00b7 Tool integration: Letting agents call external APIs, databases, code functions, etc. Memory: Maintaining state across turns or sessions (short- and long-term) RAG integration: Enabling knowledge retrieval from external sources \u00b7 Multi-agent coordination: Structuring how agents collaborate or delegate tasks ... A production project built with LangGraph demonstrates a stateful, multi-agent travel assistant that pulls flight and hotel data (using Google Flights &amp; Hotels APIs) and generates travel recommendations.4",
+          "profile": {
+            "name": "AIMultiple",
+            "url": "https://research.aimultiple.com/agentic-frameworks/",
+            "long_name": "research.aimultiple.com",
+            "img": "https://imgs.search.brave.com/nFKuuIwoXdfXLv_Q1mPIwpxB-4Xoho_okw25Wt6tdLM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDA4MDUwMjkw/NGM0MDhmNTJjZTgz/ZTg1ZmU2YWEwZmI1/MDhhNzQwMDA4ZGJk/MWRiOGE0OGEzYTA0/YTg2YzJhYy9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "research.aimultiple.com",
+            "hostname": "research.aimultiple.com",
+            "favicon": "https://imgs.search.brave.com/nFKuuIwoXdfXLv_Q1mPIwpxB-4Xoho_okw25Wt6tdLM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDA4MDUwMjkw/NGM0MDhmNTJjZTgz/ZTg1ZmU2YWEwZmI1/MDhhNzQwMDA4ZGJk/MWRiOGE0OGEzYTA0/YTg2YzJhYy9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS8",
+            "path": "  \u203a home  \u203a aimultiple research  \u203a agentic ai  \u203a agentic ai frameworks"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/Zd1Gnk2a5GtkY9BOBnQL7n83lXr4cqS6IfcfPYM-00E/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyNS8wNi9s/YW5nLndlYnA",
+            "original": "https://research.aimultiple.com/wp-content/uploads/2025/06/lang.webp",
+            "logo": false
+          }
+        },
+        {
+          "title": "AI Agent Orchestration Patterns - Azure Architecture Center | Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Learn about fundamental orchestration patterns for AI agent architectures, including sequential, concurrent, group chat, handoff, and magentic patterns.",
           "profile": {
             "name": "Microsoft Learn",
-            "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
+            "url": "https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns",
             "long_name": "learn.microsoft.com",
             "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
           },
@@ -214,7 +705,7 @@
             "netloc": "learn.microsoft.com",
             "hostname": "learn.microsoft.com",
             "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
-            "path": "\u203a en-us  \u203a windows  \u203a mixed-reality  \u203a mrtk-unity  \u203a mrtk2  \u203a supported-devices  \u203a leap-motion-mrtk"
+            "path": "\u203a en-us  \u203a azure  \u203a architecture  \u203a ai-ml  \u203a guide  \u203a ai-agent-design-patterns"
           },
           "thumbnail": {
             "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
@@ -223,485 +714,92 @@
           }
         },
         {
-          "title": "MRTK Support - Ultraleap documentation",
-          "url": "https://docs.ultraleap.com/xr-and-tabletop/xr/unity/mrtk-support.html",
+          "title": "Hexagonal architecture (software) - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "There are two approaches when using Ultraleap tracking with MRTK. This page will discuss how to use MRTK\u2019s Hand Interaction Example scene with Ultraleap hand tracking.",
+          "description": "The hexagonal architecture, or <strong>ports and adapters architecture</strong>, is an architectural pattern used in software design. It aims at creating loosely coupled application components that can be easily connected to their software environment by means of ports and adapters.",
+          "page_age": "2025-10-26T21:17:27",
           "profile": {
-            "name": "Ultraleap",
-            "url": "https://docs.ultraleap.com/xr-and-tabletop/xr/unity/mrtk-support.html",
-            "long_name": "docs.ultraleap.com",
-            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
+            "name": "Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)",
+            "long_name": "en.wikipedia.org",
+            "img": "https://imgs.search.brave.com/m6XxME4ek8DGIUcEPCqjRoDjf2e54EwL9pQzyzogLYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQwNGZhZWY0/ZTQ1YWUzYzQ3MDUw/MmMzMGY3NTQ0ZjNj/NDUwMDk5ZTI3MWRk/NWYyNTM4N2UwOTE0/NTI3ZDQzNy9lbi53/aWtpcGVkaWEub3Jn/Lw"
           },
           "language": "en",
           "family_friendly": true,
           "type": "search_result",
           "subtype": "generic",
           "is_live": false,
+          "deep_results": {
+            "buttons": [
+              {
+                "type": "button_result",
+                "title": "Origin",
+                "url": "https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)#Origin"
+              },
+              {
+                "type": "button_result",
+                "title": "Principle",
+                "url": "https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)#Principle"
+              },
+              {
+                "type": "button_result",
+                "title": "Criticism",
+                "url": "https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)#Criticism"
+              },
+              {
+                "type": "button_result",
+                "title": "Evolution",
+                "url": "https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)#Evolution"
+              },
+              {
+                "type": "button_result",
+                "title": "Variants",
+                "url": "https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)#Variants"
+              }
+            ]
+          },
           "meta_url": {
             "scheme": "https",
-            "netloc": "docs.ultraleap.com",
-            "hostname": "docs.ultraleap.com",
-            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
-            "path": "\u203a xr-and-tabletop  \u203a xr  \u203a unity  \u203a mrtk-support.html"
-          }
+            "netloc": "en.wikipedia.org",
+            "hostname": "en.wikipedia.org",
+            "favicon": "https://imgs.search.brave.com/m6XxME4ek8DGIUcEPCqjRoDjf2e54EwL9pQzyzogLYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQwNGZhZWY0/ZTQ1YWUzYzQ3MDUw/MmMzMGY3NTQ0ZjNj/NDUwMDk5ZTI3MWRk/NWYyNTM4N2UwOTE0/NTI3ZDQzNy9lbi53/aWtpcGVkaWEub3Jn/Lw",
+            "path": "\u203a wiki  \u203a Hexagonal_architecture_(software)"
+          },
+          "age": "October 26, 2025"
         },
         {
-          "title": "How to Configure Leap Motion (by Ultraleap) Hand Tracking in MRTK | Mixed Reality Toolkit Documentation",
-          "url": "https://hololabinc.github.io/MixedRealityToolkit-Unity/Documentation.ja/CrossPlatform/LeapMotionMRTK.html",
+          "title": "The ultimate guide to AI agent architectures in 2025 - DEV Community",
+          "url": "https://dev.to/sohail-akbar/the-ultimate-guide-to-ai-agent-architectures-in-2025-2j1c",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "Getting joints using the Leap Motion Data Provider is identical to hand joint retrieval for an MRTK Articulated Hand.",
+          "description": "Orchestration Layer: Manages communication between primary and specialized agents \u00b7 Dynamic Routing Mechanism: Logic for determining which specialized agent to invoke ... from typing import Literal from langchain_openai import ChatOpenAI from langgraph.types import Command from langgraph.graph import StateGraph, MessagesState, START, END # Define the primary model model = ChatOpenAI() # Primary agent function that decides which specialized agent to call def primary_agent(state: MessagesState) -&gt; Command[Literal[&quot;specialized_agent_1&quot;, &quot;specialized_agent_2&quot;, END]]: # Process the state and deter",
+          "page_age": "2025-05-05T14:22:14",
           "profile": {
-            "name": "Hololabinc",
-            "url": "https://hololabinc.github.io/MixedRealityToolkit-Unity/Documentation.ja/CrossPlatform/LeapMotionMRTK.html",
-            "long_name": "hololabinc.github.io",
-            "img": "https://imgs.search.brave.com/A77yjNTgR31h7fMaTsxY0ob9syKbjQNpaxgH4FnBdjU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWRjYzZiMWI2/Zjg1YTk5MTdiNjRl/Y2IzNzM5MTdhN2Q0/NzNiMGE0OWRjMWM5/MjhmNDIzZTc5M2Nl/YmYxMWJiYi9ob2xv/bGFiaW5jLmdpdGh1/Yi5pby8"
+            "name": "DEV Community",
+            "url": "https://dev.to/sohail-akbar/the-ultimate-guide-to-ai-agent-architectures-in-2025-2j1c",
+            "long_name": "dev.to",
+            "img": "https://imgs.search.brave.com/UUpF8I85K--vkQzrhameM7iRPRU5VCTXyWbS4sk6G2g/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTg5MTcxNDBh/N2U4ODc4MDg0NWQ4/MzU0YWJkNDY3ZWRm/MjUxY2U1YjY5MzJm/YWRlOTI4YjAyZDI1/ZjU0MmJjNi9kZXYu/dG8v"
           },
           "language": "en",
           "family_friendly": true,
           "type": "search_result",
-          "subtype": "generic",
+          "subtype": "article",
           "is_live": false,
           "meta_url": {
             "scheme": "https",
-            "netloc": "hololabinc.github.io",
-            "hostname": "hololabinc.github.io",
-            "favicon": "https://imgs.search.brave.com/A77yjNTgR31h7fMaTsxY0ob9syKbjQNpaxgH4FnBdjU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWRjYzZiMWI2/Zjg1YTk5MTdiNjRl/Y2IzNzM5MTdhN2Q0/NzNiMGE0OWRjMWM5/MjhmNDIzZTc5M2Nl/YmYxMWJiYi9ob2xv/bGFiaW5jLmdpdGh1/Yi5pby8",
-            "path": "\u203a MixedRealityToolkit-Unity  \u203a Documentation.ja  \u203a CrossPlatform  \u203a LeapMotionMRTK.html"
-          }
-        },
-        {
-          "title": "How to Configure Leap Motion (by Ultraleap) Hand Tracking in MRTK | Mixed Reality Toolkit Documentation",
-          "url": "https://hololenscndev.github.io/MRTKDoc/Documentation/CrossPlatform/LeapMotionMRTK.html",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "A Leap Motion Controller is required to use this data provider \u00b7 The Leap Motion Data Provider enables articulated hand tracking for VR and could be useful for rapid prototyping in the editor. The data provider can be configured to use the Leap Motion Controller mounted on a headset or placed ...",
-          "profile": {
-            "name": "Hololenscndev",
-            "url": "https://hololenscndev.github.io/MRTKDoc/Documentation/CrossPlatform/LeapMotionMRTK.html",
-            "long_name": "hololenscndev.github.io",
-            "img": "https://imgs.search.brave.com/MdVy5lZLwOinNAJ8QppilXncND6tlcRpjPKbeidow6w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmM5ZDgyMWU4/NTA4Mjc0MWFhNTlh/ZWIyZjBhZDE4ZTk3/MDBjM2EyNWRlODNi/MzI1NzhkY2RmN2U4/NGJiYTBiZC9ob2xv/bGVuc2NuZGV2Lmdp/dGh1Yi5pby8"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "hololenscndev.github.io",
-            "hostname": "hololenscndev.github.io",
-            "favicon": "https://imgs.search.brave.com/MdVy5lZLwOinNAJ8QppilXncND6tlcRpjPKbeidow6w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmM5ZDgyMWU4/NTA4Mjc0MWFhNTlh/ZWIyZjBhZDE4ZTk3/MDBjM2EyNWRlODNi/MzI1NzhkY2RmN2U4/NGJiYTBiZC9ob2xv/bGVuc2NuZGV2Lmdp/dGh1Yi5pby8",
-            "path": "\u203a MRTKDoc  \u203a Documentation  \u203a CrossPlatform  \u203a LeapMotionMRTK.html"
-          }
-        },
-        {
-          "title": "Touchless Interactive Kiosks: The Air Push Gesture | Ultraleap",
-          "url": "https://www.ultraleap.com/company/news/blog/touchless-interactions/",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "TouchFree detects hand movements mid-air and converts them to an onscreen cursor.",
-          "profile": {
-            "name": "Ultraleap",
-            "url": "https://www.ultraleap.com/company/news/blog/touchless-interactions/",
-            "long_name": "ultraleap.com",
-            "img": "https://imgs.search.brave.com/jLAy5KgRV7zNt2aEpkZCDZQnuxXaP86ECMWWv8N7izI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMDk4NWJiYTQ2/ZjhmMTYwODVhMGVl/YTk1MGE1ZWQwNTA0/OWMyNTUwZGVhMzUx/ZGNkYzE4YjVkMGI3/YjMwZDM3ZC93d3cu/dWx0cmFsZWFwLmNv/bS8"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "ultraleap.com",
-            "hostname": "www.ultraleap.com",
-            "favicon": "https://imgs.search.brave.com/jLAy5KgRV7zNt2aEpkZCDZQnuxXaP86ECMWWv8N7izI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMDk4NWJiYTQ2/ZjhmMTYwODVhMGVl/YTk1MGE1ZWQwNTA0/OWMyNTUwZGVhMzUx/ZGNkYzE4YjVkMGI3/YjMwZDM3ZC93d3cu/dWx0cmFsZWFwLmNv/bS8",
-            "path": "\u203a company  \u203a news  \u203a blog  \u203a touchless-interactions"
+            "netloc": "dev.to",
+            "hostname": "dev.to",
+            "favicon": "https://imgs.search.brave.com/UUpF8I85K--vkQzrhameM7iRPRU5VCTXyWbS4sk6G2g/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTg5MTcxNDBh/N2U4ODc4MDg0NWQ4/MzU0YWJkNDY3ZWRm/MjUxY2U1YjY5MzJm/YWRlOTI4YjAyZDI1/ZjU0MmJjNi9kZXYu/dG8v",
+            "path": "\u203a sohail-akbar  \u203a the-ultimate-guide-to-ai-agent-architectures-in-2025-2j1c"
           },
           "thumbnail": {
-            "src": "https://imgs.search.brave.com/IYmOvO3Uzna6UCr7GetaybLM4UcfWqQvY7HEgnJvJks/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jbXMu/dWx0cmFsZWFwLmNv/bS9hcHAvdXBsb2Fk/cy8yMDIxLzAxL2xh/ZHktdG91Y2hsZXNz/LXNjcmVlbi5qcGc",
-            "original": "https://cms.ultraleap.com/app/uploads/2021/01/lady-touchless-screen.jpg",
-            "logo": false
-          }
-        },
-        {
-          "title": "Interaction Settings - Ultraleap documentation",
-          "url": "https://docs.ultraleap.com/TouchFree/touchfree-user-manual/interaction-settings.html",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Interaction Zone Settings set the region in which Touchfree will track hands.",
-          "profile": {
-            "name": "Ultraleap",
-            "url": "https://docs.ultraleap.com/TouchFree/touchfree-user-manual/interaction-settings.html",
-            "long_name": "docs.ultraleap.com",
-            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "docs.ultraleap.com",
-            "hostname": "docs.ultraleap.com",
-            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
-            "path": "\u203a TouchFree  \u203a touchfree-user-manual  \u203a interaction-settings.html"
-          }
-        },
-        {
-          "title": "r/leapmotion on Reddit: MRTK v2.4.0 now supports Ultraleap hand tracking",
-          "url": "https://www.reddit.com/r/leapmotion/comments/grsiny/mrtk_v240_now_supports_ultraleap_hand_tracking/",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "We know some of you have been waiting for this announcement. It&#x27;s official - MRTK v2.4.0 supports Ultraleap hand tracking! We worked with MRTK to\u2026",
-          "page_age": "2020-05-27T21:14:56",
-          "profile": {
-            "name": "Reddit",
-            "url": "https://www.reddit.com/r/leapmotion/comments/grsiny/mrtk_v240_now_supports_ultraleap_hand_tracking/",
-            "long_name": "reddit.com",
-            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "qa",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "reddit.com",
-            "hostname": "www.reddit.com",
-            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
-            "path": "  \u203a r/leapmotion  \u203a mrtk v2.4.0 now supports ultraleap hand tracking"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/PaooAjFl2ZIbSY_Wyf6yE5SOkGrciwtVCKbhwyqPHVU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9leHRl/cm5hbC1wcmV2aWV3/LnJlZGQuaXQvUkxy/OWxiX0NrdEEyZTJp/c3A2S1pyWVNlNElK/RXRFMHZxY2pVSlBW/aWROay5qcGc_YXV0/bz13ZWJwJnM9ZThj/ZjNkZjFlZWY1ODNk/NTVmMTcwMmJjMjJl/OWRjZmFkNzY0N2Ix/Yw",
-            "original": "https://external-preview.redd.it/RLr9lb_CktA2e2isp6KZrYSe4IJEtE0vqcjUJPVidNk.jpg?auto=webp&s=e8cf3df1eef583d55f1702bc22e9dcfad7647b1c",
+            "src": "https://imgs.search.brave.com/PHrPf3ElnzmAPDCdX-gm_nTRxXmzkepvwO4IG4ms5kc/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9tZWRp/YTIuZGV2LnRvL2R5/bmFtaWMvaW1hZ2Uv/d2lkdGg9MTA4MCxo/ZWlnaHQ9MTA4MCxm/aXQ9Y292ZXIsZ3Jh/dml0eT1hdXRvLGZv/cm1hdD1hdXRvL2h0/dHBzJTNBJTJGJTJG/ZGV2LXRvLXVwbG9h/ZHMuczMuYW1hem9u/YXdzLmNvbSUyRnVw/bG9hZHMlMkZhcnRp/Y2xlcyUyRmdkdm4z/YjB3MnEyY2JmY3Rn/d2d1LnBuZw",
+            "original": "https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fgdvn3b0w2q2cbfctgwgu.png",
             "logo": false
           },
-          "age": "May 27, 2020"
-        },
-        {
-          "title": "Does MRTK3 pre 12 support Ultraleap Leap Motion Controller? \u00b7 microsoft/MixedRealityToolkit-Unity \u00b7 Discussion #11251",
-          "url": "https://github.com/microsoft/MixedRealityToolkit-Unity/discussions/11251",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "MRTK3 takes the hand joint data and synthesizes the rest of the input interactions that are needed, like pinch amount and the hand ray. Please let me know if you run into any issues and I&#x27;m happy to help debug! I&#x27;ve tested it on the Windows Mixed Reality runtime specifically. Beta Was this translation helpful? Give feedback. ... Something went wrong. ... Something went wrong. ... Is there a way to get the Ultraleap hand-tracking in the Unity editor without an active OpenXR runtime?",
-          "profile": {
-            "name": "GitHub",
-            "url": "https://github.com/microsoft/MixedRealityToolkit-Unity/discussions/11251",
-            "long_name": "github.com",
-            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "software",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "github.com",
-            "hostname": "github.com",
-            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
-            "path": "\u203a microsoft  \u203a MixedRealityToolkit-Unity  \u203a discussions  \u203a 11251"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/6osBR_peh5vz5RvPKmevztMnyv2lPrwhQ5l-rm3OPKM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS82/YzZlODY1NDNhZTdm/Njc2OGJlMGE4ZTc3/MTk0Mjc3OWNlZWIw/MGVkNDMwMmM5Yjgx/ZjcxODdiNDk5ZGIy/MGNkL21pY3Jvc29m/dC9NaXhlZFJlYWxp/dHlUb29sa2l0LVVu/aXR5L2Rpc2N1c3Np/b25zLzExMjUx",
-            "original": "https://opengraph.githubassets.com/6c6e86543ae7f6768be0a8e771942779ceeb00ed4302c9b81f7187b499db20cd/microsoft/MixedRealityToolkit-Unity/discussions/11251",
-            "logo": false
-          }
-        },
-        {
-          "title": "MRTK3 with Pico Neo 3 UltraLeap \u00b7 microsoft/MixedRealityToolkit-Unity \u00b7 Discussion #11397",
-          "url": "https://github.com/microsoft/MixedRealityToolkit-Unity/discussions/11397",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Hi there, has anybody a working example of MRTK3 for Pico Neo3 with UltraLeap hand tracking? The standard setup (just a MRTK XR Rig Prefab) and basic OpenXR setup with UltraLeap OpenXR and Pico OpenXR seem not work. OpenXR Ultra Leap Examples which contain special components are working though.",
-          "profile": {
-            "name": "GitHub",
-            "url": "https://github.com/microsoft/MixedRealityToolkit-Unity/discussions/11397",
-            "long_name": "github.com",
-            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "software",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "github.com",
-            "hostname": "github.com",
-            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
-            "path": "\u203a microsoft  \u203a MixedRealityToolkit-Unity  \u203a discussions  \u203a 11397"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/EGZQRlPojevMB3R-xzAXskD1F81l7N8WpVuHXaiKdeo/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS8y/NTcyNjUwOGI3YTRk/MTVkN2ZjM2FkOTQ1/MTg2MjcyNzA2Njdl/ZGNmY2ViYjUyNjJh/YTJjNTRkZmFiMTNh/ODU0L21pY3Jvc29m/dC9NaXhlZFJlYWxp/dHlUb29sa2l0LVVu/aXR5L2Rpc2N1c3Np/b25zLzExMzk3",
-            "original": "https://opengraph.githubassets.com/25726508b7a4d15d7fc3ad94518627270667edcfcebb5262aa2c54dfab13a854/microsoft/MixedRealityToolkit-Unity/discussions/11397",
-            "logo": false
-          }
-        },
-        {
-          "title": "r/Ultraleap on Reddit: Ultraleap & MRTK3 problem",
-          "url": "https://www.reddit.com/r/Ultraleap/comments/1eygfz4/ultraleap_mrtk3_problem/",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "I&#x27;m following this guide https://docs.ultraleap.com/xr-and-tabletop/xr/unity/mrtk-support.html, but I can&#x27;t even get past the first step: The subsystem for Ultraleap Hands is not visible as an option in the project settings.",
-          "page_age": "2024-08-22T11:02:05",
-          "profile": {
-            "name": "Reddit",
-            "url": "https://www.reddit.com/r/Ultraleap/comments/1eygfz4/ultraleap_mrtk3_problem/",
-            "long_name": "reddit.com",
-            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "qa",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "reddit.com",
-            "hostname": "www.reddit.com",
-            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
-            "path": "  \u203a r/ultraleap  \u203a ultraleap & mrtk3 problem"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/A5H_aQiEBuUODR0lNeU8iDfhrWUvO8oEmRGE_mcS_gM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cmVkZGl0c3RhdGlj/LmNvbS9pY29uLnBu/Zw",
-            "original": "https://www.redditstatic.com/icon.png",
-            "logo": true
-          },
-          "age": "August 22, 2024"
-        },
-        {
-          "title": "TouchFree | Add Touchless Gesture Control \u2014 Ultraleap for Developers",
-          "url": "https://developer.leapmotion.com/touchfree-tooling",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "TouchFree Tooling allows Web and Unity developers to connect applications and content to TouchFree and use its hand positioning data directly.",
-          "profile": {
-            "name": "Leapmotion",
-            "url": "https://developer.leapmotion.com/touchfree-tooling",
-            "long_name": "developer.leapmotion.com",
-            "img": "https://imgs.search.brave.com/nzQRZo3SrsAhNFlwrBzHDrDs8M4WSMBAjmIjAlYDzhg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWJhMTI3NDVk/NjAzMmM3ZjE2NThl/YzczODQ3ODNlMThk/NzAzMjc0NGJkYmQ4/N2UxNmNhYzNmZDIw/MGEyYTY2Mi9kZXZl/bG9wZXIubGVhcG1v/dGlvbi5jb20v"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "developer.leapmotion.com",
-            "hostname": "developer.leapmotion.com",
-            "favicon": "https://imgs.search.brave.com/nzQRZo3SrsAhNFlwrBzHDrDs8M4WSMBAjmIjAlYDzhg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWJhMTI3NDVk/NjAzMmM3ZjE2NThl/YzczODQ3ODNlMThk/NzAzMjc0NGJkYmQ4/N2UxNmNhYzNmZDIw/MGEyYTY2Mi9kZXZl/bG9wZXIubGVhcG1v/dGlvbi5jb20v",
-            "path": "\u203a touchfree-tooling"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/aEAXwrBE2f5adPRJ--1HC3Nh98TWS9tX5FebXPktkic/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuc3F1YXJlc3Bh/Y2UtY2RuLmNvbS9j/b250ZW50L3YxLzYw/NmNiMDk2MjE2NjQ2/MDM2NWRhMTI2MC81/Mzc5ODNiYS01MTYy/LTRiYTAtODNhMi01/ZmU2Nzc2ZWJjZGMv/dWx0cmFsZWFwLWZv/ci1kZXZlbG9wZXJz/X2xvZ28ucG5n",
-            "original": "https://images.squarespace-cdn.com/content/v1/606cb0962166460365da1260/537983ba-5162-4ba0-83a2-5fe6776ebcdc/ultraleap-for-developers_logo.png",
-            "logo": true
-          }
-        },
-        {
-          "title": "Testing Hand Tracking - Ultraleap documentation",
-          "url": "https://docs.ultraleap.com/TouchFree/touchfree-user-manual/testing-hand-tracking.html",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "<strong>TouchFree uses Ultraleap Tracking</strong>.",
-          "profile": {
-            "name": "Ultraleap",
-            "url": "https://docs.ultraleap.com/TouchFree/touchfree-user-manual/testing-hand-tracking.html",
-            "long_name": "docs.ultraleap.com",
-            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "docs.ultraleap.com",
-            "hostname": "docs.ultraleap.com",
-            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
-            "path": "\u203a TouchFree  \u203a touchfree-user-manual  \u203a testing-hand-tracking.html"
-          }
-        },
-        {
-          "title": "Input simulation service - MRTK 2 | Microsoft Learn",
-          "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/features/input-simulation/input-simulation-service?view=mrtkunity-2022-05",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "<strong>With MRTK&#x27;s input simulation, you can test various types of interactions in the Unity editor without building and deploying to a device</strong>. This allows you quickly iterate your ideas in the design and development process.",
-          "profile": {
-            "name": "Microsoft Learn",
-            "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/features/input-simulation/input-simulation-service?view=mrtkunity-2022-05",
-            "long_name": "learn.microsoft.com",
-            "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "learn.microsoft.com",
-            "hostname": "learn.microsoft.com",
-            "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
-            "path": "\u203a en-us  \u203a windows  \u203a mixed-reality  \u203a mrtk-unity  \u203a mrtk2  \u203a features  \u203a input-simulation  \u203a input-simulation-service"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
-            "original": "https://learn.microsoft.com/en-us/media/open-graph-image.png",
-            "logo": false
-          }
-        },
-        {
-          "title": "Air Push - Ultraleap documentation",
-          "url": "https://docs.ultraleap.com/touchless-interfaces/interaction-types/air-push",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Struct Leap::Interaction::Internal::InteractionEngineUtility::PhysicsUtility::Velocities \u00b7 Struct LeapInternal::LEAP_CONFIG_RESPONSE_EVENT_WITH_REF_TYPE \u00b7 Struct Leap::Unity::Geometry::Bezier::BezierPointEnumerator \u00b7 Struct Leap::Unity::RuntimeGizmos::RuntimeGizmoDrawer::WireSphere ... Users push their hand towards the screen to trigger a click event. This is TouchFree\u2019s default interaction method and recommended for most kiosk interfaces and sizes.",
-          "profile": {
-            "name": "Ultraleap",
-            "url": "https://docs.ultraleap.com/touchless-interfaces/interaction-types/air-push",
-            "long_name": "docs.ultraleap.com",
-            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "docs.ultraleap.com",
-            "hostname": "docs.ultraleap.com",
-            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
-            "path": "\u203a touchless-interfaces  \u203a interaction-types  \u203a air-push"
-          }
-        },
-        {
-          "title": "Getting Started - Ultraleap documentation",
-          "url": "https://docs.ultraleap.com/hand-tracking/getting-started.html",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Build world-leading hand tracking into your application using our developer tools. Download the plugin for your chosen platform to start integrating our tracking data into your creation. Tools are available for Unity, Unreal, OpenXR, and MRTK from the developer portal.",
-          "profile": {
-            "name": "Ultraleap",
-            "url": "https://docs.ultraleap.com/hand-tracking/getting-started.html",
-            "long_name": "docs.ultraleap.com",
-            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "docs.ultraleap.com",
-            "hostname": "docs.ultraleap.com",
-            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
-            "path": "\u203a hand-tracking  \u203a getting-started.html"
-          }
-        },
-        {
-          "title": "Hand tracking - MRTK3 | Microsoft Learn",
-          "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-input/packages/input/hand-tracking",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "MRTK3&#x27;s left and right hand controller prefabs contain all the components necessary to support hand input. One such component is MRTK&#x27;s ArticulatedHandController, which is a specialized version of Unity XR input&#x27;s ActionBasedController. This MRTK3 controller script uses MRTK3&#x27;s hand aggregator subsystem in order expose various hand input events.",
-          "profile": {
-            "name": "Microsoft Learn",
-            "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-input/packages/input/hand-tracking",
-            "long_name": "learn.microsoft.com",
-            "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "learn.microsoft.com",
-            "hostname": "learn.microsoft.com",
-            "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
-            "path": "\u203a en-us  \u203a windows  \u203a mixed-reality  \u203a mrtk-unity  \u203a mrtk3-input  \u203a packages  \u203a input  \u203a hand-tracking"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
-            "original": "https://learn.microsoft.com/en-us/media/open-graph-image.png",
-            "logo": false
-          }
-        },
-        {
-          "title": "Hand Tracking in MSFS - Leap Motion / UltraLeap native support for WMR/OpenXR - Wishlist - Microsoft Flight Simulator Forums",
-          "url": "https://forums.flightsimulator.com/t/hand-tracking-in-msfs-leap-motion-ultraleap-native-support-for-wmr-openxr/475308",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Moderator Note: Some other topics regarding hand tracking were merged into this master. Continuity may be lost. https://forums.flightsimulator.com/t/please-add-support-for-leap-motion-controller-free-hand-tracking-in-vr/359150 https://forums.flightsimulator.com/t/hand-tracking-support/387903 https://forums.flightsimulator.com/t/support-for-hand-tracking-with-leap-motion/498685 Now that MSFS has VR controller support, we need hand tracking!",
-          "page_age": "2021-11-23T17:16:12",
-          "profile": {
-            "name": "Microsoft Flight Simulator Forums",
-            "url": "https://forums.flightsimulator.com/t/hand-tracking-in-msfs-leap-motion-ultraleap-native-support-for-wmr-openxr/475308",
-            "long_name": "forums.flightsimulator.com",
-            "img": "https://imgs.search.brave.com/FJvivqbXLWdOR-jtusKhXuLZOclUCUAOdoYacZS-T_w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODc0MzdhNTFk/ZWY0NTZiYjZlODc0/NzhmOGYzNzQ5ZDU4/YTE5NTkzOWJiNTFi/ZDg0ZTY3ZGI4OWY4/NmM0ZWJkOC9mb3J1/bXMuZmxpZ2h0c2lt/dWxhdG9yLmNvbS8"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "video",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "forums.flightsimulator.com",
-            "hostname": "forums.flightsimulator.com",
-            "favicon": "https://imgs.search.brave.com/FJvivqbXLWdOR-jtusKhXuLZOclUCUAOdoYacZS-T_w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODc0MzdhNTFk/ZWY0NTZiYjZlODc0/NzhmOGYzNzQ5ZDU4/YTE5NTkzOWJiNTFi/ZDg0ZTY3ZGI4OWY4/NmM0ZWJkOC9mb3J1/bXMuZmxpZ2h0c2lt/dWxhdG9yLmNvbS8",
-            "path": "  \u203a official microsoft flight simulator  \u203a wishlist"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/KcSwJsRfv4FvHi6URwfauejlXAgjdOolCQ11vrKsg3A/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9mbGln/aHRzaW11bGF0b3It/Zm9ydW1zLWNkbi5h/enVyZWVkZ2UubmV0/L3VwbG9hZHMvZGVm/YXVsdC9vcmlnaW5h/bC80WC9jL2IvOC9j/Yjg3ZTlmMzJhZmU1/NWRjMDZkNGU5MmY3/MGUyNTZhZTFkNmM5/ZjBjLnBuZw",
-            "original": "https://flightsimulator-forums-cdn.azureedge.net/uploads/default/original/4X/c/b/8/cb87e9f32afe55dc06d4e92f70e256ae1d6c9f0c.png",
-            "logo": false
-          },
-          "age": "November 23, 2021"
-        },
-        {
-          "title": "Verwenden von Leap Motion und Ultraleap - MRTK 2 | Microsoft Learn",
-          "url": "https://learn.microsoft.com/de-de/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Wenn MRTK in einer Unity-Szene und der Leap Motion-Datenanbieter als Eingabedatenanbieter im Eingabesystemprofil hinzugef\u00fcgt wurde, erstellen Sie ein leeres Spielobjekt, und f\u00fcgen Sie das folgende Beispielskript an.",
-          "profile": {
-            "name": "Microsoft Learn",
-            "url": "https://learn.microsoft.com/de-de/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
-            "long_name": "learn.microsoft.com",
-            "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
-          },
-          "language": "de",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "learn.microsoft.com",
-            "hostname": "learn.microsoft.com",
-            "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
-            "path": "\u203a de-de  \u203a windows  \u203a mixed-reality  \u203a mrtk-unity  \u203a mrtk2  \u203a supported-devices  \u203a leap-motion-mrtk"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
-            "original": "https://learn.microsoft.com/en-us/media/open-graph-image.png",
-            "logo": false
-          }
+          "age": "May 5, 2025"
         }
       ],
       "family_friendly": true
@@ -710,5 +808,5 @@
   "repo": {
     "results": []
   },
-  "timestamp": "2026-01-10T11:37:48.331413"
+  "timestamp": "2026-01-10T12:01:29.315767"
 }
