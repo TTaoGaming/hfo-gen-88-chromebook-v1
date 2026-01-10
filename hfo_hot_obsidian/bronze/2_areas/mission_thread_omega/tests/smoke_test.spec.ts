@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('HFO Omega V16 Smoke Test', () => {
+test.describe('HFO Omega V17 Smoke Test', () => {
     test.beforeEach(async ({ page }) => {
         await page.addInitScript(() => {
             if (!navigator.mediaDevices) {
@@ -27,7 +27,7 @@ test.describe('HFO Omega V16 Smoke Test', () => {
         });
         page.on('pageerror', err => console.log('BROWSER EXCEPTION:', err.message));
 
-        await page.goto('http://localhost:8092/omega_workspace_v16.html');
+        await page.goto('http://localhost:8092/omega_workspace_v17.html');
 
         await page.waitForSelector('#layout-container');
         
