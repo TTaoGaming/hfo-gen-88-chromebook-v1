@@ -1,53 +1,53 @@
 {
-  "query": "MediaPipe hand tracking identity stability patterns minimizing latency in hand identity assignment alternatives to bipartite matching for multi-hand tracking simple temporal hand tracking algorithm",
+  "query": "Microsoft MRTK hand interaction state machine vs Ultraleap TouchFree air push FSM predictive latency",
   "tavily": {
-    "query": "MediaPipe hand tracking identity stability patterns minimizing latency in hand identity assignment alternatives to bipartite matching for multi-hand tracking simple temporal hand tracking algorithm",
+    "query": "Microsoft MRTK hand interaction state machine vs Ultraleap TouchFree air push FSM predictive latency",
     "follow_up_questions": null,
     "answer": null,
     "images": [],
     "results": [
       {
-        "url": "https://www.emergentmind.com/topics/mediapipe-hands",
-        "title": "MediaPipe Hands: Real-Time Tracking - Emergent Mind",
-        "content": "MediaPipe Hands is an open-source, real-time hand and finger tracking solution originating from Google\u2019s MediaPipe framework, built to deliver precise, markerless multi-hand localization and articulated pose estimation in unconstrained scenarios. It is extensively used in computer vision, augmented reality, gesture-based interaction, sign language translation, and robotics. The system is distinguished by its lightweight pipeline architecture, combining fast palm detectors, regression-based keypoint estimators, and temporal filtering, suitable for large-scale deployment across mobile platforms.\n\n## 1. Architecture and Key Algorithms\n\nMediaPipe Hands employs a cascaded pipeline optimizing for both robustness and low-latency: [...] 2000 character limit reached\n\n# MediaPipe Hands: Real-Time Tracking\n\nUpdated 1 November 2025\n\n MediaPipe Hands is an open-source, real-time hand tracking system that uses a palm-centric detection pipeline and CNN-based landmark regression.\n The methodology integrates fast palm detection, regression-based keypoint estimation, and temporal filtering to ensure robust multi-hand tracking in dynamic environments.\n Practical applications include gesture control, AR/VR interactions, robotic teleoperation, and sign language translation on mobile and web platforms. [...] 3. Temporal Tracking and Filtering: For video-based processing, intersection-over-union (IoU) matching, Kalman filters, or exponential smoothing can be used to maintain ID continuity and suppress outliers during rapid articulation and occlusion. Block feature refinement, as in 3DCPN (Li et al., 2021), enhances discriminative robustness, although MediaPipe Hands typically opts for lightweight, residual-based filtering for speed.\n4. Multihand Pipeline: The system runs multiple palm/landmark pipelines in parallel, supporting up to sixteen hands per frame in theory, although practical device limitations often cap performance at two hands in real time.",
-        "score": 0.609455,
+        "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
+        "title": "Using Leap Motion and Ultraleap - MRTK 2 - Microsoft Learn",
+        "content": "``` [...] ``` [...] Note\n\nUnity Modules 4.9.1 require the Gemini 5.2 tracking service or higher. The Unity plugin V4.9.1 is only officially supported on Unity 2019. See release notes for 4.9.1.\n\nThe Unity Modules were renamed the The Unity Plugin in V5.0.0.\n\n| MRTK Version | Ultraleap Unity Plugin Versions Supported |\n --- |\n| 2.8.0 | 5.3.0 (see note) |\n\nNote\n\nThe Unity Plugin versions 5.0.0, 5.1.0 and 5.2.0 are not supported in any version of MRTK. Users are recommended to upgrade to 5.3.0. Unity Plugin 5.3.0 requires the Gemini 5.2 tracking service or higher.\n\n## Using Leap Motion (by Ultraleap) hand tracking in MRTK\n\n1. Importing MRTK and the Leap Motion Unity Modules / Unity Plugin",
+        "score": 0.42763633,
         "raw_content": null
       },
       {
-        "url": "https://arxiv.org/html/2512.14746v1",
-        "title": "BlindSpot: Enabling Bystander-Controlled Privacy Signaling for ...",
-        "content": "Hand Detection and Tracking. To recognize a dynamic gesture, the system must first establish a stable identity for a hand across multiple frames. The pipeline begins by processing the video stream with the MediaPipe Hand Landmarker [mediapipe\\_hand], which provides the 21 normalized 3D landmarks for each detected hand. These raw detections are then passed to our HandTracker component, which assigns a persistent integer ID to each hand by implementing a proximity-based matching algorithm. For each existing track, it calculates the Euclidean distance between its wrist landmark from the previous frame and the wrist landmarks of all new detections in the current frame. A match is confirmed if the distance is below an empirically determined threshold (maxDistance). New IDs are assigned to any",
-        "score": 0.54521364,
+        "url": "https://docs.ultraleap.com/xr-and-tabletop/xr/unity/mrtk-support.html",
+        "title": "MRTK Support - Ultraleap documentation",
+        "content": "Light Logo\nDark Logo\n\nXR Development, Tools & Plugins\n\nTabletop Development, Tools & Plugins\n\nAPI Reference\n\nIntegrations\n\nLinks\n\n# MRTK Support\u00b6\n\nMRTK is a great collection of cross-input interactions that serve a broad range of use cases.\n\nThere are a few ways to use Ultraleap tracking with MRTK, this page will discuss how to implement each.\n\nan MRTK3 banner\n../../../_images/mrtk3-banner.png\n\n## Introduction\u00b6\n\nMRTK is an interaction system build on top of Unity\u2019s XR Interaction Toolkit. Read more about MRTK\n\nThere are two approaches when using Ultraleap tracking with MRTK. This page will discuss how to use MRTK\u2019s Hand Interaction Example scene with Ultraleap hand tracking.\n\nPlease Select your chosen route from the tabs below:\n\n## Setting up your project\u00b6\n\n### Prerequisites\u00b6 [...] ../../../_images/mrtk-openxr-plugin-enabled.png\n\nRun the HandInteractionExamples scene to see hands tracking and interactions occurring\n\n## Things to Look Out For\u00b6\n\nControllers may interfere with the Input Actions for interactions in MRTK. Make sure you are only using the Interaction Profiles that you require\n\nGaze-based interactions may interfere with nput Actions for interactions in MRTK. Make sure these are only enabled if they are required\n\nIf your headset supports passthrough, hand visuals will not render. If this is required, you may need to change the settings on the openxr\\_left\\_hand and openxr\\_right\\_hand prefab to enable it [...] ## Setting up your project\u00b6\n\n### Prerequisites\u00b6\n\nA Unity Project that meets the requirements for MRTK3\n\nA project that uses MRTK3 (In this example we will use the sample project)\n\nThe Ultraleap Tracking Service installed\n\nNote\n\nEnsure the Ultraleap Tracking Plugin for Unity is imported (available here)\n\nEnsure the Ultraleap (Non-OpenXR) Subsystem is enabled for MRTK\n\n../../../_images/mrtk-settings-ul.png\n\nRun the HandInteractionExamples scene to see hands tracking and interactions occurring\n\nNote\n\nEnsure you have an active OpenXR Runtime\n\nEnsure the OpenXR Subsystem is enabled for MRTK\n\n../../../_images/mrtk-settings-openxr.png\n\nEnable the Mixed Reality feature in the OpenXR Plug-in Management window\n\n../../../_images/mrtk-openxr-plugin-enabled.png",
+        "score": 0.34356245,
         "raw_content": null
       },
       {
-        "url": "https://mediapipe.readthedocs.io/en/latest/solutions/hands.html",
-        "title": "MediaPipe Hands - Read the Docs",
-        "content": "## Solution APIs\u00b6\n\n### Configuration Options\u00b6\n\nNaming style and availability may differ slightly across platforms/languages.\n\n#### static\\_image\\_mode\u00b6\n\nIf set to `false`, the solution treats the input images as a video stream. It will try to detect hands in the first input images, and upon a successful detection further localizes the hand landmarks. In subsequent images, once all max\\_num\\_hands hands are detected and the corresponding hand landmarks are localized, it simply tracks those landmarks without invoking another detection until it loses track of any of the hands. This reduces latency and is ideal for processing video frames. If set to `true`, hand detection runs on every input image, ideal for processing a batch of static, possibly unrelated, images. Default to `false`. [...] #### min\\_tracking\\_confidence:\u00b6\n\nMinimum confidence value (`[0.0,1.0]`) from the landmark-tracking model for the hand landmarks to be considered tracked successfully, or otherwise hand detection will be invoked automatically on the next input image. Setting it to a higher value can increase robustness of the solution, at the expense of a higher latency. Ignored if static\\_image\\_mode is `true`, where hand detection simply runs on every image. Default to `0.5`.\n\n### Output\u00b6\n\nNaming style may differ slightly across platforms/languages.\n\n#### multi\\_hand\\_landmarks\u00b6 [...] #### max\\_num\\_hands\u00b6\n\nMaximum number of hands to detect. Default to `2`.\n\n#### model\\_complexity\u00b6\n\nComplexity of the hand landmark model: `0` or `1`. Landmark accuracy as well as inference latency generally go up with the model complexity. Default to `1`.\n\n#### min\\_detection\\_confidence\u00b6\n\nMinimum confidence value (`[0.0,1.0]`) from the hand detection model for the detection to be considered successful. Default to `0.5`.\n\n#### min\\_tracking\\_confidence:\u00b6",
-        "score": 0.52962893,
+        "url": "https://eprints.bournemouth.ac.uk/37480/1/CLARK%2C%20Rory_D.Eng._2021.pdf",
+        "title": "[PDF] Understanding Hand Interactions and Mid-Air Haptic Responses ...",
+        "content": "many of the advancements that were released in with the large push for VR devices in 2016. Even devices such as the Microsoft Hololens, which was released in 2016, had rudimentary hand tracking that did successfully track the hand, but with significant latency and poor finger segmentation. Many older technologies would have to pick between either accuracy or speed, however newer offerings have helped reduce these issues significantly. 30 2.1.3.2 Passive Interactions Many modern VR systems make heavy use of ray-cast techniques, with ecosystems such as SteamVR and Oculus using these for their menu and interface interactions, and toolkits such as the MRTK (Microsoft 2019b) using them for a hybrid approach to object interaction. In the case of interface interactions, these are generally a [...] the case of interface interactions, these are generally a simple ray that directly and linearly extends from a controller or hand and is then actioned through generic button or gesture. Object interaction is a more varied field, where systems are often seen to be adding additional helper functions to the rays. For example, the MRTK warps and bends the ray to snap towards an object within close vicinity. Crucially ray-cast based interactions tend to be most favourable when they are instantaneous to react and linked to a hand based-origin. A study by (Nukarinen et al. 2018) found that the rays with time based hover interactions were less favourable than instantaneous button based interactions, while hand origins were favoured over head. This builds upon prior research by (Cournia et al. [...] in the center of the image to the left of the keyboard, demonstrating hand tracking. (Ultraleap 2013) Hand tracking hardware and software has been commercially available for a number of years. Devices such as the Leap Motion Controller (Leap Motion 2013), shown in Figure 11, and Microsoft Azure Kinect (Microsoft 2019a), and prior iterations, have allowed users to track their hands (Hald 2013). Several computing platforms are now starting to integrate hand tracking directly into the hardware of the device such as: the Oculus Quest (Oculus 2019b) Figure 12, Hololens 2, and Varjo VR-2 Pro (Varjo 2019), removing the necessity for users to obtain additional hardware. This seamless integration will not only help improve the adoption but also massively increase the user base of the tech. Figure",
+        "score": 0.28469083,
         "raw_content": null
       },
       {
-        "url": "https://research.google/blog/on-device-real-time-hand-tracking-with-mediapipe/",
-        "title": "On-Device, Real-Time Hand Tracking with MediaPipe",
-        "content": "Future Directions   \n We plan to extend this technology with more robust and stable tracking, enlarge the amount of gestures we can reliably detect, and support dynamic gestures unfolding in time. We believe that publishing this technology can give an impulse to new creative ideas and applications by the members of the research and developer community at large. We are excited to see what you can build with it!   \nAcknowledgements [...] Our MediaPipe graph for hand tracking is shown below. The graph consists of two subgraphs\u2014one for hand detection and one for hand keypoints (i.e., landmark) computation. One key optimization MediaPipe provides is that the palm detector is only run as necessary (fairly infrequently), saving significant computation time. We achieve this by inferring the hand location in the subsequent video frames from the computed hand key points in the current frame, eliminating the need to run the palm detector over each frame. For robustness, the hand tracker model outputs an additional scalar capturing the confidence that a hand is present and reasonably aligned in the input crop. Only when the confidence falls below a certain threshold is the hand detection model reapplied to the whole frame. [...] |  |\n\n| The hand landmark model\u2019s output (REJECT\\_HAND\\_FLAG) controls when the hand detection model is triggered. This behavior is achieved by MediaPipe\u2019s powerful synchronization building blocks, resulting in high performance and optimal throughput of the ML pipeline. |",
-        "score": 0.40740472,
+        "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/design/direct-manipulation",
+        "title": "Direct manipulation with hands - Mixed Reality | Microsoft Learn",
+        "content": "## Manipulation in MRTK (Mixed Reality Toolkit) for Unity\n\nWith MRTK, you can easily achieve common manipulation behavior using the script ObjectManipulator. With ObjectManipulator, you can grab and move objects directly with hands or with hand ray. It also supports two-handed manipulation for scaling and rotating an object.\n\n MRTK - Manipulation\n\n## See also\n\n Head-gaze and commit\n Point and commit with hands\n Instinctual interactions\n\n## Feedback\n\nWas this page helpful?\n\nNo \n\nNeed help with this topic?\n\nWant to try using Ask Learn to clarify or guide you through this topic?\n\n## Additional resources\n\n Last updated on  2022-09-22 [...] While eye tracking on HoloLens 2 has limitations based on how accurately it can determine your eye gaze, this can still be helpful for near interactions because of depth disparity when interacting with hand input. This means it's sometimes difficult to determine whether your hand is behind or in front of a hologram to precisely grab a manipulation widget, for example.\n Where to: Use information about what a user is looking at with quick-throwing gestures. Grab a hologram and roughly toss it toward your intended destination.\n\n  While this sometimes works, quickly doing hand gestures may result in highly inaccurate destinations. However, eye tracking could improve the accuracy of the gesture.\n\n## Manipulation in MRTK (Mixed Reality Toolkit) for Unity [...] The first mechanism is a bounding box with a proximity shader, which is detailed in the previous section. It gives users a better sense of proximity when they approach and make contact with a button.\n The second mechanism is depression. Depression creates a sense of pressing down after a fingertip contacts a button. The mechanism ensures that the button tightly moves with the fingertip along the depth axis. The button can be triggered when it reaches a chosen depth (on press) or leaves the depth (on release) after passing through it.\n The sound effect should be added to enhance feedback when the button is triggered.\n\nFinger is far away\n\nFinger approaches\n\nContact begins\n\nPress down\n\n## 2D slate interaction",
+        "score": 0.16418147,
         "raw_content": null
       },
       {
-        "url": "https://arxiv.org/abs/2006.10214",
-        "title": "MediaPipe Hands: On-device Real-time Hand Tracking - arXiv",
-        "content": "|  |  |\n --- |\n| Comments: | 5 pages, 7 figures; CVPR Workshop on Computer Vision for Augmented and Virtual Reality, Seattle, WA, USA, 2020 |\n| Subjects: | Computer Vision and Pattern Recognition (cs.CV) |\n| Cite as: | arXiv:2006.10214 [cs.CV] |\n|  | (or  arXiv:2006.10214v1 [cs.CV] for this version) |\n|  |  arXiv-issued DOI via DataCite |\n\n## Submission history\n\nFrom: Valentin Bazarevsky [view email]   \n [v1] Thu, 18 Jun 2020 00:19:13 UTC (2,262 KB)\n\nFull-text links:\n\n## Access Paper:\n\nView a PDF of the paper titled MediaPipe Hands: On-device Real-time Hand Tracking, by Fan Zhang and 6 other authors\n\n View PDF\n TeX Source\n\nview license\n\nCurrent browse context:\n\ncs.CV\n\n< prev\")    |    next >\")\n\nnew  |  recent  | 2020-06\n\nChange to browse by:\n\ncs\n\n### References & Citations [...] We gratefully acknowledge support from the Simons Foundation, member institutions, and all contributors. Donate\n\n> cs > arXiv:2006.10214\n\n# Computer Science > Computer Vision and Pattern Recognition\n\narXiv:2006.10214 (cs)\n\n[Submitted on 18 Jun 2020]\n\n# Title:MediaPipe Hands: On-device Real-time Hand Tracking\n\nAuthors:Fan Zhang, Valentin Bazarevsky, Andrey Vakunov, Andrei Tkachenka, George Sung, Chuo-Ling Chang, Matthias Grundmann\n\nView a PDF of the paper titled MediaPipe Hands: On-device Real-time Hand Tracking, by Fan Zhang and 6 other authors [...] View PDF\n> Abstract:We present a real-time on-device hand tracking pipeline that predicts hand skeleton from single RGB camera for AR/VR applications. The pipeline consists of two models: 1) a palm detector, 2) a hand landmark model. It's implemented via MediaPipe, a framework for building cross-platform ML solutions. The proposed model and pipeline architecture demonstrates real-time inference speed on mobile GPUs and high prediction quality. MediaPipe Hands is open sourced at this https URL.",
-        "score": 0.34052956,
+        "url": "https://forums.flightsimulator.com/t/hand-tracking-in-msfs-leap-motion-ultraleap-native-support-for-wmr-openxr/475308",
+        "title": "Hand Tracking in MSFS - Leap Motion / UltraLeap native support for ...",
+        "content": "The tracking device is very affordable, under $100. And most of us use hardware yokes and throttles, so even though VR Controllers are much better than mouse, they are still not very convenient. Just using our hands would be so much better for real immersion and convenience.\n\nAsobo, please develop hand tracking support with UltraLeap!\n\nHere is a video of LeapMotion already working in MSFS. Imagine this with direct interaction, hands visible in MSFS:\n\nImage 3: Play FS2020 with Hand Tracking!\n\nPlay FS2020 with Hand Tracking!\n\n(video reposted from here)\n\nAnd here\u2019s new generation of UltraLeap tracking - imagine this working in MSFS - that would be a game changer! [...] post by AmiableGalaxy9 on Nov 25, 2021\n\npost by RomanDesign on Nov 25, 2021\n\npost by AmiableGalaxy9 on Nov 26, 2021\n\npost by RomanDesign on Nov 26, 2021\n\n 8 days later \n\npost by mbucchia on Dec 5, 2021\n\npost by mbucchia on Dec 6, 2021\n\npost by RomanDesign on Dec 6, 2021\n\npost by Bushpilot6054 on Dec 6, 2021\n\npost by RomanDesign on Dec 6, 2021\n\npost by mbucchia on Dec 7, 2021\n\npost by RomanDesign on Dec 7, 2021\n\npost by RomanDesign on Dec 7, 2021\n\npost by wheeliemonsta on Dec 7, 2021\n\npost by wheeliemonsta on Dec 7, 2021\n\nLoad more posts below\n\n Invalid date  Invalid date [...] Hand Tracking in MSFS - Leap Motion / UltraLeap native support for WMR/OpenXR - Official Microsoft Flight Simulator / Wishlist - Microsoft Flight Simulator Forums\n\nSkip to last replySkip to top\n\nSkip to main content\n\nImage 1: Microsoft Flight Simulator Forums\n\n   Website\n   News\n   Events\n   Sim Support\n   Dev Forums\n\nSign Up Log In\n    \u200b \n\n   Topics\n   Code of Conduct\n   Online Services\n   Upcoming events\n    More \n\n Categories \n\n   Official Microsoft Flight Simulator\n   Wishlist\n   Bug Reporting Hub\n   All categories\n\n Tags \n\n   bug-logged\n   feedback-logged\n   official-discussion\n   release-notes\n   All tags\n\n \u200b \n\n 196 \n\nVote\n\nHand Tracking in MSFS - Leap Motion / UltraLeap native support for WMR/OpenXR\n\nOfficial Microsoft Flight SimulatorWishlist",
+        "score": 0.16402072,
         "raw_content": null
       }
     ],
-    "response_time": 1.73,
-    "request_id": "34c40c84-675a-4e95-8c4c-336d1aaa5032"
+    "response_time": 2.19,
+    "request_id": "26b9aed7-b892-4461-a0c2-8328e4767202"
   },
   "brave": {
     "query": {
-      "original": "MediaPipe hand tracking identity stability patterns minimizing latency in hand identity assignment alternatives to bipartite matching for multi-hand tracking simple temporal hand tracking algorithm",
+      "original": "Microsoft MRTK hand interaction state machine vs Ultraleap TouchFree air push FSM predictive latency",
       "show_strict_warning": false,
       "is_navigational": false,
       "is_news_breaking": false,
@@ -153,6 +153,11 @@
           "type": "web",
           "index": 17,
           "all": false
+        },
+        {
+          "type": "web",
+          "index": 18,
+          "all": false
         }
       ],
       "top": [],
@@ -163,42 +168,41 @@
       "type": "search",
       "results": [
         {
-          "title": "layout: forward target: https://developers.google.com/mediapipe/solutions/vision/hand_landmarker title: Hands parent: MediaPipe Legacy Solutions nav_order: 4 \u2014 MediaPipe v0.7.5 documentation",
-          "url": "https://mediapipe.readthedocs.io/en/latest/solutions/hands.html",
+          "title": "Interactions - Ultraleap documentation",
+          "url": "https://docs.ultraleap.com/TouchFree/touchless-interfaces/interactions.html",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "Complexity of the hand landmark model: 0 or 1. Landmark accuracy as well as inference latency generally go up with the model complexity. Default to 1. Minimum confidence value ([0.0, 1.0]) from the hand detection model for the detection to be considered successful.",
+          "description": "So that TouchFree interactions don\u2019t interfere with people using the touchscreen, we recommend using AirPush with Scroll &amp; Drag enabled. Scroll &amp; Drag performs the click when the user pulls back their hand from the same location as they pushed forward.",
           "profile": {
-            "name": "MediaPipe",
-            "url": "https://mediapipe.readthedocs.io/en/latest/solutions/hands.html",
-            "long_name": "mediapipe.readthedocs.io",
-            "img": "https://imgs.search.brave.com/siwVUd3xwHy6eFN_ZEcFH24I0GMOr2jEBCS52tTwxfc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzkwNDIzZDAx/Mzg0MTVmODVmMTEz/MDEyMTljOGE2N2Q5/ZDliODY2YzA2MDRk/MDhkYjZkMDI2OTlh/YjBiNjMwYi9tZWRp/YXBpcGUucmVhZHRo/ZWRvY3MuaW8v"
+            "name": "Ultraleap",
+            "url": "https://docs.ultraleap.com/TouchFree/touchless-interfaces/interactions.html",
+            "long_name": "docs.ultraleap.com",
+            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
           },
           "language": "en",
           "family_friendly": true,
           "type": "search_result",
-          "subtype": "article",
+          "subtype": "generic",
           "is_live": false,
           "meta_url": {
             "scheme": "https",
-            "netloc": "mediapipe.readthedocs.io",
-            "hostname": "mediapipe.readthedocs.io",
-            "favicon": "https://imgs.search.brave.com/siwVUd3xwHy6eFN_ZEcFH24I0GMOr2jEBCS52tTwxfc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzkwNDIzZDAx/Mzg0MTVmODVmMTEz/MDEyMTljOGE2N2Q5/ZDliODY2YzA2MDRk/MDhkYjZkMDI2OTlh/YjBiNjMwYi9tZWRp/YXBpcGUucmVhZHRo/ZWRvY3MuaW8v",
-            "path": "\u203a en  \u203a latest  \u203a solutions  \u203a hands.html"
+            "netloc": "docs.ultraleap.com",
+            "hostname": "docs.ultraleap.com",
+            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
+            "path": "\u203a TouchFree  \u203a touchless-interfaces  \u203a interactions.html"
           }
         },
         {
-          "title": "[2006.10214] MediaPipe Hands: On-device Real-time Hand Tracking",
-          "url": "https://ar5iv.labs.arxiv.org/html/2006.10214",
+          "title": "Using Leap Motion and Ultraleap - MRTK 2 | Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "This behavior is achieved by MediaPipe\u2019s powerful synchronization building blocks, resulting in high performance and optimal throughput of the ML pipeline. Our hand tracking solution can readily be used in many applications such as gesture recognition and AR effects. On top of the predicted hand skeleton, we employ a simple algorithm to compute gestures, see Figure 6.",
-          "page_age": "2024-03-02T11:16:50",
+          "description": "Getting joints using the Leap Motion Data Provider is identical to hand joint retrieval for an MRTK Articulated Hand.",
           "profile": {
-            "name": "arXiv",
-            "url": "https://ar5iv.labs.arxiv.org/html/2006.10214",
-            "long_name": "ar5iv.labs.arxiv.org",
-            "img": "https://imgs.search.brave.com/Ra63-x8TeB8HQ-I2dv-lRN_mIzQ3JQGTcfoprRnqdaI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGEzNGUyYWVl/NDk2ODQ0MzYwZjhk/ZGRkOGIyNWVkN2Qz/ZWZiMjQ4ZGI2YWQw/NjQ0M2Q5YWFhMTM4/MDljYjI0OS9hcjVp/di5sYWJzLmFyeGl2/Lm9yZy8"
+            "name": "Microsoft Learn",
+            "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
+            "long_name": "learn.microsoft.com",
+            "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
           },
           "language": "en",
           "family_friendly": true,
@@ -207,60 +211,28 @@
           "is_live": false,
           "meta_url": {
             "scheme": "https",
-            "netloc": "ar5iv.labs.arxiv.org",
-            "hostname": "ar5iv.labs.arxiv.org",
-            "favicon": "https://imgs.search.brave.com/Ra63-x8TeB8HQ-I2dv-lRN_mIzQ3JQGTcfoprRnqdaI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGEzNGUyYWVl/NDk2ODQ0MzYwZjhk/ZGRkOGIyNWVkN2Qz/ZWZiMjQ4ZGI2YWQw/NjQ0M2Q5YWFhMTM4/MDljYjI0OS9hcjVp/di5sYWJzLmFyeGl2/Lm9yZy8",
-            "path": "\u203a html  \u203a 2006.10214"
+            "netloc": "learn.microsoft.com",
+            "hostname": "learn.microsoft.com",
+            "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
+            "path": "\u203a en-us  \u203a windows  \u203a mixed-reality  \u203a mrtk-unity  \u203a mrtk2  \u203a supported-devices  \u203a leap-motion-mrtk"
           },
           "thumbnail": {
-            "src": "https://imgs.search.brave.com/5Tsbn2z8zn03LO10F1g1N0_ns-eYv5CwATFUyJ5Qpdc/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9hcjVp/di5sYWJzLmFyeGl2/Lm9yZy9hc3NldHMv/YXI1aXZfY2FyZC5w/bmc",
-            "original": "https://ar5iv.labs.arxiv.org/assets/ar5iv_card.png",
-            "logo": false
-          },
-          "age": "March 2, 2024"
-        },
-        {
-          "title": "On-Device, Real-Time Hand Tracking with MediaPipe",
-          "url": "https://research.google/blog/on-device-real-time-hand-tracking-with-mediapipe/",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "In addition, as palms are smaller objects, the non-maximum suppression algorithm works well even for two-hand self-occlusion cases, like handshakes. Moreover, palms can be modelled using square bounding boxes (anchors in ML terminology) ignoring other aspect ratios, and therefore reducing the number of anchors by a factor of 3-5. Second, an encoder-decoder feature extractor is used for bigger scene context awareness even for small objects (similar to the RetinaNet approach). Lastly, we minimize the focal loss during training to support a large amount of anchors resulting from the high scale variance.",
-          "profile": {
-            "name": "Google Research",
-            "url": "https://research.google/blog/on-device-real-time-hand-tracking-with-mediapipe/",
-            "long_name": "research.google",
-            "img": "https://imgs.search.brave.com/-QOsxpGGDx529NdqUjdKpQdw1SDtpkbog_g5yuxF4qs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWNhMzVhZmNi/MDJjOGQ4MGViMDgz/ZGJlNTMwZWRlZjA1/Y2Y2YTEzNzBmYjg2/YjIwOTcwN2M0ZGZj/NTgzMmYzMy9yZXNl/YXJjaC5nb29nbGUv"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "research.google",
-            "hostname": "research.google",
-            "favicon": "https://imgs.search.brave.com/-QOsxpGGDx529NdqUjdKpQdw1SDtpkbog_g5yuxF4qs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWNhMzVhZmNi/MDJjOGQ4MGViMDgz/ZGJlNTMwZWRlZjA1/Y2Y2YTEzNzBmYjg2/YjIwOTcwN2M0ZGZj/NTgzMmYzMy9yZXNl/YXJjaC5nb29nbGUv",
-            "path": "\u203a blog  \u203a on-device-real-time-hand-tracking-with-mediapipe"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/Ww80QDOXmgj8yDED_u8edBEb9uOb2U_NaHeT6DId_Io/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zdG9y/YWdlLmdvb2dsZWFw/aXMuY29tL2d3ZWIt/cmVzZWFyY2gyMDIz/LW1lZGlhL2ltYWdl/cy9lM2VmMDk1Njhm/ZTZiMDlkMGI5Mzc3/MmQzZjAyZGJmMy1p/LndpZHRoLTgwMC5m/b3JtYXQtanBlZy5q/cGc",
-            "original": "https://storage.googleapis.com/gweb-research2023-media/images/e3ef09568fe6b09d0b93772d3f02dbf3-i.width-800.format-jpeg.jpg",
+            "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
+            "original": "https://learn.microsoft.com/en-us/media/open-graph-image.png",
             "logo": false
           }
         },
         {
-          "title": "[2006.10214] MediaPipe Hands: On-device Real-time Hand Tracking",
-          "url": "https://arxiv.org/abs/2006.10214",
+          "title": "MRTK Support - Ultraleap documentation",
+          "url": "https://docs.ultraleap.com/xr-and-tabletop/xr/unity/mrtk-support.html",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "We present <strong>a real-time on-device hand tracking pipeline that predicts hand skeleton from single RGB camera for AR/VR applications</strong>. The pipeline consists of two models: 1) a palm detector, 2) a hand landmark model.",
-          "page_age": "2020-06-18T00:00:00",
+          "description": "There are two approaches when using Ultraleap tracking with MRTK. This page will discuss how to use MRTK\u2019s Hand Interaction Example scene with Ultraleap hand tracking.",
           "profile": {
-            "name": "arXiv",
-            "url": "https://arxiv.org/abs/2006.10214",
-            "long_name": "arxiv.org",
-            "img": "https://imgs.search.brave.com/l36MWBCdhb-teoPlxGGMWEenj3njVas--CoLjN2ciHU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjcxZDU5ZmZl/ZmIwNzY4NTUyZDg1/ZTVjNGNhMzE2NjUz/MjljMzQwZTA0MThm/NTdjN2Q0N2I3NjFm/ZjIwZmU5MC9hcnhp/di5vcmcv"
+            "name": "Ultraleap",
+            "url": "https://docs.ultraleap.com/xr-and-tabletop/xr/unity/mrtk-support.html",
+            "long_name": "docs.ultraleap.com",
+            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
           },
           "language": "en",
           "family_friendly": true,
@@ -269,29 +241,23 @@
           "is_live": false,
           "meta_url": {
             "scheme": "https",
-            "netloc": "arxiv.org",
-            "hostname": "arxiv.org",
-            "favicon": "https://imgs.search.brave.com/l36MWBCdhb-teoPlxGGMWEenj3njVas--CoLjN2ciHU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjcxZDU5ZmZl/ZmIwNzY4NTUyZDg1/ZTVjNGNhMzE2NjUz/MjljMzQwZTA0MThm/NTdjN2Q0N2I3NjFm/ZjIwZmU5MC9hcnhp/di5vcmcv",
-            "path": "\u203a abs  \u203a 2006.10214"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/iKdq2fkHaKJYPDvdK7fP7YT23ZvBXz_aBGM5hD9_jho/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9hcnhp/di5vcmcvc3RhdGlj/L2Jyb3dzZS8wLjMu/NC9pbWFnZXMvYXJ4/aXYtbG9nby1mYi5w/bmc",
-            "original": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png",
-            "logo": true
-          },
-          "age": "June 18, 2020"
+            "netloc": "docs.ultraleap.com",
+            "hostname": "docs.ultraleap.com",
+            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
+            "path": "\u203a xr-and-tabletop  \u203a xr  \u203a unity  \u203a mrtk-support.html"
+          }
         },
         {
-          "title": "MediaPipe Hands: Real-Time Tracking",
-          "url": "https://www.emergentmind.com/topics/mediapipe-hands",
+          "title": "How to Configure Leap Motion (by Ultraleap) Hand Tracking in MRTK | Mixed Reality Toolkit Documentation",
+          "url": "https://hololabinc.github.io/MixedRealityToolkit-Unity/Documentation.ja/CrossPlatform/LeapMotionMRTK.html",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "Temporal Tracking and Filtering: For video-based processing, <strong>intersection-over-union (IoU) matching, Kalman filters, or exponential smoothing</strong> can be used to maintain ID continuity and suppress outliers during rapid articulation and occlusion.",
+          "description": "Getting joints using the Leap Motion Data Provider is identical to hand joint retrieval for an MRTK Articulated Hand.",
           "profile": {
-            "name": "Emergent Mind",
-            "url": "https://www.emergentmind.com/topics/mediapipe-hands",
-            "long_name": "emergentmind.com",
-            "img": "https://imgs.search.brave.com/Zc521AqQwkFLu4dxf7NKn1ehs161lCdjAkhkjS4ySGI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGM4NjVhOTE1/YjRiZTJmNWRlOTZj/ZjRhZmYxZWMwMWFj/ZDAzNTk0Y2MxZDc1/MTBiYWJmODlmZTE1/N2EwMWUxZS93d3cu/ZW1lcmdlbnRtaW5k/LmNvbS8"
+            "name": "Hololabinc",
+            "url": "https://hololabinc.github.io/MixedRealityToolkit-Unity/Documentation.ja/CrossPlatform/LeapMotionMRTK.html",
+            "long_name": "hololabinc.github.io",
+            "img": "https://imgs.search.brave.com/A77yjNTgR31h7fMaTsxY0ob9syKbjQNpaxgH4FnBdjU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWRjYzZiMWI2/Zjg1YTk5MTdiNjRl/Y2IzNzM5MTdhN2Q0/NzNiMGE0OWRjMWM5/MjhmNDIzZTc5M2Nl/YmYxMWJiYi9ob2xv/bGFiaW5jLmdpdGh1/Yi5pby8"
           },
           "language": "en",
           "family_friendly": true,
@@ -300,58 +266,133 @@
           "is_live": false,
           "meta_url": {
             "scheme": "https",
-            "netloc": "emergentmind.com",
-            "hostname": "www.emergentmind.com",
-            "favicon": "https://imgs.search.brave.com/Zc521AqQwkFLu4dxf7NKn1ehs161lCdjAkhkjS4ySGI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGM4NjVhOTE1/YjRiZTJmNWRlOTZj/ZjRhZmYxZWMwMWFj/ZDAzNTk0Y2MxZDc1/MTBiYWJmODlmZTE1/N2EwMWUxZS93d3cu/ZW1lcmdlbnRtaW5k/LmNvbS8",
-            "path": "\u203a topics  \u203a mediapipe-hands"
+            "netloc": "hololabinc.github.io",
+            "hostname": "hololabinc.github.io",
+            "favicon": "https://imgs.search.brave.com/A77yjNTgR31h7fMaTsxY0ob9syKbjQNpaxgH4FnBdjU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWRjYzZiMWI2/Zjg1YTk5MTdiNjRl/Y2IzNzM5MTdhN2Q0/NzNiMGE0OWRjMWM5/MjhmNDIzZTc5M2Nl/YmYxMWJiYi9ob2xv/bGFiaW5jLmdpdGh1/Yi5pby8",
+            "path": "\u203a MixedRealityToolkit-Unity  \u203a Documentation.ja  \u203a CrossPlatform  \u203a LeapMotionMRTK.html"
+          }
+        },
+        {
+          "title": "How to Configure Leap Motion (by Ultraleap) Hand Tracking in MRTK | Mixed Reality Toolkit Documentation",
+          "url": "https://hololenscndev.github.io/MRTKDoc/Documentation/CrossPlatform/LeapMotionMRTK.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "A Leap Motion Controller is required to use this data provider \u00b7 The Leap Motion Data Provider enables articulated hand tracking for VR and could be useful for rapid prototyping in the editor. The data provider can be configured to use the Leap Motion Controller mounted on a headset or placed ...",
+          "profile": {
+            "name": "Hololenscndev",
+            "url": "https://hololenscndev.github.io/MRTKDoc/Documentation/CrossPlatform/LeapMotionMRTK.html",
+            "long_name": "hololenscndev.github.io",
+            "img": "https://imgs.search.brave.com/MdVy5lZLwOinNAJ8QppilXncND6tlcRpjPKbeidow6w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmM5ZDgyMWU4/NTA4Mjc0MWFhNTlh/ZWIyZjBhZDE4ZTk3/MDBjM2EyNWRlODNi/MzI1NzhkY2RmN2U4/NGJiYTBiZC9ob2xv/bGVuc2NuZGV2Lmdp/dGh1Yi5pby8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "hololenscndev.github.io",
+            "hostname": "hololenscndev.github.io",
+            "favicon": "https://imgs.search.brave.com/MdVy5lZLwOinNAJ8QppilXncND6tlcRpjPKbeidow6w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmM5ZDgyMWU4/NTA4Mjc0MWFhNTlh/ZWIyZjBhZDE4ZTk3/MDBjM2EyNWRlODNi/MzI1NzhkY2RmN2U4/NGJiYTBiZC9ob2xv/bGVuc2NuZGV2Lmdp/dGh1Yi5pby8",
+            "path": "\u203a MRTKDoc  \u203a Documentation  \u203a CrossPlatform  \u203a LeapMotionMRTK.html"
+          }
+        },
+        {
+          "title": "Touchless Interactive Kiosks: The Air Push Gesture | Ultraleap",
+          "url": "https://www.ultraleap.com/company/news/blog/touchless-interactions/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "TouchFree detects hand movements mid-air and converts them to an onscreen cursor.",
+          "profile": {
+            "name": "Ultraleap",
+            "url": "https://www.ultraleap.com/company/news/blog/touchless-interactions/",
+            "long_name": "ultraleap.com",
+            "img": "https://imgs.search.brave.com/jLAy5KgRV7zNt2aEpkZCDZQnuxXaP86ECMWWv8N7izI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMDk4NWJiYTQ2/ZjhmMTYwODVhMGVl/YTk1MGE1ZWQwNTA0/OWMyNTUwZGVhMzUx/ZGNkYzE4YjVkMGI3/YjMwZDM3ZC93d3cu/dWx0cmFsZWFwLmNv/bS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "ultraleap.com",
+            "hostname": "www.ultraleap.com",
+            "favicon": "https://imgs.search.brave.com/jLAy5KgRV7zNt2aEpkZCDZQnuxXaP86ECMWWv8N7izI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMDk4NWJiYTQ2/ZjhmMTYwODVhMGVl/YTk1MGE1ZWQwNTA0/OWMyNTUwZGVhMzUx/ZGNkYzE4YjVkMGI3/YjMwZDM3ZC93d3cu/dWx0cmFsZWFwLmNv/bS8",
+            "path": "\u203a company  \u203a news  \u203a blog  \u203a touchless-interactions"
           },
           "thumbnail": {
-            "src": "https://imgs.search.brave.com/K8jnmZPNdMeWoSa5EXkTOTXDUqE7xJulK0_vb-xBIyk/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9kMnpr/OHFkeDJ5MWJlci5j/bG91ZGZyb250Lm5l/dC9hc3NldHMvNjAw/cHgtYTYxMzIwNDQ5/YjhjODQ4YmNjNTZl/MDI4MjZiMDMzYjVl/ZmEwOWZhNTJjYzQ4/YjQ4N2U4ZjlhMmVi/OGVmZDcwNS5wbmc",
-            "original": "https://d2zk8qdx2y1ber.cloudfront.net/assets/600px-a61320449b8c848bcc56e02826b033b5efa09fa52cc48b487e8f9a2eb8efd705.png",
+            "src": "https://imgs.search.brave.com/IYmOvO3Uzna6UCr7GetaybLM4UcfWqQvY7HEgnJvJks/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jbXMu/dWx0cmFsZWFwLmNv/bS9hcHAvdXBsb2Fk/cy8yMDIxLzAxL2xh/ZHktdG91Y2hsZXNz/LXNjcmVlbi5qcGc",
+            "original": "https://cms.ultraleap.com/app/uploads/2021/01/lady-touchless-screen.jpg",
             "logo": false
           }
         },
         {
-          "title": "MediaPipe Hands: On-device Real-time Hand Tracking",
-          "url": "https://www.researchgate.net/publication/342302340_MediaPipe_Hands_On-device_Real-time_Hand_Tracking",
+          "title": "Interaction Settings - Ultraleap documentation",
+          "url": "https://docs.ultraleap.com/TouchFree/touchfree-user-manual/interaction-settings.html",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "Regardless, outcomes provide evidence on the robustness and stability of PHCA against perturbations to data and noise. It can be concluded that PHCA can serve as an alternative for FSL recognition, offering opportunities for further research. ... [93]. Within the designated hand areas, the MediaPipe hand landmark model identifies 21 palm-knuckle keypoints, which are highlighted in Fig.",
-          "page_age": "2020-06-17T00:00:00",
+          "description": "Interaction Zone Settings set the region in which Touchfree will track hands.",
           "profile": {
-            "name": "ResearchGate",
-            "url": "https://www.researchgate.net/publication/342302340_MediaPipe_Hands_On-device_Real-time_Hand_Tracking",
-            "long_name": "researchgate.net",
-            "img": "https://imgs.search.brave.com/WJ25-tL-91vp8kSoF0YS7d8CZVivP1cG-EjlGvrmxOc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE0MDk0Yzli/MWQ3NGQ2ZTNjODVh/YWVmMDNkM2NkZWI5/NGEzNjdhMmEyY2E2/N2EzN2Y0OThlZjdi/YWU3MjkwMi93d3cu/cmVzZWFyY2hnYXRl/Lm5ldC8"
+            "name": "Ultraleap",
+            "url": "https://docs.ultraleap.com/TouchFree/touchfree-user-manual/interaction-settings.html",
+            "long_name": "docs.ultraleap.com",
+            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
           },
           "language": "en",
           "family_friendly": true,
           "type": "search_result",
-          "subtype": "article",
+          "subtype": "generic",
           "is_live": false,
           "meta_url": {
             "scheme": "https",
-            "netloc": "researchgate.net",
-            "hostname": "www.researchgate.net",
-            "favicon": "https://imgs.search.brave.com/WJ25-tL-91vp8kSoF0YS7d8CZVivP1cG-EjlGvrmxOc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjE0MDk0Yzli/MWQ3NGQ2ZTNjODVh/YWVmMDNkM2NkZWI5/NGEzNjdhMmEyY2E2/N2EzN2Y0OThlZjdi/YWU3MjkwMi93d3cu/cmVzZWFyY2hnYXRl/Lm5ldC8",
-            "path": "\u203a publication  \u203a 342302340_MediaPipe_Hands_On-device_Real-time_Hand_Tracking"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/NA3UWQdok5rp6uI2kyF0cHLVZy0QBikNBsFv8yDMrrc/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cmVzZWFyY2hnYXRl/Lm5ldC9pbWFnZXMv/dGVtcGxhdGUvZGVm/YXVsdF9wdWJsaWNh/dGlvbl9wcmV2aWV3/X2xhcmdlLnBuZw",
-            "original": "https://www.researchgate.net/images/template/default_publication_preview_large.png",
-            "logo": false
-          },
-          "age": "June 17, 2020"
+            "netloc": "docs.ultraleap.com",
+            "hostname": "docs.ultraleap.com",
+            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
+            "path": "\u203a TouchFree  \u203a touchfree-user-manual  \u203a interaction-settings.html"
+          }
         },
         {
-          "title": "GitHub - geaxgx/depthai_hand_tracker: Running Google Mediapipe Hand Tracking models on Luxonis DepthAI hardware (OAK-D-lite, OAK-D, OAK-1,...)",
-          "url": "https://github.com/geaxgx/depthai_hand_tracker",
+          "title": "r/leapmotion on Reddit: MRTK v2.4.0 now supports Ultraleap hand tracking",
+          "url": "https://www.reddit.com/r/leapmotion/comments/grsiny/mrtk_v240_now_supports_ultraleap_hand_tracking/",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "<strong>Hand Tracking from Mediapipe is a 2-stages pipeline</strong>. First, the Hand detection stage detects where are the hands in the whole image. For each detected hand, a Region of Interest (ROI) around the hand is calculated and fed to the second stage, ...",
+          "description": "We know some of you have been waiting for this announcement. It&#x27;s official - MRTK v2.4.0 supports Ultraleap hand tracking! We worked with MRTK to\u2026",
+          "page_age": "2020-05-27T21:14:56",
+          "profile": {
+            "name": "Reddit",
+            "url": "https://www.reddit.com/r/leapmotion/comments/grsiny/mrtk_v240_now_supports_ultraleap_hand_tracking/",
+            "long_name": "reddit.com",
+            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "reddit.com",
+            "hostname": "www.reddit.com",
+            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
+            "path": "  \u203a r/leapmotion  \u203a mrtk v2.4.0 now supports ultraleap hand tracking"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/PaooAjFl2ZIbSY_Wyf6yE5SOkGrciwtVCKbhwyqPHVU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9leHRl/cm5hbC1wcmV2aWV3/LnJlZGQuaXQvUkxy/OWxiX0NrdEEyZTJp/c3A2S1pyWVNlNElK/RXRFMHZxY2pVSlBW/aWROay5qcGc_YXV0/bz13ZWJwJnM9ZThj/ZjNkZjFlZWY1ODNk/NTVmMTcwMmJjMjJl/OWRjZmFkNzY0N2Ix/Yw",
+            "original": "https://external-preview.redd.it/RLr9lb_CktA2e2isp6KZrYSe4IJEtE0vqcjUJPVidNk.jpg?auto=webp&s=e8cf3df1eef583d55f1702bc22e9dcfad7647b1c",
+            "logo": false
+          },
+          "age": "May 27, 2020"
+        },
+        {
+          "title": "Does MRTK3 pre 12 support Ultraleap Leap Motion Controller? \u00b7 microsoft/MixedRealityToolkit-Unity \u00b7 Discussion #11251",
+          "url": "https://github.com/microsoft/MixedRealityToolkit-Unity/discussions/11251",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "MRTK3 takes the hand joint data and synthesizes the rest of the input interactions that are needed, like pinch amount and the hand ray. Please let me know if you run into any issues and I&#x27;m happy to help debug! I&#x27;ve tested it on the Windows Mixed Reality runtime specifically. Beta Was this translation helpful? Give feedback. ... Something went wrong. ... Something went wrong. ... Is there a way to get the Ultraleap hand-tracking in the Unity editor without an active OpenXR runtime?",
           "profile": {
             "name": "GitHub",
-            "url": "https://github.com/geaxgx/depthai_hand_tracker",
+            "url": "https://github.com/microsoft/MixedRealityToolkit-Unity/discussions/11251",
             "long_name": "github.com",
             "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
           },
@@ -365,108 +406,23 @@
             "netloc": "github.com",
             "hostname": "github.com",
             "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
-            "path": "\u203a geaxgx  \u203a depthai_hand_tracker"
+            "path": "\u203a microsoft  \u203a MixedRealityToolkit-Unity  \u203a discussions  \u203a 11251"
           },
           "thumbnail": {
-            "src": "https://imgs.search.brave.com/DVvGW1EDkApeq8PakD8kp0LpWRiuMyrxa_it-fvVL5E/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS8w/ZTUwOGIyMDljZTdm/Zjg2MDk3ZDg5ODA2/YjgzMDU5MDRhMzhi/MzlhZDM3ODlhMDhi/MGQ2NWVkMjk3NTFh/NjM0L2dlYXhneC9k/ZXB0aGFpX2hhbmRf/dHJhY2tlcg",
-            "original": "https://opengraph.githubassets.com/0e508b209ce7ff86097d89806b8305904a38b39ad3789a08b0d65ed29751a634/geaxgx/depthai_hand_tracker",
+            "src": "https://imgs.search.brave.com/6osBR_peh5vz5RvPKmevztMnyv2lPrwhQ5l-rm3OPKM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS82/YzZlODY1NDNhZTdm/Njc2OGJlMGE4ZTc3/MTk0Mjc3OWNlZWIw/MGVkNDMwMmM5Yjgx/ZjcxODdiNDk5ZGIy/MGNkL21pY3Jvc29m/dC9NaXhlZFJlYWxp/dHlUb29sa2l0LVVu/aXR5L2Rpc2N1c3Np/b25zLzExMjUx",
+            "original": "https://opengraph.githubassets.com/6c6e86543ae7f6768be0a8e771942779ceeb00ed4302c9b81f7187b499db20cd/microsoft/MixedRealityToolkit-Unity/discussions/11251",
             "logo": false
           }
         },
         {
-          "title": "[PDF] MediaPipe Hands: On-device Real-time Hand Tracking | Semantic Scholar",
-          "url": "https://www.semanticscholar.org/paper/MediaPipe-Hands:-On-device-Real-time-Hand-Tracking-Zhang-Bazarevsky/84b19524609ad75f309be7f87bcea783e6ecd337",
+          "title": "MRTK3 with Pico Neo 3 UltraLeap \u00b7 microsoft/MixedRealityToolkit-Unity \u00b7 Discussion #11397",
+          "url": "https://github.com/microsoft/MixedRealityToolkit-Unity/discussions/11397",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "This paper presents a simple but powerful algorithm based on the MediaPipe Hands solution, a highly optimized neural network that processes the landmarks provided by MediaP Pipe using morphological and logical operators to obtain the masks that allow dynamic updating of the skin color model.Expand",
-          "profile": {
-            "name": "Semantic Scholar",
-            "url": "https://www.semanticscholar.org/paper/MediaPipe-Hands:-On-device-Real-time-Hand-Tracking-Zhang-Bazarevsky/84b19524609ad75f309be7f87bcea783e6ecd337",
-            "long_name": "semanticscholar.org",
-            "img": "https://imgs.search.brave.com/K-sZ3Vgcj9LFjkcTUpjjK40LWCyX6WutMxHJiE7XYPI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGI3NTZiOWVj/YTE5N2MzYTNhYzA2/NWEyMzQwMzA5N2Yy/NGY3MjhhYTcxYmI2/YWQ3NjdjNDk5NGE2/NmUyYTdlYi93d3cu/c2VtYW50aWNzY2hv/bGFyLm9yZy8"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "semanticscholar.org",
-            "hostname": "www.semanticscholar.org",
-            "favicon": "https://imgs.search.brave.com/K-sZ3Vgcj9LFjkcTUpjjK40LWCyX6WutMxHJiE7XYPI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGI3NTZiOWVj/YTE5N2MzYTNhYzA2/NWEyMzQwMzA5N2Yy/NGY3MjhhYTcxYmI2/YWQ3NjdjNDk5NGE2/NmUyYTdlYi93d3cu/c2VtYW50aWNzY2hv/bGFyLm9yZy8",
-            "path": "  \u203a papers  \u203a mediapipe hands: on-device real-time hand tracking"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/A3fktYElQA3Sms9BB_yLvcb2tzI-8lZyB7LvUT1A-us/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/c2VtYW50aWNzY2hv/bGFyLm9yZy9pbWcv/c2VtYW50aWNfc2No/b2xhcl9vZy5wbmc",
-            "original": "https://www.semanticscholar.org/img/semantic_scholar_og.png",
-            "logo": false
-          }
-        },
-        {
-          "title": "Hands - mediapipe",
-          "url": "https://chuoling.github.io/mediapipe/solutions/hands.html",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Complexity of the hand landmark model: 0 or 1. Landmark accuracy as well as inference latency generally go up with the model complexity. Default to 1. Minimum confidence value ([0.0, 1.0]) from the hand detection model for the detection to be considered successful.",
+          "description": "Hi there, has anybody a working example of MRTK3 for Pico Neo3 with UltraLeap hand tracking? The standard setup (just a MRTK XR Rig Prefab) and basic OpenXR setup with UltraLeap OpenXR and Pico OpenXR seem not work. OpenXR Ultra Leap Examples which contain special components are working though.",
           "profile": {
             "name": "GitHub",
-            "url": "https://chuoling.github.io/mediapipe/solutions/hands.html",
-            "long_name": "chuoling.github.io",
-            "img": "https://imgs.search.brave.com/UQsG855bt9JVRC7rU_bzffBainVrPq-eopHOMS-wk-A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGE4MmNlN2Ez/ODk4YTAyNmM2ZGNi/NGY4OGIwZjQ0Nzkz/NDhkNDdkOWMwYjNl/ZGU0MTQzZGIzYjll/NDY4OWVlZi9jaHVv/bGluZy5naXRodWIu/aW8v"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "chuoling.github.io",
-            "hostname": "chuoling.github.io",
-            "favicon": "https://imgs.search.brave.com/UQsG855bt9JVRC7rU_bzffBainVrPq-eopHOMS-wk-A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGE4MmNlN2Ez/ODk4YTAyNmM2ZGNi/NGY4OGIwZjQ0Nzkz/NDhkNDdkOWMwYjNl/ZGU0MTQzZGIzYjll/NDY4OWVlZi9jaHVv/bGluZy5naXRodWIu/aW8v",
-            "path": "\u203a mediapipe  \u203a solutions  \u203a hands.html"
-          }
-        },
-        {
-          "title": "MediaPipe Hands: On-device Real-time Hand Tracking",
-          "url": "https://research.google/pubs/mediapipe-hands-on-device-real-time-hand-tracking/",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "The proposed architecture demonstrates realtime inference speed on mobile GPUs and a high prediction quality. MediaPipe Hands is open-sourced at https://github.com/google/mediapipe.",
-          "profile": {
-            "name": "Google Research",
-            "url": "https://research.google/pubs/mediapipe-hands-on-device-real-time-hand-tracking/",
-            "long_name": "research.google",
-            "img": "https://imgs.search.brave.com/-QOsxpGGDx529NdqUjdKpQdw1SDtpkbog_g5yuxF4qs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWNhMzVhZmNi/MDJjOGQ4MGViMDgz/ZGJlNTMwZWRlZjA1/Y2Y2YTEzNzBmYjg2/YjIwOTcwN2M0ZGZj/NTgzMmYzMy9yZXNl/YXJjaC5nb29nbGUv"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "research.google",
-            "hostname": "research.google",
-            "favicon": "https://imgs.search.brave.com/-QOsxpGGDx529NdqUjdKpQdw1SDtpkbog_g5yuxF4qs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWNhMzVhZmNi/MDJjOGQ4MGViMDgz/ZGJlNTMwZWRlZjA1/Y2Y2YTEzNzBmYjg2/YjIwOTcwN2M0ZGZj/NTgzMmYzMy9yZXNl/YXJjaC5nb29nbGUv",
-            "path": "\u203a pubs  \u203a mediapipe-hands-on-device-real-time-hand-tracking"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/xMSx6K-DNGKBD00GCYX2R_H6N036h6fg9HWvNmYR3vs/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zdG9y/YWdlLmdvb2dsZWFw/aXMuY29tL2d3ZWIt/cmVzZWFyY2gyMDIz/LW1lZGlhL2ltYWdl/cy9PcGVuX0dyYXBo/LndpZHRoLTgwMC5m/b3JtYXQtanBlZy5q/cGc",
-            "original": "https://storage.googleapis.com/gweb-research2023-media/images/Open_Graph.width-800.format-jpeg.jpg",
-            "logo": false
-          }
-        },
-        {
-          "title": "mediapipe/docs/solutions/hands.md at master \u00b7 google-ai-edge/...",
-          "url": "https://github.com/google/mediapipe/blob/master/docs/solutions/hands.md",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "In addition, in our pipeline the crops can also be generated based on the hand landmarks identified in the previous frame, and only when the landmark model could no longer identify hand presence is palm detection invoked to relocalize the hand. The pipeline is implemented as a MediaPipe graph that uses a hand landmark tracking subgraph from the hand landmark module, and renders using a dedicated hand renderer subgraph.",
-          "profile": {
-            "name": "GitHub",
-            "url": "https://github.com/google/mediapipe/blob/master/docs/solutions/hands.md",
+            "url": "https://github.com/microsoft/MixedRealityToolkit-Unity/discussions/11397",
             "long_name": "github.com",
             "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
           },
@@ -480,245 +436,271 @@
             "netloc": "github.com",
             "hostname": "github.com",
             "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
-            "path": "\u203a google  \u203a mediapipe  \u203a blob  \u203a master  \u203a docs  \u203a solutions  \u203a hands.md"
+            "path": "\u203a microsoft  \u203a MixedRealityToolkit-Unity  \u203a discussions  \u203a 11397"
           },
           "thumbnail": {
-            "src": "https://imgs.search.brave.com/688wcydayjjovsWi9Y1muRakISJExilZNCGGw0NS29o/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS8w/ZjdhOTg2MjU3M2Ni/NzFlOWQyZGIzY2Fm/NDU5MDc4NTUwODQ3/ZTEyZmRjYzI0OTgy/YTgyYmJlNmJmMGMz/MGVlL2dvb2dsZS1h/aS1lZGdlL21lZGlh/cGlwZQ",
-            "original": "https://opengraph.githubassets.com/0f7a9862573cb71e9d2db3caf459078550847e12fdcc24982a82bbe6bf0c30ee/google-ai-edge/mediapipe",
+            "src": "https://imgs.search.brave.com/EGZQRlPojevMB3R-xzAXskD1F81l7N8WpVuHXaiKdeo/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS8y/NTcyNjUwOGI3YTRk/MTVkN2ZjM2FkOTQ1/MTg2MjcyNzA2Njdl/ZGNmY2ViYjUyNjJh/YTJjNTRkZmFiMTNh/ODU0L21pY3Jvc29m/dC9NaXhlZFJlYWxp/dHlUb29sa2l0LVVu/aXR5L2Rpc2N1c3Np/b25zLzExMzk3",
+            "original": "https://opengraph.githubassets.com/25726508b7a4d15d7fc3ad94518627270667edcfcebb5262aa2c54dfab13a854/microsoft/MixedRealityToolkit-Unity/discussions/11397",
             "logo": false
           }
         },
         {
-          "title": "Hand Gesture Mapping Using MediaPipe Algorithm | SpringerLink",
-          "url": "https://link.springer.com/chapter/10.1007/978-981-16-8862-1_39",
+          "title": "r/Ultraleap on Reddit: Ultraleap & MRTK3 problem",
+          "url": "https://www.reddit.com/r/Ultraleap/comments/1eygfz4/ultraleap_mrtk3_problem/",
           "is_source_local": false,
           "is_source_both": false,
-          "description": "Once the user has completed the setup of his or her gestures, he or she can request the Python code that was created for that configuration. This paper provides the ability to pick any one of the workstation GUI tasks and assign motions to it, as well as the reverse of this functionality.",
+          "description": "I&#x27;m following this guide https://docs.ultraleap.com/xr-and-tabletop/xr/unity/mrtk-support.html, but I can&#x27;t even get past the first step: The subsystem for Ultraleap Hands is not visible as an option in the project settings.",
+          "page_age": "2024-08-22T11:02:05",
           "profile": {
-            "name": "Springer",
-            "url": "https://link.springer.com/chapter/10.1007/978-981-16-8862-1_39",
-            "long_name": "link.springer.com",
-            "img": "https://imgs.search.brave.com/_9fJfT7yiJHjwRW_yis-sKXBI-83soJohV8IX_gf83A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvY2FlNzAzZTY0/NWEyMTdmNjZhOTAz/YTRlOTM0MDg0MDJi/NWIzODMzM2M2ZDAw/OTVkOTViOTE2MTMz/M2NmMmY1OC9saW5r/LnNwcmluZ2VyLmNv/bS8"
+            "name": "Reddit",
+            "url": "https://www.reddit.com/r/Ultraleap/comments/1eygfz4/ultraleap_mrtk3_problem/",
+            "long_name": "reddit.com",
+            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
           },
           "language": "en",
           "family_friendly": true,
           "type": "search_result",
-          "subtype": "article",
+          "subtype": "qa",
           "is_live": false,
           "meta_url": {
             "scheme": "https",
-            "netloc": "link.springer.com",
-            "hostname": "link.springer.com",
-            "favicon": "https://imgs.search.brave.com/_9fJfT7yiJHjwRW_yis-sKXBI-83soJohV8IX_gf83A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvY2FlNzAzZTY0/NWEyMTdmNjZhOTAz/YTRlOTM0MDg0MDJi/NWIzODMzM2M2ZDAw/OTVkOTViOTE2MTMz/M2NmMmY1OC9saW5r/LnNwcmluZ2VyLmNv/bS8",
-            "path": "  \u203a home  \u203a proceedings of third international conference on communication, computing and electronics systems  \u203a conference paper"
+            "netloc": "reddit.com",
+            "hostname": "www.reddit.com",
+            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
+            "path": "  \u203a r/ultraleap  \u203a ultraleap & mrtk3 problem"
           },
           "thumbnail": {
-            "src": "https://imgs.search.brave.com/rdKOmGJHkXAowWNI03n9wxbAwO3VkWZPCeHc1c-kLm8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5zcHJpbmdlcm5h/dHVyZS5jb20vdzE1/My9zcHJpbmdlci1z/dGF0aWMvY292ZXIv/Ym9vay85NzgtOTgx/LTE2LTg4NjItMS5q/cGc",
-            "original": "https://media.springernature.com/w153/springer-static/cover/book/978-981-16-8862-1.jpg",
-            "logo": false
-          }
-        },
-        {
-          "title": "MediaPipe-Hand-Detection - Qualcomm AI Hub",
-          "url": "https://aihub.qualcomm.com/models/mediapipe_hand",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Real-time hand detection optimized for mobile and edge.",
-          "profile": {
-            "name": "Qualcomm\u00ae AI Hub",
-            "url": "https://aihub.qualcomm.com/models/mediapipe_hand",
-            "long_name": "aihub.qualcomm.com",
-            "img": "https://imgs.search.brave.com/UTpvhPmpFihRjdmffoVQ1hNbVD9RVkCUpBjgRUHvZ8M/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2NkNTI4NGE5/MjhlN2JiZTY0NDUy/ZGY1M2RiNzEwN2Q3/MDJmM2EzMGVlMjJl/NzM3NWU4ZmRjNWNk/OTViZTQwOS9haWh1/Yi5xdWFsY29tbS5j/b20v"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "aihub.qualcomm.com",
-            "hostname": "aihub.qualcomm.com",
-            "favicon": "https://imgs.search.brave.com/UTpvhPmpFihRjdmffoVQ1hNbVD9RVkCUpBjgRUHvZ8M/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2NkNTI4NGE5/MjhlN2JiZTY0NDUy/ZGY1M2RiNzEwN2Q3/MDJmM2EzMGVlMjJl/NzM3NWU4ZmRjNWNk/OTViZTQwOS9haWh1/Yi5xdWFsY29tbS5j/b20v",
-            "path": "\u203a models  \u203a mediapipe_hand"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/FuYaNDzTcc2_nHxBaVW_S8ObhDJAfJhxdrvNbVKWpms/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9xYWlo/dWItcHVibGljLWFz/c2V0cy5zMy51cy13/ZXN0LTIuYW1hem9u/YXdzLmNvbS9xYWkt/aHViLW1vZGVscy9t/b2RlbHMvbWVkaWFw/aXBlX2hhbmQvd2Vi/LWFzc2V0cy9tb2Rl/bF9kZW1vLnBuZw",
-            "original": "https://qaihub-public-assets.s3.us-west-2.amazonaws.com/qai-hub-models/models/mediapipe_hand/web-assets/model_demo.png",
-            "logo": false
-          }
-        },
-        {
-          "title": "MediaPipe - Wikipedia",
-          "url": "https://en.wikipedia.org/wiki/MediaPipe",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Starting with the identification of the palm, MediaPipe is able to use the positioning of the palm as an input to a second model that predicts the positions of key landmarks that will represent the hand&#x27;s structure. MediaPipe continuously monitors the confidence of its predictions and re-runs detection when needed to maintain its accuracy, while temporal smoothing helps reduce the jitter between frames.",
-          "page_age": "2025-12-19T19:06:04",
-          "profile": {
-            "name": "Wikipedia",
-            "url": "https://en.wikipedia.org/wiki/MediaPipe",
-            "long_name": "en.wikipedia.org",
-            "img": "https://imgs.search.brave.com/m6XxME4ek8DGIUcEPCqjRoDjf2e54EwL9pQzyzogLYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQwNGZhZWY0/ZTQ1YWUzYzQ3MDUw/MmMzMGY3NTQ0ZjNj/NDUwMDk5ZTI3MWRk/NWYyNTM4N2UwOTE0/NTI3ZDQzNy9lbi53/aWtpcGVkaWEub3Jn/Lw"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "deep_results": {
-            "buttons": [
-              {
-                "type": "button_result",
-                "title": "History",
-                "url": "https://en.wikipedia.org/wiki/MediaPipe#History"
-              },
-              {
-                "type": "button_result",
-                "title": "Solutions",
-                "url": "https://en.wikipedia.org/wiki/MediaPipe#Solutions"
-              },
-              {
-                "type": "button_result",
-                "title": "Programming Language",
-                "url": "https://en.wikipedia.org/wiki/MediaPipe#Programming_Language"
-              },
-              {
-                "type": "button_result",
-                "title": "How MediaPipe Works",
-                "url": "https://en.wikipedia.org/wiki/MediaPipe#How_MediaPipe_Works"
-              }
-            ]
-          },
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "en.wikipedia.org",
-            "hostname": "en.wikipedia.org",
-            "favicon": "https://imgs.search.brave.com/m6XxME4ek8DGIUcEPCqjRoDjf2e54EwL9pQzyzogLYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQwNGZhZWY0/ZTQ1YWUzYzQ3MDUw/MmMzMGY3NTQ0ZjNj/NDUwMDk5ZTI3MWRk/NWYyNTM4N2UwOTE0/NTI3ZDQzNy9lbi53/aWtpcGVkaWEub3Jn/Lw",
-            "path": "\u203a wiki  \u203a MediaPipe"
-          },
-          "age": "3 weeks ago"
-        },
-        {
-          "title": "Hand landmarks detection guide | MediaPipe | Google for Developers",
-          "url": "https://developers.google.com/mediapipe/solutions/vision/hand_landmarker",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "<strong>Hand Landmarker</strong> only re-triggers the palm detection model if the hand landmarks model no longer identifies the presence of hands or fails to track the hands within the frame. This reduces the number of times <strong>Hand Landmarker</strong> tiggers the palm ...",
-          "profile": {
-            "name": "Google",
-            "url": "https://developers.google.com/mediapipe/solutions/vision/hand_landmarker",
-            "long_name": "developers.google.com",
-            "img": "https://imgs.search.brave.com/xd2if5kWPozWi5tGSdOQNnrmMOZFDny4yeh0h6PJu8U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODcyMjg1ZjQ0/ZWI1OTgzNjQxNTM4/NDQ4MDljYjE2YTZi/MTc4OWFjOGM3NDEx/ZDBmZWJjYjg2YTBj/MGI3Zjk3OC9kZXZl/bG9wZXJzLmdvb2ds/ZS5jb20v"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "article",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "developers.google.com",
-            "hostname": "developers.google.com",
-            "favicon": "https://imgs.search.brave.com/xd2if5kWPozWi5tGSdOQNnrmMOZFDny4yeh0h6PJu8U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODcyMjg1ZjQ0/ZWI1OTgzNjQxNTM4/NDQ4MDljYjE2YTZi/MTc4OWFjOGM3NDEx/ZDBmZWJjYjg2YTBj/MGI3Zjk3OC9kZXZl/bG9wZXJzLmdvb2ds/ZS5jb20v",
-            "path": "  \u203a mediapipe  \u203a hand landmarks detection guide"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/GAPHAOESmySObnKYOeWfpQqXqlFxcq796DV_PD-ziIY/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/Z3N0YXRpYy5jb20v/ZGV2cmVsLWRldnNp/dGUvcHJvZC92N2Vj/MWNkYmY5MDk4OWFi/MDgyZjMwYmY5Yjlj/YmU2Mjc4MDQ4NDhj/MThiNzBkNzIyMDYy/YWViNmM2ZDg5NThi/NS9kZXZlbG9wZXJz/L2ltYWdlcy9vcGVu/Z3JhcGgvcGFsZS1i/bHVlLnBuZw",
-            "original": "https://www.gstatic.com/devrel-devsite/prod/v7ec1cdbf90989ab082f30bf9b9cbe627804848c18b70d722062aeb6c6d8958b5/developers/images/opengraph/pale-blue.png",
-            "logo": false
-          }
-        },
-        {
-          "title": "Hand tracking using Mediapipe. Access full tutorial of body pose\u2026",
-          "url": "https://medium.com/@sunnykumar1516/hand-tracking-using-mediapipe-263c40ad6914",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "MediaPipe simplifies the development of ML-based applications by providing a modular and customizable framework. It offers a variety of pre-trained models and reusable building blocks for tasks like object detection, face detection and tracking, pose estimation, hand tracking, and more.",
-          "page_age": "2024-01-04T14:39:28",
-          "profile": {
-            "name": "Medium",
-            "url": "https://medium.com/@sunnykumar1516/hand-tracking-using-mediapipe-263c40ad6914",
-            "long_name": "medium.com",
-            "img": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "article",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "medium.com",
-            "hostname": "medium.com",
-            "favicon": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw",
-            "path": "\u203a @sunnykumar1516  \u203a hand-tracking-using-mediapipe-263c40ad6914"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/SQJB29X3dmFdn9oc8q7n7zRdq7JUrSrSZnCIJQ7psiU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9taXJv/Lm1lZGl1bS5jb20v/djIvcmVzaXplOmZp/dDoxMjAwLzEqQnFs/YkN2cmFNNDByQkdZ/Rl9YOWd5Zy5wbmc",
-            "original": "https://miro.medium.com/v2/resize:fit:1200/1*BqlbCvraM40rBGYF_X9gyg.png",
-            "logo": false
-          },
-          "age": "January 4, 2024"
-        },
-        {
-          "title": "qualcomm/MediaPipe-Hand-Detection \u00b7 Hugging Face",
-          "url": "https://huggingface.co/qualcomm/MediaPipe-Hand-Detection",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "<strong>The MediaPipe Hand Landmark Detector</strong> is a machine learning pipeline that predicts bounding boxes and pose skeletons of hands in an image.",
-          "profile": {
-            "name": "Hugging Face",
-            "url": "https://huggingface.co/qualcomm/MediaPipe-Hand-Detection",
-            "long_name": "huggingface.co",
-            "img": "https://imgs.search.brave.com/L-O7pGsoxRbYSIBhk64OxIe19zjGm3DcqlEnCuoI678/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNmYwNDg3ZTZh/YzcxMDgwYmRkOGFm/YTk1MTJiYzQ2NmM5/NWViOGEyNGYyZWEx/NDg4NzQ5NzlhYTA5/NTI0MDA4Yy9odWdn/aW5nZmFjZS5jby8"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "huggingface.co",
-            "hostname": "huggingface.co",
-            "favicon": "https://imgs.search.brave.com/L-O7pGsoxRbYSIBhk64OxIe19zjGm3DcqlEnCuoI678/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNmYwNDg3ZTZh/YzcxMDgwYmRkOGFm/YTk1MTJiYzQ2NmM5/NWViOGEyNGYyZWEx/NDg4NzQ5NzlhYTA5/NTI0MDA4Yy9odWdn/aW5nZmFjZS5jby8",
-            "path": "\u203a qualcomm  \u203a MediaPipe-Hand-Detection"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/glL8I8zIEdl1fZsXyjijrXYGATuQfjNnK-OeRhsRIgg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4t/dGh1bWJuYWlscy5o/dWdnaW5nZmFjZS5j/by9zb2NpYWwtdGh1/bWJuYWlscy9tb2Rl/bHMvcXVhbGNvbW0v/TWVkaWFQaXBlLUhh/bmQtRGV0ZWN0aW9u/LnBuZw",
-            "original": "https://cdn-thumbnails.huggingface.co/social-thumbnails/models/qualcomm/MediaPipe-Hand-Detection.png",
-            "logo": false
-          }
-        },
-        {
-          "title": "Google open sources an on-device, real-time hand gesture recognition algorithm built with MediaPipe",
-          "url": "https://www.packtpub.com/en-us/learning/how-to-tutorials/google-open-sources-an-on-device-real-time-hand-gesture-recognition-algorithm-built-with-mediapipe/",
-          "is_source_local": false,
-          "is_source_both": false,
-          "description": "Their algorithm <strong>uses machine learning to compute 3D keypoints of a hand from a video frame</strong>. This research is implemented in MediaPipe which is an open-source cross-platform framework for building multimodal (eg.",
-          "profile": {
-            "name": "Packt",
-            "url": "https://www.packtpub.com/en-us/learning/how-to-tutorials/google-open-sources-an-on-device-real-time-hand-gesture-recognition-algorithm-built-with-mediapipe/",
-            "long_name": "packtpub.com",
-            "img": "https://imgs.search.brave.com/jmMH8m2C6oTR0y9v_5fVd60yhumrU_CUcH-gwVKvrPY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODAxNjFmYzkw/YWNhMzMzMjk2NDk5/ODkwMGY0YTg5NWYw/YWRjY2MzOTljNjUz/OGE2YjVmOWYyMDAx/NmY5ZWVjNS93d3cu/cGFja3RwdWIuY29t/Lw"
-          },
-          "language": "en",
-          "family_friendly": true,
-          "type": "search_result",
-          "subtype": "generic",
-          "is_live": false,
-          "meta_url": {
-            "scheme": "https",
-            "netloc": "packtpub.com",
-            "hostname": "www.packtpub.com",
-            "favicon": "https://imgs.search.brave.com/jmMH8m2C6oTR0y9v_5fVd60yhumrU_CUcH-gwVKvrPY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODAxNjFmYzkw/YWNhMzMzMjk2NDk5/ODkwMGY0YTg5NWYw/YWRjY2MzOTljNjUz/OGE2YjVmOWYyMDAx/NmY5ZWVjNS93d3cu/cGFja3RwdWIuY29t/Lw",
-            "path": "\u203a en-us  \u203a learning  \u203a how-to-tutorials  \u203a google-open-sources-an-on-device-real-time-hand-gesture-recognition-algorithm-built-with-mediapipe"
-          },
-          "thumbnail": {
-            "src": "https://imgs.search.brave.com/TAfXJOPJD2tCOxYi6BDenOqjhxoonZIbBp-b1sHf5YU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zdWJz/Y3JpcHRpb24ucGFj/a3RwdWIuY29tL2lt/YWdlcy9sb2dvLnBu/Zw",
-            "original": "https://subscription.packtpub.com/images/logo.png",
+            "src": "https://imgs.search.brave.com/A5H_aQiEBuUODR0lNeU8iDfhrWUvO8oEmRGE_mcS_gM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cmVkZGl0c3RhdGlj/LmNvbS9pY29uLnBu/Zw",
+            "original": "https://www.redditstatic.com/icon.png",
             "logo": true
+          },
+          "age": "August 22, 2024"
+        },
+        {
+          "title": "TouchFree | Add Touchless Gesture Control \u2014 Ultraleap for Developers",
+          "url": "https://developer.leapmotion.com/touchfree-tooling",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "TouchFree Tooling allows Web and Unity developers to connect applications and content to TouchFree and use its hand positioning data directly.",
+          "profile": {
+            "name": "Leapmotion",
+            "url": "https://developer.leapmotion.com/touchfree-tooling",
+            "long_name": "developer.leapmotion.com",
+            "img": "https://imgs.search.brave.com/nzQRZo3SrsAhNFlwrBzHDrDs8M4WSMBAjmIjAlYDzhg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWJhMTI3NDVk/NjAzMmM3ZjE2NThl/YzczODQ3ODNlMThk/NzAzMjc0NGJkYmQ4/N2UxNmNhYzNmZDIw/MGEyYTY2Mi9kZXZl/bG9wZXIubGVhcG1v/dGlvbi5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "developer.leapmotion.com",
+            "hostname": "developer.leapmotion.com",
+            "favicon": "https://imgs.search.brave.com/nzQRZo3SrsAhNFlwrBzHDrDs8M4WSMBAjmIjAlYDzhg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZWJhMTI3NDVk/NjAzMmM3ZjE2NThl/YzczODQ3ODNlMThk/NzAzMjc0NGJkYmQ4/N2UxNmNhYzNmZDIw/MGEyYTY2Mi9kZXZl/bG9wZXIubGVhcG1v/dGlvbi5jb20v",
+            "path": "\u203a touchfree-tooling"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/aEAXwrBE2f5adPRJ--1HC3Nh98TWS9tX5FebXPktkic/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuc3F1YXJlc3Bh/Y2UtY2RuLmNvbS9j/b250ZW50L3YxLzYw/NmNiMDk2MjE2NjQ2/MDM2NWRhMTI2MC81/Mzc5ODNiYS01MTYy/LTRiYTAtODNhMi01/ZmU2Nzc2ZWJjZGMv/dWx0cmFsZWFwLWZv/ci1kZXZlbG9wZXJz/X2xvZ28ucG5n",
+            "original": "https://images.squarespace-cdn.com/content/v1/606cb0962166460365da1260/537983ba-5162-4ba0-83a2-5fe6776ebcdc/ultraleap-for-developers_logo.png",
+            "logo": true
+          }
+        },
+        {
+          "title": "Testing Hand Tracking - Ultraleap documentation",
+          "url": "https://docs.ultraleap.com/TouchFree/touchfree-user-manual/testing-hand-tracking.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>TouchFree uses Ultraleap Tracking</strong>.",
+          "profile": {
+            "name": "Ultraleap",
+            "url": "https://docs.ultraleap.com/TouchFree/touchfree-user-manual/testing-hand-tracking.html",
+            "long_name": "docs.ultraleap.com",
+            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "docs.ultraleap.com",
+            "hostname": "docs.ultraleap.com",
+            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
+            "path": "\u203a TouchFree  \u203a touchfree-user-manual  \u203a testing-hand-tracking.html"
+          }
+        },
+        {
+          "title": "Input simulation service - MRTK 2 | Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/features/input-simulation/input-simulation-service?view=mrtkunity-2022-05",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>With MRTK&#x27;s input simulation, you can test various types of interactions in the Unity editor without building and deploying to a device</strong>. This allows you quickly iterate your ideas in the design and development process.",
+          "profile": {
+            "name": "Microsoft Learn",
+            "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/features/input-simulation/input-simulation-service?view=mrtkunity-2022-05",
+            "long_name": "learn.microsoft.com",
+            "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "learn.microsoft.com",
+            "hostname": "learn.microsoft.com",
+            "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
+            "path": "\u203a en-us  \u203a windows  \u203a mixed-reality  \u203a mrtk-unity  \u203a mrtk2  \u203a features  \u203a input-simulation  \u203a input-simulation-service"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
+            "original": "https://learn.microsoft.com/en-us/media/open-graph-image.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Air Push - Ultraleap documentation",
+          "url": "https://docs.ultraleap.com/touchless-interfaces/interaction-types/air-push",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Struct Leap::Interaction::Internal::InteractionEngineUtility::PhysicsUtility::Velocities \u00b7 Struct LeapInternal::LEAP_CONFIG_RESPONSE_EVENT_WITH_REF_TYPE \u00b7 Struct Leap::Unity::Geometry::Bezier::BezierPointEnumerator \u00b7 Struct Leap::Unity::RuntimeGizmos::RuntimeGizmoDrawer::WireSphere ... Users push their hand towards the screen to trigger a click event. This is TouchFree\u2019s default interaction method and recommended for most kiosk interfaces and sizes.",
+          "profile": {
+            "name": "Ultraleap",
+            "url": "https://docs.ultraleap.com/touchless-interfaces/interaction-types/air-push",
+            "long_name": "docs.ultraleap.com",
+            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "docs.ultraleap.com",
+            "hostname": "docs.ultraleap.com",
+            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
+            "path": "\u203a touchless-interfaces  \u203a interaction-types  \u203a air-push"
+          }
+        },
+        {
+          "title": "Getting Started - Ultraleap documentation",
+          "url": "https://docs.ultraleap.com/hand-tracking/getting-started.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Build world-leading hand tracking into your application using our developer tools. Download the plugin for your chosen platform to start integrating our tracking data into your creation. Tools are available for Unity, Unreal, OpenXR, and MRTK from the developer portal.",
+          "profile": {
+            "name": "Ultraleap",
+            "url": "https://docs.ultraleap.com/hand-tracking/getting-started.html",
+            "long_name": "docs.ultraleap.com",
+            "img": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "docs.ultraleap.com",
+            "hostname": "docs.ultraleap.com",
+            "favicon": "https://imgs.search.brave.com/QVunXcuPbNfEru292JZ0SlyuuWGFPdNSKuxGsoIw2SE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGFjMDcwMTBk/ODM1ZGNhNzhiOWY0/Yjc3MDQ5Y2QwNGQx/MThmNDFkYTE5YWEw/ZGIzYTUzNjM3Njll/MWM5ZmE5MC9kb2Nz/LnVsdHJhbGVhcC5j/b20v",
+            "path": "\u203a hand-tracking  \u203a getting-started.html"
+          }
+        },
+        {
+          "title": "Hand tracking - MRTK3 | Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-input/packages/input/hand-tracking",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "MRTK3&#x27;s left and right hand controller prefabs contain all the components necessary to support hand input. One such component is MRTK&#x27;s ArticulatedHandController, which is a specialized version of Unity XR input&#x27;s ActionBasedController. This MRTK3 controller script uses MRTK3&#x27;s hand aggregator subsystem in order expose various hand input events.",
+          "profile": {
+            "name": "Microsoft Learn",
+            "url": "https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-input/packages/input/hand-tracking",
+            "long_name": "learn.microsoft.com",
+            "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "learn.microsoft.com",
+            "hostname": "learn.microsoft.com",
+            "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
+            "path": "\u203a en-us  \u203a windows  \u203a mixed-reality  \u203a mrtk-unity  \u203a mrtk3-input  \u203a packages  \u203a input  \u203a hand-tracking"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
+            "original": "https://learn.microsoft.com/en-us/media/open-graph-image.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Hand Tracking in MSFS - Leap Motion / UltraLeap native support for WMR/OpenXR - Wishlist - Microsoft Flight Simulator Forums",
+          "url": "https://forums.flightsimulator.com/t/hand-tracking-in-msfs-leap-motion-ultraleap-native-support-for-wmr-openxr/475308",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Moderator Note: Some other topics regarding hand tracking were merged into this master. Continuity may be lost. https://forums.flightsimulator.com/t/please-add-support-for-leap-motion-controller-free-hand-tracking-in-vr/359150 https://forums.flightsimulator.com/t/hand-tracking-support/387903 https://forums.flightsimulator.com/t/support-for-hand-tracking-with-leap-motion/498685 Now that MSFS has VR controller support, we need hand tracking!",
+          "page_age": "2021-11-23T17:16:12",
+          "profile": {
+            "name": "Microsoft Flight Simulator Forums",
+            "url": "https://forums.flightsimulator.com/t/hand-tracking-in-msfs-leap-motion-ultraleap-native-support-for-wmr-openxr/475308",
+            "long_name": "forums.flightsimulator.com",
+            "img": "https://imgs.search.brave.com/FJvivqbXLWdOR-jtusKhXuLZOclUCUAOdoYacZS-T_w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODc0MzdhNTFk/ZWY0NTZiYjZlODc0/NzhmOGYzNzQ5ZDU4/YTE5NTkzOWJiNTFi/ZDg0ZTY3ZGI4OWY4/NmM0ZWJkOC9mb3J1/bXMuZmxpZ2h0c2lt/dWxhdG9yLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "video",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "forums.flightsimulator.com",
+            "hostname": "forums.flightsimulator.com",
+            "favicon": "https://imgs.search.brave.com/FJvivqbXLWdOR-jtusKhXuLZOclUCUAOdoYacZS-T_w/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODc0MzdhNTFk/ZWY0NTZiYjZlODc0/NzhmOGYzNzQ5ZDU4/YTE5NTkzOWJiNTFi/ZDg0ZTY3ZGI4OWY4/NmM0ZWJkOC9mb3J1/bXMuZmxpZ2h0c2lt/dWxhdG9yLmNvbS8",
+            "path": "  \u203a official microsoft flight simulator  \u203a wishlist"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/KcSwJsRfv4FvHi6URwfauejlXAgjdOolCQ11vrKsg3A/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9mbGln/aHRzaW11bGF0b3It/Zm9ydW1zLWNkbi5h/enVyZWVkZ2UubmV0/L3VwbG9hZHMvZGVm/YXVsdC9vcmlnaW5h/bC80WC9jL2IvOC9j/Yjg3ZTlmMzJhZmU1/NWRjMDZkNGU5MmY3/MGUyNTZhZTFkNmM5/ZjBjLnBuZw",
+            "original": "https://flightsimulator-forums-cdn.azureedge.net/uploads/default/original/4X/c/b/8/cb87e9f32afe55dc06d4e92f70e256ae1d6c9f0c.png",
+            "logo": false
+          },
+          "age": "November 23, 2021"
+        },
+        {
+          "title": "Verwenden von Leap Motion und Ultraleap - MRTK 2 | Microsoft Learn",
+          "url": "https://learn.microsoft.com/de-de/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Wenn MRTK in einer Unity-Szene und der Leap Motion-Datenanbieter als Eingabedatenanbieter im Eingabesystemprofil hinzugef\u00fcgt wurde, erstellen Sie ein leeres Spielobjekt, und f\u00fcgen Sie das folgende Beispielskript an.",
+          "profile": {
+            "name": "Microsoft Learn",
+            "url": "https://learn.microsoft.com/de-de/windows/mixed-reality/mrtk-unity/mrtk2/supported-devices/leap-motion-mrtk?view=mrtkunity-2022-05",
+            "long_name": "learn.microsoft.com",
+            "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
+          },
+          "language": "de",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "learn.microsoft.com",
+            "hostname": "learn.microsoft.com",
+            "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
+            "path": "\u203a de-de  \u203a windows  \u203a mixed-reality  \u203a mrtk-unity  \u203a mrtk2  \u203a supported-devices  \u203a leap-motion-mrtk"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
+            "original": "https://learn.microsoft.com/en-us/media/open-graph-image.png",
+            "logo": false
           }
         }
       ],
@@ -726,7 +708,7 @@
     }
   },
   "repo": {
-    "error": "name 'subprocess' is not defined"
+    "results": []
   },
-  "timestamp": "2026-01-10T10:47:08.779612"
+  "timestamp": "2026-01-10T11:37:48.331413"
 }

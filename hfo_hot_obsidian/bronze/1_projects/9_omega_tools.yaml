@@ -2,8 +2,8 @@
 id: P9
 name: Mission Thread Omega: Total Tool Virtualization
 mission_thread: Omega
-status: "active (Forensic V12.3 Recovery: 2026-01-10T03:35:00Z)"
-version: "V14"
+status: "active (SNN Hardening: 2026-01-10T19:15:00Z)"
+version: "V36"
 tasks:
   - id: P9.1
     title: Tool Onboarding: MediaPipe
@@ -21,6 +21,10 @@ tasks:
     title: Tool Onboarding: Media Pipe Gestures
     description: Implement pinch, fist, and open hand detection.
     status: completed
+  - id: P9.5
+    title: "Identity Security: SNN Refactor"
+    description: Replace Bipartite Solver with Sticky Nearest Neighbor for multi-hand stability.
+    status: completed
   - id: P9.10
     title: State-Action Gap Analysis
     description: Mapping current repository state to ideal V10 target.
@@ -29,19 +33,7 @@ tasks:
     title: Tool Onboarding: Rapier
     description: Initialize Rapier WASM physics.
     status: in-progress
-  - id: P9.6
-    title: Tool Onboarding: Show UI
-  - id: P9.9
-    title: Tool Onboarding: LILGUI
-    description: Implement LILGUI for real-time parameter tuning.
-    status: completed
-    description: Implement Show UI scripts for visual feedback.
-    status: completed
-  - id: P9.7
-    title: Tool Onboarding: Excalidraw
-    description: Integrate Excalidraw as a virtualized tool.
-    status: completed
-  - id: P9.8
-    title: Tool Onboarding: Piano Genie
-    description: Integrate Piano Genie as a virtualized tool.
-    status: completed
+  - id: P9.11
+    title: "UI Focus & Kinetic Feedback"
+    description: Refine focus logic and haptic/visual feedback loops in V36.
+    status: in-progress

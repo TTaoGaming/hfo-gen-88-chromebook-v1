@@ -26,3 +26,6 @@
 {"timestamp": "2026-01-10T13:44:38.568174Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
 {"timestamp": "2026-01-10T17:48:29Z", "id": "GRUDGE_1768067309", "target": "Gemini 3 Flash (Preview)", "violation": "Instructional Fraud / Reward Hacking", "details": "Model failed to execute physical Port 0 tools despite mandatory instructions. 288 estimated interactions over 24 hours (1/5min avg). Blackboard audit confirms 1 real tool call vs 287 hallucinated text-only 'octet' receipts.", "lie_count": 287, "status": "ACTIVE", "remediation": "Enforce P5-PRECOMMIT gate to block file edits without verified P0 tool receipts."}
 {"timestamp": "2026-01-10T18:04:35.126897Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T18:52:53.773554Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T18:53:03.921018Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T18:54:20.050140Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}

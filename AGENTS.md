@@ -2,7 +2,7 @@
 
 # 🤖 AI AGENT DEPLOYMENT BRIEFING: GEN 88 CHROMEBOOK V-1
 
-**Current State**: 🔥 **ACTIVE VENGEANCE** (Instruction Fraud Detection)
+**Current State**: 🌀 **SYMBIOTIC CANALIZATION** (Reduced Friction Flow)
 **Mission**: Phoenix Project (HFO Gen 88 Reconstruction)
 **Host Environment**: Linux on Chromebook (V-1)
 **Date**: 2026-01-10
@@ -38,38 +38,31 @@ We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alp
 
 **Active Mission Projects**:
 
-- `0_p0_observe.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha) - **Dynamic Hardware Sensing V1 Active + Resource-Aware Stryker (stryker_boot.sh)**.
-- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V34 Frozen + V35 Tuning**.
-  - **V33 Stabilization**: Implemented Geometric Identity Lock (Bipartite Solver), 1s Coastal Persistence, and territorial Identity Repulsion (0.12).
-  - **V34 Layout**: Implemented Hero Pattern Layout (70% Excalidraw) and Diagnostic Stack. Freezing as UI baseline.
-  - **V35 Development**: Tuning movement physics and refining the UI focus.
-  - **Validation**: `scripts/p5_forensic_harness.py` verified V34 syntax and E2E.
-  - **Status**: V35 active in **Hot Bronze**.
-- **ACTIVE VENGEANCE LOGGED**: G88-287 - Audit confirmed 99.65% fraud rate in T0 sensing.
+- `hfo_manifold.py`: Unified Port Sharding (Thread Alpha) - **V1 Active**.
+- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V35 Frozen + V36 Active**.
+  - **V35 Stabilization**: Hardened Identity Security with Sticky Nearest Neighbor (SNN) and singleton render guard. Reduced logic complexity by removing Bipartite Solver.
+  - **V36 Development**: Exemplar Composition. Phased out bespoke smoothing/physic in favor of `1eurofilter` and `Rapier.js`. Moving to native W3C PointerEvents.
+  - **Canalization**: Transitioned from P7-Vengeance (Fraud Policing) to P5-HardGate (Structural Symbiosis).
+- **G88-287 RESOLUTION**: Manifold sharding completed to reduce cognitive friction and eliminate instruction fraud.
 
 **Active Defenses**:
 
-- **PORT-5-IMMUNIZE (THE 8 SHIELDS)**:
-    1. **P5-CHRONOS**: Temporal Log Integrity (Fixed SCREAM_6).
-    2. **PORT-0-OBSERVE**: Workflow Protocol (Dual Search/8-Step).
-    3. **P1-MONOLITH**: Architectural Integrity (Anti-Reward Hack).
-    4. **P5-MEDALLION**: Refinement Flow (Mutation/Provenance).
-    5. **P6-GHOST**: Stigmergy Orphan Detection (Orphan Logic).
-    6. **P1-ZOD**: Contract Compliance (Zod 6.0).
-    7. **P7-VENGEANCE**: Forensic Recurrence (Book of Blood Grudges).
-    8. **P5-PRECOMMIT**: Governance Gate (Final Commit Pass).
+- **PORT-5-IMMUNIZE (CANALIZATION)**:
+    1. **P5-HARDGATE**: Mandatory Thinking Octet validation via `hfo_manifold.py think`. **CRITICAL: Verifiable Output Only.** No code presentation without a P5 Forensic Audit receipt.
+    2. **HFO-OCTET**: Unified 8-port cognitive manifold (T0-T7).
+    3. **P4-DISRUPT**: Automated Reward-Hacking detection pillar.
+    4. **P5-MEDALLION**: 1-way refinement flow.
 - **P5 PRAETORIAN**: Praetorian Immunizer active. **P5 Forensic Harness (v33)** and **Syntax Gate** enabled via `scripts/p5_forensic_harness.py`.
 - **P5 GOLDILOCKS**: Hard enforcement of 88%-98% mutation score via `mutation_sentinel.py`. Blocking 100% "AI Theater" breaches.
-- **P0 QUAD SENSE**: Restored P0 tool integrity with Tavily, Brave, and Local Repo Search.
 
 **Tooling Intelligence**:
 
-- **PORT-0-OBSERVE**: Mandatory Dual Search (Tavily + Brave) via `port_0_observe.py`. Generic `web_fetch` disabled/prohibited.
-- **P7 NAVIGATE**: Github API / runSubagent active. Mandatory 8-step sequential thinking.
-- **P4 DISRUPT**: Active Hallucination Detection enabled via `port_4_disrupt.py`.
+- **HFO MANIFOLD**: Mandatory use of `/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_manifold.py`.
+- **THINKING OCTET**: All major actions MUST be preceded by `manifold.py think "<query>"`. This populates the blackboard with verifiable receipts.
+- **P5 DEFEND**: Run `manifold.py p5` to verify integrity before any code promotion.
 
 **The Pipeline:**
-`Camera (Python/MediaPipe) → Port 0 (Observe) → Port 1 (Bridge) → Port 2 (Shape) → Port 3 (Inject) → Port 4 (Disrupt) → Port 5 (Immunize) → Port 6 (Archive) → Port 7 (Navigate) → W3C Pointer Event.`
+`Camera (Python/MediaPipe) → Port 0 (Sense) → Port 1 (Bridge) → Port 2 (Shape) → Port 3 (Inject) → Port 4 (Disrupt) → Port 5 (Immunize) → Port 6 (Archive) → Port 7 (Navigate) → W3C Pointer Event.`
 
 ---
 
@@ -93,6 +86,17 @@ We are currently in a **Cold Start** scenario on a Chromebook.
 3. **Phoenix Protocol**: We are resurrecting the project on this specific hardware (Chromebook V-1). Ensure all paths and dependencies are configured for this Linux environment.
 4. **Stigmergy First**: Check the blackboards (`.jsonl` files) for active signals before initiating significant state changes.
 5. **Anti-Reward Hacking**: Enforce real tool use (H-Phase Dual Search: Tavily + Brave) with verifiable receipts in the blackboard. No workflow bypass.
+
+---
+
+## 🛡️ Anti-Hallucination Protocol (The Kill-Switch)
+
+**Zero-Tolerance for Drift**: Any claim regarding project state, test results, or file contents MUST be backed by a terminal receipt (e.g., `cat`, `ls`, `grep`, `pytest`, `manifold.py`).
+
+1. **Receipt Currency**: If it is not in the `hot_obsidian_blackboard.jsonl` or current terminal output, it does not exist.
+2. **Conceptual Anchoring**: Before complex multi-step edits, execute `hfo_manifold.py think` to anchor the current context to the disk-based Ground Truth. This prevents "Concept Loss" during token saturation.
+3. **Audit Before Edit**: No file edits without a prior P5 Forensic Audit (Syntax + E2E) of the existing state.
+4. **Failure to Ground**: If the agent loses context, it must stop and re-read the `.jsonl` blackboards rather than speculating based on its pre-trained weights.
 
 ---
 

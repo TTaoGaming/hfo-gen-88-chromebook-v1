@@ -31,3 +31,8 @@ repos:
     entry: python3 hfo_hot_obsidian/bronze/2_areas/p5_defend/medallion_guard.py
     language: python
     files: ^(hfo_cold_obsidian|hfo_hot_obsidian/silver|hfo_hot_obsidian/gold)/.*$
+  - id: hfo-manifold-hardgate
+    name: HFO P5 HardGate Manifold Check
+    entry: python3 hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_manifold.py p5
+    language: python
+    always_run: true

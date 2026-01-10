@@ -6,7 +6,7 @@ import { test, expect } from './hfo_fixtures';
  * Verifies that the FSM stays in COMMITTED during tracking loss for up to 1000ms.
  */
 test('V33: 1s Persistence (Sticky Drag) during Tracking Loss', async ({ hfoPage }) => {
-  const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v33.html';
+  const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v36.html';
   await hfoPage.goto(url);
 
   // 1. Initialize

@@ -7,7 +7,7 @@ import { test, expect } from './hfo_fixtures';
  */
 test('V30 E2E: Simulate Gesture-to-Click on Tool Menu', async ({ hfoPage }) => {
   // 1. Load the workspace
-  const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v33.html';
+  const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v36.html';
   await hfoPage.goto(url);
 
   // 1.5 Manually trigger physics
@@ -72,7 +72,7 @@ test('V30 E2E: Simulate Gesture-to-Click on Tool Menu', async ({ hfoPage }) => {
 });
 
 test('V30 E2E: Structural Check for Same-Origin Drill', async ({ hfoPage }) => {
-  const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v33.html';
+  const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v36.html';
   await hfoPage.goto(url);
 
   // Verify that we can read internal document properties (Requires Same-Origin)
