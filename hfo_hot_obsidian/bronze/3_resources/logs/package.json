@@ -11,6 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
+    "@stryker-mutator/core": "^9.4.0",
+    "@stryker-mutator/typescript-checker": "^9.4.0",
     "@types/node": "^25.0.5",
     "husky": "^9.1.7"
   },

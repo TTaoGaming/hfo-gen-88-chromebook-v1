@@ -33,9 +33,8 @@ We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alp
 **Active Mission Projects**:
 - `0_p0_observe.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha).
 - `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V14 Pending**.
-    - **V17 Finalized**: Dual-anchor Matter.js physics (snappy/smooth) + Refined tuning (0.2/0.1).
-    - **V18 Refactored**: 5-Cursor UI Panel (Raw, Smooth, Snappy, Spring, Pred). Grid-responsive data cards.
-    - **Status**: [omega_v17_finalize_receipt.json](hfo_hot_obsidian/bronze/3_resources/receipts/omega_v17_finalize_receipt.json) active. Physics cursor project hardened at Bronze. v18 UI upgrade complete.
+    - **V12 Vertical Slice**: MediaPipe Tasks (Restored UMD) + One Euro Filters + W3C Dispatch.
+    - **Status**: [Forensic Analysis V12.3](hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/forensics/forensic_analysis_v12_3.md) active. Path back to stable UMD achieved.
 
 **Active Defenses**:
 - **PORT-5-IMMUNIZE (THE 8 SHIELDS)**:
@@ -48,6 +47,8 @@ We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alp
     7. **P7-VENGEANCE**: Forensic Recurrence (Book of Blood Grudges).
     8. **P5-PRECOMMIT**: Governance Gate (Final Commit Pass).
 - **P5 PRAETORIAN**: Praetorian Immunizer active at [hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/p5_praetorian.py](hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/p5_praetorian.py).
+- **P5 GOLDILOCKS**: Hard enforcement of 88%-98% mutation score via `mutation_sentinel.py`. Blocking 100% "AI Theater" breaches.
+- **P0 QUAD SENSE**: Restored P0 tool integrity with Tavily, Brave, and Local Repo Search.
 
 **Tooling Intelligence**:
 - **PORT-0-OBSERVE**: Mandatory Dual Search (Tavily + Brave) via `port_0_observe.py`. Generic `web_fetch` disabled/prohibited.

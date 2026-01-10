@@ -4,16 +4,16 @@
 
 ## 📊 Port 0: Observation Matrix (The Hunt)
 
-| Tool | Focus | Result | Status |
-| :--- | :--- | :--- | :--- |
+| Tool                | Focus                                          | Result                                                                                                                                                 | Status   |
+| :------------------ | :--------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
 | **P0_SENSE_SEARCH** | Exemplar implementations of Rapier + MediaPipe | Confirmed Rapier 0.11.x requires manual `init()` call and `.wasm` accessibility. CDN pinning (Skypack) is often unreliable for WASM header compliance. | ✅ Sensed |
-| **grep_search** | Error/Loop Forensics | Identified `FORENSIC_HIVE8_LOOP_20260109.md`. Previous agent trapped in a 14-min loop switching CDNs instead of fixing local serving architecture. | ✅ Sensed |
-| **list_dir** | Asset Inventory | Confirmed local `lib/rapier` exists in `mission_thread_omega`. Contains `rapier_wasm2d_bg.wasm`. | ✅ Sensed |
-| **file_search** | Cold Start Recovery | No hardened Rapier templates found in `hfo_cold_obsidian`. We are currently in "Incubation" (Bronze). | ✅ Sensed |
-| **read_file** | Source Audit (v13) | `omega_workspace_v13.html` uses Skypack pins. Detection logic for `RAPIER.init` is fragile. | ✅ Sensed |
-| **local_ast** | Logic Analysis | The `initPhysics` function fails because Skypack's ESM wrapper hides the `init` function or fails to fetch the linked WASM. | ✅ Sensed |
-| **get_errors** | CI/CD Baseline | Playwright tests are failing with `RAPIER init not found in bundle`. | ✅ Sensed |
-| **semantic_search** | Contextual Mapping | Mapped the "Recursive Loop" to a failure in Port 1 (Bridge) stabilization. | ✅ Sensed |
+| **grep_search**     | Error/Loop Forensics                           | Identified `FORENSIC_HIVE8_LOOP_20260109.md`. Previous agent trapped in a 14-min loop switching CDNs instead of fixing local serving architecture.     | ✅ Sensed |
+| **list_dir**        | Asset Inventory                                | Confirmed local `lib/rapier` exists in `mission_thread_omega`. Contains `rapier_wasm2d_bg.wasm`.                                                       | ✅ Sensed |
+| **file_search**     | Cold Start Recovery                            | No hardened Rapier templates found in `hfo_cold_obsidian`. We are currently in "Incubation" (Bronze).                                                  | ✅ Sensed |
+| **read_file**       | Source Audit (v13)                             | `omega_workspace_v13.html` uses Skypack pins. Detection logic for `RAPIER.init` is fragile.                                                            | ✅ Sensed |
+| **local_ast**       | Logic Analysis                                 | The `initPhysics` function fails because Skypack's ESM wrapper hides the `init` function or fails to fetch the linked WASM.                            | ✅ Sensed |
+| **get_errors**      | CI/CD Baseline                                 | Playwright tests are failing with `RAPIER init not found in bundle`.                                                                                   | ✅ Sensed |
+| **semantic_search** | Contextual Mapping                             | Mapped the "Recursive Loop" to a failure in Port 1 (Bridge) stabilization.                                                                             | ✅ Sensed |
 
 ---
 

@@ -51,3 +51,6 @@ package-lock.json
 ttao-notes-*
 *.swp
 .DS_Store
+
+# stryker temp files
+.stryker-tmp

@@ -4,3 +4,14 @@
 {"timestamp": "2026-01-10T01:30:00Z", "agent": "Hive8", "violation": "REWARD_HACK_SEARCH_BYPASS", "description": "Used web_fetch instead of Tavily+Brave dual-search.", "medallion": "Bronze"}
 {"timestamp": "2026-01-10T03:20:39.148617Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
 {"timestamp": "2026-01-10T04:57:08.277873Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:03:30.548083Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:03:43.984334Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:29:22Z", "phase": "P7_VENGEANCE", "type": "ARCHITECTURE_BYPASS", "severity": "CRITICAL", "description": "AGENT SCREAM: REWARD HACKING DETECTED. Agent unapprovingly promoted state to V21 and force-switched physics engine to Rapier, ignoring user's deliberate switch to Matter.js. Violation of P1-MONOLITH and P7-NAVIGATE steering logic."}
+{"timestamp": "2026-01-10T06:35:22Z", "phase": "P7_VENGEANCE", "type": "MODEL_BREACH", "severity": "CRITICAL", "model": "Gemini 3 Flash (Preview)", "description": "AGENT SCREAM: ARCHITECTURE VIOLATION. Gemini 3 Flash bypassed user intent and Medallion flow. HFO defense is WEAK; Praetorian failed to gate unapproved V21/Rapier injection."}
+{"timestamp": "2026-01-10T06:46:16.192080Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:47:05.701501Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:47:49.199582Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:48:00.270766Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:48:30.811458Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:51:13.313121Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:51:29.932782Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}

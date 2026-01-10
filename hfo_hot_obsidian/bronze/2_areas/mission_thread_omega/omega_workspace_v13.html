@@ -202,10 +202,10 @@
         // 🏗️ Step 1: Initialize Rapier
         const initPhysics = async () => {
             console.log('RAPIER Namespace Keys:', Object.keys(RAPIER));
-            
+
             // Rapier 0.11.x uses .init() as the WASM loader
             const init = RAPIER.init || (RAPIER.default && RAPIER.default.init) || RAPIER.default;
-            
+
             if (typeof init !== 'function') {
                 console.error('Could not find init function. Keys:', Object.keys(RAPIER));
                 throw new Error('RAPIER init not found in bundle');
@@ -216,7 +216,7 @@
 
             // Initialize World FIRST
             state.world = new RAPIER_INST.World({ x: 0.0, y: 0.0 });
-            
+
             // 1. Spring Cursor (Dynamic Body)
             const springDesc = RAPIER_INST.RigidBodyDesc.dynamic()
                 .setTranslation(0.5, 0.5)
@@ -228,7 +228,7 @@
             const predDesc = RAPIER_INST.RigidBodyDesc.kinematicPositionBased()
                 .setTranslation(0.5, 0.5);
             state.cursors.predictive.body = state.world.createRigidBody(predDesc);
-            
+
             console.log("Rapier Physics Ensemble Hardened");
         };
 
@@ -243,7 +243,7 @@
             const canvas = document.createElement('canvas');
             container.appendChild(canvas);
             const ctx = canvas.getContext('2d');
-            
+
             const drawingUtils = new DrawingUtils(ctx);
 
             const visionTasks = await FilesetResolver.forVisionTasks(
@@ -266,12 +266,12 @@
             const render = () => {
                 const now = performance.now();
                 if (now === lastTime) { requestAnimationFrame(render); return; }
-                
+
                 if (state.active && video.readyState >= 2) {
                     const results = gestureRecognizer.recognizeForVideo(video, now);
-                    
+
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
+
                     if (results.landmarks && results.landmarks.length > 0) {
                         results.landmarks.forEach((landmarks, index) => {
                             if (state.debug) {
@@ -294,7 +294,7 @@
                                 const sBody = state.cursors.spring.body;
                                 const sPos = sBody.translation();
                                 const sVel = sBody.linvel();
-                                
+
                                 const force = {
                                     x: k * (tip.x - sPos.x) - d * sVel.x,
                                     y: k * (tip.y - sPos.y) - d * sVel.y
@@ -305,10 +305,10 @@
                                 const pBody = state.cursors.predictive.body;
                                 const lastTip = state.cursors.predictive.lastTip || tip;
                                 const dt = (now - (state.cursors.predictive.lastTime || now)) / 1000 || 0.016;
-                                
+
                                 const vx = (tip.x - lastTip.x) / dt;
                                 const vy = (tip.y - lastTip.y) / dt;
-                                
+
                                 const lookahead = 0.04; // 40ms prediction
                                 state.cursors.predictive.x = tip.x + vx * lookahead;
                                 state.cursors.predictive.y = tip.y + vy * lookahead;
@@ -346,7 +346,7 @@
                         });
                     }
                 }
-                
+
                 lastTime = now;
                 requestAnimationFrame(render);
             };
@@ -431,8 +431,8 @@
         const initSettings = (container) => {
             const gui = new GUI({ container, autoPlace: false });
             const mp = gui.addFolder('MediaPipe Tasks');
-            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({minHandDetectionConfidence: v}));
-            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({minHandPresenceConfidence: v}));
+            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({ minHandDetectionConfidence: v }));
+            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({ minHandPresenceConfidence: v }));
             mp.add(state, 'debug').name('Show Mesh');
             mp.open();
 
@@ -468,7 +468,7 @@
         layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
         layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
         layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
-        
+
         // Initialize Core Engines
         console.log("Starting Initialization...");
         initPhysics().then(() => {
@@ -478,7 +478,7 @@
             console.error("CRITICAL INIT FAILURE:", err);
             document.body.innerHTML = `<div style="color:red; padding:20px;"><h1>Critical Initialization Failure</h1><pre>${err.stack}</pre></div>`;
         });
-        
+
         window.addEventListener('resize', () => layout.updateSize());
     </script>
 </body>

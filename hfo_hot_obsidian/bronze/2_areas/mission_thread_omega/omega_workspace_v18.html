@@ -207,7 +207,7 @@
         let engine, runner;
         const initPhysics = () => {
             const { Engine, Bodies, Composite, Constraint, Runner } = Matter;
-            
+
             engine = Engine.create();
             engine.gravity.scale = 0; // No gravity for 2D UI cursors
 
@@ -226,8 +226,8 @@
             state.cursors.predictive.body = Bodies.circle(0.5, 0.5, 10, { isStatic: true });
 
             Composite.add(engine.world, [
-                state.cursors.spring.anchor, 
-                state.cursors.spring.body, 
+                state.cursors.spring.anchor,
+                state.cursors.spring.body,
                 state.cursors.spring.constraint,
                 state.cursors.predictive.body
             ]);
@@ -249,7 +249,7 @@
             const canvas = document.createElement('canvas');
             container.appendChild(canvas);
             const ctx = canvas.getContext('2d');
-            
+
             const drawingUtils = new DrawingUtils(ctx);
 
             const visionTasks = await FilesetResolver.forVisionTasks(
@@ -272,12 +272,12 @@
             const render = () => {
                 const now = performance.now();
                 if (now === lastTime) { requestAnimationFrame(render); return; }
-                
+
                 if (state.active && video.readyState >= 2) {
                     const results = gestureRecognizer.recognizeForVideo(video, now);
-                    
+
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
+
                     if (results.landmarks && results.landmarks.length > 0) {
                         results.landmarks.forEach((landmarks, index) => {
                             if (state.debug) {
@@ -287,7 +287,7 @@
 
                             // 🎯 Focus on Index Tip (8)
                             const tip = landmarks[8];
-                            
+
                             state.cursors.raw.x = tip.x;
                             state.cursors.raw.y = tip.y;
 
@@ -341,7 +341,7 @@
                                 ctx.strokeStyle = state.gestures.isDown ? '#fff' : 'transparent';
                                 ctx.lineWidth = 4;
                                 ctx.stroke();
-                                
+
                                 // Label
                                 ctx.fillStyle = '#fff';
                                 ctx.font = '12px Courier';
@@ -350,7 +350,7 @@
                         });
                     }
                 }
-                
+
                 lastTime = now;
                 requestAnimationFrame(render);
             };
@@ -442,7 +442,7 @@
 
         const initSettings = (container) => {
             const gui = new GUI({ container, autoPlace: false });
-            
+
             const phys = gui.addFolder('Matter.js Dynamics');
             phys.add(state.physics, 'springSource', ['snappy', 'smooth']).name('Spring Anchor');
             phys.add(state.physics, 'predSource', ['snappy', 'smooth']).name('Pred Anchor');
@@ -452,8 +452,8 @@
             phys.open();
 
             const mp = gui.addFolder('MediaPipe Tasks');
-            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({minHandDetectionConfidence: v}));
-            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({minHandPresenceConfidence: v}));
+            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({ minHandDetectionConfidence: v }));
+            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({ minHandPresenceConfidence: v }));
             mp.add(state, 'debug').name('Show Mesh');
             mp.open();
 
@@ -484,7 +484,7 @@
         layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
         layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
         layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
-        
+
         layout.loadLayout(config);
         window.addEventListener('resize', () => layout.updateSize());
     </script>

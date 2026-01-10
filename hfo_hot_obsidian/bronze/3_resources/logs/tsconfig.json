@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "CommonJS",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true
+    },
+    "include": [
+        "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/lib/math_utils.ts",
+        "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/tests/math.test.ts"
+    ]
+}

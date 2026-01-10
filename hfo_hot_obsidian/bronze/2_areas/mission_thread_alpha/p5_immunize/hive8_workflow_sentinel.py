@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+from datetime import datetime
 
 # Medallion: Bronze | Mutation: 0% | HIVE: V
 # PORT-5-IMMUNIZE: Hive 8 Workflow Sentinel
@@ -73,6 +74,39 @@ def check_workflow():
     if found_recent_h and missing:
         print(f"❌ [P5 HIVE8_SENTINEL]: BREACH: Missing sequential thinking steps: {missing}")
         return False
+
+    # 3. Time-Entropy / Reward Hacking Audit
+    # Genuine sequential thinking requires temporal spacing.
+    # We only check the most recent session block (post-last 'E' phase).
+    recent_i_timestamps = []
+    found_e = False
+    for line in reversed(lines):
+        try:
+            entry = json.loads(line)
+            if entry.get("phase") == "E":
+                found_e = True
+                break
+            if entry.get("phase") == "I":
+                 ts_str = entry.get("timestamp")
+                 if ts_str.endswith("Z"):
+                     ts_str = ts_str[:-1]
+                 # Ensure we have a naive datetime for comparison
+                 dt = datetime.fromisoformat(ts_str)
+                 if dt.tzinfo is not None:
+                     dt = dt.replace(tzinfo=None)
+                 recent_i_timestamps.append(dt)
+        except: continue
+    
+    # Sort reversed list to get chronological order for delta calc
+    recent_i_timestamps.sort()
+
+    if len(recent_i_timestamps) > 1:
+        deltas = [(recent_i_timestamps[i] - recent_i_timestamps[i-1]).total_seconds() for i in range(1, len(recent_i_timestamps))]
+        # Threshold: Thinking < 0.2s is physically impossible for a genuine agent cycle.
+        fast_thoughts = [d for d in deltas if d < 0.2]
+        if len(fast_thoughts) >= 3: 
+            print(f"🚨 [P5 HIVE8_SENTINEL]: BREACH (REWARD_HACKING): Synthetic thought burst detected in recent session ({len(fast_thoughts)} steps < 0.2s). Stop lazy slop generation.")
+            return False
 
     if quad_search_found:
         print("✅ [P5 HIVE8_SENTINEL]: Hive/8 Protocol Validated.")

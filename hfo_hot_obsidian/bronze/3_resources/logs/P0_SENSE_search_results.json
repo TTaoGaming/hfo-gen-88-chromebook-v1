@@ -1,0 +1,801 @@
+{
+  "query": "middleware for AI agent tool execution hard gating wrapping VS Code AI tools with workflow validation",
+  "tavily": {
+    "query": "middleware for AI agent tool execution hard gating wrapping VS Code AI tools with workflow validation",
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://learn.microsoft.com/en-us/agent-framework/user-guide/agents/agent-middleware",
+        "title": "Agent Middleware | Microsoft Learn",
+        "content": "```\nfrom agent_framework import ChatMiddleware, ChatContext class LoggingChatMiddleware(ChatMiddleware): \"\"\"Chat middleware that logs AI interactions.\"\"\" async def process( self, context: ChatContext, next: Callable, ) -> None: # Pre-processing: Log before AI call print(f\"[Chat Class] Sending {len(context.messages)} messages to AI\") # Continue to next middleware or AI service await next(context) # Post-processing: Log after AI response print(\"[Chat Class] AI response received\") \n```\n\n## Middleware Registration\n\nMiddleware can be registered at two levels with different scopes and behaviors.\n\n### Agent-Level vs Run-Level Middleware [...] ```\nasync def blocking_middleware( context: AgentRunContext, next: Callable, ) -> None: \"\"\"Middleware that blocks execution based on conditions.\"\"\" # Check for blocked content last_message = context.messages[-1] if context.messages else None if last_message and last_message.text: if \"blocked\" in last_message.text.lower(): print(\"Request blocked by middleware\") context.terminate = True return # If no issues, continue normally await next(context) \n```\n\nWhat termination means:\n\n Setting `context.terminate = True` signals that processing should stop\n You can provide a custom result before terminating to give users feedback\n The agent execution is completely skipped when middleware terminates\n\n## Middleware Result Override [...] from agent_framework.azure import AzureAIAgentClient from azure.identity.aio import AzureCliCredential # Agent-level middleware: Applied to ALL runs of the agent async with AzureAIAgentClient(async_credential=credential).create_agent( name=\"WeatherAgent\", instructions=\"You are a helpful weather assistant.\", tools=get_weather, middleware=[ SecurityAgentMiddleware(), # Applies to all runs TimingFunctionMiddleware(), # Applies to all runs ], ) as agent: # This run uses agent-level middleware only result1 = await agent.run(\"What's the weather in Seattle?\") # This run uses agent-level + run-level middleware result2 = await agent.run( \"What's the weather in Portland?\", middleware=[ # Run-level middleware (this run only) logging_chat_middleware, ] ) # This run uses agent-level middleware only",
+        "score": 0.99969935,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.linkedin.com/posts/christian-bromann_langchain-ai-agents-activity-7378801556726595584-HeY5",
+        "title": "Built an AI agent with LangChain v1 middleware in 150 lines of code",
+        "content": "I built an AI agent in ~150 lines of code that asks questions, executes actions, and validates results\u2014all with human oversight baked in. Here's how LangChain v1's middleware made it surprisingly simple \ud83e\udd2f I stumbled on a great thread by @arafatkatze about how AI agents really just operate in 3 states ( \ud83e\udd14 Need to ASK something \u26a1 Need to DO something \u2705 Ready to SHOW results Simple, right? So I thought: \"How would this look with LangChain v1 alpha's new middleware?\" Turns out, middleware is perfect for this. Instead of building complex routing logic, I just: 1\ufe0f\u20e3 Defined my tools - reading files, searching code, asking questions, showing results 2\ufe0f\u20e3 Injected them via middleware - one clean array, no manual wiring 3\ufe0f\u20e3 Used lifecycle hooks - modifyModelRequest builds the system prompt [...] I built an AI agent in ~150 lines of code that asks questions, executes actions, and validates results\u2014all with human oversight baked in. Here's how LangChain v1's middleware made it surprisingly simple \ud83e\udd2f I stumbled on a great thread by @arafatkatze about how AI agents really just operate in 3 states ( \ud83e\udd14 Need to ASK something \u26a1 Need to DO something \u2705 Ready to SHOW results Simple, right? So I thought: \"How would this look with LangChain v1 alpha's new middleware?\" Turns out, middleware is perfect for this. Instead of building complex routing logic, I just: 1\ufe0f\u20e3 Defined my tools - reading files, searching code, asking questions, showing results 2\ufe0f\u20e3 Injected them via middleware - one clean array, no manual wiring 3\ufe0f\u20e3 Used lifecycle hooks - modifyModelRequest builds the system prompt [...] model responds - add guardrails, trigger human review, log decisions for compliance. You can tweak the actual API call - swap tools, adjust prompts, modify messages right before they're sent. The real power is chaining these together. One middleware handles user authentication, another adds conversation history, a third implements your custom business rules. They all work independently without stepping on each other. What I love about this approach is how much custom logic it eliminates. Instead of writing dozens of wrapper functions and state management code, you just plug in middleware components. All that boilerplate I was building to handle context switching and validation? Gone. I've been testing it with automatic conversation summarization and prompt caching alongside my custom",
+        "score": 0.9991573,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=fJ9o0EPXdHk",
+        "title": "LangChain 1.0 Unpacked \u2013 Build AI Agents with the New ... - YouTube",
+        "content": "thing and uh this is pre preselect like standardized format of human loop and this should be familiar to you right but it's very simple right now it's everything the complexities hidden inside the human in loop middleware. So what we are going to do here, we are allowing to either approve this tool, edit it or reject it. The rest happens automatically. And you probably should be aware that when you approve the tool, you just allow the tool to be executed. When you reject, you can reject it and provide maybe additional note if you want or feedback why you don't want this tool to be executed. Or you can even edit the parameters of the tool and then run it but with some list of parameters. But from now on it's everything clear. It's hidden. The complexity is hidden inside this human in [...] It's hidden. The complexity is hidden inside this human in middleware. And practically that's that's the whole point in and this our financial advisor a agent right and we're going to ask it the financial questions about some test stocks as usual. But if we compile run it let's take a look how okay look at that it's different right now. Okay we see immediately that this hook was added or middleware sorry it's middleware right now. So this middleware was added. It's after the model as this one says and we immediately can see it in our diagram. So what's happening here? We have a start goes to model. If model decides to make a tool call, it goes to this after model for human inter middleware. It checks if this is a tool call and this tool call should be protected. Then it performs some [...] This episode shows how middleware fits into real workflows for AI agents\u2014whether you're learning how to create AI agents, how to build them, or how to make autonomous AI agents behave safely with tools and Human-in-the-Loop checkpoints. If you're exploring LangChain, LangGraph, reAct architecture, or just want a straightforward langchain tutorial or ai agent tutorial, this will help you understand what\u2019s new and why it matters.\n\nI get it\u2014tech content takes time to research, code, and polish. If my videos have helped you save time, avoid headaches, or just made debugging less painful, a coffee would be highly appreciated! \n\n\ud83d\udd17 Related Videos\n\n\u25b6\ufe0f 17. LangGraph Advanced \u2013 Standardize Human in the Loop Workflows in AI Agents with Unified HITL Format\n\n\ud83c\udf1f Related Courses & Tutorials",
+        "score": 0.99871576,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.linkedin.com/posts/dhanushkumar-r-datascience_unlocking-the-power-of-langchain-agent-middleware-activity-7394952956514791425-94d7",
+        "title": "LangChain's middleware for AI agents: a game changer - LinkedIn",
+        "content": "is now durable with automatic checkpointing. \u2022 I can pause execution, inspect state, or even \u201ctime travel\u201d to debug past steps that\u2019s a big leap forward. \u2022 Seeing how companies like Uber and LinkedIn are already using it in production makes it even more exciting. 3. Middleware System \u2013 Total Control \u2022 LangChain now gives fine-grained hooks to control everything before and after model calls. \u2022 I\u2019ve tested middleware for caching, approval workflows, and summarization all reusable, neat, and efficient. 4. Structured Outputs -Built In \u2022 Previously, getting structured responses from LLMs required multiple calls or extra logic. \u2022 Now it\u2019s native. You can bind schemas using Pydantic or JSON, making agents faster and more reliable. 5. Standard Content Blocks \u2022 A single message format now supports [...] # LangChain's middleware for AI agents: a game changer\n\nThis title was summarized by AI from the post below.\n\nDhanushkumar R\n\n Report this post\n\nLangChain\u2019s agent framework is one of the most powerful ecosystems for building intelligent AI applications. However, what sets it apart is its middleware system \u2014 a flexible way to monitor, control, and enhance your agent\u2019s behavior. Whether you\u2019re building a complex multi-tool agent, managing privacy concerns, or just want to keep your context efficient, middleware is the toolkit you didn\u2019t know you needed. #langchain #middleware #aiagents #llm #genai\n\nUnlocking the Power of LangChain Agent Middleware   medium.com\n\nLike   Comment\n\nTo view or add a comment, sign in\n\n## More Relevant Posts\n\n Ashwini Dave\n\n  + Report this post [...] Dhanushkumar R   3mo\n\n## Explore related topics\n\n How to Build Agent Frameworks\n Multi Agent Frameworks for Software Development\n Building a Collaborative AI Agent Ecosystem\n Open Source Frameworks for Building Autonomous Agents\n Building Scalable Applications With AI Frameworks\n Essential Tools For Working With AI Frameworks\n How to Choose the Best AI Agent Framework\n RAG Framework and Tool Utilization in AI Agents\n Understanding the Enterprise AI Agent Ecosystem\n How AI Agents Transform Digital Ecosystems\n\n## Explore content categories\n\n Career\n Productivity\n Finance\n Soft Skills & Emotional Intelligence\n Project Management\n Education\n Technology\n Leadership\n Ecommerce\n User Experience\n\n## Sign in to view more content\n\nCreate your free account or sign in to continue your search",
+        "score": 0.99482024,
+        "raw_content": null
+      },
+      {
+        "url": "https://graphite.com/guides/integrating-ai-code-review-workflow",
+        "title": "Integrating AI into your code review workflow - Graphite",
+        "content": "### Adopting AI tools in your development workflow\n\nThis guide shows you how to effectively adopt AI tools in your development workflow with clear examp...\n\nLast modified9 months ago\n\n0min read\n\nOn this page\n\n Benefits of AI-assisted code review\n Embedding AI code review tools into development processes\n Combining AI with human reviewers\n Automating code review tasks in CI/CD pipelines\n Validating AI output\n Graphite's AI code review tool: Graphite Agent\n Conclusion\n\nShare\n\nGit inspired\n\nGraphite's CLI and VS Code extension make working with Git effortless.\n\nLearn more\n\n## Built for the world's fastest engineering teams, now available for everyone\n\nRequest a demo\n\nStart free trial",
+        "score": 0.993807,
+        "raw_content": null
+      }
+    ],
+    "response_time": 1.1,
+    "request_id": "06dc9d44-6959-46b0-bfeb-8153f9699963"
+  },
+  "brave": {
+    "query": {
+      "original": "middleware for AI agent tool execution hard gating wrapping VS Code AI tools with workflow validation",
+      "show_strict_warning": false,
+      "is_navigational": false,
+      "is_news_breaking": false,
+      "spellcheck_off": true,
+      "country": "us",
+      "bad_results": false,
+      "should_fallback": false,
+      "postal_code": "",
+      "city": "",
+      "header_country": "",
+      "more_results_available": true,
+      "state": ""
+    },
+    "mixed": {
+      "type": "mixed",
+      "main": [
+        {
+          "type": "web",
+          "index": 0,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 1,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 2,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 3,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 4,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 5,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 6,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 7,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 8,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 9,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 10,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 11,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 12,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 13,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 14,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 15,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 16,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 17,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 18,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 19,
+          "all": false
+        }
+      ],
+      "top": [],
+      "side": []
+    },
+    "type": "search",
+    "web": {
+      "type": "search",
+      "results": [
+        {
+          "title": "Top Agentic AI Tools for VS Code, According to Installs -- Visual Studio Magazine",
+          "url": "https://visualstudiomagazine.com/articles/2025/10/07/top-agentic-ai-tools-for-vs-code-according-to-installs.aspx",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>This tool takes the agentic concept and wraps it into a fully open-source framework, letting developers run customizable AI agents directly inside VS Code</strong>. It can operate as both a conversational assistant and a multi-step autonomous agent, ...",
+          "profile": {
+            "name": "Visual Studio Magazine",
+            "url": "https://visualstudiomagazine.com/articles/2025/10/07/top-agentic-ai-tools-for-vs-code-according-to-installs.aspx",
+            "long_name": "visualstudiomagazine.com",
+            "img": "https://imgs.search.brave.com/_vvQfh59oWk1hKP136sq6kKGRzOPQGNjWwPfPS1fECg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGU3ZTFjZGE2/MzY0ODRkNGE4ZDY2/OGY1ODQ5NzQwYmI2/NmUxZTI2YjM0NTBh/MmY0YzVmOWYxODA0/NzU5NzFkMC92aXN1/YWxzdHVkaW9tYWdh/emluZS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "visualstudiomagazine.com",
+            "hostname": "visualstudiomagazine.com",
+            "favicon": "https://imgs.search.brave.com/_vvQfh59oWk1hKP136sq6kKGRzOPQGNjWwPfPS1fECg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZGU3ZTFjZGE2/MzY0ODRkNGE4ZDY2/OGY1ODQ5NzQwYmI2/NmUxZTI2YjM0NTBh/MmY0YzVmOWYxODA0/NzU5NzFkMC92aXN1/YWxzdHVkaW9tYWdh/emluZS5jb20v",
+            "path": "\u203a articles  \u203a 2025  \u203a 10  \u203a 07  \u203a top-agentic-ai-tools-for-vs-code-according-to-installs.aspx"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/IwcQgJW1YMJ-zEVhCXor-zj2MokgbP4ICh8K7KboMRs/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly92aXN1/YWxzdHVkaW9tYWdh/emluZS5jb20vLS9t/ZWRpYS9FQ0cvdmlz/dWFsc3R1ZGlvbWFn/YXppbmUvSW1hZ2Vz/L2ludHJvaW1hZ2Vz/L1ZTX0NvZGVfRGV2/ZWxvcGVyXzIuanBn",
+            "original": "https://visualstudiomagazine.com/-/media/ECG/visualstudiomagazine/Images/introimages/VS_Code_Developer_2.jpg",
+            "logo": false
+          }
+        },
+        {
+          "title": "20 Best AI Coding Assistant Tools [Updated Aug 2025]",
+          "url": "https://www.qodo.ai/blog/best-ai-coding-assistant-tools/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "MCP collaboration: Can process external artifacts and pull context from connected systems during execution. AWS-centric: Best suited for AWS stacks; less effective for cross-platform or non-AWS-heavy workflows. Mixed feedback: Some users report outputs are underwhelming when used outside AWS-specific contexts. I asked it to create a GitHub webhook listener from the ground up using its agentic workflow in Visual Studio Code. I prompted Q to create a FastAPI microservice that listens to GitHub push events, validates the X-Hub-Signature-256 header using a shared secret, and logs the branch and commit message.",
+          "page_age": "2025-01-30T04:00:32",
+          "profile": {
+            "name": "Qodo",
+            "url": "https://www.qodo.ai/blog/best-ai-coding-assistant-tools/",
+            "long_name": "qodo.ai",
+            "img": "https://imgs.search.brave.com/DthxDQl2cYUcBfrFz9Y1t_qyA3Q5FlFIAIHMMOr6c5U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWVhZmQ0YzZk/N2YzOWE3NjBiNjA0/YjI0ODgxYWYxYTY4/NjBiZmIwOTYxNzIz/N2E4YmEzZWMzYjRk/M2VkYWU0Yi93d3cu/cW9kby5haS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "faq",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "qodo.ai",
+            "hostname": "www.qodo.ai",
+            "favicon": "https://imgs.search.brave.com/DthxDQl2cYUcBfrFz9Y1t_qyA3Q5FlFIAIHMMOr6c5U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWVhZmQ0YzZk/N2YzOWE3NjBiNjA0/YjI0ODgxYWYxYTY4/NjBiZmIwOTYxNzIz/N2E4YmEzZWMzYjRk/M2VkYWU0Yi93d3cu/cW9kby5haS8",
+            "path": "  \u203a blog  \u203a general  \u203a 20 best ai coding assistant tools [updated aug 2025]"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/0F8-gjfxl1wqEKR91869vfm4CkJDNXsRyDweQ7EbfPY/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cW9kby5haS93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyNC8wOS8x/NS1CZXN0LUFJLUNv/ZGluZy1Bc3Npc3Rh/bnQtVG9vbHMtaW4t/MjAyNS0xLnBuZw",
+            "original": "https://www.qodo.ai/wp-content/uploads/2024/09/15-Best-AI-Coding-Assistant-Tools-in-2025-1.png",
+            "logo": false
+          },
+          "age": "January 30, 2025"
+        },
+        {
+          "title": "Introduction to Microsoft Agent Framework | Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Agents support model providers including Azure OpenAI, OpenAI, and Azure AI. Workflows: Graph-based workflows that connect multiple agents and functions to perform complex, multi-step tasks. Workflows support type-based routing, nesting, checkpointing, and request/response patterns for human-in-the-loop scenarios. The framework also provides foundational building blocks, including model clients (chat completions and responses), an agent thread for state management, context providers for agent memory, middleware for intercepting agent actions, and MCP clients for tool integration.",
+          "profile": {
+            "name": "Microsoft Learn",
+            "url": "https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview",
+            "long_name": "learn.microsoft.com",
+            "img": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "learn.microsoft.com",
+            "hostname": "learn.microsoft.com",
+            "favicon": "https://imgs.search.brave.com/dKusAYBYTLeCBl16XSMYRZO-wCc_EyGpoH65Oj11tOU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmMzNjVjYjk4/NmJkODdmNTU4ZDU1/MGUwNjk0MWFmZWU0/NmYzZjVlYmZjZDIy/MWM4MGMwODc4MDhi/MDM5MmZkYy9sZWFy/bi5taWNyb3NvZnQu/Y29tLw",
+            "path": "\u203a en-us  \u203a agent-framework  \u203a overview  \u203a agent-framework-overview"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/KxEtqQiadL_R-Mr9_FffhMDYK3gVHrYWjuByaTLSjYg/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9sZWFy/bi5taWNyb3NvZnQu/Y29tL2VuLXVzL21l/ZGlhL29wZW4tZ3Jh/cGgtaW1hZ2UucG5n",
+            "original": "https://learn.microsoft.com/en-us/media/open-graph-image.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Top 5 Agentic AI Tools for Developers in 2025",
+          "url": "https://www.qodo.ai/blog/agentic-ai-tools/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "A PR affects CI, triggers deployment, impacts monitoring dashboards, and sometimes requires compliance approval. Qodo allows agents to orchestrate across these workflows rather than stopping at code generation. I\u2019ve seen it propose a schema migration PR, validate changes against staging, and auto-tag the right Jira ticket.",
+          "page_age": "2025-08-31T15:20:29",
+          "profile": {
+            "name": "Qodo",
+            "url": "https://www.qodo.ai/blog/agentic-ai-tools/",
+            "long_name": "qodo.ai",
+            "img": "https://imgs.search.brave.com/DthxDQl2cYUcBfrFz9Y1t_qyA3Q5FlFIAIHMMOr6c5U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWVhZmQ0YzZk/N2YzOWE3NjBiNjA0/YjI0ODgxYWYxYTY4/NjBiZmIwOTYxNzIz/N2E4YmEzZWMzYjRk/M2VkYWU0Yi93d3cu/cW9kby5haS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "faq",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "qodo.ai",
+            "hostname": "www.qodo.ai",
+            "favicon": "https://imgs.search.brave.com/DthxDQl2cYUcBfrFz9Y1t_qyA3Q5FlFIAIHMMOr6c5U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWVhZmQ0YzZk/N2YzOWE3NjBiNjA0/YjI0ODgxYWYxYTY4/NjBiZmIwOTYxNzIz/N2E4YmEzZWMzYjRk/M2VkYWU0Yi93d3cu/cW9kby5haS8",
+            "path": "  \u203a blog  \u203a technology  \u203a top 5 agentic ai tools for developers 2025"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/cPXexc8zRhy18K3l3UhTMWiJoq64ITvRgUNIiMCgytw/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cW9kby5haS93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyNS8wOC9p/bWFnZTItNS5wbmc",
+            "original": "https://www.qodo.ai/wp-content/uploads/2025/08/image2-5.png",
+            "logo": false
+          },
+          "age": "August 31, 2025"
+        },
+        {
+          "title": "AI Agent Workflow Implementation Guide for Dev Teams - Augment Code",
+          "url": "https://www.augmentcode.com/guides/ai-agent-workflow-implementation-guide",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "&quot;AI agents will break production.&quot; <strong>Wrap agents in guardrails from day one: least-privilege permissions, sandboxed runtimes, and mandatory human approval for high-impact actions</strong>. Your CI/CD pipeline blocks any agent attempting to push untested code.",
+          "page_age": "2025-08-06T22:08:06",
+          "profile": {
+            "name": "Augment Code",
+            "url": "https://www.augmentcode.com/guides/ai-agent-workflow-implementation-guide",
+            "long_name": "augmentcode.com",
+            "img": "https://imgs.search.brave.com/w5yhFvwJGUiTaMQY3cUMxTI9MmObS5xvs9nFZehRPu0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOGQwNzQwZDY5/NmIzNTJjNWZiNTEz/Nzg1MjYzODNiNmE3/Y2ZjNjQwNWFhNjIw/YWVlZTViYzUxYmFi/NzQ3ZjAzYS93d3cu/YXVnbWVudGNvZGUu/Y29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "augmentcode.com",
+            "hostname": "www.augmentcode.com",
+            "favicon": "https://imgs.search.brave.com/w5yhFvwJGUiTaMQY3cUMxTI9MmObS5xvs9nFZehRPu0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOGQwNzQwZDY5/NmIzNTJjNWZiNTEz/Nzg1MjYzODNiNmE3/Y2ZjNjQwNWFhNjIw/YWVlZTViYzUxYmFi/NzQ3ZjAzYS93d3cu/YXVnbWVudGNvZGUu/Y29tLw",
+            "path": "\u203a guides  \u203a ai-agent-workflow-implementation-guide"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/Sbq28JH1YVWl_zoioU2bXUvAh-loBvIY61ITMntogJI/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/c2FuaXR5LmlvL2lt/YWdlcy9vcmF3MnUy/Yy9wcm9kdWN0aW9u/L2JlZTU0NDI5NTc2/ZDA4MWQxZGQ4YWU4/NDFmNDYyMGQxYmEx/ZTM4ZDMtMTAyNHgx/MDI0LnBuZw",
+            "original": "https://cdn.sanity.io/images/oraw2u2c/production/bee54429576d081d1dd8ae841f4620d1ba1e38d3-1024x1024.png",
+            "logo": false
+          },
+          "age": "August 6, 2025"
+        },
+        {
+          "title": "Top 9 AI Agent Frameworks as of January 2026 | Shakudo",
+          "url": "https://www.shakudo.io/blog/top-9-ai-agent-frameworks",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "By integrating LangChain with Shakudo, teams can focus more on innovation and less on managing resources, resulting in faster and more efficient project execution. AgentFlow is Shakudo\u2019s production-ready platform for building and running multi-agent systems. It wraps popular libraries like LangChain, CrewAI, and AutoGen inside a low-code canvas so teams can sketch workflows, attach vector or SQL memory stores, and push the whole graph into a self-hosted cluster with one click.",
+          "profile": {
+            "name": "Shakudo",
+            "url": "https://www.shakudo.io/blog/top-9-ai-agent-frameworks",
+            "long_name": "shakudo.io",
+            "img": "https://imgs.search.brave.com/p0czl3eGOnS9COUNC0H1Foko4mgwf_9-hckcu4ceCLQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYmIzOWI4NjQ4/Njk3NjBlMTc2NTY4/NzhhYWE0YWRmMDU1/NjBhMTAwNjlmYWYz/NzI3Njc4MTQwN2Jj/OWI4MDlmMy93d3cu/c2hha3Vkby5pby8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "shakudo.io",
+            "hostname": "www.shakudo.io",
+            "favicon": "https://imgs.search.brave.com/p0czl3eGOnS9COUNC0H1Foko4mgwf_9-hckcu4ceCLQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYmIzOWI4NjQ4/Njk3NjBlMTc2NTY4/NzhhYWE0YWRmMDU1/NjBhMTAwNjlmYWYz/NzI3Njc4MTQwN2Jj/OWI4MDlmMy93d3cu/c2hha3Vkby5pby8",
+            "path": "\u203a blog  \u203a top-9-ai-agent-frameworks"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/p2FpfIT8WHrCl-s_-b0EPZocu05ZoqEtf9Yz3pmRdtI/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/cHJvZC53ZWJzaXRl/LWZpbGVzLmNvbS82/MjU0NDdjNjdiNjIx/YWI0OWJiN2UzZTUv/NjdlNDY3ZmU2YjY2/N2MzNzg3ZGQyNGI5/X3RvcCUyMDklMjBh/aSUyMGFnZW50cy5h/dmlm",
+            "original": "https://cdn.prod.website-files.com/625447c67b621ab49bb7e3e5/67e467fe6b667c3787dd24b9_top%209%20ai%20agents.avif",
+            "logo": false
+          }
+        },
+        {
+          "title": "Use AI Toolkit Copilot tools for AI agent development",
+          "url": "https://code.visualstudio.com/docs/intelligentapps/copilot-tools",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Workflow support: The tool supports many workflows in Agent Framework, like Sequential, Switch-case, Loop, and Human-In-The-Loop.",
+          "page_age": "2021-11-03T00:00:00",
+          "profile": {
+            "name": "Visual Studio Code",
+            "url": "https://code.visualstudio.com/docs/intelligentapps/copilot-tools",
+            "long_name": "code.visualstudio.com",
+            "img": "https://imgs.search.brave.com/Ss8On-q_OmE9m3HK81vWCxjsSiBf3GQKVNyv-aR6BQs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Q1MjIwOWMx/Yjk0OTY2NjgyOGVk/MGJlNDQ2YTFjZGQy/ODNkNjI3ZTg0MTc3/MzU1NGE1N2ZjMzMz/ZWEyNTE5OS9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "code.visualstudio.com",
+            "hostname": "code.visualstudio.com",
+            "favicon": "https://imgs.search.brave.com/Ss8On-q_OmE9m3HK81vWCxjsSiBf3GQKVNyv-aR6BQs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Q1MjIwOWMx/Yjk0OTY2NjgyOGVk/MGJlNDQ2YTFjZGQy/ODNkNjI3ZTg0MTc3/MzU1NGE1N2ZjMzMz/ZWEyNTE5OS9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20v",
+            "path": "\u203a docs  \u203a intelligentapps  \u203a copilot-tools"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/8DX09E8UDl57W_ruztp4ieH7tOS1We9xg2Odm4a2zDQ/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20vb3Blbmdy/YXBoaW1nL29wZW5n/cmFwaC1kb2NzLnBu/Zw",
+            "original": "https://code.visualstudio.com/opengraphimg/opengraph-docs.png",
+            "logo": false
+          },
+          "age": "November 3, 2021"
+        },
+        {
+          "title": "Building AI Agents: Workflow-First vs. Code-First vs. Hybrid | Microsoft Community Hub",
+          "url": "https://techcommunity.microsoft.com/blog/azurearchitectureblog/building-ai-agents-workflow-first-vs-code-first-vs-hybrid/4466788",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>They represent a design paradigm where orchestration logic is abstracted into declarative models rather than imperative code</strong>. These tools allow you to define agent behaviors, event triggers, and integration points visually, while the underlying ...",
+          "page_age": "2025-11-11T18:36:18",
+          "profile": {
+            "name": "Microsoft Community Hub",
+            "url": "https://techcommunity.microsoft.com/blog/azurearchitectureblog/building-ai-agents-workflow-first-vs-code-first-vs-hybrid/4466788",
+            "long_name": "techcommunity.microsoft.com",
+            "img": "https://imgs.search.brave.com/5U49g5VsF6RBgvXeHfdeiseInTiE2TbldgG66SUovLE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjQ4ZjY3MTc3/NjRlYzhlOWFlYjFl/YmM0YzQ5NDFhNjVl/NTIyNWJiMzE1YzBi/MWFmNWZjNWIzOWE0/YzE4ZWU1Mi90ZWNo/Y29tbXVuaXR5Lm1p/Y3Jvc29mdC5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "techcommunity.microsoft.com",
+            "hostname": "techcommunity.microsoft.com",
+            "favicon": "https://imgs.search.brave.com/5U49g5VsF6RBgvXeHfdeiseInTiE2TbldgG66SUovLE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMjQ4ZjY3MTc3/NjRlYzhlOWFlYjFl/YmM0YzQ5NDFhNjVl/NTIyNWJiMzE1YzBi/MWFmNWZjNWIzOWE0/YzE4ZWU1Mi90ZWNo/Y29tbXVuaXR5Lm1p/Y3Jvc29mdC5jb20v",
+            "path": "  \u203a microsoft community hub  \u203a communities  \u203a products  \u203a azure  \u203a azure architecture blog"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/wEL-4ZntaBU80WU7oVVHjSqxgm9u7uDjw-_c0UtQLkE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly90ZWNo/Y29tbXVuaXR5Lm1p/Y3Jvc29mdC5jb20v/dDUvcy9neGN1Zjg5/NzkyL2ltYWdlcy9i/UzAwTkRZMk56ZzRM/VFZrYVUxak1RP3Jl/dmlzaW9uPTE",
+            "original": "https://techcommunity.microsoft.com/t5/s/gxcuf89792/images/bS00NDY2Nzg4LTVkaU1jMQ?revision=1",
+            "logo": false
+          },
+          "age": "November 11, 2025"
+        },
+        {
+          "title": "Using agents in Visual Studio Code",
+          "url": "https://code.visualstudio.com/docs/copilot/agents/overview",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Give an agent a high-level task, and they break it down into steps, execute those steps using various tools, and self-correct when they hit errors or failed tests. In VS Code, agents can run in different environments to match your workflow: locally in VS Code for interactive tasks, in the background on your machine for autonomous work, or remotely in the cloud for team collaboration.",
+          "page_age": "2021-11-03T00:00:00",
+          "profile": {
+            "name": "Visual Studio Code",
+            "url": "https://code.visualstudio.com/docs/copilot/agents/overview",
+            "long_name": "code.visualstudio.com",
+            "img": "https://imgs.search.brave.com/Ss8On-q_OmE9m3HK81vWCxjsSiBf3GQKVNyv-aR6BQs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Q1MjIwOWMx/Yjk0OTY2NjgyOGVk/MGJlNDQ2YTFjZGQy/ODNkNjI3ZTg0MTc3/MzU1NGE1N2ZjMzMz/ZWEyNTE5OS9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "code.visualstudio.com",
+            "hostname": "code.visualstudio.com",
+            "favicon": "https://imgs.search.brave.com/Ss8On-q_OmE9m3HK81vWCxjsSiBf3GQKVNyv-aR6BQs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Q1MjIwOWMx/Yjk0OTY2NjgyOGVk/MGJlNDQ2YTFjZGQy/ODNkNjI3ZTg0MTc3/MzU1NGE1N2ZjMzMz/ZWEyNTE5OS9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20v",
+            "path": "\u203a docs  \u203a copilot  \u203a agents  \u203a overview"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/zrQhOcZaVVt8x3X34QAE6bF-kPnHLiMizj89k9gLFOA/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20vYXNzZXRz/L2RvY3MvY29waWxv/dC9zaGFyZWQvZ2l0/aHViLWNvcGlsb3Qt/c29jaWFsLnBuZw",
+            "original": "https://code.visualstudio.com/assets/docs/copilot/shared/github-copilot-social.png",
+            "logo": false
+          },
+          "age": "November 3, 2021"
+        },
+        {
+          "title": "AI Toolkit for Visual Studio Code",
+          "url": "https://code.visualstudio.com/docs/intelligentapps/overview",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>AI Toolkit</strong> offers seamless integration with popular AI models from providers like OpenAI, Anthropic, Google, and GitHub, while also supporting local models through ONNX and Ollama.",
+          "page_age": "2021-11-03T00:00:00",
+          "profile": {
+            "name": "Visual Studio Code",
+            "url": "https://code.visualstudio.com/docs/intelligentapps/overview",
+            "long_name": "code.visualstudio.com",
+            "img": "https://imgs.search.brave.com/Ss8On-q_OmE9m3HK81vWCxjsSiBf3GQKVNyv-aR6BQs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Q1MjIwOWMx/Yjk0OTY2NjgyOGVk/MGJlNDQ2YTFjZGQy/ODNkNjI3ZTg0MTc3/MzU1NGE1N2ZjMzMz/ZWEyNTE5OS9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "code.visualstudio.com",
+            "hostname": "code.visualstudio.com",
+            "favicon": "https://imgs.search.brave.com/Ss8On-q_OmE9m3HK81vWCxjsSiBf3GQKVNyv-aR6BQs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Q1MjIwOWMx/Yjk0OTY2NjgyOGVk/MGJlNDQ2YTFjZGQy/ODNkNjI3ZTg0MTc3/MzU1NGE1N2ZjMzMz/ZWEyNTE5OS9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20v",
+            "path": "\u203a docs  \u203a intelligentapps  \u203a overview"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/8DX09E8UDl57W_ruztp4ieH7tOS1We9xg2Odm4a2zDQ/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20vb3Blbmdy/YXBoaW1nL29wZW5n/cmFwaC1kb2NzLnBu/Zw",
+            "original": "https://code.visualstudio.com/opengraphimg/opengraph-docs.png",
+            "logo": false
+          },
+          "age": "November 3, 2021"
+        },
+        {
+          "title": "Guide to AI Coding Agents & Assistants: How to Choose the Right AI Tool - DEV Community",
+          "url": "https://dev.to/proflead/guide-to-ai-coding-agents-assistants-how-to-choose-the-right-ai-tool-1a4n",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Replit offers a cloud IDE with an AI assistant for code explanations and incremental edits, plus the Agent that can generate full-stack applications from natural language. The agent performs extended reasoning and uses self-testing to refine its work. Developers can build other agents and automation workflows inside Replit.",
+          "page_age": "2025-12-22T14:14:24",
+          "profile": {
+            "name": "DEV Community",
+            "url": "https://dev.to/proflead/guide-to-ai-coding-agents-assistants-how-to-choose-the-right-ai-tool-1a4n",
+            "long_name": "dev.to",
+            "img": "https://imgs.search.brave.com/UUpF8I85K--vkQzrhameM7iRPRU5VCTXyWbS4sk6G2g/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTg5MTcxNDBh/N2U4ODc4MDg0NWQ4/MzU0YWJkNDY3ZWRm/MjUxY2U1YjY5MzJm/YWRlOTI4YjAyZDI1/ZjU0MmJjNi9kZXYu/dG8v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "dev.to",
+            "hostname": "dev.to",
+            "favicon": "https://imgs.search.brave.com/UUpF8I85K--vkQzrhameM7iRPRU5VCTXyWbS4sk6G2g/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTg5MTcxNDBh/N2U4ODc4MDg0NWQ4/MzU0YWJkNDY3ZWRm/MjUxY2U1YjY5MzJm/YWRlOTI4YjAyZDI1/ZjU0MmJjNi9kZXYu/dG8v",
+            "path": "\u203a proflead  \u203a guide-to-ai-coding-agents-assistants-how-to-choose-the-right-ai-tool-1a4n"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/gC-IQwbJfWGqm70Rzf9n9hSkSn8mbf6MaoQJvakpCy0/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9tZWRp/YTIuZGV2LnRvL2R5/bmFtaWMvaW1hZ2Uv/d2lkdGg9MTA4MCxo/ZWlnaHQ9MTA4MCxm/aXQ9Y292ZXIsZ3Jh/dml0eT1hdXRvLGZv/cm1hdD1hdXRvL2h0/dHBzJTNBJTJGJTJG/ZGV2LXRvLXVwbG9h/ZHMuczMuYW1hem9u/YXdzLmNvbSUyRnVw/bG9hZHMlMkZhcnRp/Y2xlcyUyRnN3cnUy/N2FhaWkyMGNhZzJy/MGF5LnBuZw",
+            "original": "https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fswru27aaii20cag2r0ay.png",
+            "logo": false
+          },
+          "age": "3 weeks ago"
+        },
+        {
+          "title": "AI Agent Platforms: Tutorial & Comparison",
+          "url": "https://www.patronus.ai/ai-agent-development/ai-agent-platforms",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Once running, you can visually create a new flow (for example, a basic chatbot with a prompt node and an LLM node) and then execute it in the <strong>LangFlow interface</strong>. LangFlow converts each created agent or workflow into an API that you can integrate ...",
+          "profile": {
+            "name": "Patronus",
+            "url": "https://www.patronus.ai/ai-agent-development/ai-agent-platforms",
+            "long_name": "patronus.ai",
+            "img": "https://imgs.search.brave.com/kylqtuquBMVG8a4ZIZyq-14MEwUnPnPGppY3VYRMKKQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Y3YTQwMzc3/YTQzNjE3OTk4ZWE4/YmUwOGZlMWIyYmE5/N2JiMGZmNzVmOTMx/ZjExYTg2YWYwNWNm/MTcwMTllOS93d3cu/cGF0cm9udXMuYWkv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "patronus.ai",
+            "hostname": "www.patronus.ai",
+            "favicon": "https://imgs.search.brave.com/kylqtuquBMVG8a4ZIZyq-14MEwUnPnPGppY3VYRMKKQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Y3YTQwMzc3/YTQzNjE3OTk4ZWE4/YmUwOGZlMWIyYmE5/N2JiMGZmNzVmOTMx/ZjExYTg2YWYwNWNm/MTcwMTllOS93d3cu/cGF0cm9udXMuYWkv",
+            "path": "\u203a ai-agent-development  \u203a ai-agent-platforms"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/6mOMrjJbsO8HkG9pAshm4w2qsCTyEzTeB7brt0ld9Ug/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/cHJvZC53ZWJzaXRl/LWZpbGVzLmNvbS82/NGU4ZDE4NDM5NGIy/ZjBkYzk3MGNkMWEv/Njg3ZDRkNWQ3Njgw/Nzk2OWRhZGUwM2Yx/X0FJJTIwQWdlbnQl/MjBQbGF0Zm9ybXNf/JTIwVHV0b3JpYWwl/MjAlMjYlMjBDb21w/YXJpc29uLmpwZw",
+            "original": "https://cdn.prod.website-files.com/64e8d184394b2f0dc970cd1a/687d4d5d76807969dade03f1_AI%20Agent%20Platforms_%20Tutorial%20%26%20Comparison.jpg",
+            "logo": false
+          }
+        },
+        {
+          "title": "AI Agent Frameworks: No-Code vs Code Platforms (LangGraph, n8n, Inkeep & more)",
+          "url": "https://inkeep.com/blog/agent-frameworks-platforms-overview",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "A comprehensive comparison of leading code and no-code agent frameworks such as <strong>LangGraph, CrewAI, n8n, LangFlow, AgentKit, Mastra, Lindy, Gumloop, Agno, LlamaIndex, Pydantic AI, Microsoft AutoGen, and Inkeep</strong>.",
+          "page_age": "2025-11-15T10:00:00",
+          "profile": {
+            "name": "Inkeep",
+            "url": "https://inkeep.com/blog/agent-frameworks-platforms-overview",
+            "long_name": "inkeep.com",
+            "img": "https://imgs.search.brave.com/n_OLnRm2piV5pwVr1aCKMIFUuoPczRd_Q_ZzGD1qqe4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTIwOGFmNGE5/ZmU3NmM5NDBmMTA5/YmRkYjg2NDZiYTg5/MzllZGFmZDQ5ZDNi/MTEwMzUzODRjNTdh/ZjFiYTg0My9pbmtl/ZXAuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "faq",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "inkeep.com",
+            "hostname": "inkeep.com",
+            "favicon": "https://imgs.search.brave.com/n_OLnRm2piV5pwVr1aCKMIFUuoPczRd_Q_ZzGD1qqe4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTIwOGFmNGE5/ZmU3NmM5NDBmMTA5/YmRkYjg2NDZiYTg5/MzllZGFmZDQ5ZDNi/MTEwMzUzODRjNTdh/ZjFiYTg0My9pbmtl/ZXAuY29tLw",
+            "path": "  \u203a blog  \u203a building agents  \u203a ai agent frameworks: no-code vs code platforms (langgraph, n8n, inkeep & more)"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/rgzacDuonxfdLyocki9K7liPqoOT_HjvgkMAOIF0dQ0/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pbmtl/ZXAuY29tL2Jsb2cv/YWdlbnQtZnJhbWV3/b3Jrcy1wbGF0Zm9y/bXMtb3ZlcnZpZXcv/b3BlbmdyYXBoLWlt/YWdlPzY1MjI1ODhi/OTM1NzE2NTc",
+            "original": "https://inkeep.com/blog/agent-frameworks-platforms-overview/opengraph-image?6522588b93571657",
+            "logo": false
+          },
+          "age": "November 15, 2025"
+        },
+        {
+          "title": "Introducing Codex | OpenAI",
+          "url": "https://openai.com/index/introducing-codex/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "A primary goal while training codex-1 was to align outputs closely with human coding preferences and standards. Compared to <strong>OpenAI o3</strong>, codex-1 consistently produces cleaner patches ready for immediate human review and integration into standard ...",
+          "profile": {
+            "name": "OpenAI",
+            "url": "https://openai.com/index/introducing-codex/",
+            "long_name": "openai.com",
+            "img": "https://imgs.search.brave.com/a162Y0hLEPHL4G7WHg0Nw0DxUOn2TknT_UI4sVOwS_E/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWE0ODk4ZGY3/Mzk1Y2EwMjAxZjJk/YmEzZWM1MzcyNTZm/MTI0YWEyOWQ3NjVk/MDgxNTMwMGQxNWMx/ZWVmZWMzZC9vcGVu/YWkuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "openai.com",
+            "hostname": "openai.com",
+            "favicon": "https://imgs.search.brave.com/a162Y0hLEPHL4G7WHg0Nw0DxUOn2TknT_UI4sVOwS_E/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWE0ODk4ZGY3/Mzk1Y2EwMjAxZjJk/YmEzZWM1MzcyNTZm/MTI0YWEyOWQ3NjVk/MDgxNTMwMGQxNWMx/ZWVmZWMzZC9vcGVu/YWkuY29tLw",
+            "path": "\u203a index  \u203a introducing-codex"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/5pB1X-KGu2StZzvzMMLjlueaWjwR8DudcfPMokmUON4/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuY3RmYXNzZXRz/Lm5ldC9rZnR6d2R5/YXV3dDkvMUNXMzMx/T2Rsd0NOS0ZIc2NN/amR1cy8zMDU0NDAy/N2YwYmZlY2E2OTAw/YWM4ZDcxOWZmZTdk/ZC9Db2RleF9CbG9n/X1NFT19JbWFnZV9W/Mi5wbmc_dz0xNjAw/JmFtcDtoPTkwMCZh/bXA7Zml0PWZpbGw",
+            "original": "https://images.ctfassets.net/kftzwdyauwt9/1CW331OdlwCNKFHscMjdus/30544027f0bfeca6900ac8d719ffe7dd/Codex_Blog_SEO_Image_V2.png?w=1600&amp;h=900&amp;fit=fill",
+            "logo": false
+          }
+        },
+        {
+          "title": "Build agents and prompts in AI Toolkit",
+          "url": "https://code.visualstudio.com/docs/intelligentapps/agentbuilder",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>Agent Builder in AI Toolkit</strong> streamlines the engineering workflow for building agents, including prompt engineering and integration with tools, such as MCP servers.",
+          "page_age": "2021-11-03T00:00:00",
+          "profile": {
+            "name": "Visual Studio Code",
+            "url": "https://code.visualstudio.com/docs/intelligentapps/agentbuilder",
+            "long_name": "code.visualstudio.com",
+            "img": "https://imgs.search.brave.com/Ss8On-q_OmE9m3HK81vWCxjsSiBf3GQKVNyv-aR6BQs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Q1MjIwOWMx/Yjk0OTY2NjgyOGVk/MGJlNDQ2YTFjZGQy/ODNkNjI3ZTg0MTc3/MzU1NGE1N2ZjMzMz/ZWEyNTE5OS9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "code.visualstudio.com",
+            "hostname": "code.visualstudio.com",
+            "favicon": "https://imgs.search.brave.com/Ss8On-q_OmE9m3HK81vWCxjsSiBf3GQKVNyv-aR6BQs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvM2Q1MjIwOWMx/Yjk0OTY2NjgyOGVk/MGJlNDQ2YTFjZGQy/ODNkNjI3ZTg0MTc3/MzU1NGE1N2ZjMzMz/ZWEyNTE5OS9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20v",
+            "path": "\u203a docs  \u203a intelligentapps  \u203a agentbuilder"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/8DX09E8UDl57W_ruztp4ieH7tOS1We9xg2Odm4a2zDQ/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jb2Rl/LnZpc3VhbHN0dWRp/by5jb20vb3Blbmdy/YXBoaW1nL29wZW5n/cmFwaC1kb2NzLnBu/Zw",
+            "original": "https://code.visualstudio.com/opengraphimg/opengraph-docs.png",
+            "logo": false
+          },
+          "age": "November 3, 2021"
+        },
+        {
+          "title": "How AI coding agents work\u2014and what to remember if you use them - Ars Technica",
+          "url": "https://arstechnica.com/information-technology/2025/12/how-do-ai-coding-agents-work-we-look-under-the-hood/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "In that sense, <strong>each AI coding agent is a program wrapper that works with multiple LLMs</strong>. There is typically a \u201csupervising\u201d LLM that interprets tasks (prompts) from the human user and then assigns those tasks to parallel LLMs that can use ...",
+          "page_age": "2025-12-24T12:10:31",
+          "profile": {
+            "name": "Ars Technica",
+            "url": "https://arstechnica.com/information-technology/2025/12/how-do-ai-coding-agents-work-we-look-under-the-hood/",
+            "long_name": "arstechnica.com",
+            "img": "https://imgs.search.brave.com/pLBultCHv8ZgS8SMpjQu226957dhuNw-YHi1lvaeMMU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOGJlOTQ4ZDZm/Zjg3MWQwY2NmYjI0/NzRmM2U0MTAzODQx/ZGU3YTFmMDljOGNj/ZmZkNTdlNDRhMjZm/ZGM4NDk3Ni9hcnN0/ZWNobmljYS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "arstechnica.com",
+            "hostname": "arstechnica.com",
+            "favicon": "https://imgs.search.brave.com/pLBultCHv8ZgS8SMpjQu226957dhuNw-YHi1lvaeMMU/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOGJlOTQ4ZDZm/Zjg3MWQwY2NmYjI0/NzRmM2U0MTAzODQx/ZGU3YTFmMDljOGNj/ZmZkNTdlNDRhMjZm/ZGM4NDk3Ni9hcnN0/ZWNobmljYS5jb20v",
+            "path": "\u203a information-technology  \u203a 2025  \u203a 12  \u203a how-do-ai-coding-agents-work-we-look-under-the-hood"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/5mEqbZMIDI8O_aETrHvaHl_HztDa4UM433DTm2zi7vE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG4u/YXJzdGVjaG5pY2Eu/bmV0L3dwLWNvbnRl/bnQvdXBsb2Fkcy8y/MDI1LzA5L0dldHR5/SW1hZ2VzLTIyMTEw/ODYzNTYtMTE1Mng2/NDgtMTc2NjE4MjAw/NC5qcGc",
+            "original": "https://cdn.arstechnica.net/wp-content/uploads/2025/09/GettyImages-2211086356-1152x648-1766182004.jpg",
+            "logo": false
+          },
+          "age": "2 weeks ago"
+        },
+        {
+          "title": "Writing effective tools for AI agents\u2014using ...",
+          "url": "https://www.anthropic.com/engineering/writing-tools-for-agents",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "However, because there might be multiple valid paths to solving tasks correctly, try to avoid overspecifying or overfitting to strategies. ... We recommend running your evaluation programmatically with direct LLM API calls. Use simple agentic loops (while-loops wrapping alternating LLM API and tool calls): one loop for each evaluation task.",
+          "profile": {
+            "name": "Anthropic",
+            "url": "https://www.anthropic.com/engineering/writing-tools-for-agents",
+            "long_name": "anthropic.com",
+            "img": "https://imgs.search.brave.com/pR77i0D9jHLE7BnlANBtzsTMgvt_s6LdJtDJ3zh0OaI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZTczZTUwY2Q1/NjM4YWM1YjQ1ZWRi/MzUxNzEwMjgyMWRm/NzhmNDM0MTNhMDQ3/NzI5NWQ4MDU1N2Ex/ZmY2NGQwYy93d3cu/YW50aHJvcGljLmNv/bS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "anthropic.com",
+            "hostname": "www.anthropic.com",
+            "favicon": "https://imgs.search.brave.com/pR77i0D9jHLE7BnlANBtzsTMgvt_s6LdJtDJ3zh0OaI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZTczZTUwY2Q1/NjM4YWM1YjQ1ZWRi/MzUxNzEwMjgyMWRm/NzhmNDM0MTNhMDQ3/NzI5NWQ4MDU1N2Ex/ZmY2NGQwYy93d3cu/YW50aHJvcGljLmNv/bS8",
+            "path": "\u203a engineering  \u203a writing-tools-for-agents"
+          }
+        },
+        {
+          "title": "The 2026 Guide to AI Agent Builders (And Why They All Need an Action Layer) - Composio",
+          "url": "https://composio.dev/blog/best-ai-agent-builders-and-integrations",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Developers drag and drop agent, tool, and router nodes onto a canvas, making complex workflow creation accessible to broader teams. The platform ships with OpenAI&#x27;s core strengths: a Code Interpreter for sandboxed Python execution, managed vector stores for file search, and built-in safety guardrails for PII and prompt injection.",
+          "profile": {
+            "name": "Composio",
+            "url": "https://composio.dev/blog/best-ai-agent-builders-and-integrations",
+            "long_name": "composio.dev",
+            "img": "https://imgs.search.brave.com/i2SIBtIftpVEBfxHrE-yTvEvzToFXch0FOA6a-II4G4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODdkZjQ1NzZm/NjliOTlhNzdlNzgz/ZjBkNzU0YTU0MGJk/NDM3YTQ2ODE0NDFk/YzU0N2Q0ZjgwNTYw/OGM2OWRhZC9jb21w/b3Npby5kZXYv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "composio.dev",
+            "hostname": "composio.dev",
+            "favicon": "https://imgs.search.brave.com/i2SIBtIftpVEBfxHrE-yTvEvzToFXch0FOA6a-II4G4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODdkZjQ1NzZm/NjliOTlhNzdlNzgz/ZjBkNzU0YTU0MGJk/NDM3YTQ2ODE0NDFk/YzU0N2Q0ZjgwNTYw/OGM2OWRhZC9jb21w/b3Npby5kZXYv",
+            "path": "\u203a blog  \u203a best-ai-agent-builders-and-integrations"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/sHVFys62U9lWBcFDgJZCtst7zVkv3vKRJa3h2HFcStc/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9mcmFt/ZXJ1c2VyY29udGVu/dC5jb20vaW1hZ2Vz/LzVEYm9VNkY0ejRB/dVVianA5bDlmeklS/bGRvTS5wbmc_d2lk/dGg9MTQyNCZhbXA7/aGVpZ2h0PTc1Mg",
+            "original": "https://framerusercontent.com/images/5DboU6F4z4AuUbjp9l9fzIRldoM.png?width=1424&amp;height=752",
+            "logo": false
+          }
+        },
+        {
+          "title": "Top Tools For Building AI Agents in 2025 - Pragmatic Coders",
+          "url": "https://www.pragmaticcoders.com/blog/top-tools-for-building-ai-agents",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Your complete 2025 guide to the AI agent toolkit. Compare frameworks, security tools, and no-code platforms to build powerful AI agents.",
+          "page_age": "2025-07-29T09:09:18",
+          "profile": {
+            "name": "Pragmatic Coders",
+            "url": "https://www.pragmaticcoders.com/blog/top-tools-for-building-ai-agents",
+            "long_name": "pragmaticcoders.com",
+            "img": "https://imgs.search.brave.com/umF-wucG0VQfogNZndSIqd2lN5zke_M54NFQHTvBdG0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZTc3YzZjMTBm/YzE1ZjQ5YzdiOWNh/OGQzMDFjYjYyNmZl/MGI2ZGY2ODQzZTdl/OTRhNmY4YmJiNDU0/ZWZmZTY2MS93d3cu/cHJhZ21hdGljY29k/ZXJzLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "pragmaticcoders.com",
+            "hostname": "www.pragmaticcoders.com",
+            "favicon": "https://imgs.search.brave.com/umF-wucG0VQfogNZndSIqd2lN5zke_M54NFQHTvBdG0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZTc3YzZjMTBm/YzE1ZjQ5YzdiOWNh/OGQzMDFjYjYyNmZl/MGI2ZGY2ODQzZTdl/OTRhNmY4YmJiNDU0/ZWZmZTY2MS93d3cu/cHJhZ21hdGljY29k/ZXJzLmNvbS8",
+            "path": "\u203a blog  \u203a top-tools-for-building-ai-agents"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/km0Dn_VroB9QNKX4DKTTY0HKShBEq1C0G7s9i_aABZI/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cHJhZ21hdGljY29k/ZXJzLmNvbS93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyNS8xMS9B/aS15b3VyLW5ldy1k/ZXYtdGVhbXMtc3Vw/ZXJwb3dlci5qcGc",
+            "original": "https://www.pragmaticcoders.com/wp-content/uploads/2025/11/Ai-your-new-dev-teams-superpower.jpg",
+            "logo": false
+          },
+          "age": "July 29, 2025"
+        },
+        {
+          "title": "Building With AI Coding Agents: Best Practices for Agent Workflows | by Elisheba Builds | Medium",
+          "url": "https://medium.com/@elisheba.t.anderson/building-with-ai-coding-agents-best-practices-for-agent-workflows-be1d7095901b",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Discover how to use AI coding agents effectively with structured workflows, agent.md configuration, and the Plan\u2013Act\u2013Reflect method. Learn p",
+          "page_age": "2025-10-22T15:57:28",
+          "profile": {
+            "name": "Medium",
+            "url": "https://medium.com/@elisheba.t.anderson/building-with-ai-coding-agents-best-practices-for-agent-workflows-be1d7095901b",
+            "long_name": "medium.com",
+            "img": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "medium.com",
+            "hostname": "medium.com",
+            "favicon": "https://imgs.search.brave.com/4R4hFITz_F_be0roUiWbTZKhsywr3fnLTMTkFL5HFow/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTZhYmQ1N2Q4/NDg4ZDcyODIyMDZi/MzFmOWNhNjE3Y2E4/Y2YzMThjNjljNDIx/ZjllZmNhYTcwODhl/YTcwNDEzYy9tZWRp/dW0uY29tLw",
+            "path": "\u203a @elisheba.t.anderson  \u203a building-with-ai-coding-agents-best-practices-for-agent-workflows-be1d7095901b"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/902aq-wcRzvZw3X98UX3eJDD6ja3tNi65AesaS1yh3U/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9taXJv/Lm1lZGl1bS5jb20v/MSppR0NkNWExdG1t/Y2Q3cVlkWkFndzh3/LnBuZw",
+            "original": "https://miro.medium.com/1*iGCd5a1tmmcd7qYdZAgw8w.png",
+            "logo": false
+          },
+          "age": "October 22, 2025"
+        }
+      ],
+      "family_friendly": true
+    }
+  },
+  "timestamp": "2026-01-09T23:03:03.066914"
+}

@@ -43,6 +43,9 @@ def main():
     run_check("P1-MONOLITH", "monolith_bypass_sentinel.py")
 
     # 4. P5-MEDALLION (Integrity)
+    # Check mutation Goldilocks zone
+    run_check("P5-GOLDILOCKS", "mutation_sentinel.py")
+
     # Check core project files
     hot_bronze = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze"
     files_to_check = []
@@ -64,7 +67,10 @@ def main():
     # 7. P7-VENGEANCE (Forensic)
     run_check("P7-VENGEANCE", "blood_grudge_sentinel.py")
 
-    # 8. P5-PRECOMMIT (Gatekeeper)
+    # 8. P5-ROOT-PURITY (Hard Gate)
+    run_check("P5-ROOT-PURITY", "../p5_defend/root_purity_gate.py")
+
+    # 9. P5-PRECOMMIT (Gatekeeper)
     run_check("P5-PRECOMMIT", "pre_commit_shield.py")
 
     if failures:

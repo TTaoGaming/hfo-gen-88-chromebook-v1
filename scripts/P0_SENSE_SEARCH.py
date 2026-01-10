@@ -45,23 +45,45 @@ def search_brave(query, api_key):
     except Exception as e:
         return {"error": str(e)}
 
+def local_repo_sense(query):
+    # Simulated Repo Search via grep/find for P0 QUAD compliance
+    print(f"🔍 [P0-SENSE]: Locally sensing Repo for: {query}")
+    try:
+        # We use a simple grep to find matches in the workspace
+        # This simulates the 'Repo' pillar of QUAD search
+        cmd = ["grep", "-ri", query, "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze"]
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        lines = result.stdout.splitlines()[:10] # Limit to 10 lines
+        return {"results": [{"content": line} for line in lines]}
+    except Exception as e:
+        return {"error": str(e)}
+
 def main():
+    import sys
+    import subprocess
     load_env()
     tavily_key = os.getenv("TAVILY_API_KEY")
     brave_key = os.getenv("BRAVE_API_KEY")
 
-    query = "@mediapipe/tasks-vision vision_bundle.js script global name for FilesetResolver and GestureRecognizer"
+    if len(sys.argv) > 1:
+        query = " ".join(sys.argv[1:])
+    else:
+        query = "@mediapipe/tasks-vision vision_bundle.js script global name for FilesetResolver and GestureRecognizer"
 
-    print(f"🔍 [P0-SENSE]: Searching Tavily...")
+    print(f"🔍 [P0-SENSE]: Searching Tavily for: {query}")
     tavily_results = search_tavily(query, tavily_key)
 
     print(f"🔍 [P0-SENSE]: Searching Brave...")
     brave_results = search_brave(query, brave_key)
 
+    print(f"🔍 [P0-SENSE]: Locally sensing Repo...")
+    repo_results = local_repo_sense(query)
+
     output = {
         "query": query,
         "tavily": tavily_results,
         "brave": brave_results,
+        "repo": repo_results,
         "timestamp": datetime.now().isoformat()
     }
 
@@ -70,18 +92,19 @@ def main():
 
     # PORT 5 COMPLIANCE: Log to Blackboard
     blackboard_path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
-    receipt = f"P0_SENSE_SEARCH_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
+    receipt = f"P0_QUAD_SEARCH_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
     entry = {
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "phase": "H",
-        "summary": f"P0-Sense Hunt: {query}",
+        "summary": f"P0-Sense QUAD Hunt: {query}",
         "p0": {
             "status": "complete",
             "query": query,
             "receipt": receipt,
             "data": {
                 "web_tavily": tavily_results.get("results", []) if isinstance(tavily_results, dict) else [],
-                "web_brave": brave_results.get("web", {}).get("results", []) if isinstance(brave_results, dict) else []
+                "web_brave": brave_results.get("web", {}).get("results", []) if isinstance(brave_results, dict) else [],
+                "repo_sense": repo_results.get("results", [])
             }
         }
     }

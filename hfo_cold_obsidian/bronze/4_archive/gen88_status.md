@@ -16,13 +16,14 @@
 
 ## VERIFIED Port Status (From Receipts)
 
-| Port | Commander | Score | Status | Receipt |
-|:---:|:---|:---:|:---:|:---|
-| P0 | Lidless Legion | 80.95% | 🟢 SILVER | SCREAM_BLINDSPOT |
-| P1 | Web Weaver | 95.65% | 🟢 SILVER | Cold Bronze verified |
-| P1 | Web Weaver | 87.60% | 🟢 SILVER | SCREAM_BREACH (Hot Silver) |
-| P4 | Red Regnant | — | 🟢 SILVER | 281 tests, 7 files |
-| P5 | Pyre Praetorian | — | 🟢 COLD BRONZE | PYRE_DANCE verified |
+| Port  | Commander       | Score  |    Status     | Receipt                    |
+| :---: | :-------------- | :----: | :-----------: | :------------------------- |
+| P0/1  | Omega Bridge    |  100%  | 🔵 COLD BRONZE | V20_FREEZE                 |
+|  P0   | Lidless Legion  | 80.95% |   🟢 SILVER    | SCREAM_BLINDSPOT           |
+|  P1   | Web Weaver      | 95.65% |   🟢 SILVER    | Cold Bronze verified       |
+|  P1   | Web Weaver      | 87.60% |   🟢 SILVER    | SCREAM_BREACH (Hot Silver) |
+|  P4   | Red Regnant     |   —    |   🟢 SILVER    | 281 tests, 7 files         |
+|  P5   | Pyre Praetorian |   —    | 🟢 COLD BRONZE | PYRE_DANCE verified        |
 
 ---
 
@@ -65,14 +66,14 @@
 - **Performance**: 48ms
 
 **Verified Artifacts:**
-| Artifact | Tests | Score | Status |
-|:---|:---:|:---:|:---:|
-| contracts/screams.ts | 42 | — | verified |
-| contracts/detector.ts | 44 | — | verified |
-| contracts/index.ts | 50 | — | verified |
-| detectors/blindspot.ts | 44 | 80.95% | goldilocks |
-| detectors/breach.ts | 62 | 87.60% | goldilocks |
-| core/score-classifier.ts | 29 | — | verified |
+| Artifact                 | Tests | Score  |   Status   |
+| :----------------------- | :---: | :----: | :--------: |
+| contracts/screams.ts     |  42   |   —    |  verified  |
+| contracts/detector.ts    |  44   |   —    |  verified  |
+| contracts/index.ts       |  50   |   —    |  verified  |
+| detectors/blindspot.ts   |  44   | 80.95% | goldilocks |
+| detectors/breach.ts      |  62   | 87.60% | goldilocks |
+| core/score-classifier.ts |  29   |   —    |  verified  |
 
 **8 Stryker Shards:**
 - shard-0-blindspot
@@ -113,16 +114,16 @@
 - **Last Pulse**: 2026-01-09T05:22:01.426Z
 
 ### Port Status (Live from Soul)
-| Port | Commander | Status |
-|:---:|:---|:---:|
-| P0 | Lidless Legion | ⚫ OFFLINE |
-| P1 | Web Weaver | 🟢 ONLINE |
-| P2 | Mirror Magus | ⚫ OFFLINE |
-| P3 | Spore Storm | ⚫ OFFLINE |
-| P4 | Red Regnant | 🟢 ONLINE |
-| P5 | Pyre Praetorian | ⚫ OFFLINE |
-| P6 | Kraken Keeper | ⚫ OFFLINE |
-| P7 | Spider Sovereign | 🟢 ONLINE |
+| Port  | Commander        |  Status   |
+| :---: | :--------------- | :-------: |
+|  P0   | Lidless Legion   | ⚫ OFFLINE |
+|  P1   | Web Weaver       | 🟢 ONLINE  |
+|  P2   | Mirror Magus     | ⚫ OFFLINE |
+|  P3   | Spore Storm      | ⚫ OFFLINE |
+|  P4   | Red Regnant      | 🟢 ONLINE  |
+|  P5   | Pyre Praetorian  | ⚫ OFFLINE |
+|  P6   | Kraken Keeper    | ⚫ OFFLINE |
+|  P7   | Spider Sovereign | 🟢 ONLINE  |
 
 ### P1 Web Weaver (Active)
 - **Mutation Score**: 95.65%
@@ -146,13 +147,13 @@
 
 ## Version History
 
-| Version | Focus | Status |
-|:---|:---|:---|
-| V6 | MTG Semiotic Anchoring | ✅ Complete |
-| V7 | Behavioral Narrative | ✅ Complete |
-| V8 | JADC2 Translation | ✅ Complete |
-| V9 | Plain Language | ✅ Complete |
-| V10 | Physics Cursor | 🟡 Active |
+| Version | Focus                  | Status     |
+| :------ | :--------------------- | :--------- |
+| V6      | MTG Semiotic Anchoring | ✅ Complete |
+| V7      | Behavioral Narrative   | ✅ Complete |
+| V8      | JADC2 Translation      | ✅ Complete |
+| V9      | Plain Language         | ✅ Complete |
+| V10     | Physics Cursor         | 🟡 Active   |
 
 ---
 

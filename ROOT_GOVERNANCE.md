@@ -2,7 +2,7 @@
 # ⚖️ HFO Root Governance & Anti-Pollution Manifest
 
 **Status**: HARDENED
-**Medallion**: Gold
+**Medallion*
 **Mission**: Phoenix Project (Chromebook V-1)
 
 ---

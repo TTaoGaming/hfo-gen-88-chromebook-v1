@@ -234,7 +234,7 @@
             const canvas = document.createElement('canvas');
             container.appendChild(canvas);
             const ctx = canvas.getContext('2d');
-            
+
             const drawingUtils = new DrawingUtils(ctx);
 
             const visionTasks = await FilesetResolver.forVisionTasks(
@@ -257,12 +257,12 @@
             const render = () => {
                 const now = performance.now();
                 if (now === lastTime) { requestAnimationFrame(render); return; }
-                
+
                 if (state.active && video.readyState >= 2) {
                     const results = gestureRecognizer.recognizeForVideo(video, now);
-                    
+
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
+
                     if (results.landmarks && results.landmarks.length > 0) {
                         results.landmarks.forEach((landmarks, index) => {
                             if (state.debug) {
@@ -325,7 +325,7 @@
                                 ctx.strokeStyle = state.gestures.isDown ? '#fff' : 'transparent';
                                 ctx.lineWidth = 4;
                                 ctx.stroke();
-                                
+
                                 // Label
                                 ctx.fillStyle = '#fff';
                                 ctx.font = '12px Courier';
@@ -334,7 +334,7 @@
                         });
                     }
                 }
-                
+
                 lastTime = now;
                 requestAnimationFrame(render);
             };
@@ -412,7 +412,7 @@
 
         const initSettings = (container) => {
             const gui = new GUI({ container, autoPlace: false });
-            
+
             const phys = gui.addFolder('Rapier Dynamics');
             phys.add(state.physics, 'stiffness', 0, 1000).name('Spring K');
             phys.add(state.physics, 'damping', 0, 100).name('Damping D');
@@ -420,8 +420,8 @@
             phys.open();
 
             const mp = gui.addFolder('MediaPipe Tasks');
-            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({minHandDetectionConfidence: v}));
-            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({minHandPresenceConfidence: v}));
+            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({ minHandDetectionConfidence: v }));
+            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({ minHandPresenceConfidence: v }));
             mp.add(state, 'debug').name('Show Mesh');
             mp.open();
 
@@ -457,11 +457,11 @@
         layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
         layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
         layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
-        
+
         initPhysics().then(() => {
             layout.loadLayout(config);
         });
-        
+
         window.addEventListener('resize', () => layout.updateSize());
     </script>
 </body>

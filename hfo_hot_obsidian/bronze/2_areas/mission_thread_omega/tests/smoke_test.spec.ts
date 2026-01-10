@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('HFO Omega V18 Smoke Test', () => {
+test.describe('HFO Omega V20 Smoke Test', () => {
     test.beforeEach(async ({ page }) => {
         await page.addInitScript(() => {
             if (!navigator.mediaDevices) {
@@ -17,6 +17,25 @@ test.describe('HFO Omega V18 Smoke Test', () => {
                 },
                 configurable: true
             });
+
+            // Mock MediaPipe Global Scope (since it's imported via CDN in script tag)
+            // @ts-ignore
+            window.GestureRecognizer = {
+                createFromOptions: async () => ({
+                    recognizeForVideo: () => ({
+                        landmarks: [[
+                            {x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},
+                            {x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0.5,y:0.5,z:0} // Landmark 8
+                        ]],
+                        gestures: [[{ categoryName: 'Open_Palm', score: 0.9 }]],
+                    }),
+                    setOptions: () => {}
+                })
+            };
+            // @ts-ignore
+            window.FilesetResolver = { forVisionTasks: async () => ({}) };
+            // @ts-ignore
+            window.DrawingUtils = class { drawConnectors() {} };
         });
     });
 
@@ -27,16 +46,16 @@ test.describe('HFO Omega V18 Smoke Test', () => {
         });
         page.on('pageerror', err => console.log('BROWSER EXCEPTION:', err.message));
 
-        await page.goto('http://localhost:8092/omega_workspace_v18.html');
+        await page.goto('http://localhost:8092/omega_workspace_v20.html');
 
         await page.waitForSelector('#layout-container');
-        
+
         // Wait for cards
-        await page.waitForSelector('.data-card', { timeout: 30000 });
+        await page.waitForSelector('.hand-section', { timeout: 30000 });
         const cards = await page.locator('.data-card h3').allInnerTexts();
         console.log('Detected Cards:', cards);
-        
-        // Match V18 titles
+
+        // Match V20 titles
         const upperCards = cards.map(c => c.toUpperCase());
         expect(upperCards).toContain('RAW');
         expect(upperCards).toContain('SMOOTH');
