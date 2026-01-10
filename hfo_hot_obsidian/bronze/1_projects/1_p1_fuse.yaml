@@ -1,0 +1,14 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+id: P1
+name: P1 FUSE (Web Weaver)
+mission_thread: Alpha
+status: online
+tasks:
+  - id: P1.1
+    title: FUSE_MCP_BRIDGE
+    description: Harden the bridge between sensing data and MCP orchestration.
+    status: in-progress
+  - id: P1.2
+    title: Zod 6.0 Integration
+    description: Update all P1 schemas to Zod 6.0 standards.
+    status: not-started

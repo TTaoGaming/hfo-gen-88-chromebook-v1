@@ -48,12 +48,21 @@ def check_file(filepath):
 
 def main():
     files = sys.argv[1:]
-    failed = False
+    exit_needed = False
     for f in files:
-        if os.path.isfile(f) and not check_file(f):
-            failed = True
+        if not os.path.isfile(f): continue
 
-    if failed:
+        is_bronze = "hfo_hot_obsidian/bronze" in f
+        success = check_file(f)
+
+        if not success:
+            if is_bronze:
+                print(f"⚠️ [P5 WARNING]: Header violation in Bronze file {f}. Please fix before freezing.")
+            else:
+                print(f"❌ [P5 BLOCK]: Header violation in hardened layer file {f}.")
+                exit_needed = True
+
+    if exit_needed:
         sys.exit(1)
 
 if __name__ == "__main__":

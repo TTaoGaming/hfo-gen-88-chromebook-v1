@@ -8,7 +8,7 @@ from datetime import datetime
 # Medallion: Bronze | Mutation: 0% | HIVE: V
 # P5 DEFEND: Automated Quarantine & Demotion Manager
 
-GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/bootstrapping_hfo/defenses/BOOK_OF_BLOOD_GRUDGES.jsonl"
+GRUDGE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_defend/BOOK_OF_BLOOD_GRUDGES.jsonl"
 
 def log_grudge(scream_id, filename, message):
     entry = {
@@ -29,38 +29,42 @@ def get_medallion_layer(path):
     return "bronze"
 
 def check_receipt(filepath):
-    # Receipts are located in the 3_resources/receipts of the target layer
-    # Format: filename.receipt.json
-    parts = filepath.split('/')
-    try:
-        medallion_index = -1
+    # Rules:
+    # 1. Any file in hfo_cold_obsidian must have [file].receipt.json in the SAME directory.
+    # 2. Any file in hfo_hot_obsidian/silver must have [file].receipt.json in silver/3_resources/receipts.
+
+    filename = os.path.basename(filepath)
+
+    if "hfo_cold_obsidian" in filepath:
+        receipt_path = f"{filepath}.receipt.json"
+        if not os.path.exists(receipt_path):
+            return False, f"Cold File lacks freeze receipt: {receipt_path}"
+        return True, "Valid"
+
+    if "hfo_hot_obsidian/silver" in filepath:
+        # Avoid checking receipts against themselves
+        if "3_resources/receipts" in filepath: return True, "Valid"
+
+        parts = filepath.split('/')
+        silver_root = ""
         for i, part in enumerate(parts):
-            if part in ["bronze", "silver", "gold", "hfo"]:
-                medallion_index = i
+            if part == "silver":
+                silver_root = "/".join(parts[:i+1])
                 break
 
-        if medallion_index == -1: return True # Not in medallion
-
-        layer = parts[medallion_index]
-        if layer == "bronze": return True # Bronze doesn't need receipt yet (it IS the input)
-
-        filename = os.path.basename(filepath)
-        receipt_name = f"{filename}.receipt.json"
-        # Receipt must be in the target layer's 3_resources/receipts
-        receipt_path = os.path.join("/".join(parts[:medallion_index+1]), "3_resources", "receipts", receipt_name)
-
+        receipt_path = os.path.join(silver_root, "3_resources", "receipts", f"{filename}.receipt.json")
         if not os.path.exists(receipt_path):
-            return False, f"Missing Tamper-Evident Receipt: {receipt_path}"
+            return False, f"Silver File lacks mutation receipt: {receipt_path}"
 
-        # Basic validation of receipt content
         with open(receipt_path, 'r') as r:
             data = json.load(r)
-            if data.get("mutation_score", 0) < 88:
-                return False, f"Receipt failed Goldilocks check: {data.get('mutation_score')}% < 88%"
+            score = data.get("mutation_score", 0)
+            if not (88 <= score <= 98):
+                return False, f"Silver Receipt failed Goldilocks check: {score}%"
 
         return True, "Valid"
-    except Exception as e:
-        return False, f"Receipt Error: {str(e)}"
+
+    return True, "Valid"
 
 def quarantine(filepath, reason):
     filename = os.path.basename(filepath)

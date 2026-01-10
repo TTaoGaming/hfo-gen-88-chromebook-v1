@@ -16,19 +16,28 @@ objectives:
     - id: "P7_V10_H1"
       title: "HUNT Phase: Intelligence Gained"
       desc: "Identified MediaPipe environment requirements for Chromebook V-1."
+    - id: "P2_V10_1"
+      title: "Physics Selection"
+      desc: "Committed to Mass-Spring-Dampener model for digital twin."
   active:
     - id: "P1_V10_1"
       title: "Zod 6.0 Interlock"
-      desc: "Drafting the P0 -> P1 coordinate relay contract."
+      desc: "Defining P0 -> P1 -> P2 -> P3 coordinate & state relay contracts."
+    - id: "P2_V10_2"
+      title: "Rapier Integration"
+      desc: "Implementing mass-spring-dampener logic in Port 2."
     - id: "P3_V10_1"
+      title: "FSM Spore Storm"
+      desc: "Implementing the Pointer FSM (Idle -> Arming -> Acquiring -> Committed)."
+    - id: "P3_V10_2"
       title: "W3C Event Dispatcher"
       desc: "Mechanism to inject PointerEvents into browser targets."
 
 pipeline_status:
-  p0_sensor: "🔴 Offline"
-  p1_schema: "⚪ Planned"
-  p2_physics: "⚪ Planned"
-  p3_delivery: "⚪ Planned"
+  p0_sensor: "🟠 Hunting (MediaPipe Index Tip)"
+  p1_schema: "🟡 Interlocked (Zod 6.0)"
+  p2_physics: "🟡 Modeling (Mass-Spring-Dampener)"
+  p3_delivery: "🟡 Planning (FSM + W3C)"
 
 blockers:
   - "Need verified MediaPipe environment on Chromebook (Linux V-1)."

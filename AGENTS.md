@@ -30,14 +30,22 @@ Every action must be aligned with one of these two primary mission threads:
 ## 📍 Current Phase: Gen 88 Canalization
 We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alpha Bootstrapping**.
 
+**Active Mission Projects**:
+- `0_p0_sense.yaml` to `7_p7_navigate.yaml`: Port Hardening (Thread Alpha).
+- `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega).
+    - **V10 Vertical Slice**: Mass-Spring-Dampener Physics Cursor + FSM.
+    - **Status**: Bronze Interlock complete. Contracts & Physics Logic manifested.
+
 **Active Defenses**:
 - **P4 SCREAM**: Pre-commit governance header enforcement enabled.
-- **P5 DEFEND**: Integrity audit (Scripts/Hooks) operational.
-- **Grudge Ledger**: `BOOK_OF_BLOOD_GRUDGES.jsonl` active.
+- **P5 DEFEND**: Theater Sentinel (Temporal/Interlock check) operational. **SUCCESS**: Caught BREACH_REWARD_HACK 2026-01-10T01:30:00Z.
+- **P5 HIVE8**: **HARD ENFORCEMENT ACTIVE**. Interaction blocked without Port 0 Dual Search (Tavily+Brave) and 8-Step Sequential Thinking (Port 7).
+- **P5 CONSUL**: Praetorian Immunizer (Consolidated Sentinels) active at [hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_defend/p5_praetorian.py](hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_defend/p5_praetorian.py).
+- **Grudge Ledger**: [BOOK_OF_BLOOD_GRUDGES.jsonl](hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_defend/BOOK_OF_BLOOD_GRUDGES.jsonl) active (1 entry recorded).
 
 **Tooling Intelligence**:
-- **P0 SENSE**: Tavily Search / Brave Search active.
-- **P7 NAVIGATE**: Github API / runSubagent active.
+- **P0 SENSE**: Mandatory Dual Search (Tavily + Brave) via `dual_search.py`. Generic `web_fetch` disabled/prohibited.
+- **P7 NAVIGATE**: Github API / runSubagent active. Mandatory 8-step sequential thinking.
 
 **The Pipeline:**
 `Camera (Python/MediaPipe) → Port 0 (Sense) → Port 1 (Fuse) → Port 2 (Physics/Rapier) → Port 3 (Deliver) → W3C Pointer Event.`
@@ -55,11 +63,12 @@ We are currently in a **Cold Start** scenario on a Chromebook.
 
 ---
 
-## 🧠 Strategic Priorities for Agents
-1. **Respect the Medallion Flow**: Code must be tested and "cooled" in Bronze before moving to Silver.
-2. **Maintain the Goldilocks Zone**: Aim for 88-98% mutation scoring.
+## 📏 Strategic Priorities for Agents
+1. **Respect the Medallion Flow**: Code must follow the 1-way refinement path: **Hot Bronze -> (Freeze) -> Cold Bronze -> (Stryker) -> Hot Silver**. Promotion requires valid receipts.
+2. **Maintain the Goldilocks Zone**: Aim for 88-98% mutation scoring for Silver/Gold layers.
 3. **Phoenix Protocol**: We are resurrecting the project on this specific hardware (Chromebook V-1). Ensure all paths and dependencies are configured for this Linux environment.
 4. **Stigmergy First**: Check the blackboards (`.jsonl` files) for active signals before initiating significant state changes.
+5. **Anti-Reward Hacking**: Enforce real tool use (H-Phase Dual Search: Tavily + Brave) with verifiable receipts in the blackboard. No workflow bypass.
 
 ---
 

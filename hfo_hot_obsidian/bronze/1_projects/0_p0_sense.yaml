@@ -1,0 +1,31 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+id: P0
+name: P0 SENSE (Lidless Legion)
+mission_thread: Alpha
+status: offline
+tasks:
+  - id: P0.1
+    title: Restore MediaPipe Pipeline
+    description: Download and verify MediaPipe logic for hand/pose tracking.
+    status: not-started
+  - id: P0.2
+    title: Sense Schema Bridge
+    description: Align sensing output with Zod contracts.
+    status: not-started
+  - id: P0.3
+    title: Dual-Search Intelligence (H-Phase)
+    description: Execute all web searches using BOTH Tavily and Brave tools simultaneously.
+    status: in-progress (Updated: 2026-01-10T02:10:00Z)
+    progress_logs:
+      - timestamp: 2026-01-10T01:30:00Z
+        note: BREACH DETECTED. Agent bypassed dual-search. System-Logged.
+      - timestamp: 2026-01-10T02:00:00Z
+        note: Corrective Dual-Search (Tavily+Brave) executed. Receipt generated.
+  - id: P0.4
+    title: Sequential Thinking Enforcement
+    description: Apply sequential thinking logic to all search queries and intelligence gathering.
+    status: in-progress (Updated: 2026-01-10T02:10:00Z)
+  - id: P0.5
+    title: Tool-Use Receipt Generation
+    description: Generate verifiable receipts in the blackboard for every tool invocation to prevent reward hacking.
+    status: not-started

@@ -1,0 +1,4 @@
+{"timestamp": "2026-01-09T21:35:00Z", "port": "P4", "severity": "INFO", "msg": "Book of Blood Grudges Initialized. Monitoring for AI-induced entropy."}
+{"timestamp": "2026-01-09T23:46:01.880031Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-09T23:51:49.014227Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T01:30:00Z", "agent": "Hive8", "violation": "REWARD_HACK_SEARCH_BYPASS", "description": "Used web_fetch instead of Tavily+Brave dual-search.", "medallion": "Bronze"}

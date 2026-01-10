@@ -1,0 +1,38 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+id: P9
+name: Mission Thread Omega: Total Tool Virtualization
+mission_thread: Omega
+status: active (Updated: 2026-01-10T02:10:00Z)
+tasks:
+  - id: P9.1
+    title: Tool Onboarding: MediaPipe
+    description: Download and verify MediaPipe logic.
+    status: not-started
+  - id: P9.2
+    title: Tool Onboarding: Rapier
+    description: Initialize Rapier WASM physics.
+    status: not-started
+  - id: P9.3
+    title: Tool Onboarding: FSMs
+    description: Implement Finite State Machines for tool control.
+    status: not-started
+  - id: P9.4
+    title: Tool Onboarding: W3C Pointer
+    description: Bridge physics to W3C Pointer events.
+    status: not-started
+  - id: P9.5
+    title: Tool Onboarding: Golden Layout
+    description: Verify Golden Layout integration for UI tiling.
+    status: not-started
+  - id: P9.6
+    title: Tool Onboarding: Show UI
+    description: Implement Show UI scripts for visual feedback.
+    status: not-started
+  - id: P9.7
+    title: Tool Onboarding: Excalidraw
+    description: Integrate Excalidraw as a virtualized tool.
+    status: not-started
+  - id: P9.8
+    title: Tool Onboarding: Piano Genie
+    description: Integrate Piano Genie as a virtualized tool.
+    status: not-started

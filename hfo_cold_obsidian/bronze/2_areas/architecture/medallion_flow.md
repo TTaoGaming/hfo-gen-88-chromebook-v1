@@ -42,12 +42,15 @@ medallion/
 
 ### Tripwire Rule
 > **NEVER** move directly from Hot Bronze to Hot Silver.
-> All code MUST cool in Cold Bronze first.
+> All code MUST freeze in Cold Bronze first.
 
-### Receipt Requirement
-Moving to Cold Bronze requires:
-- Mutation Score ≥ 88%
-- Hashed manifest
+### Receipt Requirements
+1. **To Cold Bronze (Freeze)**:
+    - Hashed manifest.
+    - Provenance header (Bronze).
+2. **To Hot Silver (Mutation)**:
+    - Mutation Score (Stryker) **88% - 98%**.
+    - Tamper-evident mutation receipt.
 - Tamper-Evident Receipt in `3_resources/receipts/`
 
 ### No Theater Rule
@@ -77,22 +80,22 @@ workspace/
 
 ## Stigmergy Blackboards
 
-| Blackboard | Purpose |
-|:---|:---|
-| `hot_obsidianblackboard.jsonl` | Active kinetic signals |
+| Blackboard                      | Purpose                    |
+| :------------------------------ | :------------------------- |
+| `hot_obsidianblackboard.jsonl`  | Active kinetic signals     |
 | `cold_obsidianblackboard.jsonl` | Hardened historical record |
-| `BLOOD_BOOK_OF_GRUDGES.jsonl` | Port 4 violation ledger |
+| `BLOOD_BOOK_OF_GRUDGES.jsonl`   | Port 4 violation ledger    |
 
 ---
 
 ## Goldilocks Zone
 
-| Score | Status | Action |
-|:---:|:---:|:---|
-| < 80% | 🔴 REJECT | Under-tested → Bronze |
-| 80-87% | 🟡 WARN | Debt → Silver with warning |
-| 88-98% | 🟢 TARGET | Pareto optimal |
-| > 99% | 🔴 SCREAM | AI Theater detected |
+| Score  |  Status  | Action                     |
+| :----: | :------: | :------------------------- |
+| < 80%  | 🔴 REJECT | Under-tested → Bronze      |
+| 80-87% |  🟡 WARN  | Debt → Silver with warning |
+| 88-98% | 🟢 TARGET | Pareto optimal             |
+| > 99%  | 🔴 SCREAM | AI Theater detected        |
 
 ---
 
