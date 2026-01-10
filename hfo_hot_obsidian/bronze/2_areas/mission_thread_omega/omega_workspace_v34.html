@@ -217,7 +217,7 @@
                 this.recoveryStartTime = 0;
                 this.dwellStartTime = 0;
                 this.pointerEvent = 'none';
-                this.ARMING_THRESHOLD = 300; 
+                this.ARMING_THRESHOLD = 300;
                 this.RECOVERY_TIMEOUT = 1000; // V33: Sticky Drag - Coastal Persistence
                 this.RELEASE_TIMEOUT = 200;   // Buffer for button-up cushioning
                 this.CANCEL_DWELL = 50;
@@ -287,7 +287,7 @@
                             if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
                             if (timestamp - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
                                 this.state = 'IDLE';
-                                this.pointerEvent = 'pointerup'; 
+                                this.pointerEvent = 'pointerup';
                                 this.recoveryStartTime = 0;
                             }
                         }
@@ -301,7 +301,7 @@
                             this.recoveryStartTime = 0;
                         } else if (currentGesture === 'POINTING_UP' && isConfident) {
                             this.state = 'COMMITTED';
-                            this.pointerEvent = 'pointerdown'; 
+                            this.pointerEvent = 'pointerdown';
                             this.recoveryStartTime = 0;
                         } else if (currentGesture === 'LOST' || currentGesture === 'NONE' || !isConfident) {
                             if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
@@ -471,12 +471,12 @@
                             const inner = target.contentDocument.elementFromPoint(finalX, finalY);
                             if (inner) target = inner;
                             else { finalX = x; finalY = y; }
-                        } catch(e) { finalX = x; finalY = y; }
+                        } catch (e) { finalX = x; finalY = y; }
                     }
                 } else {
                     finalX = x; finalY = y;
                 }
-                
+
                 if (target.tagName === 'IFRAME' || target.classList.contains('canvas-gate')) {
                     if (!hand.localCursor) {
                         hand.localCursor = document.createElement('div');
@@ -606,7 +606,7 @@
                 if (hfoState.active && video.readyState >= 2) {
                     const res = gestureRecognizer.recognizeForVideo(video, now); ctx.clearRect(0, 0, canvas.width, canvas.height);
                     const landmarks = res.landmarks || []; const handIds = Object.keys(hfoState.hands);
-                    
+
                     // 🎯 V33: Identity Security (High-Inertia Geometric Solver)
                     const costMatrix = []; const assignments = {};
                     landmarks.forEach((lm, lIdx) => {
@@ -614,16 +614,16 @@
                         handIds.forEach(id => {
                             const h = hfoState.hands[id];
                             const d = Math.sqrt((tip.x - h.cursors.raw.x) ** 2 + (tip.y - h.cursors.raw.y) ** 2);
-                            
+
                             // TRACKING: Active hands have affinity (cost = d)
                             // DISCOVERY: Inactive hands have penalty (cost = d + 0.5) to prevent theft
                             let cost = d;
                             if (!h.active) {
-                                cost = d + 0.5; 
+                                cost = d + 0.5;
                             } else if (d > hfoState.physics.persistence.teleportLimit) {
                                 cost = 1000; // Teleport protection
                             }
-                            
+
                             costMatrix.push({ lIdx, handId: id, cost });
                         });
                     });

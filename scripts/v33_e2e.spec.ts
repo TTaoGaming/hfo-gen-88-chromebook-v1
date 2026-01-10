@@ -9,7 +9,7 @@ test('V30 E2E: Simulate Gesture-to-Click on Tool Menu', async ({ hfoPage }) => {
   // 1. Load the workspace
   const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v33.html';
   await hfoPage.goto(url);
-  
+
   // 1.5 Manually trigger physics
   await hfoPage.initHFO();
 
@@ -24,13 +24,13 @@ test('V30 E2E: Simulate Gesture-to-Click on Tool Menu', async ({ hfoPage }) => {
   // 2. Locate a target menu item (e.g., the Rectangle tool)
   const rectTool = frame.locator('label[title*="Rectangle"]');
   await expect(rectTool).toBeVisible();
-  
+
   // Get positions
   const iframeEl = hfoPage.locator('iframe#excalidraw-iframe');
   const iframeBox = await iframeEl.boundingBox();
   const box = await rectTool.boundingBox();
   if (!box || !iframeBox) throw new Error("Could not find box for Rectangle tool or iframe");
-  
+
   // Normalize relative to the IFRAME
   const targetX = (box.x + box.width / 2 - iframeBox.x) / iframeBox.width;
   const targetY = (box.y + box.height / 2 - iframeBox.y) / iframeBox.height;
@@ -39,26 +39,26 @@ test('V30 E2E: Simulate Gesture-to-Click on Tool Menu', async ({ hfoPage }) => {
 
   // 3. Inject State: Move hand to tool and transition FSM to COMMITTED
   await hfoPage.evaluate(() => {
-      // @ts-ignore
-      window.hfoState.physics.p3Mirror = false;
+    // @ts-ignore
+    window.hfoState.physics.p3Mirror = false;
   });
 
   await hfoPage.injectHand(0, {
-      active: true,
-      state: 'COMMITTED',
-      event: 'pointerdown',
-      cursors: { predictive: { x: targetX, y: targetY } }
+    active: true,
+    state: 'COMMITTED',
+    event: 'pointerdown',
+    cursors: { predictive: { x: targetX, y: targetY } }
   });
 
   // 4. Inject State: Release
   await hfoPage.injectHand(0, {
-      state: 'RELEASING',
-      event: 'pointermove'
+    state: 'RELEASING',
+    event: 'pointermove'
   });
 
   await hfoPage.injectHand(0, {
-      state: 'ARMED',
-      event: 'pointerup'
+    state: 'ARMED',
+    event: 'pointerup'
   });
 
   // 5. Verification
@@ -74,14 +74,14 @@ test('V30 E2E: Simulate Gesture-to-Click on Tool Menu', async ({ hfoPage }) => {
 test('V30 E2E: Structural Check for Same-Origin Drill', async ({ hfoPage }) => {
   const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v33.html';
   await hfoPage.goto(url);
-  
+
   // Verify that we can read internal document properties (Requires Same-Origin)
   const canAccessDocument = await hfoPage.evaluate(() => {
     const iframe = document.getElementById('excalidraw-iframe') as HTMLIFrameElement;
     try {
-        return !!iframe.contentDocument;
-    } catch(e) {
-        return false;
+      return !!iframe.contentDocument;
+    } catch (e) {
+      return false;
     }
   });
 

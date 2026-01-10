@@ -15,9 +15,9 @@ test('V33: 1s Persistence (Sticky Drag) during Tracking Loss', async ({ hfoPage 
 
   // 2. Start a drag (COMMITTED)
   await hfoPage.injectHand(0, {
-      active: true,
-      state: 'COMMITTED',
-      event: 'pointerdown'
+    active: true,
+    state: 'COMMITTED',
+    event: 'pointerdown'
   });
 
   // Verify it's committed
@@ -29,7 +29,7 @@ test('V33: 1s Persistence (Sticky Drag) during Tracking Loss', async ({ hfoPage 
     // @ts-ignore
     const hand = window.hfoState.hands[0];
     const now = performance.now();
-    hand.fsm.process('LOST', now, 0); 
+    hand.fsm.process('LOST', now, 0);
   });
 
   // Wait 500ms (Halfway through persistence)
@@ -42,7 +42,7 @@ test('V33: 1s Persistence (Sticky Drag) during Tracking Loss', async ({ hfoPage 
     const now = performance.now();
     hand.fsm.process('LOST', now, 0);
   });
-  
+
   state = await hfoPage.getHandState(0);
   expect(state.state).toBe('COMMITTED');
   console.log('V33: State is still COMMITTED after 500ms tracking loss (PASS)');

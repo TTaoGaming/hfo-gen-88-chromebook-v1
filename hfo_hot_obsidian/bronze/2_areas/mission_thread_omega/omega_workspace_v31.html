@@ -217,7 +217,7 @@
                 this.recoveryStartTime = 0;
                 this.dwellStartTime = 0;
                 this.pointerEvent = 'none';
-                this.ARMING_THRESHOLD = 300; 
+                this.ARMING_THRESHOLD = 300;
                 this.RECOVERY_TIMEOUT = 300;
                 this.CANCEL_DWELL = 50;
                 this.lastTimestamp = 0;
@@ -329,7 +329,7 @@
                         } else if (currentGesture === 'POINTING_UP') {
                             // 🐛 BUG FIX: Recidivism into COMMITTED requires a re-down if we already started releasing
                             this.state = 'COMMITTED';
-                            this.pointerEvent = 'pointerdown'; 
+                            this.pointerEvent = 'pointerdown';
                             this.recoveryStartTime = 0;
                         } else if (currentGesture === 'NONE' || currentGesture === 'LOST') {
                             if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
@@ -499,12 +499,12 @@
                             const inner = target.contentDocument.elementFromPoint(finalX, finalY);
                             if (inner) target = inner;
                             else { finalX = x; finalY = y; }
-                        } catch(e) { finalX = x; finalY = y; }
+                        } catch (e) { finalX = x; finalY = y; }
                     }
                 } else {
                     finalX = x; finalY = y;
                 }
-                
+
                 if (target.tagName === 'IFRAME' || target.classList.contains('canvas-gate')) {
                     if (!hand.localCursor) {
                         hand.localCursor = document.createElement('div');
@@ -640,20 +640,20 @@
                         const tip = lm[8];
                         const handedness = res.handedness?.[lIdx]?.[0]?.categoryName; // 'Left' or 'Right'
                         const prefId = (handedness === 'Left') ? 0 : (handedness === 'Right' ? 1 : null);
-                        
+
                         let bestD = Infinity, bestId = null;
-                        
+
                         handIds.forEach(id => {
                             const h = hfoState.hands[id];
                             const d = Math.sqrt((tip.x - h.cursors.raw.x) ** 2 + (tip.y - h.cursors.raw.y) ** 2);
-                            
+
                             // Acquisition Logic: If preferred ID is inactive, snap immediately
                             if (id == prefId && !h.active) {
                                 bestD = 0; bestId = id;
                             } else if (d < bestD) {
                                 // Physics Logic: Tie-breaker for label swaps
                                 // We weight the preferred ID to prevent jitter, but allow physics to win if distance is extreme
-                                const weight = (id == prefId) ? 0.6 : 1.0; 
+                                const weight = (id == prefId) ? 0.6 : 1.0;
                                 if (d * weight < bestD) {
                                     bestD = d;
                                     bestId = id;

@@ -1,4 +1,5 @@
 # 📊 Trade Study: Identity Lock & Landmark Assignment (P0-SENSE)
+
 **Date**: 2026-01-10
 **Mission**: Phoenix Project | Omega Thread
 **Objective**: Robust 1:1 Hand-to-ID mapping under sensor noise and occlusion.
@@ -30,16 +31,20 @@ Moving away from the handedness label simplifies the P0-SENSE layer but introduc
 | **Startup** | Predetermined IDs. | "First come, first served" discovery. |
 
 ### 🚀 The "Simple" Tradeoff: **Predictable Swaps**
+
 The primary tradeoff of moving to Geometric Memory is the **"X-Crossing" problem**.
+
 - **The Risk**: If you cross your hands, Hand 0 (Left) and Hand 1 (Right) will swap identities at the moment of intersection.
 - **The Recovery**: Because we are building a *Physics Cursor*, a swap is actually less jarring than a tracking drop. A swap just means the cursor labels change; a tracking drop means the interaction (like a drag) is terminated.
 
 ### 🧭 Option: The "Catch-All" Discovery
+
 We can make the geometric logic even simpler by allowing any landmark to claim any **Inactive** ID with zero cost. This solves the "Cold Start" problem where a hand needs to be recognized for the first time.
 
 ---
 
 ## 🧭 Recommendation: **Hybrid Kinetic-Geometric (Option 5 Lite)**
+
 We should use a **Minimal Total Cost Solver** (Bipartite) but change the cost function to prioritize **Temporal Continuity** over **MediaPipe Labels**.
 
 **The New Formula**:

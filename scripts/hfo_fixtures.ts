@@ -31,7 +31,7 @@ export const test = base.extend<{ hfoPage: HFOPage }>({
                 // @ts-ignore
                 const hand = window.hfoState.hands[handId];
                 if (!hand) return;
-                
+
                 if (handProps.cursors) {
                     for (const key in handProps.cursors) {
                         Object.assign(hand.cursors[key], handProps.cursors[key]);
@@ -42,7 +42,7 @@ export const test = base.extend<{ hfoPage: HFOPage }>({
                 Object.assign(hand, handProps);
                 if (handProps.state) hand.fsm.state = handProps.state;
                 if (handProps.event) hand.fsm.pointerEvent = handProps.event;
-                
+
                 // @ts-ignore
                 if (window.p3InjectPointer) window.p3InjectPointer(hand);
             }, { handId: id, handProps: props });

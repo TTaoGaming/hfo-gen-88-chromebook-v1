@@ -20,7 +20,7 @@ test('V30 Hardening: Check Iframe and FSM stability', async ({ page }) => {
   // 4. Try to drill (using same-origin access)
   const frame = page.frameLocator('iframe#excalidraw-iframe');
   const canvas = frame.locator('canvas.interactive');
-  
+
   // Wait for Excalidraw to load (might take a second for unpkg)
   await expect(canvas).toBeVisible({ timeout: 15000 });
 

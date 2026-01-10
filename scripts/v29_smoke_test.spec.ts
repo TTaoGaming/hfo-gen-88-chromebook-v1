@@ -18,6 +18,6 @@ test('HFO Omega V29 Trans-Boundary Smoke Test', async ({ page }) => {
     if (iframeBox) {
         await page.mouse.click(iframeBox.x + iframeBox.width / 2, iframeBox.y + iframeBox.height / 2);
     }
-    
+
     console.log("SUCCESS: V29 Iframe and internal canvas detected. Native mouse path verified.");
 });

@@ -217,7 +217,7 @@
                 this.recoveryStartTime = 0;
                 this.dwellStartTime = 0;
                 this.pointerEvent = 'none';
-                this.ARMING_THRESHOLD = 300; 
+                this.ARMING_THRESHOLD = 300;
                 this.RECOVERY_TIMEOUT = 300;
                 this.CANCEL_DWELL = 50;
                 this.lastTimestamp = 0;
@@ -487,12 +487,12 @@
                             const inner = target.contentDocument.elementFromPoint(finalX, finalY);
                             if (inner) target = inner;
                             else { finalX = x; finalY = y; }
-                        } catch(e) { finalX = x; finalY = y; }
+                        } catch (e) { finalX = x; finalY = y; }
                     }
                 } else {
                     finalX = x; finalY = y;
                 }
-                
+
                 if (target.tagName === 'IFRAME' || target.classList.contains('canvas-gate')) {
                     if (!hand.localCursor) {
                         hand.localCursor = document.createElement('div');

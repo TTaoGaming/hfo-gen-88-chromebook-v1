@@ -2,6 +2,8 @@
 import os
 import requests
 import json
+import sys
+import subprocess
 from datetime import datetime
 
 # Medallion: Bronze | Mutation: 0% | HIVE: H
@@ -49,8 +51,6 @@ def local_repo_sense(query):
     # Simulated Repo Search via grep/find for P0 QUAD compliance
     print(f"🔍 [P0-SENSE]: Locally sensing Repo for: {query}")
     try:
-        # We use a simple grep to find matches in the workspace
-        # This simulates the 'Repo' pillar of QUAD search
         cmd = ["grep", "-ri", query, "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze"]
         result = subprocess.run(cmd, capture_output=True, text=True)
         lines = result.stdout.splitlines()[:10] # Limit to 10 lines
@@ -59,8 +59,6 @@ def local_repo_sense(query):
         return {"error": str(e)}
 
 def main():
-    import sys
-    import subprocess
     load_env()
     tavily_key = os.getenv("TAVILY_API_KEY")
     brave_key = os.getenv("BRAVE_API_KEY")
@@ -87,7 +85,7 @@ def main():
         "timestamp": datetime.now().isoformat()
     }
 
-    with open("P0_SENSE_search_results.json", "w") as f:
+    with open("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/P0_SENSE_search_results.json", "w") as f:
         json.dump(output, f, indent=2)
 
     # PORT 5 COMPLIANCE: Log to Blackboard
