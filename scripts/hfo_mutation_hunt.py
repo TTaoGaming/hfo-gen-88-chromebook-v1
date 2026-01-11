@@ -11,8 +11,13 @@ import os
 import subprocess
 import json
 import time
+import sys
 
-MANIFOLD = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_manifold.py"
+ORCHESTRATION_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports"
+if ORCHESTRATION_PATH not in sys.path:
+    sys.path.append(ORCHESTRATION_PATH)
+
+MANIFOLD = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py"
 
 def run_manifold_p5():
     res = subprocess.run(["python3", MANIFOLD, "p5"], capture_output=True, text=True)
@@ -46,15 +51,17 @@ def cleanup_physics_break():
 
 # --- MUTATION 2: Delete P3 Injector ---
 def setup_p3_break():
-    # Patch the HTML to remove the string the manifold looks for
-    path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v36.html"
+    # Patch the dynamic HTML
+    from hfo_orchestration_hub import get_active_workspace
+    path = get_active_workspace()
     with open(path, "r") as f:
         content = f.read()
     with open(path, "w") as f:
         f.write(content.replace("p3InjectPointer", "p3BROKENPointer"))
 
 def cleanup_p3_break():
-    path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v36.html"
+    from hfo_orchestration_hub import get_active_workspace
+    path = get_active_workspace()
     with open(path, "r") as f:
         content = f.read()
     with open(path, "w") as f:

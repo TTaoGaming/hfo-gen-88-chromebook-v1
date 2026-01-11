@@ -52,16 +52,12 @@ test('V30 E2E: Simulate Gesture-to-Click on Tool Menu', async ({ hfoPage }) => {
 
   // 4. Inject State: Release
   await hfoPage.injectHand(0, {
-    state: 'RELEASING',
-    event: 'pointermove'
-  });
-
-  await hfoPage.injectHand(0, {
-    state: 'ARMED',
+    state: 'IDLE',
     event: 'pointerup'
   });
 
   // 5. Verification
+  await hfoPage.waitForTimeout(500);
   const isSelected = await rectTool.evaluate((el) => {
     const input = el.querySelector('input');
     return input ? input.checked : el.classList.contains('active');

@@ -210,18 +210,20 @@
             specversion: z.literal("1.0"), type: z.string(), source: z.string(), id: z.string(), time: z.string(), data: z.record(HandSchema)
         });
 
-        // 🤖 V37: Palm-Oriented State Machine (FSM)
+        // 🤖 V38: Palm-Oriented "Predict then Confirm" FSM
         class GestureFSM {
             constructor() {
                 this.state = 'IDLE';
                 this.progress = 0;
-                this.recoveryStartTime = 0;
+                this.departureStartTime = 0;
+                this.coastStartTime = 0;
                 this.dwellStartTime = 0;
                 this.pointerEvent = 'none';
                 this.ARMING_THRESHOLD = 300;
-                this.RECOVERY_TIMEOUT = 1000; // V33: Sticky Drag
-                this.RELEASE_TIMEOUT = 200;   
-                this.CANCEL_DWELL = 50;
+                this.RECOVERY_TIMEOUT = 1000;
+                this.RELEASE_TIMEOUT = 500;   // Increased for stability
+                this.CANCEL_DWELL = 800; // V38.1.1 Stickier palm identity
+                this.COMMIT_TIMEOUT = 1500; // More forgiving prediction
                 this.lastTimestamp = 0;
             }
 
@@ -232,6 +234,22 @@
                 this.pointerEvent = 'none';
                 const isConfident = score > 0.5;
 
+                // 🛡️ Global Departure Logic: Stickier Palm Recovery
+                if (!isPalmFacing && this.state !== 'IDLE') {
+                    if (!this.departureStartTime) this.departureStartTime = timestamp;
+                    if (timestamp - this.departureStartTime > this.CANCEL_DWELL) {
+                        const oldState = this.state;
+                        this.state = 'IDLE';
+                        this.pointerEvent = (oldState === 'COMMITTED' || oldState === 'RELEASING') ? 'pointercancel' : 'none';
+                        this.departureStartTime = 0;
+                        return { state: this.state, pointerEvent: this.pointerEvent };
+                    }
+                    // 🔒 LOCK: No internal transitions while departure in progress
+                    return { state: this.state, pointerEvent: this.pointerEvent };
+                } else if (isPalmFacing) {
+                    this.departureStartTime = 0;
+                }
+
                 switch (this.state) {
                     case 'IDLE':
                         if (isPalmFacing) {
@@ -241,99 +259,70 @@
                         break;
 
                     case 'ARMING':
-                        if (isPalmFacing) {
-                            this.progress += dt;
-                        } else {
-                            this.state = 'IDLE';
-                            break;
-                        }
+                        this.progress += dt;
                         if (this.progress >= this.ARMING_THRESHOLD) {
                             this.state = 'ARMED';
                             this.progress = 0;
+                        } else if (!isConfident && currentGesture !== 'NONE') {
+                            this.state = 'IDLE';
                         }
                         break;
 
                     case 'ARMED':
                         this.pointerEvent = 'pointermove';
-                        if (!isPalmFacing) {
-                            this.state = 'IDLE';
-                            this.pointerEvent = 'pointercancel';
-                            break;
-                        }
-                        // Transition to COMMITTING if we start to point
-                        if (currentGesture === 'POINTING_UP' && isConfident) {
+                        // 🎯 V38.1.1: Responsive Threshold Tuning
+                        if (currentGesture === 'POINTING_UP' && score > 0.8 && isPalmFacing) {
+                            this.state = 'COMMITTING'; // Transition through state for consistency
+                            this.coastStartTime = timestamp;
+                        } else if (currentGesture === 'POINTING_UP' && isConfident) {
                             this.state = 'COMMITTING';
-                            this.progress = 0;
+                            this.coastStartTime = timestamp;
+                        } else if ((currentGesture === 'NONE' || currentGesture === 'LOST') && isPalmFacing) {
+                            this.state = 'COMMITTING';
+                            this.coastStartTime = timestamp;
                         }
                         break;
 
                     case 'COMMITTING':
                         this.pointerEvent = 'pointermove';
-                        if (!isPalmFacing) {
-                            this.state = 'IDLE';
-                            this.pointerEvent = 'pointercancel';
-                            break;
-                        }
-                        // Immediately commit if POINTING_UP is stable
-                        if (currentGesture === 'POINTING_UP' && isConfident) {
+                        // 🚀 Faster Commitment
+                        if (currentGesture === 'POINTING_UP' && (score > 0.7 || timestamp - this.coastStartTime > 150)) {
                             this.state = 'COMMITTED';
                             this.pointerEvent = 'pointerdown';
-                            this.recoveryStartTime = 0;
-                        } else if (currentGesture !== 'NONE' && currentGesture !== 'LOST' && isConfident) {
-                            // If we see a different gesture entirely, go back to ARMED
-                            this.state = 'ARMED';
+                        } else if (currentGesture !== 'NONE' && currentGesture !== 'LOST' && currentGesture !== 'POINTING_UP' && isConfident) {
+                            this.state = 'ARMED'; // Returned to regular tracking
+                        } else if (timestamp - this.coastStartTime > this.COMMIT_TIMEOUT) {
+                            this.state = 'ARMED'; // Prediction timed out, no click
                         }
                         break;
 
                     case 'COMMITTED':
                         this.pointerEvent = 'pointermove';
-                        
-                        const isHolding = (currentGesture === 'POINTING_UP' && isConfident) || (isPalmFacing && currentGesture !== 'OPEN_PALM');
-
-                        if (isHolding) {
-                            this.recoveryStartTime = 0;
-                        } else if (currentGesture === 'OPEN_PALM' && isConfident) {
+                        if (currentGesture === 'POINTING_UP' && isConfident) {
+                            this.coastStartTime = 0;
+                        } else if (currentGesture === 'NONE' || currentGesture === 'LOST') {
                             this.state = 'RELEASING';
-                            this.recoveryStartTime = 0;
+                            this.coastStartTime = timestamp;
                         } else {
-                            // Sticky Drag / Recovery for both lost gesture and lost palm
-                            if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
-                            if (timestamp - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
-                                this.state = 'IDLE';
-                                this.pointerEvent = 'pointerup';
-                                this.recoveryStartTime = 0;
+                            if (!this.coastStartTime) this.coastStartTime = timestamp;
+                            if (timestamp - this.coastStartTime > this.RECOVERY_TIMEOUT) {
+                                this.state = 'RELEASING';
+                                this.coastStartTime = timestamp;
                             }
                         }
                         break;
 
                     case 'RELEASING':
                         this.pointerEvent = 'pointermove';
-                        if (!isPalmFacing) {
-                            this.state = 'IDLE';
-                            this.pointerEvent = 'pointerup';
-                            break;
-                        }
                         if (currentGesture === 'OPEN_PALM' && isConfident) {
-                            // Wait for actual gesture release or dwell
-                            if (!this.recoveryStartTime) this.recoveryStartTime = timestamp;
-                            if (timestamp - this.recoveryStartTime > this.RELEASE_TIMEOUT) {
-                                this.state = 'ARMED';
-                                this.pointerEvent = 'pointerup';
-                                this.recoveryStartTime = 0;
-                            }
+                            this.state = 'ARMED';
+                            this.pointerEvent = 'pointerup';
                         } else if (currentGesture === 'POINTING_UP' && isConfident) {
-                            // Re-grip
                             this.state = 'COMMITTED';
-                            this.pointerEvent = 'pointerdown';
-                            this.recoveryStartTime = 0;
-                        } else {
-                            // Cancel dwell if unknown gesture
-                            if (!this.dwellStartTime) this.dwellStartTime = timestamp;
-                            if (timestamp - this.dwellStartTime > this.CANCEL_DWELL) {
-                                this.state = 'ARMED';
-                                this.pointerEvent = 'pointerup';
-                                this.dwellStartTime = 0;
-                            }
+                        } else if (timestamp - this.coastStartTime > this.RELEASE_TIMEOUT) {
+                            // If stuck in RELEASING/NONE for too long, finalize release
+                            this.state = 'ARMED';
+                            this.pointerEvent = 'pointerup';
                         }
                         break;
                 }
@@ -350,16 +339,16 @@
             }
             alpha(c) { const te = 1 / (this.freq || 60); const tau = 1 / (2 * Math.PI * (c || 1.0)); return 1 / (1 + tau / te); }
             call(x, t = null) {
-                if (this.lastTime !== null && t !== null) { 
-                    const dt = (t - this.lastTime) / 1000; 
-                    if (dt > 0.001) this.freq = 1 / dt; 
+                if (this.lastTime !== null && t !== null) {
+                    const dt = (t - this.lastTime) / 1000;
+                    if (dt > 0.001) this.freq = 1 / dt;
                 }
-                this.lastTime = t; 
-                const prevX = this.xFilter.s; 
+                this.lastTime = t;
+                const prevX = this.xFilter.s;
                 const dx = prevX === null ? 0 : (x - prevX) * (this.freq || 60);
-                const edx = this.dxFilter.call(dx); 
+                const edx = this.dxFilter.call(dx);
                 const c = this.minCutoff + this.beta * Math.abs(edx);
-                this.xFilter.alpha = this.alpha(c); 
+                this.xFilter.alpha = this.alpha(c);
                 const result = this.xFilter.call(x);
                 return isNaN(result) ? (x || 0) : result;
             }
@@ -383,6 +372,7 @@
         // 🛰️ V37 System Singleton Guard
         const hfoSystem = window.hfoSystem = {
             initialized: false,
+            initializing: false,
             video: null,
             canvas: null,
             ctx: null,
@@ -413,9 +403,9 @@
                         gestures: h.gestures, palm: h.palm
                     };
                 }
-                const event = { 
-                    specversion: "1.0", type: "hfo.omega.v25.hand_update", source: "hfo.port.0.sense", 
-                    id: `telemetry-${telemetrySeq++}`, time: new Date().toISOString(), data: telemetryData 
+                const event = {
+                    specversion: "1.0", type: "hfo.omega.v25.hand_update", source: "hfo.port.0.sense",
+                    id: `telemetry-${telemetrySeq++}`, time: new Date().toISOString(), data: telemetryData
                 };
                 if (shouldValidate) {
                     CloudEventSchema.parse(event);
@@ -608,172 +598,201 @@
         };
 
         const initMediaPipe = async (container) => {
-            // Re-use or Create Singleton Elements
-            if (!hfoSystem.video) {
-                hfoSystem.video = document.createElement('video');
-                hfoSystem.video.autoplay = true;
-                hfoSystem.video.playsinline = true;
-                hfoSystem.video.style.opacity = '0.3';
-            }
-            if (!hfoSystem.canvas) {
-                hfoSystem.canvas = document.createElement('canvas');
-                hfoSystem.ctx = hfoSystem.canvas.getContext('2d');
-            }
-            
-            // Attach to current container
-            container.appendChild(hfoSystem.video);
-            container.appendChild(hfoSystem.canvas);
+            if (hfoSystem.loopActive || hfoSystem.initializing) return;
+            hfoSystem.initializing = true;
+            try {
+                // Re-use or Create Singleton Elements
+                if (!hfoSystem.video) {
+                    hfoSystem.video = document.createElement('video');
+                    hfoSystem.video.autoplay = true;
+                    hfoSystem.video.playsinline = true;
+                    hfoSystem.video.style.opacity = '0.3';
+                }
+                if (!hfoSystem.canvas) {
+                    hfoSystem.canvas = document.createElement('canvas');
+                    hfoSystem.ctx = hfoSystem.canvas.getContext('2d');
+                }
 
-            if (hfoSystem.loopActive) {
-                // Resize if needed
-                hfoSystem.canvas.width = hfoSystem.video.videoWidth || 1280;
-                hfoSystem.canvas.height = hfoSystem.video.videoHeight || 720;
-                return;
-            }
+                // Attach to current container
+                container.appendChild(hfoSystem.video);
+                container.appendChild(hfoSystem.canvas);
 
-            const video = hfoSystem.video;
-            const canvas = hfoSystem.canvas;
-            const ctx = hfoSystem.ctx;
-            const dw = new DrawingUtils(ctx);
-            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm");
-            gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
-                baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task", delegate: "GPU" },
-                runningMode: "VIDEO", ...hfoState.mpOptions
-            });
-            hfoSystem.recognizer = gestureRecognizer;
+                if (hfoSystem.loopActive) {
+                    // Resize if needed
+                    hfoSystem.canvas.width = hfoSystem.video.videoWidth || 1280;
+                    hfoSystem.canvas.height = hfoSystem.video.videoHeight || 720;
+                    hfoSystem.initializing = false;
+                    return;
+                }
 
-            const render = () => {
-                if (hfoSystem.loopActive) return;
-                hfoSystem.loopActive = true;
-                const loop = () => {
-                    const now = performance.now();
-                    if (hfoState.active && video.readyState >= 2) {
-                        try {
-                            const res = gestureRecognizer.recognizeForVideo(video, now);
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
-                            const landmarks = res.landmarks || [];
-                            const handIds = Object.keys(hfoState.hands);
+                const video = hfoSystem.video;
+                const canvas = hfoSystem.canvas;
+                const ctx = hfoSystem.ctx;
+                const dw = new DrawingUtils(ctx);
+                const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm");
+                gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+                    baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task", delegate: "GPU" },
+                    runningMode: "VIDEO", ...hfoState.mpOptions
+                });
+                hfoSystem.recognizer = gestureRecognizer;
 
-                            const assignedLandmarks = new Set();
-                            const currentAssignments = {};
+                const render = () => {
+                    hfoSystem.initializing = false;
+                    if (hfoSystem.loopActive) return;
+                    hfoSystem.loopActive = true;
+                    const loop = () => {
+                        const now = hfoSystem.lastFrame = performance.now();
+                        if (hfoState.active) {
+                            try {
+                                if (video.readyState >= 2 && gestureRecognizer) {
+                                    const res = gestureRecognizer.recognizeForVideo(video, now);
+                                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                    const landmarks = res.landmarks || [];
+                                    const handIds = Object.keys(hfoState.hands);
+                                    const assignedLandmarks = new Set();
+                                    const currentAssignments = {};
 
-                            // PASS 1: Sticky Tracking
-                            handIds.filter(id => hfoState.hands[id].active).forEach(id => {
-                                const h = hfoState.hands[id];
-                                let bestLIdx = -1;
-                                let minD = hfoState.physics.persistence.teleportLimit;
-                                landmarks.forEach((lm, lIdx) => {
-                                    if (assignedLandmarks.has(lIdx)) return;
-                                    const d = Math.sqrt((lm[8].x - h.cursors.raw.x) ** 2 + (lm[8].y - h.cursors.raw.y) ** 2);
-                                    if (d < minD) { minD = d; bestLIdx = lIdx; }
-                                });
-                                if (bestLIdx !== -1) { assignedLandmarks.add(bestLIdx); currentAssignments[id] = bestLIdx; }
-                            });
-
-                            // PASS 2: Discovery
-                            handIds.filter(id => !currentAssignments.hasOwnProperty(id)).forEach(id => {
-                                const h = hfoState.hands[id];
-                                let bestLIdx = -1;
-                                let minD = hfoState.physics.persistence.snapDistance;
-                                landmarks.forEach((lm, lIdx) => {
-                                    if (assignedLandmarks.has(lIdx)) return;
-                                    const d = Math.sqrt((lm[8].x - h.cursors.raw.x) ** 2 + (lm[8].y - h.cursors.raw.y) ** 2);
-                                    if (d < minD) { minD = d; bestLIdx = lIdx; }
-                                });
-                                if (bestLIdx !== -1) { assignedLandmarks.add(bestLIdx); currentAssignments[id] = bestLIdx; }
-                            });
-
-                            // APPLY
-                            handIds.forEach(id => {
-                                const h = hfoState.hands[id];
-                                if (currentAssignments.hasOwnProperty(id)) {
-                                    const lIdx = currentAssignments[id];
-                                    const lm = landmarks[lIdx];
-                                    
-                                    // 🎯 V37: Palm Orientation Cone (Safe Calc)
-                                    const v1 = { x: lm[5].x - lm[0].x, y: lm[5].y - lm[0].y, z: lm[5].z - lm[0].z };
-                                    const v2 = { x: lm[17].x - lm[0].x, y: lm[17].y - lm[0].y, z: lm[17].z - lm[0].z };
-                                    const cross = {
-                                        x: (v1.y * v2.z - v1.z * v2.y) || 0,
-                                        y: (v1.z * v2.x - v1.x * v2.z) || 0,
-                                        z: (v1.x * v2.y - v1.y * v2.x) || 0
-                                    };
-                                    const mag = Math.sqrt(cross.x ** 2 + cross.y ** 2 + cross.z ** 2) || 1;
-                                    const normal = { x: cross.x / mag, y: cross.y / mag, z: cross.z / mag };
-                                    const isFacing = normal.z < -0.3;
-                                    h.palm = { normal, facingCamera: isFacing };
-
-                                    h.cursors.raw.x = lm[8].x; h.cursors.raw.y = lm[8].y; h.lastSeen = now; h.coastCount = 0; h.active = true;
-                                    h.cursors.smooth.x = h.filters.sx.call(lm[8].x, now); h.cursors.smooth.y = h.filters.sy.call(lm[8].y, now);
-                                    h.cursors.snappy.x = h.filters.nx.call(lm[8].x, now); h.cursors.snappy.y = h.filters.ny.call(lm[8].y, now);
-
-                                    if (res.gestures?.[lIdx]) {
-                                        const g = res.gestures[lIdx][0];
-                                        const fsmRes = h.fsm.process(g.categoryName, now, g.score, isFacing);
-                                        h.gestures = { active: g.categoryName, score: g.score, isDown: (h.fsm.state === 'COMMITTED'), pointerEvent: fsmRes.pointerEvent };
-                                    }
-                                } else {
-                                    h.palm = { normal: { x: 0, y: 0, z: 0 }, facingCamera: false };
-                                    h.coastCount++;
-                                    const fsmRes = h.fsm.process('LOST', now, 0, false);
-                                    h.gestures.isDown = (h.fsm.state === 'COMMITTED');
-                                    h.gestures.pointerEvent = fsmRes.pointerEvent;
-                                    if (h.coastCount > hfoState.physics.persistence.coastFrames) h.active = false;
-                                }
-
-                                if (h.active) {
-                                    if (hfoState.debug && currentAssignments.hasOwnProperty(id)) {
-                                        dw.drawConnectors(landmarks[currentAssignments[id]], HandLandmarker.HAND_CONNECTIONS, { color: "#00FF00", lineWidth: 5 });
-                                    }
-                                    if (engine) {
-                                        const isEngaged = h.fsm.state === 'ARMED' || h.fsm.state === 'COMMITTED';
-                                        h.cursors.spring.constraint.stiffness = isEngaged ? hfoState.physics.stiffnessArmed : hfoState.physics.stiffness;
-                                        Matter.Body.setPosition(h.cursors.spring.anchor, { x: h.cursors[hfoState.physics.springSource].x * canvas.width, y: h.cursors[hfoState.physics.springSource].y * canvas.height });
-                                        const lead = { x: (h.cursors.snappy.x - h.cursors.smooth.x) * hfoState.physics.lookAhead, y: (h.cursors.snappy.y - h.cursors.smooth.y) * hfoState.physics.lookAhead };
-                                        Matter.Body.setPosition(h.cursors.predictive.body, { x: (h.cursors[hfoState.physics.predSource].x + lead.x) * canvas.width, y: (h.cursors[hfoState.physics.predSource].y + lead.y) * canvas.height });
-                                        h.cursors.spring.x = h.cursors.spring.body.position.x / canvas.width; h.cursors.spring.y = h.cursors.spring.body.position.y / canvas.height;
-                                        h.cursors.predictive.x = h.cursors.predictive.body.position.x / canvas.width; h.cursors.predictive.y = h.cursors.predictive.body.position.y / canvas.height;
-                                    }
-
-                                    [h.cursors.raw, h.cursors.smooth, h.cursors.snappy, h.cursors.spring, h.cursors.predictive].forEach(c => {
-                                        ctx.beginPath(); ctx.arc(c.x * canvas.width, c.y * canvas.height, 12, 0, 2 * Math.PI);
-                                        ctx.fillStyle = c.color; ctx.globalAlpha = 1.0; ctx.fill();
-                                        ctx.strokeStyle = (h.fsm.state === 'COMMITTED') ? '#00ff88' : (h.fsm.state === 'ARMED' ? '#0088ff' : 'transparent');
-                                        ctx.lineWidth = 4; ctx.stroke();
-                                        ctx.globalAlpha = 1.0; ctx.fillStyle = '#fff'; ctx.font = '10px Courier'; ctx.fillText(c.label, c.x * canvas.width + 15, c.y * canvas.height + 5);
+                                    // PASS 1: Sticky Tracking
+                                    handIds.filter(id => hfoState.hands[id].active).forEach(id => {
+                                        const h = hfoState.hands[id];
+                                        let bestLIdx = -1;
+                                        let minD = hfoState.physics.persistence.teleportLimit;
+                                        landmarks.forEach((lm, lIdx) => {
+                                            if (assignedLandmarks.has(lIdx)) return;
+                                            const d = Math.sqrt((lm[8].x - h.cursors.raw.x) ** 2 + (lm[8].y - h.cursors.raw.y) ** 2);
+                                            if (d < minD) { minD = d; bestLIdx = lIdx; }
+                                        });
+                                        if (bestLIdx !== -1) { assignedLandmarks.add(bestLIdx); currentAssignments[id] = bestLIdx; }
                                     });
-                                    p3InjectPointer(h);
-                                }
-                            });
-                            port1Bridge(hfoState.hands);
-                        } catch (err) {
-                            if (hfoState.debug) console.error("MediaPipe Loop Logic Error:", err);
-                        }
-                    }
-                    requestAnimationFrame(loop);
-                };
-                hfoSystem.loopActive = true;
-                loop();
-            };
 
-            video.onloadedmetadata = () => {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                initPhysics();
-                render();
-            };
-            
-            if (!hfoSystem.stream) {
-                hfoSystem.stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
-                video.srcObject = hfoSystem.stream;
-            } else {
-                // Singleton shortcut: video already has stream
-                if (video.readyState >= 2) {
+                                    // PASS 2: Discovery
+                                    handIds.filter(id => !currentAssignments.hasOwnProperty(id)).forEach(id => {
+                                        const h = hfoState.hands[id];
+                                        let bestLIdx = -1;
+                                        let minD = hfoState.physics.persistence.snapDistance;
+                                        landmarks.forEach((lm, lIdx) => {
+                                            if (assignedLandmarks.has(lIdx)) return;
+                                            const d = Math.sqrt((lm[8].x - h.cursors.raw.x) ** 2 + (lm[8].y - h.cursors.raw.y) ** 2);
+                                            if (d < minD) { minD = d; bestLIdx = lIdx; }
+                                        });
+                                        if (bestLIdx !== -1) { assignedLandmarks.add(bestLIdx); currentAssignments[id] = bestLIdx; }
+                                    });
+
+                                    // APPLY
+                                    handIds.forEach(id => {
+                                        const h = hfoState.hands[id];
+                                        if (currentAssignments.hasOwnProperty(id)) {
+                                            const lIdx = currentAssignments[id];
+                                            const lm = landmarks[lIdx];
+
+                                            // 🎯 V37: Palm Orientation Cone (Safe Calc)
+                                            const v1 = { x: lm[5].x - lm[0].x, y: lm[5].y - lm[0].y, z: lm[5].z - lm[0].z };
+                                            const v2 = { x: lm[17].x - lm[0].x, y: lm[17].y - lm[0].y, z: lm[17].z - lm[0].z };
+                                            const cross = {
+                                                x: (v1.y * v2.z - v1.z * v2.y) || 0,
+                                                y: (v1.z * v2.x - v1.x * v2.z) || 0,
+                                                z: (v1.x * v2.y - v1.y * v2.x) || 0
+                                            };
+                                            const mag = Math.sqrt(cross.x ** 2 + cross.y ** 2 + cross.z ** 2) || 1;
+                                            const normal = { x: cross.x / mag, y: cross.y / mag, z: cross.z / mag };
+                                            const isFacing = normal.z < -0.3;
+                                            h.palm = { normal, facingCamera: isFacing };
+
+                                            h.cursors.raw.x = lm[8].x; h.cursors.raw.y = lm[8].y; h.lastSeen = now; h.coastCount = 0; h.active = true;
+                                            h.cursors.smooth.x = h.filters.sx.call(lm[8].x, now); h.cursors.smooth.y = h.filters.sy.call(lm[8].y, now);
+                                            h.cursors.snappy.x = h.filters.nx.call(lm[8].x, now); h.cursors.snappy.y = h.filters.ny.call(lm[8].y, now);
+
+                                            if (res.gestures?.[lIdx]) {
+                                                const g = res.gestures[lIdx][0];
+                                                const fsmRes = h.fsm.process(g.categoryName, now, g.score, isFacing);
+                                                h.gestures = { active: g.categoryName, score: g.score, isDown: (h.fsm.state === 'COMMITTED'), pointerEvent: fsmRes.pointerEvent };
+                                            }
+                                        } else {
+                                            h.palm = { normal: { x: 0, y: 0, z: 0 }, facingCamera: false };
+                                            h.coastCount++;
+                                            const fsmRes = h.fsm.process('LOST', now, 0, false);
+                                            h.gestures.isDown = (h.fsm.state === 'COMMITTED');
+                                            h.gestures.pointerEvent = fsmRes.pointerEvent;
+                                            if (h.coastCount > hfoState.physics.persistence.coastFrames) h.active = false;
+                                        }
+
+                                        if (h.active) {
+                                            if (hfoState.debug && currentAssignments.hasOwnProperty(id)) {
+                                                dw.drawConnectors(landmarks[currentAssignments[id]], HandLandmarker.HAND_CONNECTIONS, { color: "#00FF00", lineWidth: 5 });
+                                            }
+                                            if (engine) {
+                                                const isEngaged = h.fsm.state === 'ARMED' || h.fsm.state === 'COMMITTED';
+                                                h.cursors.spring.constraint.stiffness = isEngaged ? hfoState.physics.stiffnessArmed : hfoState.physics.stiffness;
+                                                // 🚀 Fix: Ensure cursors reference is robust
+                                                const source = h.cursors[hfoState.physics.springSource] || h.cursors.raw;
+                                                Matter.Body.setPosition(h.cursors.spring.anchor, { x: source.x * canvas.width, y: source.y * canvas.height });
+                                                const lead = { x: (h.cursors.snappy.x - h.cursors.smooth.x) * hfoState.physics.lookAhead, y: (h.cursors.snappy.y - h.cursors.smooth.y) * hfoState.physics.lookAhead };
+                                                const predSource = h.cursors[hfoState.physics.predSource] || h.cursors.snappy;
+                                                Matter.Body.setPosition(h.cursors.predictive.body, { x: (predSource.x + lead.x) * canvas.width, y: (predSource.y + lead.y) * canvas.height });
+                                                h.cursors.spring.x = h.cursors.spring.body.position.x / canvas.width; h.cursors.spring.y = h.cursors.spring.body.position.y / canvas.height;
+                                                h.cursors.predictive.x = h.cursors.predictive.body.position.x / canvas.width; h.cursors.predictive.y = h.cursors.predictive.body.position.y / canvas.height;
+                                            }
+
+                                            [h.cursors.raw, h.cursors.smooth, h.cursors.snappy, h.cursors.spring, h.cursors.predictive].forEach(c => {
+                                                ctx.beginPath(); ctx.arc(c.x * canvas.width, c.y * canvas.height, 12, 0, 2 * Math.PI);
+                                                ctx.fillStyle = c.color; ctx.globalAlpha = 1.0; ctx.fill();
+                                                ctx.strokeStyle = (h.fsm.state === 'COMMITTED') ? '#00ff88' : (h.fsm.state === 'ARMED' ? '#0088ff' : 'transparent');
+                                                ctx.lineWidth = 4; ctx.stroke();
+                                                ctx.globalAlpha = 1.0; ctx.fillStyle = '#fff'; ctx.font = '10px Courier'; ctx.fillText(c.label, c.x * canvas.width + 15, c.y * canvas.height + 5);
+                                            });
+                                            p3InjectPointer(h);
+                                        }
+                                    });
+                                } else {
+                                    // 🚀 Synthetic Support: Process physics even if video is off
+                                    Object.values(hfoState.hands).filter(h => h.active).forEach(h => {
+                                        if (engine) {
+                                            const source = h.cursors[hfoState.physics.springSource] || h.cursors.raw;
+                                            Matter.Body.setPosition(h.cursors.spring.anchor, { x: source.x * canvas.width, y: source.y * canvas.height });
+                                            h.cursors.spring.x = h.cursors.spring.body.position.x / canvas.width; h.cursors.spring.y = h.cursors.spring.body.position.y / canvas.height;
+                                        }
+                                        p3InjectPointer(h);
+                                    });
+                                }
+                                port1Bridge(hfoState.hands);
+                            } catch (loopErr) {
+                                console.error("Loop Error Cycle:", loopErr);
+                            }
+                        }
+                        requestAnimationFrame(loop);
+                    };
+                    loop();
+                };
+
+                video.onloadedmetadata = () => {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     initPhysics();
                     render();
+                };
+
+                try {
+                    if (!hfoSystem.stream) {
+                        hfoSystem.stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
+                        video.srcObject = hfoSystem.stream;
+                    } else {
+                        video.srcObject = hfoSystem.stream;
+                        if (video.readyState >= 2) {
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            initPhysics();
+                            render();
+                        }
+                    }
+                } catch (mediaErr) {
+                    console.warn("Media Access Error: Entering Synthetic Baseline.", mediaErr);
+                    initPhysics();
+                    render();
                 }
+            } catch (err) {
+                console.error("Critical MediaPipe Failure:", err);
+            } finally {
+                hfoSystem.initializing = false;
             }
         };
 
@@ -889,7 +908,7 @@
                             facing.innerText = `FACING: ${h.palm.facingCamera ? 'YES' : 'NO'}`;
                             facing.style.color = h.palm.facingCamera ? '#00ff88' : '#ff4444';
                             norm.innerText = `X:${h.palm.normal.x.toFixed(2)} Y:${h.palm.normal.y.toFixed(2)} Z:${h.palm.normal.z.toFixed(2)}`;
-                            
+
                             // Visual hint: move dot based on X/Y normal
                             dot.style.left = `${50 + h.palm.normal.x * 40}%`;
                             dot.style.top = `${50 + h.palm.normal.y * 40}%`;

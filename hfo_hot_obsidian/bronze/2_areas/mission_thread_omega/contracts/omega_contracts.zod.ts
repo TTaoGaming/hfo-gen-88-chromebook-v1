@@ -80,7 +80,7 @@ export const P2DigitalTwinSchema = CloudEventEnvelopeSchema.extend({
 });
 
 /**
- * P3 -> CONSUMER: W3C Pointer Event
+ * P3 -> CONSUMER: W3C Pointer Event (Option C Standard)
  */
 export const P3PointerEventSchema = CloudEventEnvelopeSchema.extend({
     type: z.literal('hfo.omega.p3.deliver'),
@@ -90,6 +90,7 @@ export const P3PointerEventSchema = CloudEventEnvelopeSchema.extend({
         clientY: z.number(),
         pressure: z.number(),
         pointerId: z.number(),
+        isPrimary: z.boolean(),
         timestamp: z.number(),
     }),
 });

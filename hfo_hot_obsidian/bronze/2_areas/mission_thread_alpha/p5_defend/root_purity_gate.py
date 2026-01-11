@@ -9,7 +9,7 @@ import sys
 AUTHORIZED_DIRS = {
     'hfo_cold_obsidian', 'hfo_hot_obsidian', '.github', '.vscode', 
     '.venv', 'scripts', '.git', '.husky', 'node_modules', 
-    'reports', 'test-results', '.stryker-tmp'
+    'reports', 'test-results', '.stryker-tmp', '.serena'
 }
 
 AUTHORIZED_FILES = {

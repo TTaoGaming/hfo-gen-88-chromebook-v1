@@ -50,7 +50,9 @@ export const test = base.extend<{ hfoPage: HFOPage }>({
                 if (handProps.event) hand.fsm.pointerEvent = handProps.event;
 
                 // @ts-ignore
-                if (window.p3InjectPointer) window.p3InjectPointer(hand);
+                if (window.w3cPointerInjector) window.w3cPointerInjector(hand);
+                // @ts-ignore
+                else if (window.p3InjectPointer) window.p3InjectPointer(hand);
             }, { handId: id, handProps: props });
         };
 

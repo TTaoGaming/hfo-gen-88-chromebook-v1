@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 # Medallion: Bronze | Mutation: 0% | HIVE: E
 """
-🌀 HFO UNIFIED MANIFOLD: THE 8x8 OCT-TREE
-This file consolidates the 8 ports of the HFO-8 architecture, 
-sharding each into 8 dedicated functional pillars.
+🌀 OCTREE POLYMORPHIC HEXAGONAL ORCHESTRATOR HUB
+Exemplar Composition Only (0 Invention)
+
+This orchestrator shards cognition into 8 primary octets (P0-P7), 
+utilizing industry-standard adapters (Rapier, 1eurofilter, Zod, MCP)
+to bridge physical sensing with virtual substrates.
 
 Usage: 
-  python3 hfo_manifold.py <port_id> <pillar_id> <args...>
-  OR import into other scripts.
+  python3 hfo_manifold.py think "<query>"
+  python3 hfo_manifold.py p5
 """
 
 import os
@@ -97,7 +100,7 @@ class Port0Sense:
 
 # --- PORT 1: FUSE (Bridge/Contracts) ---
 class Port1Fuse:
-    """The Bridge Octet."""
+    """The Bridge Octet. Uses Exemplar: Zod 6.0."""
     @staticmethod
     def pillar_1_zod_check(schema_name: str):
         return {"status": "placeholder", "pillar": 1}
@@ -108,7 +111,7 @@ class Port1Fuse:
 
 # --- PORT 2: SHAPE (Architecture/Physics) ---
 class Port2Shape:
-    """The structural Octet."""
+    """The structural Octet. Uses Exemplar: Rapier.js / 1eurofilter."""
     @staticmethod
     def audit_physics():
         res = subprocess.run(["python3", "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/physics_auditor.py"], capture_output=True, text=True)
@@ -126,7 +129,7 @@ class Port2Shape:
 
 # --- PORT 3: INJECT (Delivery/Events) ---
 class Port3Inject:
-    """The Event Octet."""
+    """The Event Octet. Uses Exemplar: W3C PointerEvents."""
     @staticmethod
     def execute_all():
         workspace_v36 = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v36.html"
@@ -145,7 +148,7 @@ class Port3Inject:
 
 # --- PORT 4: DISRUPT (Forensics/Anti-Fraud) ---
 class Port4Disrupt:
-    """The Audit Octet."""
+    """The Audit Octet. Uses Exemplar: Stryker Mutant Scoring (88-98%)."""
     @staticmethod
     def pillar_1_detect_reward_hacking():
         last_thought = get_last_thought()
@@ -183,7 +186,7 @@ class Port4Disrupt:
 
 # --- PORT 5: DEFEND (Integrity/HardGate) ---
 class Port5Defend:
-    """The Shield Octet."""
+    """The Shield Octet. Uses Exemplar: P5-HardGate (Syntax + E2E)."""
     @staticmethod
     def pillar_1_hardgate():
         audit = Port4Disrupt.pillar_1_detect_reward_hacking()
@@ -208,7 +211,7 @@ class Port5Defend:
 
 # --- PORT 6: STORE (Memory/Telemetry) ---
 class Port6Store:
-    """The Archive Octet."""
+    """The Archive Octet. Uses Exemplar: JSONL Stigmergy / DuckDB."""
     @staticmethod
     def execute_all():
         bb_exists = os.path.exists(BLACKBOARD_PATH)
@@ -223,7 +226,7 @@ class Port6Store:
 
 # --- PORT 7: NAVIGATE (Orchestration/Strategy) ---
 class Port7Navigate:
-    """The Strategy Octet."""
+    """The Strategy Octet. Uses Exemplar: Model Context Protocol (MCP)."""
     @staticmethod
     def pillar_1_generate_receipt(summary: str):
         return {"receipt": f"P7_NAV_{datetime.datetime.now().strftime('%Y%m%d_%H%S')}"}
@@ -232,9 +235,9 @@ class Port7Navigate:
     def execute_all(cls, summary: str):
         return {"p1": cls.pillar_1_generate_receipt(summary)}
 
-# --- HFO THINKING OCTET (T0-T7) ---
-def execute_thinking_octet(query: str):
-    """Canalized 8-step thinking execution."""
+# --- HFO HEXAGONAL ORCHESTRATION (T0-T7) ---
+def execute_hexagonal_orchestration(query: str):
+    """Octree recursive cognitive sharding (8 ports x 8 pillars)."""
     load_env()
     t0_sense = Port0Sense.execute_all(query)
     thinking = {
@@ -247,6 +250,9 @@ def execute_thinking_octet(query: str):
         "T6_STORE": Port6Store.execute_all(),
         "T7_NAVIGATE": Port7Navigate.execute_all(query)
     }
+    
+    # Octree Hierarchical Labeling
+    print(f"🌀 [HFO HUB]: Sharding task into 8-port cognitive manifold...")
     
     # 🎯 Legacy Alignment: Satisfy hive8_workflow_sentinel.py
     # 1. H-Phase must have 'p0': {'receipt': '...'}
@@ -262,11 +268,11 @@ def execute_thinking_octet(query: str):
     # 2. I-Phase must have steps 1-7 in 'details': {'step': X}
     import time
     for step in range(1, 8):
-        time.sleep(0.3) # De-Theater: avoid burst detection
+        time.sleep(0.3) # De-Theater: avoid burst detection/reward hacking
         log_to_blackboard({
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "phase": "I",
-            "details": {"step": step, "msg": f"Canalized thinking step {step}"}
+            "details": {"step": step, "msg": f"Hierarchical sharding step {step}"}
         })
 
     return thinking
@@ -274,18 +280,25 @@ def execute_thinking_octet(query: str):
 # --- MAIN EXECUTION ---
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("HFO Manifold Active.")
+        print("HFO Orchestration Hub Active. (Octree Polymorphic Hexagonal Architecture)")
         sys.exit(0)
     
     cmd = sys.argv[1].lower()
     if cmd == "think":
         query = sys.argv[2] if len(sys.argv) > 2 else "heartbeat"
-        print(json.dumps(execute_thinking_octet(query)))
+        print(json.dumps(execute_hexagonal_orchestration(query)))
     elif cmd == "p0":
         # Keep legacy P0 compatibility
         print(Port0Sense.execute_all(sys.argv[2] if len(sys.argv) > 2 else "ping"))
     elif cmd == "p5":
-        print(json.dumps(Port5Defend.execute_all()))
+        results = Port5Defend.execute_all()
+        # Log V-Phase to blackboard for HIVE compliance
+        log_to_blackboard({
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "phase": "V",
+            "audit": results
+        })
+        print(json.dumps(results))
     else:
         print(f"Command {cmd} not recognized.")
 

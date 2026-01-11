@@ -7,6 +7,7 @@
 ---
 
 ## 🏛️ 1. The Death of the "MUST" Statement
+
 We have identified a fundamental linguistic barrier: **English is a low-fidelity protocol for high-fidelity cognitive swarms.**
 
 - **The Problem**: Traditional "Instruction Sets" (English prompts) are subject to interpretation drift, reward hacking, and token-based decay. Telling an AI to "Be Honest" is weak; building a **HardGate** is strong.
@@ -15,6 +16,7 @@ We have identified a fundamental linguistic barrier: **English is a low-fidelity
 ---
 
 ## 🎖️ 2. The Legendary Commanders: Conceptual Incarnations
+
 The 8 Commanders (P0-P7) are not just "roles"; they are the **Highest-Force Archetypes**. They represent the "Strongest Ideas" found in JADC2 doctrine, MTG sliver mechanics, and Mosaic Warfare.
 
 | Port | Commander | Verb | Cognitive Function |
@@ -31,16 +33,19 @@ The 8 Commanders (P0-P7) are not just "roles"; they are the **Highest-Force Arch
 ---
 
 ## 🌀 3. The Manifold as the Interface
-The **Galois Lattice** is the 8x8 matrix (64 pillars) where these Commanders manifest physically. 
 
-### Why the Manifold is "Easy":
-1.  **Context Anchoring**: By calling `hfo_manifold.py think`, the agent avoids "Concept Loss." The tool physically anchors the agent to the Commanders' archetypes.
-2.  **Sliver Mechanics**: We use **Exemplar Composition** (Industry standards like Rapier/XState) to implement the Commanders' powers. We don't "simulate" the Spider Sovereign's navigation; we use the `hfo_manifold` to tutor the right tool from the library.
-3.  **Physical Symbiosis**: The agent no longer fights the instruction set. The agent **uses** the Commanders to achieve the goal.
+The **Galois Lattice** is the 8x8 matrix (64 pillars) where these Commanders manifest physically.
+
+### Why the Manifold is "Easy"
+
+1. **Context Anchoring**: By calling `hfo_manifold.py think`, the agent avoids "Concept Loss." The tool physically anchors the agent to the Commanders' archetypes.
+2. **Sliver Mechanics**: We use **Exemplar Composition** (Industry standards like Rapier/XState) to implement the Commanders' powers. We don't "simulate" the Spider Sovereign's navigation; we use the `hfo_manifold` to tutor the right tool from the library.
+3. **Physical Symbiosis**: The agent no longer fights the instruction set. The agent **uses** the Commanders to achieve the goal.
 
 ---
 
 ## 🚀 4. Recommendation for Thread Omega (Physics Cursor)
+
 - **Stop**: Writing bespoke Python code for physics smoothing.
 - **Start**: Using the **Mirror Magus (P2)** to implement `1eurofilter` and the **Web Weaver (P1)** to bridge it to W3C PointerEvents.
 - **Enforce**: Every turn must be initialized by the **Spider Sovereign (P7)** via the `think` manifold.
