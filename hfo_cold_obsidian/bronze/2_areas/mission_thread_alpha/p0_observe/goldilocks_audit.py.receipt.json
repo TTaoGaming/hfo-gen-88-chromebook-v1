@@ -1,8 +1,0 @@
-{
-    "timestamp": "2026-01-10T01:45:49.427956Z",
-    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p0_observe/goldilocks_audit.py",
-    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p0_observe/goldilocks_audit.py",
-    "hash": "7435eb8c515dbc540ec602a5c59d1600818e102992d53a5a1532a8b246229359",
-    "medallion": "Bronze",
-    "state": "Frozen"
-}

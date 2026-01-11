@@ -1,8 +1,0 @@
-{
-    "timestamp": "2026-01-10T01:46:09.358169Z",
-    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/p3_deliver/interaction_fsm.py",
-    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_omega/p3_deliver/interaction_fsm.py",
-    "hash": "8897692661d7eb906451b098bddd4d10d2be3effc7b519a306edac8214667649",
-    "medallion": "Bronze",
-    "state": "Frozen"
-}

@@ -1,8 +1,0 @@
-{
-    "version": "v18",
-    "medallion": "bronze",
-    "mission_thread": "omega",
-    "summary": "V18 Refactor Complete. UI expanded to 5-cursor ensemble (Raw, Smooth, Snappy, Spring, Pred). Physics tuning locked at stiffness: 0.2, damping: 0.1. Verified via Playwright smoke tests.",
-    "state": "hardened_bronze",
-    "timestamp": "2026-01-09T22:05:00Z"
-}

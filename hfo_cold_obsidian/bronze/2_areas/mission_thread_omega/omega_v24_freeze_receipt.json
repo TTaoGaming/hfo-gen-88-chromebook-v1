@@ -1,8 +1,0 @@
-{
-    "version": "v24",
-    "medallion": "bronze",
-    "mission_thread": "omega",
-    "summary": "V24 Promotion. Implemented Leaking Bucket FSM logic. Fixed MediaPipe metadata loop hang and normalized gesture case mapping. Integrated V24 Zod contracts and exhaustive tests.",
-    "state": "hardened_bronze",
-    "timestamp": "2026-01-10T09:47:04Z"
-}
