@@ -52,8 +52,12 @@ tasks:
   - id: P9.14
     title: "V47.0: Resonance Suppression & GitOps"
     description: Implemented velocityDeadzone (0.05) to stop static spinning. Resolved Git size limit blockers via .gitignore. Hardened P5-CHRONOS validation.
-    status: active
+    status: completed
   - id: P9.15
     title: "Gaps & Limitations Audit"
-    description: Identified Port 4 DuckDB-WASM dependency fragility. Flagged Port 7 (Shards 5-7) as deterministic theater stubs. P0-SENSE requires pre-commit receipt.
-    status: in-progress
+    description: Identified Port 4 DuckDB-WASM dependency fragility. Flagged Port 7 (Shards 5-7) as deterministic theater stubs. Transitioning to OpenRouter to bypass GitHub Copilot rate limits.
+    status: completed
+  - id: P9.16
+    title: "V48.0: Piano Genie Offline Integration"
+    description: "Phase 1: Download Magenta.js and model weights. Phase 2: Create window module for Omega Workspace. Phase 3: Dual-hand W3C Pointer support (P7 Committed Gesture)."
+    status: active

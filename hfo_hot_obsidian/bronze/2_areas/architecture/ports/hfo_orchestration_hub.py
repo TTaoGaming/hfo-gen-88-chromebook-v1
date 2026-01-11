@@ -129,8 +129,13 @@ if __name__ == "__main__":
         query = sys.argv[2] if len(sys.argv) > 2 else "heartbeat"
         print(json.dumps(execute_hexagonal_orchestration(query)))
     elif cmd == "p0":
-        # Keep legacy P0 compatibility
-        print(Port0Observe.execute_all(sys.argv[2] if len(sys.argv) > 2 else "ping"))
+        # Keep legacy P0 compatibility with V2 support
+        try:
+            from versions.base import Port0ObserveV2
+            print(Port0ObserveV2.execute_all(sys.argv[2] if len(sys.argv) > 2 else "ping"))
+        except ImportError:
+            # Fallback to direct shard call if V2 is not imported
+            print(Port0Observe.port0_shard0_observe(sys.argv[2] if len(sys.argv) > 2 else "ping"))
     elif cmd == "p5":
         results = Port5Immunize.execute_all()
         # Log V-Phase to blackboard for HIVE compliance

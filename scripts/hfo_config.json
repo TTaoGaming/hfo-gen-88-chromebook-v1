@@ -1,6 +1,6 @@
 {
-    "activeVersion": "44",
-    "hubVersion": "6",
-    "baseUrl": "http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v",
+    "activeVersion": "52",
+    "hubVersion": "7",
+    "baseUrl": "http://localhost:8889/omega_workspace_v",
     "suffix": ".html"
 }

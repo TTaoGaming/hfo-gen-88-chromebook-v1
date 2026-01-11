@@ -1,0 +1,11 @@
+{
+  "name": "hfo-gen-88-chromebook",
+  "version": "1.0.0",
+  "description": "HFO Gen 88 Omega Workspace - Chromebook V-1",
+  "scripts": {
+    "start": "python3 -m http.server 8889 --directory hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/",
+    "launch": "xdg-open http://localhost:8889/omega_workspace_v52.html",
+    "clean:chrome": "sudo apt purge google-chrome-stable -y && sudo apt autoremove -y",
+    "status": "echo 'HFO Stability Status' && netstat -tulpn | grep 8889"
+  }
+}

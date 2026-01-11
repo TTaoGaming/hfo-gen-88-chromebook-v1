@@ -31,3 +31,6 @@
 {"timestamp": "2026-01-10T18:54:20.050140Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
 {"timestamp": "2026-01-11T18:02:32.347740Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
 {"timestamp": "2026-01-11T18:02:51.540347Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-11T20:15:04.512329Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-11T20:15:50.886104Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-11T20:23:31.337423Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
