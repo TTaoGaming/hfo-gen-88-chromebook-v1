@@ -1,5 +1,5 @@
 // Medallion: Bronze | Mutation: 0% | HIVE: V
-import { test as base, Page } from '@playwright/test';
+import { test as base, Page, expect } from '@playwright/test';
 import config from './hfo_config.json';
 
 export interface HFOPage extends Page {
@@ -19,6 +19,13 @@ export const test = base.extend<{ hfoPage: HFOPage }>({
         const hfoPage = page as HFOPage;
 
         hfoPage.initHFO = async () => {
+            // Unlock Hero Button if present
+            const heroBtn = page.locator('#hero-button');
+            if (await heroBtn.isVisible()) {
+                await heroBtn.click();
+                await expect(heroBtn).not.toBeVisible();
+            }
+
             await page.evaluate(() => {
                 // @ts-ignore
                 if (window.initPhysics) window.initPhysics();
@@ -50,9 +57,7 @@ export const test = base.extend<{ hfoPage: HFOPage }>({
                 if (handProps.event) hand.fsm.pointerEvent = handProps.event;
 
                 // @ts-ignore
-                if (window.w3cPointerInjector) window.w3cPointerInjector(hand);
-                // @ts-ignore
-                else if (window.p3InjectPointer) window.p3InjectPointer(hand);
+                if (window.port3Inject) window.port3Inject(hand);
             }, { handId: id, handProps: props });
         };
 

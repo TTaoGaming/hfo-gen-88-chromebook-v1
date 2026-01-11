@@ -62,22 +62,22 @@ test('V41: Stickiness through NONE and Frame Drops', async ({ hfoPage }) => {
     const now = performance.now();
     h.fsm.state = 'PORT_7_POINTER_COMMITTED';
     h.fsm.dwellAccumulator = 1000;
-    
+
     // 1. Pointing stays Pointing
     const r1 = h.fsm.process('Pointing_Up', now + 10, 0.9, true);
-    
+
     // 2. 'None' gesture stays committed (Sticky)
     const r2 = h.fsm.process('None', now + 20, 0.9, true);
-    
+
     // 3. 'LOST' frame stays committed (Sticky)
     const r3 = h.fsm.process('LOST', now + 30, 0, false);
-    
+
     // 4. Turning palm away (isPalmFacing=false) stays committed TEMPORARILY (Leaky Bucket)
     const r4 = h.fsm.process('Pointing_Up', now + 40, 0.9, false);
-    
+
     // 5. Sustained lack of palm leads to exit
     const r5 = h.fsm.process('Pointing_Up', now + 1000, 0.9, false);
-    
+
     return { r1, r2, r3, r4, r5 };
   });
 
@@ -101,9 +101,9 @@ test('V41: Return to READY on Any Other Gesture', async ({ hfoPage }) => {
     const now = performance.now();
     h.fsm.state = 'PORT_7_POINTER_COMMITTED';
     h.fsm.dwellAccumulator = 1000;
-    
+
     // Changing to 'Open_Palm' (a high-confidence non-pointing gesture)
-    const r1 = h.fsm.process('Open_Palm', now, 0.9, true); 
+    const r1 = h.fsm.process('Open_Palm', now, 0.9, true);
     return { r1 };
   });
 

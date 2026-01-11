@@ -30,9 +30,21 @@ def audit_physics(file_path):
     if "hfoState.physics" not in content:
         errors.append("❌ hfoState.physics configuration not found")
 
-    # 5. Check for P3 Inject Pointer logic
-    if "p3InjectPointer" not in content and "w3cPointerInjector" not in content:
-        errors.append("❌ Missing P3 Pointer Injection logic (Expected p3InjectPointer or w3cPointerInjector)")
+    # 5. Check for P0 Observe logic
+    if "port0Observe" not in content:
+         errors.append("❌ Missing Formalized P0 Observe (port0Observe)")
+
+    # 6. Check for P1 Bridge logic
+    if "port1Bridge" not in content:
+         errors.append("❌ Missing Formalized P1 Bridge (port1Bridge)")
+
+    # 7. Check for P2 Shape logic
+    if "port2Shape" not in content:
+         errors.append("❌ Missing Formalized P2 Shape (port2Shape)")
+
+    # 8. Check for P3 Inject logic
+    if "port3Inject" not in content:
+        errors.append("❌ Missing Formalized P3 Inject (port3Inject)")
 
     if not errors:
         print("✅ Physics Integrity Verified.")

@@ -7,11 +7,12 @@ All development must follow the **Medallion Refinement Flow**. Do not bypass lay
 2.  **Silver (Integration)**: Verified code. Requires passing property tests and contract validation.
 3.  **Gold (Hardened)**: Automated mission engineering ready. Pareto optimal.
 
-## 📏 Testing & The Goldilocks Zone
-We prioritize **Mutation Scoring** (Stryker) over simple line coverage.
-- **Target**: 88% - 98% mutation score.
-- **Reject**: < 80% (Under-tested).
-- **Warning**: > 99% (Possible "AI Theater" - over-fitted tests).
+## 📏 Testing & The HFO Goldilocks Zone
+We prioritize **Mutation Scoring** (Stryker) over simple line coverage. HFO operates best within the Pareto Goldilocks range.
+- **Pareto Optimal**: 88% (matches 7/8 cognitive shards / 87.5%).
+- **Target Zone**: 80% - 99% mutation score.
+- **Reject**: < 80% (Under-tested/Needs evolution).
+- **Warning**: 100% (Possible "AI Theater" or trivial tests/over-fitted).
 
 ## 🛡️ Coding Patterns
 - **Zod 6.0 Contracts**: Use Zod for all cross-port (P0-P7) communication. Define schemas in `contracts/` directories.

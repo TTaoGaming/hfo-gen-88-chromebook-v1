@@ -10,6 +10,9 @@ mission:
 
 objectives:
   completed:
+    - id: "P7_G88_2"
+      title: "H-Phase Double Diamond (8-1-8-1)"
+      desc: "H1: 8x P0 Shards -> H2: Baton A (Sense) -> H3: 8x P7 Shards -> H4: Baton B (Strategy). Integrated HubV6."
     - id: "P4_G88_1"
       title: "Book of Blood Grudges"
       desc: "Initialized Port 4 violation ledger."
@@ -26,6 +29,9 @@ objectives:
       title: "Stigmergy Sensing"
       desc: "Port 0 now senses Hot/Cold blackboards (Pillar 3) with SCREAM logic."
   active:
+    - id: "P7_G88_2"
+      title: "H-Phase Double Diamond (8-1-8-1)"
+      desc: "H1: 8x P0 Shards -> H2: Baton A (Sense) -> H3: 8x P7 Shards -> H4: Baton B (Strategy). All within H-Phase Hunt."
     - id: "P0_G88_2"
       title: "Consolidated PORT-0-OBSERVE"
       desc: "Unified 8-pillar manifold (Web, Code, Docs, Acad, Fact, Stigmergy, Prov)."

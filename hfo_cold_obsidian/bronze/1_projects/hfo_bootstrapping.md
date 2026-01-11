@@ -1,4 +1,5 @@
 # 🕸️ HFO Bootstrapping
+
 **Area**: JADC2 + Galois Lattice Mapping
 **Status**: Gen 88 Canalization
 
@@ -7,10 +8,26 @@
 ## What is HFO?
 
 **Hyper-Fractal Obsidian** is an AI-native mission engineering platform:
+
 - **Apex Ensemble**: 8 Legendary Commanders as composable force elements
 - **Mosaic Warfare**: DARPA/JADC2 doctrine for disaggregated effects
 - **Stigmergy**: Indirect coordination via blackboard signals
 - **Swarm Orchestration**: Sliver-like ability sharing across all agents
+
+---
+
+## 🏛️ The Domain Language (Canonical Mapping)
+
+| Port | HFO [Role / Verb] | JADC2 [Verb] | JADC2 [Domain] | Commander |
+|:---:|:---|:---|:---|:---|
+| 0 | Observer / Observe | SENSE | ISR | Lidless Legion |
+| 1 | Bridger / Bridge | FUSE | Data Fabric | Web Weaver |
+| 2 | Shaper / Shape | SHAPE | Digital Twin | Mirror Magus |
+| 3 | Injector / Inject | DELIVER | Effect Delivery | Spore Storm |
+| 4 | Disruptor / Disrupt | DISRUPT | Coev. Red Team | Red Regnant |
+| 5 | Immunizer / Immunize | DEFEND | Coev. Blue Team | Pyre Praetorian |
+| 6 | Assimilator / Assimilate | STORE | AAR (Archive) | Kraken Keeper |
+| 7 | Navigator / Navigate | NAVIGATE | BMC2 | Spider Sovereign |
 
 ---
 

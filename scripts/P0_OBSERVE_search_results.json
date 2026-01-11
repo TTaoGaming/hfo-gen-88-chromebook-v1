@@ -1,0 +1,793 @@
+{
+  "query": "H-Phase: Research the top 8 sensing tools/APIs for AI agents in 2026. Looking for diverse signals: Web (Tavily, Exa, Brave), Code (Greptile, GitHub), Social (Reddit, X), Technical (Jina, Firecrawl), and Real-time (Serper, News). Compare costs and signal-to-noise ratios.",
+  "tavily": {
+    "query": "H-Phase: Research the top 8 sensing tools/APIs for AI agents in 2026. Looking for diverse signals: Web (Tavily, Exa, Brave), Code (Greptile, GitHub), Social (Reddit, X), Technical (Jina, Firecrawl), and Real-time (Serper, News). Compare costs and signal-to-noise ratios.",
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://www.datacamp.com/blog/best-ai-agents",
+        "title": "The Best AI Agents in 2026: Tools, Frameworks, and ...",
+        "content": "### Comparison analysis [...] Google Jules: Jules is Google\u2019s asynchronous AI coding assistant that integrates directly with developers\u2019 repositories. It clones the codebase into a secure Google Cloud virtual machine, understands the full context of the project, and performs tasks such as writing tests, building new features, fixing bugs, and updating dependencies. Learn more in this tutorial on Google Jules.\n Hashbrown is a browser-native agent framework. Unlike most agents that run on a server (backend), Hashbrown runs entirely in the user's browser. [...] AI agents offer a step-change solution. Unlike basic chatbots or rule-based tools, they can analyze information, make decisions, and adapt to new situations\u2014without constant human input. This capability is driving rapid adoption, with the AI agent market reaching $7.6 billion in 2025 and projected to grow at 49.6% annually through 2033.\n\nThis guide explores the top AI agent solutions in 2026\u2014from low-code tools to enterprise platforms\u2014focusing on real-world implementation and strategy. Whether you're a developer, data scientist, or tech leader, you\u2019ll find practical insights to guide your next move.\n\nFor those new to the concept, our AI Agent Fundamentals skill track takes you from zero to AI agent hero.\n\n## What Are AI Agents?",
+        "score": 0.68571854,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.usaii.org/ai-insights/ai-agents-in-2026-a-comparative-guide-to-tools-frameworks-and-platforms",
+        "title": "AI AGENTS IN 2026: A Comparative Guide to Tools ...",
+        "content": "Download the complete \u201cAI Agents in 2026\u201d PDF now and explore the top tools, frameworks, and career pathways to become an AI agent expert!\n\nFollow us:\n\nFields marked with \\ are required.\n\nThis website uses cookies to enhance website functionalities and improve your online experience. By clicking Accept or continue browsing this website, you agree to our use of cookies as outlined in our privacy policy. [...] Ready-to-use enterprise agents such as Microsoft Copilot Studio, Devin AI, and IBM Watsonx Assistant are built to be part of the workflow and provide secure, compliant services and multi-channel functionality.\n\nWith the help of generative AI, LLMs, RAG pipelines, and memory architectures, AI agents can think, act, and learn in an iterative process. In the case of AI professionals, it is important to learn how to master skills such as prompt engineering, API integrations, and agent orchestration. Certifications like the USAII\u00ae Certified Artificial Intelligence Engineer (CAIE\u2122) enable learners to have practical knowledge to develop, implement, and manage AI agents in the real world. [...] Dec 20, 2025\n\nBy Editorial Desk\n\nAI agents are transforming how we work, evolving from simple assistants to strategic collaborators that can summarize meetings, simplify complex data, trigger workflows, and even make decisions. There is high interest among AI agents: 62% of the surveyed respondents indicated that their organizations at least experiment with AI agents (McKinsey, 2025)\n\nThis guide will cover the best AI agents, frameworks, and platforms that will define the digital world in 2026. Businesses can use agentic AI to build automation, collaboration, and intelligent decision-making applications using developer-friendly tools such as LangGraph and AutoGen or no-code platforms such as Dify and n8n.",
+        "score": 0.6388584,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.firecrawl.dev/blog/top_web_search_api_2025",
+        "title": "The Complete Guide to Web Search APIs for AI ...",
+        "content": "| Feature | Firecrawl | Exa | Tavily | SerpAPI | ScrapingDog | Serper | Brave |\n ---  ---  ---  --- |\n| Pricing | $83/100k credits | $1.50/1k searches | $8/1k requests | $75+/5k searches | $0.29-1.00/1k | $0.30-1.00/1k | $3/1k queries |\n| Free Tier | Yes | 1,000/month | 1,000/month | 250/month | 1,000 credits | None | 2,000/month |\n| Output Formats | JSON, Markdown, HTML, Screenshots | JSON, Structured Data | JSON, Citations | JSON, Rich Metadata | JSON | JSON | JSON |\n| Content Extraction | Full page + custom schemas | Page summaries | Key content extraction | Metadata only | Metadata only | Metadata only | Metadata only | [...] Unlike integrated platforms like Firecrawl, Tavily focuses purely on search and source discovery. The API provides structured JSON output with citation metadata, but workflows typically require additional processing to extract full content from the discovered sources.\n\nTavily offers 1,000 free searches monthly, then charges $0.008 per request on a pay-as-you-go basis with no volume minimums. While the per-request pricing is transparent, teams may find the lack of bundled plans less predictable for budgeting than competitors with monthly tiers.\n\nPros: [...] Serper positions itself between budget and premium SERP API options, offering straightforward Google search results through a clean REST API. Rather than competing on advanced features or multi-engine support, they focus on delivering reliable Google search data at volume-friendly pricing that scales with usage. The service targets developers who need more than basic SERP scraping but don\u2019t require the larger feature sets of enterprise tools.\n\nSerper emphasizes partnerships and framework integrations over direct developer outreach. For example, their documentation appears less accessible than some competitors (serper.dev/docs doesn\u2019t exist). Serper has lots of AI integrations, such as LangChain, so you might have an easier time accessing it through those partner tools.\n\nPros:",
+        "score": 0.60666215,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.kdnuggets.com/7-free-web-search-apis-for-ai-agents",
+        "title": "7 Free Web Search APIs for AI Agents",
+        "content": "## 7. Brave Search\n\nBrave Search offers a privacy-first API on an independent web index, with endpoints for web, news, and images that work well for grounding LLMs without user tracking. It\u2019s developer-friendly, performant, and includes a free usage plan.\n\n```\nimport requests url = \" headers = { \"Accept\": \"application/json\", \"Accept-Encoding\": \"gzip\", \"X-Subscription-Token\": \"\" } params = { \"q\": \"greek restaurants in san francisco\" } response = requests.get(url, headers=headers, params=params) if response.status_code == 200: data = response.json() print(data) else: print(f\"Error {response.status_code}: {response.text}\")\n```\n\n## Wrapping Up [...] ## 1. Firecrawl\n\nFirecrawl provides a dedicated Search API built \u201cfor AI,\u201d alongside its crawl/scrape stack. You can choose your output format: clean Markdown, raw HTML, link lists, or screenshots, so the data fits your downstream workflow. It also supports customizable search parameters (e.g. language and country) to target results by locale, and is built for AI agents that need web data at scale.\n\nInstallation: `pip install firecrawl-py`\n\n```\nfrom firecrawl import Firecrawl firecrawl = Firecrawl(api_key=\"fc-YOUR-API-KEY\") results = firecrawl.search( query=\"KDnuggets\", limit=3, ) print(results)\n```\n\n## 2. Tavily [...] ## 2. Tavily\n\nTavily is a search engine for AI agents and LLMs that turns queries into vetted, LLM-ready insights in a single API call. Instead of returning raw links and noisy snippets, Tavily aggregates up to 20 sources, then uses proprietary AI to score, filter, and rank the most relevant content for your task, reducing the need for custom scraping and post-processing.\n\nInstallation: `pip install tavily-python`\n\n```\nfrom tavily import TavilyClient tavily_client = TavilyClient(api_key=\"tvly-YOUR_API_KEY\") response = tavily_client.search(\"Who is MLK?\") print(response)\n```\n\n## 3. Exa",
+        "score": 0.5889134,
+        "raw_content": null
+      },
+      {
+        "url": "https://medium.com/@urano10/the-hidden-ai-stack-for-2026-the-tools-before-they-become-obvious-5225dd9ad94e",
+        "title": "Hidden AI Stack 2026: Next-Gen Tools | Medium",
+        "content": "Pricing: Free to start ($0), then pay per execution. Most small teams spend $50\u2013200/month across all workflows. This scales with you \u2014 run 10,000 workflow executions = ~$50\u2013100 month.\n\n## \ud83e\udde0 The Long-Term Memory: Pinecone (Why AI Agents Actually Work)\n\nChatGPT has a context window limit. Claude can handle longer documents, but even Claude forgets. Every conversation starts fresh.\n\nThis is why most AI agents fail. They forget what they learned. They can\u2019t maintain long-term memory.\n\nPinecone is a vector database \u2014 basically, long-term memory for AI. You feed it thousands of documents, customer tickets, code repositories, or customer interactions. When an AI agent needs context, it searches Pinecone instead of hallucinating.\u200b [...] Total cost: ~$150\u2013300/month for serious business automation.\n\nOld way cost: ~$2,000\u20135,000/month (SaaS tools + human time + inefficiency).\n\n## Why These Tools Are about to Explode\n\nThey solve specific bottlenecks. They\u2019re not general. Clay doesn\u2019t replace CRM. Gumloop doesn\u2019t replace Zapier (it\u2019s cheaper/better for AI-heavy work). Pinecone isn\u2019t for everyone (only useful if you\u2019re building agents).\n\nBut if you have that bottleneck \u2014 bad data, manual workflows, audio production, 3D assets, time chaos \u2014 these tools are 80% cheaper and 5x more effective than the mainstream alternatives.\n\nAnd in 2026, when they do hit mainstream, the people who started using them now have a 12\u201318 month head start.\n\n## The Brutal Truth About Tool Stack Selection\n\nYou don\u2019t need 15 tools. You need the right 4.",
+        "score": 0.5379402,
+        "raw_content": null
+      }
+    ],
+    "response_time": 7.95,
+    "request_id": "6be68f66-8085-4ced-b7f7-5970be9251cf"
+  },
+  "brave": {
+    "query": {
+      "original": "H-Phase: Research the top 8 sensing tools/APIs for AI agents in 2026. Looking for diverse signals: Web (Tavily, Exa, Brave), Code (Greptile, GitHub), Social (Reddit, X), Technical (Jina, Firecrawl), and Real-time (Serper, News). Compare costs and signal-to-noise ratios.",
+      "show_strict_warning": false,
+      "is_navigational": false,
+      "is_news_breaking": false,
+      "spellcheck_off": true,
+      "country": "us",
+      "bad_results": false,
+      "should_fallback": false,
+      "postal_code": "",
+      "city": "",
+      "header_country": "",
+      "more_results_available": true,
+      "state": ""
+    },
+    "mixed": {
+      "type": "mixed",
+      "main": [
+        {
+          "type": "web",
+          "index": 0,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 1,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 2,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 3,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 4,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 5,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 6,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 7,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 8,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 9,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 10,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 11,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 12,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 13,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 14,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 15,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 16,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 17,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 18,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 19,
+          "all": false
+        }
+      ],
+      "top": [],
+      "side": []
+    },
+    "type": "search",
+    "web": {
+      "type": "search",
+      "results": [
+        {
+          "title": "7 Free Web Search APIs for AI Agents - KDnuggets",
+          "url": "https://www.kdnuggets.com/7-free-web-search-apis-for-ai-agents",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "These tools power real-time web applications, agentic RAG workflows, and more, while keeping outputs grounded and reducing hallucinations in sensitive scenarios. ... Pick the API that matches your stack, latency needs, content coverage, and budget. If you need a place to start, I highly recommend Firecrawl and Tavily.",
+          "profile": {
+            "name": "KDnuggets",
+            "url": "https://www.kdnuggets.com/7-free-web-search-apis-for-ai-agents",
+            "long_name": "kdnuggets.com",
+            "img": "https://imgs.search.brave.com/QuNIxehb0YfGzvCROKMnfwWvx9i0_DVGUGE-V_Qw--s/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWI3MjNmZTI5/NmI1YmQyYmZjMDQ5/YTE3ODdiZGEzODUx/NDA4NTg3ZTYxYjRl/YTQ3MTBiYzVjNzc5/MGFjMGI2ZC93d3cu/a2RudWdnZXRzLmNv/bS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "kdnuggets.com",
+            "hostname": "www.kdnuggets.com",
+            "favicon": "https://imgs.search.brave.com/QuNIxehb0YfGzvCROKMnfwWvx9i0_DVGUGE-V_Qw--s/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWI3MjNmZTI5/NmI1YmQyYmZjMDQ5/YTE3ODdiZGEzODUx/NDA4NTg3ZTYxYjRl/YTQ3MTBiYzVjNzc5/MGFjMGI2ZC93d3cu/a2RudWdnZXRzLmNv/bS8",
+            "path": "\u203a 7-free-web-search-apis-for-ai-agents"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/YfHgBqj0Xza02U6gPbmHlRQpJZbpnNaBLXgvfGx56Q8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/a2RudWdnZXRzLmNv/bS93cC1jb250ZW50/L3VwbG9hZHMvYXdh/bl83X2ZyZWVfd2Vi/X3NlYXJjaF9hcGlz/X2FpX2FnZW50c18x/LnBuZw",
+            "original": "https://www.kdnuggets.com/wp-content/uploads/awan_7_free_web_search_apis_ai_agents_1.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Top 5 Exa Alternatives for AI Web Search in 2026",
+          "url": "https://brightdata.com/blog/ai/exa-alternatives",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Tavily: AI-focused search and crawl APIs for LLMs. Firecrawl: Open-source APIs for search, crawling, enrichment.",
+          "page_age": "2025-08-28T07:45:57",
+          "profile": {
+            "name": "Bright Data",
+            "url": "https://brightdata.com/blog/ai/exa-alternatives",
+            "long_name": "brightdata.com",
+            "img": "https://imgs.search.brave.com/A19YH0qEDhcIws9ES9RWJBeFSo9hBdN-cqwQteP7MXo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2I5Njg4Njdl/OTBiNDNlM2ZlMzEw/NzA0NzJkZGViM2Uy/Yjk4YTRmMTA1YzE1/NjU2N2YwMDJlOTcy/N2M5YmVkOS9icmln/aHRkYXRhLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "brightdata.com",
+            "hostname": "brightdata.com",
+            "favicon": "https://imgs.search.brave.com/A19YH0qEDhcIws9ES9RWJBeFSo9hBdN-cqwQteP7MXo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2I5Njg4Njdl/OTBiNDNlM2ZlMzEw/NzA0NzJkZGViM2Uy/Yjk4YTRmMTA1YzE1/NjU2N2YwMDJlOTcy/N2M5YmVkOS9icmln/aHRkYXRhLmNvbS8",
+            "path": "\u203a blog  \u203a ai  \u203a exa-alternatives"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/51S5DPaeCBcvqDLFw0-lVzTt-METv_gOxtIq-nTG2u8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5icmlnaHRkYXRh/LmNvbS8yMDI1LzA4/L2Jlc3QtRXhhLXNl/YXJjaC1BUEktYWx0/ZXJuYXRpdmVzLnBu/Zw",
+            "original": "https://media.brightdata.com/2025/08/best-Exa-search-API-alternatives.png",
+            "logo": false
+          },
+          "age": "August 28, 2025"
+        },
+        {
+          "title": "Top Exa Alternatives for AI Web Search in 2025",
+          "url": "https://www.scrapeless.com/en/blog/exa-alternatives",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Tavily AI is specifically designed to be the search engine for LLMs and Retrieval-Augmented Generation (RAG) applications. Its core strength is providing concise, relevant, and fact-checked information to reduce hallucinations. ... Optimized for RAG and AI agents. Provides concise, summarized answers with sources. Integrates seamlessly with LangChain and LlamaIndex. Offers a generous free tier for development. Firecrawl is an open-source tool that turns websites into LLM-ready Markdown.",
+          "page_age": "2025-09-09T09:04:45",
+          "profile": {
+            "name": "Scrapeless",
+            "url": "https://www.scrapeless.com/en/blog/exa-alternatives",
+            "long_name": "scrapeless.com",
+            "img": "https://imgs.search.brave.com/CbBYR0nEhohg5VL6B2YntznYjWqNYaGddmmhTfl2bj8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzkwNjMwMzBk/MDQ3ZjNlOWFmNGYz/ZWFmNmQ3MTg0NzJh/OWJjMDZkZDUxYzU0/YmFkMTAzYmVmODA2/NWRmYmEzYS93d3cu/c2NyYXBlbGVzcy5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "scrapeless.com",
+            "hostname": "www.scrapeless.com",
+            "favicon": "https://imgs.search.brave.com/CbBYR0nEhohg5VL6B2YntznYjWqNYaGddmmhTfl2bj8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzkwNjMwMzBk/MDQ3ZjNlOWFmNGYz/ZWFmNmQ3MTg0NzJh/OWJjMDZkZDUxYzU0/YmFkMTAzYmVmODA2/NWRmYmEzYS93d3cu/c2NyYXBlbGVzcy5j/b20v",
+            "path": "\u203a en  \u203a blog  \u203a exa-alternatives"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/AmAq-cx93_7mD27QKCcH7I8Vds9jp3d_VHyGmWzAQA4/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc2NyYXBlbGVz/cy5jb20vcHJvZC9w/b3N0cy9leGEtYWx0/ZXJuYXRpdmVzLzhh/MDMzZjlmYTJhNjA0/MjU5ZTZjOGRjNjFj/MTkxMDFhLnBuZw",
+            "original": "https://assets.scrapeless.com/prod/posts/exa-alternatives/8a033f9fa2a604259e6c8dc61c19101a.png",
+            "logo": false
+          },
+          "age": "September 9, 2025"
+        },
+        {
+          "title": "tavily \u00b7 GitHub Topics \u00b7 GitHub",
+          "url": "https://github.com/topics/tavily",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "text-to-speech ai smarthome artificial-intelligence vision speech-recognition openai speech-to-text webscraping agents vision-and-language smartspeaker gpt-4 chatgpt langchain langsmith tavily ... \ud83d\udd0d A Model Context Protocol (MCP) server providing unified access to multiple search engines (Tavily, Brave, Kagi), AI tools (Perplexity, FastGPT), and content processing services (Jina AI, Kagi).",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/topics/tavily",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a topics  \u203a tavily"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/Ak6HThvSqywc3-m9bLCqUL8AA_8s3vzsf8Bgi4yo0ds/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9naXRo/dWIuZ2l0aHViYXNz/ZXRzLmNvbS9hc3Nl/dHMvZ2l0aHViLW9j/dG9jYXQtMTNjODZi/OGIzMzZkLnBuZw",
+            "original": "https://github.githubassets.com/assets/github-octocat-13c86b8b336d.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "The Complete Guide to Web Search APIs for AI Applications in 2025",
+          "url": "https://www.firecrawl.dev/blog/top_web_search_api_2025",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "AI-native search APIs like Exa, Tavily, and Firecrawl use neural networks, semantic understanding, or integrated content extraction to deliver information specifically formatted for LLM consumption and AI workflows. These platforms understand context and meaning beyond simple keyword matching. You\u2019ll want to use them for RAG systems, AI agents, and applications requiring semantic search capabilities. Traditional SERP APIs including SerpAPI, ScrapingDog, Serper, and Brave focus on extracting and formatting search engine results from established platforms like Google and Bing (or in the case of Brave, using their own index).",
+          "profile": {
+            "name": "Firecrawl",
+            "url": "https://www.firecrawl.dev/blog/top_web_search_api_2025",
+            "long_name": "firecrawl.dev",
+            "img": "https://imgs.search.brave.com/HQs4TK8-Xz6tBPYlZETJGBLBk9ZqBJF6Q5uOiQgN7Aw/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODM4Y2IwNmJi/OTNiYTM2OGFiNTll/ODFjMjU5YTU0ZTYw/MDVhMTczNDA2YjRi/N2ZmNWEyOTlhNjZl/NDU4MDVlMi93d3cu/ZmlyZWNyYXdsLmRl/di8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "firecrawl.dev",
+            "hostname": "www.firecrawl.dev",
+            "favicon": "https://imgs.search.brave.com/HQs4TK8-Xz6tBPYlZETJGBLBk9ZqBJF6Q5uOiQgN7Aw/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODM4Y2IwNmJi/OTNiYTM2OGFiNTll/ODFjMjU5YTU0ZTYw/MDVhMTczNDA2YjRi/N2ZmNWEyOTlhNjZl/NDU4MDVlMi93d3cu/ZmlyZWNyYXdsLmRl/di8",
+            "path": "\u203a blog  \u203a top_web_search_api_2025"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/eCUnJSoYMWRFlBkZpw105II6e3lCeC10CzNAAkdE8Zo/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/ZmlyZWNyYXdsLmRl/di9pbWFnZXMvYmxv/Zy90b3Bfd2ViX3Nl/YXJjaF9hcGlfMjAy/NS90b3Bfd2ViX3Nl/YXJjaF9hcGlfMjAy/NV9jb3Zlci53ZWJw",
+            "original": "https://www.firecrawl.dev/images/blog/top_web_search_api_2025/top_web_search_api_2025_cover.webp",
+            "logo": false
+          }
+        },
+        {
+          "title": "Firecrawl vs. Tavily for RAG and agent pipelines",
+          "url": "https://blog.apify.com/firecrawl-vs-tavily/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "You decide exactly how much HTML or plain text your LLM sees. Firecrawl is language\u2011agnostic, accessible via REST with Node, Go, and Python SDKs. Its selector\u2011less approach lets you skip CSS or XPath entirely; the model inspects the DOM and fills your schema. Paging, infinite scroll, and form submits are delegated to FIRE\u20111. Tavily leans on search\u2011time AI.",
+          "page_age": "2025-08-08T07:30:29",
+          "profile": {
+            "name": "Apify",
+            "url": "https://blog.apify.com/firecrawl-vs-tavily/",
+            "long_name": "blog.apify.com",
+            "img": "https://imgs.search.brave.com/yCpvfZdF3GEvr6JBrHiTlo7S2h7TKjnlaz42VS1w5XI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGQ1ZGM5YTdh/ZmM1ZDEyY2NmZTRh/NzA0ZDMyODlhYzUy/NDdiMTc3YTBmODQz/M2YxMWFiNmQ3YmUx/ZTQxMzliOS9ibG9n/LmFwaWZ5LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "blog.apify.com",
+            "hostname": "blog.apify.com",
+            "favicon": "https://imgs.search.brave.com/yCpvfZdF3GEvr6JBrHiTlo7S2h7TKjnlaz42VS1w5XI/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGQ1ZGM5YTdh/ZmM1ZDEyY2NmZTRh/NzA0ZDMyODlhYzUy/NDdiMTc3YTBmODQz/M2YxMWFiNmQ3YmUx/ZTQxMzliOS9ibG9n/LmFwaWZ5LmNvbS8",
+            "path": "\u203a firecrawl-vs-tavily"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/_lNEEeU7crKXTLJELwiKiUEKyzBeV9KmRvIO6RBDxEE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9ibG9n/LmFwaWZ5LmNvbS9j/b250ZW50L2ltYWdl/cy8yMDI1LzA4L0Zp/cmVjcmF3bC12cy1U/YXZpbHkucG5n",
+            "original": "https://blog.apify.com/content/images/2025/08/Firecrawl-vs-Tavily.png",
+            "logo": false
+          },
+          "age": "August 8, 2025"
+        },
+        {
+          "title": "Tavily - The Web Access Layer for AI Agents",
+          "url": "https://www.tavily.com/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Yes, Tavily is committed to transparency. The API includes citations for all the information it retrieves, ensuring you know exactly where the data comes from.",
+          "profile": {
+            "name": "Tavily",
+            "url": "https://www.tavily.com/",
+            "long_name": "tavily.com",
+            "img": "https://imgs.search.brave.com/oVy5sjwlMH9lxePuA2FDTJPiiXooyn9_vg_AVA1htVE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTAwOTFlMzIz/MDk3NWY2OGFiNDg2/ZGNhZmQxNjE1ZDQ5/ZGMyYWQ3NzJhZjAx/NWQ5YzBiYTI4MDI3/OTlmZDRjOS93d3cu/dGF2aWx5LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "tavily.com",
+            "hostname": "www.tavily.com",
+            "favicon": "https://imgs.search.brave.com/oVy5sjwlMH9lxePuA2FDTJPiiXooyn9_vg_AVA1htVE/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTAwOTFlMzIz/MDk3NWY2OGFiNDg2/ZGNhZmQxNjE1ZDQ5/ZGMyYWQ3NzJhZjAx/NWQ5YzBiYTI4MDI3/OTlmZDRjOS93d3cu/dGF2aWx5LmNvbS8",
+            "path": ""
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/yXMGl6cUdLwXA1kNexZJFR63T-cztPcFXDk9R6Bv6sU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly90YXZp/bHkuY29tL29wZW5n/cmFwaC1pbWFnZS5w/bmc_OTVlNDdhMzNj/OGI5MzJhZg",
+            "original": "https://tavily.com/opengraph-image.png?95e47a33c8b932af",
+            "logo": false
+          }
+        },
+        {
+          "title": "Best SERP APIs & Web Search APIs in 2025",
+          "url": "https://www.linkup.so/blog/best-serp-apis-web-search",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Q3: Which API is best for AI chatbots and RAG systems? For AI-first use cases, Linkup, Tavily, and Exa are the strongest options. Q4: Are there free SERP APIs? Yes. Providers like Linkup, Tavily, SerpApi, and Brave all offer free plans or trial credits.",
+          "profile": {
+            "name": "Linkup",
+            "url": "https://www.linkup.so/blog/best-serp-apis-web-search",
+            "long_name": "linkup.so",
+            "img": "https://imgs.search.brave.com/4OK_hnyiem_yy9zzdhcuJWoQcoMmbwNZFoS6ovJa7gc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZDg3ODNhZWVk/ZjA4NDM3NGM2ODU3/N2ZmYjU1NDA3NmNi/OGQyMTIxYTRkMjdj/OGJiZGM3MzVlOGIz/NDM3MjdhNi93d3cu/bGlua3VwLnNvLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "linkup.so",
+            "hostname": "www.linkup.so",
+            "favicon": "https://imgs.search.brave.com/4OK_hnyiem_yy9zzdhcuJWoQcoMmbwNZFoS6ovJa7gc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZDg3ODNhZWVk/ZjA4NDM3NGM2ODU3/N2ZmYjU1NDA3NmNi/OGQyMTIxYTRkMjdj/OGJiZGM3MzVlOGIz/NDM3MjdhNi93d3cu/bGlua3VwLnNvLw",
+            "path": "\u203a blog  \u203a best-serp-apis-web-search"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/NFfYZus6NtHXnxJK2RHebx8pu_IA7h5fQiVzicDbpn4/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9mcmFt/ZXJ1c2VyY29udGVu/dC5jb20vaW1hZ2Vz/L2dNRGNrN0pjRUpX/d3F0Y3YxeG42V0ZW/NW9Idy5qcGc",
+            "original": "https://framerusercontent.com/images/gMDck7JcEJWwqtcv1xn6WFV5oHw.jpg",
+            "logo": false
+          }
+        },
+        {
+          "title": "r/Rag on Reddit: Which search API should I use between Tavily.com, Exa.ai and Linkup.so? Building a RAG app that needs internet access.",
+          "url": "https://www.reddit.com/r/Rag/comments/1gr8jnr/which_search_api_should_i_use_between_tavilycom/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Trying the /content endpoint from Linkup, seems to be similar to the Tavily extract feature from what you&#x27;re saying More replies More replies More replies ... We were using Exa but it got too expensive too quickly so switched to Brave and added our own filtering and it works great.",
+          "page_age": "2024-11-14T16:21:08",
+          "profile": {
+            "name": "Reddit",
+            "url": "https://www.reddit.com/r/Rag/comments/1gr8jnr/which_search_api_should_i_use_between_tavilycom/",
+            "long_name": "reddit.com",
+            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "reddit.com",
+            "hostname": "www.reddit.com",
+            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
+            "path": "  \u203a r/rag  \u203a which search api should i use between tavily.com, exa.ai and linkup.so? building a rag app that needs internet access."
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/A5H_aQiEBuUODR0lNeU8iDfhrWUvO8oEmRGE_mcS_gM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cmVkZGl0c3RhdGlj/LmNvbS9pY29uLnBu/Zw",
+            "original": "https://www.redditstatic.com/icon.png",
+            "logo": true
+          },
+          "age": "November 14, 2024"
+        },
+        {
+          "title": "Top 5 Anthropic Web Search Alternatives of 2025",
+          "url": "https://www.scrapeless.com/en/blog/anthropic-web-search-alternatives",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "For AI agents, APIs like Exa or Tavily are ideal. For factual accuracy, Perplexity AI is strong. For custom data, a combination with Scrapeless might be best. A4: Yes, most of the listed alternatives, especially Exa, Brave Search API, Tavily, and Perplexity AI API, are designed for production environments.",
+          "page_age": "2025-09-09T07:45:10",
+          "profile": {
+            "name": "Scrapeless",
+            "url": "https://www.scrapeless.com/en/blog/anthropic-web-search-alternatives",
+            "long_name": "scrapeless.com",
+            "img": "https://imgs.search.brave.com/CbBYR0nEhohg5VL6B2YntznYjWqNYaGddmmhTfl2bj8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzkwNjMwMzBk/MDQ3ZjNlOWFmNGYz/ZWFmNmQ3MTg0NzJh/OWJjMDZkZDUxYzU0/YmFkMTAzYmVmODA2/NWRmYmEzYS93d3cu/c2NyYXBlbGVzcy5j/b20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "scrapeless.com",
+            "hostname": "www.scrapeless.com",
+            "favicon": "https://imgs.search.brave.com/CbBYR0nEhohg5VL6B2YntznYjWqNYaGddmmhTfl2bj8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzkwNjMwMzBk/MDQ3ZjNlOWFmNGYz/ZWFmNmQ3MTg0NzJh/OWJjMDZkZDUxYzU0/YmFkMTAzYmVmODA2/NWRmYmEzYS93d3cu/c2NyYXBlbGVzcy5j/b20v",
+            "path": "\u203a en  \u203a blog  \u203a anthropic-web-search-alternatives"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/pCK3dpjiP8LSY5c1sn0Nj3FqAOn6NFhS3WK3ClkLL1M/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc2NyYXBlbGVz/cy5jb20vcHJvZC9w/b3N0cy9hbnRocm9w/aWMtd2ViLXNlYXJj/aC1hbHRlcm5hdGl2/ZXMvMWQyZjNlMGY3/ODVhNWQ2ODIzZDg3/ZGNhYTdkYTJmZGYu/cG5n",
+            "original": "https://assets.scrapeless.com/prod/posts/anthropic-web-search-alternatives/1d2f3e0f785a5d6823d87dcaa7da2fdf.png",
+            "logo": false
+          },
+          "age": "September 9, 2025"
+        },
+        {
+          "title": "MCP Benchmark: Top MCP Servers for Web Access in 2026",
+          "url": "https://research.aimultiple.com/browser-mcp/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Across all the tools we benchmarked, Apify, Bright Data, Browserbase, and Hyperbrowser are the only ones with both of the capabilities required for agents working on the web: Web search &amp; extraction includes searching the web and using links on the page to navigate between pages to collect and process data. Browser automation includes interacting with JS elements to fill forms etc. To see the tasks used in the benchmark in detail, see our methodology. ... Web search &amp; extraction: Firecrawl is the fastest MCP with the average MCP run time for correct results of 7 seconds and its accuracy rate was 83%.",
+          "profile": {
+            "name": "AIMultiple",
+            "url": "https://research.aimultiple.com/browser-mcp/",
+            "long_name": "research.aimultiple.com",
+            "img": "https://imgs.search.brave.com/nFKuuIwoXdfXLv_Q1mPIwpxB-4Xoho_okw25Wt6tdLM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDA4MDUwMjkw/NGM0MDhmNTJjZTgz/ZTg1ZmU2YWEwZmI1/MDhhNzQwMDA4ZGJk/MWRiOGE0OGEzYTA0/YTg2YzJhYy9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "faq",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "research.aimultiple.com",
+            "hostname": "research.aimultiple.com",
+            "favicon": "https://imgs.search.brave.com/nFKuuIwoXdfXLv_Q1mPIwpxB-4Xoho_okw25Wt6tdLM/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNDA4MDUwMjkw/NGM0MDhmNTJjZTgz/ZTg1ZmU2YWEwZmI1/MDhhNzQwMDA4ZGJk/MWRiOGE0OGEzYTA0/YTg2YzJhYy9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS8",
+            "path": "  \u203a home  \u203a aimultiple research  \u203a agentic ai  \u203a model context protocol"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/OI-7r7RDEObTJXipzRqXCO8W2crWw-ZHISOk0Tc1SO0/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9yZXNl/YXJjaC5haW11bHRp/cGxlLmNvbS93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyNS8wMi9h/aW11bHRpcGxlbG9n/by5wbmc",
+            "original": "https://research.aimultiple.com/wp-content/uploads/2025/02/aimultiplelogo.png",
+            "logo": true
+          }
+        },
+        {
+          "title": "Beyond Tavily - The Complete Guide to AI Search APIs in 2025",
+          "url": "https://websearchapi.ai/blog/tavily-alternatives",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "\ud83e\udd47 For most AI applications: WebSearchAPI.ai offers the best balance of quality, ease of use, and pricing. The Google-powered results and RAG-optimized responses make it ideal for the majority of AI agent use cases. \ud83e\udd48 For cutting-edge semantic applications: Exa.ai is unmatched when you need true understanding of query meaning and context.",
+          "page_age": "2025-04-12T12:00:00",
+          "profile": {
+            "name": "Websearchapi",
+            "url": "https://websearchapi.ai/blog/tavily-alternatives",
+            "long_name": "websearchapi.ai",
+            "img": "https://imgs.search.brave.com/kOxmplfbzEB_Hpzp6gVHm8js5VUx-v2m1O6TLK_RCjw/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYmFjZWU5ZmZj/YWVkMzhlMjZjMTMx/YWM2NzcxOGE3MTI2/ZDU3YjFiN2YxM2M1/NjEwMjYxZmY2YTQw/MmQ2MzY3OS93ZWJz/ZWFyY2hhcGkuYWkv"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "websearchapi.ai",
+            "hostname": "websearchapi.ai",
+            "favicon": "https://imgs.search.brave.com/kOxmplfbzEB_Hpzp6gVHm8js5VUx-v2m1O6TLK_RCjw/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYmFjZWU5ZmZj/YWVkMzhlMjZjMTMx/YWM2NzcxOGE3MTI2/ZDU3YjFiN2YxM2M1/NjEwMjYxZmY2YTQw/MmQ2MzY3OS93ZWJz/ZWFyY2hhcGkuYWkv",
+            "path": "  \u203a home  \u203a blog  \u203a beyond tavily - the complete guide to ai search apis in 2025"
+          },
+          "age": "April 12, 2025"
+        },
+        {
+          "title": "GitHub - spences10/mcp-omnisearch: \ud83d\udd0d A Model Context Protocol (MCP) server providing unified access to multiple search engines (Tavily, Brave, Kagi), AI tools (Perplexity, FastGPT), and content processing services (Jina AI, Kagi). Combines search, AI responses, content processing, and enhancement features through a single interface.",
+          "url": "https://github.com/spences10/mcp-omnisearch",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Firecrawl Actions: Support for page interactions (clicking, scrolling, etc.) before extraction for dynamic content \u00b7 Exa Contents: Extract full content from Exa search result IDs \u00b7 Exa Similar: Find web pages semantically similar to a given URL using Exa \u00b7 Kagi Enrichment API: Supplementary content from specialized indexes (Teclis, TinyGem) Jina AI Grounding: Real-time fact verification against web knowledge",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/spences10/mcp-omnisearch",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "software",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a spences10  \u203a mcp-omnisearch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/pYAkTFvGf3Tf0lmKsLjk2zaN45T7kvbJDPaHr-m2GVw/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS85/MTYyY2QzOGIzMTYw/NDA4ZDQ3N2RlNDdj/YTQ4NDlmZjQzMDFk/ODQ0NjExOTI1M2Jl/MDNlNWFhYjFhYjJh/YmJhL3NwZW5jZXMx/MC9tY3Atb21uaXNl/YXJjaA",
+            "original": "https://opengraph.githubassets.com/9162cd38b3160408d477de47ca4849ff4301d8446119253be03e5aab1ab2abba/spences10/mcp-omnisearch",
+            "logo": false
+          }
+        },
+        {
+          "title": "r/AI_Agents on Reddit: Cheapest Realtime Web Search AI API?",
+          "url": "https://www.reddit.com/r/AI_Agents/comments/1jl653q/cheapest_realtime_web_search_ai_api/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Try Serper - only $0.30 per 1k queries.",
+          "page_age": "2025-03-27T15:09:04",
+          "profile": {
+            "name": "Reddit",
+            "url": "https://www.reddit.com/r/AI_Agents/comments/1jl653q/cheapest_realtime_web_search_ai_api/",
+            "long_name": "reddit.com",
+            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "reddit.com",
+            "hostname": "www.reddit.com",
+            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
+            "path": "  \u203a r/ai_agents  \u203a cheapest realtime web search ai api?"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/fYEWxpr6aIoHpY3FQyiuZHEke1J1e0I9RzQRRb1jCGc/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zaGFy/ZS5yZWRkLml0L3By/ZXZpZXcvcG9zdC8x/amw2NTNx",
+            "original": "https://share.redd.it/preview/post/1jl653q",
+            "logo": false
+          },
+          "age": "March 27, 2025"
+        },
+        {
+          "title": "Agent-Ready APIs, 2025\u2019s Top GitHub Repos, Scaling Inference for Gen AI, and Upcoming Meetups | by ODSC - Open Data Science | Dec, 2025 | Medium",
+          "url": "https://odsc.medium.com/open-source-vibe-coding-tools-scaling-ai-agents-ai-alignment-and-hackathon-winners-539d15b69629",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Agent-Ready APIs, 2025\u2019s Top GitHub Repos, Scaling Inference for Gen AI, and Upcoming Meetups The Top Ten GitHub AI Repositories in 2025 These are the ten most-starred GitHub repositories in 2025 \u2026",
+          "page_age": "2025-12-24T17:02:21",
+          "profile": {
+            "name": "ODSC - Open Data Science",
+            "url": "https://odsc.medium.com/open-source-vibe-coding-tools-scaling-ai-agents-ai-alignment-and-hackathon-winners-539d15b69629",
+            "long_name": "odsc.medium.com",
+            "img": "https://imgs.search.brave.com/Suhwbc-iN5qUJOV5SKtvrcC3W_nf0KnIKH-DSbx7q1s/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmZiMjhhNTc5/ZGUyNzg0MjRlOTM1/ZjJkMDMzMmEyMTFk/NzI3ZTRiYzFmNDM2/MGRlZTc4MGMwYTVj/OTVjZmNkNC9vZHNj/Lm1lZGl1bS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "odsc.medium.com",
+            "hostname": "odsc.medium.com",
+            "favicon": "https://imgs.search.brave.com/Suhwbc-iN5qUJOV5SKtvrcC3W_nf0KnIKH-DSbx7q1s/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMmZiMjhhNTc5/ZGUyNzg0MjRlOTM1/ZjJkMDMzMmEyMTFk/NzI3ZTRiYzFmNDM2/MGRlZTc4MGMwYTVj/OTVjZmNkNC9vZHNj/Lm1lZGl1bS5jb20v",
+            "path": "\u203a open-source-vibe-coding-tools-scaling-ai-agents-ai-alignment-and-hackathon-winners-539d15b69629"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/oAcQ648n_kntFHWu1Yy_emRXDhDF4ykmm8x_ma8455Y/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9taXJv/Lm1lZGl1bS5jb20v/MSpNd244S3RpMW9j/SU9vZEpCSGZpSkxn/LnBuZw",
+            "original": "https://miro.medium.com/1*Mwn8Kti1ocIOodJBHfiJLg.png",
+            "logo": false
+          },
+          "age": "2 weeks ago"
+        },
+        {
+          "title": "Tavily AI \u00b7 GitHub",
+          "url": "https://github.com/tavily-ai",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Built specifically for AI agents and RAG workflows. ... Production ready MCP server with real-time search, extract, map &amp; crawl. ... The Tavily Python wrapper allows for easy interaction with the Tavily API, offering the full range of our search, extract, crawl, map, and research functionalities directly from your Python program\u2026",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/tavily-ai",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a tavily-ai"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/zgobdQXBAjQghRLBdm-JDaP3pBO3oPTutPvqwQLrb_g/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9hdmF0/YXJzLmdpdGh1YnVz/ZXJjb250ZW50LmNv/bS91LzE3MDIwNzQ3/Mz9zPTIwMCZhbXA7/dj00",
+            "original": "https://avatars.githubusercontent.com/u/170207473?s=200&amp;v=4",
+            "logo": false
+          }
+        },
+        {
+          "title": "r/AI_Agents on Reddit: Tools and APIs for building AI Agents in 2025",
+          "url": "https://www.reddit.com/r/AI_Agents/comments/1jikig2/tools_and_apis_for_building_ai_agents_in_2025/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "85 votes, 25 comments. Everyone is building AI agents right now, but to get good results, you\u2019ve got to start with the right tools and APIs. We\u2019ve\u2026",
+          "page_age": "2025-06-10T18:53:51",
+          "profile": {
+            "name": "Reddit",
+            "url": "https://www.reddit.com/r/AI_Agents/comments/1jikig2/tools_and_apis_for_building_ai_agents_in_2025/",
+            "long_name": "reddit.com",
+            "img": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "reddit.com",
+            "hostname": "www.reddit.com",
+            "favicon": "https://imgs.search.brave.com/U-eHNCapRHVNWWCVPPMTIvOofZULh0_A_FQKe8xTE4I/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2ZiNTU0M2Nj/MTFhZjRiYWViZDlk/MjJiMjBjMzFjMDRk/Y2IzYWI0MGI0MjVk/OGY5NzQzOGQ5NzQ5/NWJhMWI0NC93d3cu/cmVkZGl0LmNvbS8",
+            "path": "  \u203a r/ai_agents  \u203a tools and apis for building ai agents in 2025"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/A5H_aQiEBuUODR0lNeU8iDfhrWUvO8oEmRGE_mcS_gM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cmVkZGl0c3RhdGlj/LmNvbS9pY29uLnBu/Zw",
+            "original": "https://www.redditstatic.com/icon.png",
+            "logo": true
+          },
+          "age": "June 10, 2025"
+        },
+        {
+          "title": "The Best AI Agents in 2026: Tools, Frameworks, and Platforms Compared | DataCamp",
+          "url": "https://www.datacamp.com/blog/best-ai-agents",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Discover 2026&#x27;s best AI agents. Compare frameworks, no-code tools, enterprise platforms, and get step-by-step guidance to choose and deploy agentic automation.",
+          "page_age": "2025-12-22T23:00:00",
+          "profile": {
+            "name": "DataCamp",
+            "url": "https://www.datacamp.com/blog/best-ai-agents",
+            "long_name": "datacamp.com",
+            "img": "https://imgs.search.brave.com/YV5sojK5QsZJNk2w2tHrpkx2YgkvmS-p5nbsTHpqfyY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmM4ODRiMTE0/NTQyY2YzZTAxZTIw/NzdmZDcwOGVmNTBh/NGFjMjRjODMzYzRm/NDIxMzY2ZmZjMTgz/YmM2ZjRkNi93d3cu/ZGF0YWNhbXAuY29t/Lw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "datacamp.com",
+            "hostname": "www.datacamp.com",
+            "favicon": "https://imgs.search.brave.com/YV5sojK5QsZJNk2w2tHrpkx2YgkvmS-p5nbsTHpqfyY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmM4ODRiMTE0/NTQyY2YzZTAxZTIw/NzdmZDcwOGVmNTBh/NGFjMjRjODMzYzRm/NDIxMzY2ZmZjMTgz/YmM2ZjRkNi93d3cu/ZGF0YWNhbXAuY29t/Lw",
+            "path": "\u203a blog  \u203a best-ai-agents"
+          },
+          "age": "3 weeks ago"
+        },
+        {
+          "title": "Open Deep Research MCP Server by David Zhang | PulseMCP",
+          "url": "https://www.pulsemcp.com/servers/ozamatash-open-deep-research",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Orchestrates intelligent research workflows by selecting and executing specialized tools (Brave Search, Tavily,... ... Integrates DeepSeek&#x27;s R1 reasoning engine with Claude, enabling complex problem-solving through a tool that processes... ... Guides structured research processes through systematic question elaboration, web searching, and data synthesis to... ... Provides web search and advanced research capabilities with specialized tools for browsing, document analysis, media... ... Integrates with Serper API to provide web search capabilities through standard Google search and Deep Research tools...",
+          "profile": {
+            "name": "PulseMCP",
+            "url": "https://www.pulsemcp.com/servers/ozamatash-open-deep-research",
+            "long_name": "pulsemcp.com",
+            "img": "https://imgs.search.brave.com/1nSasYgFk9ALFLCZmjM4npx6cDJIK73-VuoI_m8o_oQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGUwMTg5Yzcx/ZTRhYzBmMDlmMjdk/OTZhZmQ1N2RmMmE4/MjQxNGJiZTU4NWJk/OGQ1ZjEzZTQxM2I3/MDc1NzFkMi93d3cu/cHVsc2VtY3AuY29t/Lw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "pulsemcp.com",
+            "hostname": "www.pulsemcp.com",
+            "favicon": "https://imgs.search.brave.com/1nSasYgFk9ALFLCZmjM4npx6cDJIK73-VuoI_m8o_oQ/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNGUwMTg5Yzcx/ZTRhYzBmMDlmMjdk/OTZhZmQ1N2RmMmE4/MjQxNGJiZTU4NWJk/OGQ1ZjEzZTQxM2I3/MDc1NzFkMi93d3cu/cHVsc2VtY3AuY29t/Lw",
+            "path": "\u203a servers  \u203a ozamatash-open-deep-research"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/aQCymhkySJOsPtMxIL5uS28TH5F04_JMl8gaLCceifA/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zdG9y/YWdlLmdvb2dsZWFw/aXMuY29tL3B1bHNl/X3B1YmxpYy9tY3Bf/YXNzZXRzL29nLTIt/amFuLTI1LnBuZw",
+            "original": "https://storage.googleapis.com/pulse_public/mcp_assets/og-2-jan-25.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "AI Agents: A Comprehensive List of The Best AI Agents \u00b7 GitHub",
+          "url": "https://gist.github.com/devinschumacher/6b50d08249bf97f147657a33869eef07",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Perception: They gather data from their environment through sensors or data inputs, allowing them to understand and interpret situational contexts.",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://gist.github.com/devinschumacher/6b50d08249bf97f147657a33869eef07",
+            "long_name": "gist.github.com",
+            "img": "https://imgs.search.brave.com/xZ1QeMRUaD4Rb2PRlguFbHNXkQKQJMGrNr6XEBVeFkc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNzdmZjEzNDE3/NDlmMDc4NDRlMGJl/YTdmYzUxNGNkNDdk/OGE5YmRiOWQ0NGVl/NDU4MzZlNzg3OTYy/M2YzOTZiMS9naXN0/LmdpdGh1Yi5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "gist.github.com",
+            "hostname": "gist.github.com",
+            "favicon": "https://imgs.search.brave.com/xZ1QeMRUaD4Rb2PRlguFbHNXkQKQJMGrNr6XEBVeFkc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNzdmZjEzNDE3/NDlmMDc4NDRlMGJl/YTdmYzUxNGNkNDdk/OGE5YmRiOWQ0NGVl/NDU4MzZlNzg3OTYy/M2YzOTZiMS9naXN0/LmdpdGh1Yi5jb20v",
+            "path": "\u203a devinschumacher  \u203a 6b50d08249bf97f147657a33869eef07"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/xibc_mhoVZOIJZ8WpN5zLmMhFjHG43_6n7CZ-4y25kI/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9naXRo/dWIuZ2l0aHViYXNz/ZXRzLmNvbS9hc3Nl/dHMvZ2lzdC1vZy1p/bWFnZS01NGZkN2Rj/MDcxM2UucG5n",
+            "original": "https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png",
+            "logo": false
+          }
+        }
+      ],
+      "family_friendly": true
+    }
+  },
+  "repo": {
+    "results": []
+  },
+  "timestamp": "2026-01-10T21:09:24.843459"
+}

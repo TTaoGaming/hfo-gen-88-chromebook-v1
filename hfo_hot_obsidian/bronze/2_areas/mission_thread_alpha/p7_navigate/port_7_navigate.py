@@ -48,35 +48,35 @@ class Navigator:
 
         return receipt
 
-    def t0_sense_discovery(self, summary: str, tokens: int, data: Dict[str, Any]):
-        """T0: Signal Discovery (P0 Alignment)"""
+    def t0_observe(self, summary: str, tokens: int, data: Dict[str, Any]):
+        """T0: Signal Observation (P0 Alignment)"""
         return self._generate_receipt("T0", "P0", summary, tokens, data)
 
-    def t1_sequential_reasoning(self, summary: str, tokens: int, steps: list):
+    def t1_bridge(self, summary: str, tokens: int, steps: list):
         """T1: Logic Bridge (P1 Alignment)"""
         return self._generate_receipt("T1", "P1", summary, tokens, {"steps": steps})
 
-    def t2_galois_lattice(self, summary: str, tokens: int, mapping: Dict[str, Any]):
-        """T2: Geometric Logic (P2 Alignment)"""
+    def t2_shape(self, summary: str, tokens: int, mapping: Dict[str, Any]):
+        """T2: Geometric Shape (P2 Alignment)"""
         return self._generate_receipt("T2", "P2", summary, tokens, {"lattice_points": mapping})
 
-    def t3_event_injection(self, summary: str, tokens: int, fsm_state: str):
+    def t3_inject(self, summary: str, tokens: int, fsm_state: str):
         """T3: Kinetic Injection (P3 Alignment)"""
         return self._generate_receipt("T3", "P3", summary, tokens, {"fsm_state": fsm_state})
 
-    def t4_scream_audit(self, summary: str, tokens: int, anomalies: list):
+    def t4_disrupt(self, summary: str, tokens: int, anomalies: list):
         """T4: Entropy Analysis (P4 Alignment)"""
         return self._generate_receipt("T4", "P4", summary, tokens, {"anomalies": anomalies})
 
-    def t5_governance_shield(self, summary: str, tokens: int, check_result: bool):
+    def t5_integrity(self, summary: str, tokens: int, check_result: bool):
         """T5: Shielding (P5 Alignment)"""
         return self._generate_receipt("T5", "P5", summary, tokens, {"integrity_passed": check_result})
 
-    def t6_historical_synthesis(self, summary: str, tokens: int, findings: list):
+    def t6_archive(self, summary: str, tokens: int, findings: list):
         """T6: Library Retrieval (P6 Alignment)"""
         return self._generate_receipt("T6", "P6", summary, tokens, {"historical_deltas": findings})
 
-    def t7_mission_orchestration(self, summary: str, tokens: int, plan: str):
+    def t7_navigate(self, summary: str, tokens: int, plan: str):
         """T7: Tactical Steering (P7 Alignment)"""
         return self._generate_receipt("T7", "P7", summary, tokens, {"final_directive": plan})
 
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     nav = Navigator()
     # PoC: Run a sample orchestration thinking session
     print("🧠 Initializing Port 7 Navigator PoC...")
-    nav.t7_mission_orchestration(
+    nav.t7_navigate(
         "Navigator initialized with full Octet capability.",
         256,
         "Proceeding to stabilize Port 0 Stigmergy and harden Omega Workspace."

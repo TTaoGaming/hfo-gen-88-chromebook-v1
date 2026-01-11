@@ -4,9 +4,9 @@ import { test, expect } from './hfo_fixtures';
 /**
  * V40 Standard E2E: Verify that modern tools (Excalidraw) work with PURE PointerEvents.
  */
-test('V40 Standard E2E: PointerEvent-only Interaction on Excalidraw', async ({ hfoPage }) => {
-    // 1. Load the V40 workspace
-    const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v40.html';
+test('V42 Standard E2E: PointerEvent-only Interaction on Excalidraw', async ({ hfoPage }) => {
+    // 1. Load the V42 workspace
+    const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v42.html';
     await hfoPage.goto(url);
     await hfoPage.initHFO();
     await hfoPage.waitForHand(0);
@@ -33,11 +33,13 @@ test('V40 Standard E2E: PointerEvent-only Interaction on Excalidraw', async ({ h
     await hfoPage.evaluate(() => {
         // @ts-ignore
         window.hfoState.physics.p3Mirror = false;
+        // @ts-ignore
+        window.hfoState.physics.remoteMode = true;
     });
 
     await hfoPage.injectHand(0, {
         active: true,
-        state: 'COMMITTED',
+        state: 'PORT_7_POINTER_COMMITTED',
         event: 'pointerdown',
         cursors: { predictive: { x: targetX, y: targetY } }
     });
@@ -55,6 +57,6 @@ test('V40 Standard E2E: PointerEvent-only Interaction on Excalidraw', async ({ h
         return input ? input.checked : el.classList.contains('active');
     });
 
-    console.log(`V40 E2E: Rectangle tool selected with Pure PointerEvents? ${isSelected}`);
+    console.log(`V42 E2E: Rectangle tool selected with Pure PointerEvents? ${isSelected}`);
     expect(isSelected).toBe(true);
 });

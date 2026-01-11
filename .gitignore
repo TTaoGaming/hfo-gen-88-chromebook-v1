@@ -48,9 +48,21 @@ package-lock.json
 
 # Workspace Specific
 .env
+
+# Large Binary Persistance (HFO Shards)
+*.zim
+*.parquet
+hfo_hot_obsidian/bronze/6_persist/
+hfo_cold_obsidian/bronze/6_persist/
+**/test-results/
 ttao-notes-*
 *.swp
 .DS_Store
 
 # stryker temp files
 .stryker-tmp
+
+# Large Data Files (Persist Layer)
+*.parquet
+*.zim
+hfo_hot_obsidian/bronze/6_persist/wiki_rag/

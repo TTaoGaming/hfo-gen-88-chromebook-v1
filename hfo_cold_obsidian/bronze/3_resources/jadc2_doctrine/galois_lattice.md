@@ -1,4 +1,5 @@
 # 🧊 Galois Lattice (8x8)
+
 **Reference**: HFO_OBSIDIAN_GALOIS_LATTICE.md
 **Source**: Cold Bronze (Grounded SSOT)
 **Architecture**: Fractal Octree
@@ -24,16 +25,16 @@ And Navigate the Higher State.          # P7: NAVIGATE
 
 Each intersection [Verb, Domain] = execution tile in semantic manifold.
 
-| Port | Commander | Verb | Domain |
-|:---:|:---|:---:|:---|
-| 0 | Lidless Legion | SENSE | ISR / Sensing |
-| 1 | Web Weaver | FUSE | C2 Relay / Fusion |
-| 2 | Mirror Magus | SHAPE | EW / Cyber Strike |
-| 3 | Spore Storm | DELIVER | Kinetic Strike |
-| 4 | Red Regnant | DISRUPT | SEAD / DEAD |
-| 5 | Pyre Praetorian | DEFEND | Air Defense / IAMD |
-| 6 | Kraken Keeper | STORE | Logistics / Sustain |
-| 7 | Spider Sovereign | NAVIGATE | Battle Manager |
+| Port | Commander | HFO [Role/Verb] | JADC2 [Verb] | JADC2 [Domain] |
+|:---:|:---|:---|:---:|:---|
+| 0 | Lidless Legion | Observer / Observe | SENSE | ISR |
+| 1 | Web Weaver | Bridger / Bridge | FUSE | Data Fabric |
+| 2 | Mirror Magus | Shaper / Shape | SHAPE | Digital Twin |
+| 3 | Spore Storm | Injector / Inject | DELIVER | Effect Delivery |
+| 4 | Red Regnant | Disruptor / Disrupt | DISRUPT | Coev. Red Team |
+| 5 | Pyre Praetorian | Immunizer / Immunize | DEFEND | Coev. Blue Team |
+| 6 | Kraken Keeper | Assimilator / Assimilate| STORE | AAR |
+| 7 | Spider Sovereign | Navigator / Navigate | NAVIGATE | BMC2 |
 
 ---
 
@@ -86,6 +87,7 @@ b  ├───┼───┼───┼───┼───┼───┼�
 ## Fractal Octree Structure
 
 Each port branches into 8 sub-domains:
+
 - 8 Commanders × 8 Domains = 64 tiles
 - Each tile can recurse into 8 sub-tiles
 - Infinite depth for mission engineering

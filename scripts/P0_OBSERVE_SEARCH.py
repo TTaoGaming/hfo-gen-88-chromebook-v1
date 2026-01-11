@@ -7,7 +7,7 @@ import subprocess
 from datetime import datetime
 
 # Medallion: Bronze | Mutation: 0% | HIVE: H
-# P0-SENSE Hunt Tool: Dual Search (Tavily + Brave)
+# P0-OBSERVE Hunt Tool: Dual Search (Tavily + Brave)
 
 def load_env():
     env_path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.env"
@@ -47,9 +47,9 @@ def search_brave(query, api_key):
     except Exception as e:
         return {"error": str(e)}
 
-def local_repo_sense(query):
+def local_repo_observe(query):
     # Simulated Repo Search via grep/find for P0 QUAD compliance
-    print(f"🔍 [P0-SENSE]: Locally sensing Repo for: {query}")
+    print(f"🔍 [P0-OBSERVE]: Locally observing Repo for: {query}")
     try:
         cmd = ["grep", "-ri", query, "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze"]
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -68,14 +68,14 @@ def main():
     else:
         query = "@mediapipe/tasks-vision vision_bundle.js script global name for FilesetResolver and GestureRecognizer"
 
-    print(f"🔍 [P0-SENSE]: Searching Tavily for: {query}")
+    print(f"🔍 [P0-OBSERVE]: Searching Tavily for: {query}")
     tavily_results = search_tavily(query, tavily_key)
 
-    print(f"🔍 [P0-SENSE]: Searching Brave...")
+    print(f"🔍 [P0-OBSERVE]: Searching Brave...")
     brave_results = search_brave(query, brave_key)
 
-    print(f"🔍 [P0-SENSE]: Locally sensing Repo...")
-    repo_results = local_repo_sense(query)
+    print(f"🔍 [P0-OBSERVE]: Locally observing Repo...")
+    repo_results = local_repo_observe(query)
 
     output = {
         "query": query,
@@ -85,7 +85,7 @@ def main():
         "timestamp": datetime.now().isoformat()
     }
 
-    with open("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/P0_SENSE_search_results.json", "w") as f:
+    with open("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/P0_OBSERVE_search_results.json", "w") as f:
         json.dump(output, f, indent=2)
 
     # PORT 5 COMPLIANCE: Log to Blackboard
@@ -94,7 +94,7 @@ def main():
     entry = {
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "phase": "H",
-        "summary": f"P0-Sense QUAD Hunt: {query}",
+        "summary": f"P0-Observe QUAD Hunt: {query}",
         "p0": {
             "status": "complete",
             "query": query,
@@ -102,13 +102,13 @@ def main():
             "data": {
                 "web_tavily": tavily_results.get("results", []) if isinstance(tavily_results, dict) else [],
                 "web_brave": brave_results.get("web", {}).get("results", []) if isinstance(brave_results, dict) else [],
-                "repo_sense": repo_results.get("results", [])
+                "repo_observe": repo_results.get("results", [])
             }
         }
     }
     with open(blackboard_path, "a") as f:
         f.write(json.dumps(entry) + "\n")
-    print(f"✅ [P0-SENSE]: Logged to Blackboard with receipt: {receipt}")
+    print(f"✅ [P0-OBSERVE]: Logged to Blackboard with receipt: {receipt}")
 
 if __name__ == "__main__":
     main()

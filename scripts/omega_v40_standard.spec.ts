@@ -1,13 +1,16 @@
 // Medallion: Bronze | Mutation: 0% | HIVE: V
 import { test, expect } from './hfo_fixtures';
 
-test('V40 Standard: Pure W3C PointerEvent Validation (Red Test)', async ({ hfoPage }) => {
-    const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v40.html';
+test('V42 Standard: Pure W3C PointerEvent Validation (Red Test)', async ({ hfoPage }) => {
+    const url = 'http://localhost:8080/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v42.html';
     await hfoPage.goto(url);
     await hfoPage.initHFO();
     await hfoPage.waitForHand(0);
 
-    // Setup event spy
+    // Set Pure Pointer Mode
+    await hfoPage.evaluate(() => {
+        (window as any).hfoState.physics.purePointerMode = true;
+    });
     await hfoPage.evaluate(() => {
         (window as any).hfoEventLog = [];
         const logEvent = (e: Event) => {
@@ -62,5 +65,5 @@ test('V40 Standard: Pure W3C PointerEvent Validation (Red Test)', async ({ hfoPa
     const mouseEvents = logs.filter((l: any) => ['mousedown', 'mouseup', 'click'].includes(l.type));
 
     // FAIL CONDITION: If we still have legacy dispatches
-    expect(mouseEvents.length, 'Legacy MouseEvents detected! Expected Pure PointerEvents (V40 Standard).').toBe(0);
+    expect(mouseEvents.length, 'Legacy MouseEvents detected! Expected Pure PointerEvents (V42 Standard).').toBe(0);
 });
