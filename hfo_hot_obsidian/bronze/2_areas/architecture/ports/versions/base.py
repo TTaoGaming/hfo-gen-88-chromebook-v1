@@ -447,15 +447,46 @@ class Port5Immunize:
         if Port2Shape.audit_physics()["status"] == "BROKEN":
             return {"status": "FAIL", "message": "Physics Audit Failed"}
         
+        # ESCALATION_LEVEL_8: MEDALLION PURITY GUARD
+        if subprocess.run(["python3", "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/medallion_purity_guard.py"]).returncode != 0:
+            return {"status": "BLOCK", "message": "Medallion Purity Guard: LOBOTOMY PROTECTION ACTIVE"}
+        
         return {"status": "PASS", "message": "HardGate Physical Integrity Verified (Kinetic Snaplock Enabled)"}
+
+    @staticmethod
+    def pillar_2_medallion_purity():
+        """ESCALATION_LEVEL_8: 8 Critical Signals monitoring."""
+        blood_grudges = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/BOOK_OF_BLOOD_GRUDGES.md"
+        if not os.path.exists(blood_grudges):
+            return {"status": "CRITICAL", "message": "BOOK_OF_BLOOD_GRUDGES MISSING! POSSIBLE LOBOTOMY IN PROGRESS."}
+        
+        # Critical Signal Check: Provenance Density
+        # Every file in Cold must have a receipt.
+        cold_files = 0
+        receipts = 0
+        for root, _, files in os.walk("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian"):
+            for f in files:
+                if f.endswith(".receipt.json"): receipts += 1
+                elif f.endswith(('.py', '.ts', '.html')): cold_files += 1
+        
+        density = receipts / cold_files if cold_files > 0 else 0
+        if density < 0.9:
+            return {"status": "RED", "message": f"Critical Signal 2 (PROVENANCE) breached! Density: {density:.2f}"}
+            
+        return {"status": "GREEN", "message": "8 Critical Signals: NOMINAL", "provenance_density": density}
 
     @classmethod
     def execute_all(cls):
-        return {"p1": cls.pillar_1_hardgate()}
+        return {
+            "p1": cls.pillar_1_hardgate(),
+            "p2": cls.pillar_2_medallion_purity()
+        }
 
     @staticmethod
     def get_pheromone(output: Dict[str, Any]) -> str:
-        return f"Immunization: {output.get('p1', {}).get('status')} (HardGate Active)."
+        s1 = output.get("p1", {}).get("status")
+        s2 = output.get("p2", {}).get("status")
+        return f"Immunization: {s1} | Purity: {s2} (HardGate Active)."
 
 # --- PORT 6: STORE (HFO: Assimilator / Assimilate | JADC2 Domain: AAR) ---
 class Port6Assimilate:

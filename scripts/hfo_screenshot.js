@@ -8,7 +8,7 @@ async function capture(mode = 'headless') {
   console.log(`📸 HFO: Initiating [${mode.toUpperCase()}] Capture...`);
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const filename = path.join(__dirname, `../reports/screenshot_${mode}_${timestamp}.png`);
-  
+
   let browser;
   try {
     if (mode === 'host') {
@@ -24,7 +24,7 @@ async function capture(mode = 'headless') {
       const page = await browser.newPage();
       await page.goto('http://localhost:8889/omega_workspace_v52.html');
       // Wait for Piano Genie to settle
-      await page.waitForTimeout(2000); 
+      await page.waitForTimeout(2000);
       await page.screenshot({ path: filename, fullPage: true });
     }
     console.log(`✅ HFO: Screenshot saved to: ${filename}`);

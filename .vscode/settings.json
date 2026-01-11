@@ -12,7 +12,7 @@
         "*.md": "markdown"
     },
     "markdown.links.openLocation": "currentGroup",
-    "liveServer.settings.port": 8889,
-    "liveServer.settings.root": "/",
+    "liveServer.settings.port": 8890,
+    "liveServer.settings.root": "",
     "liveServer.settings.CustomBrowser": "null"
 }
