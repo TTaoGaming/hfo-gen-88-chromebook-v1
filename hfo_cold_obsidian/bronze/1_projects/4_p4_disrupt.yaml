@@ -1,0 +1,22 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+id: P4
+name: P4 DISRUPT (Red Regnant)
+mission_thread: Alpha
+status: online
+tasks:
+  - id: P4.1
+    title: 8-Scream Governance
+    description: Enforce header and contract compliance across all ports.
+    status: completed
+  - id: P4.2
+    title: Entropy Monitoring
+    description: Track system entropy and trigger disruptions when thresholds are met.
+    status: in-progress
+  - id: P4.3
+    title: Tool-Bypass Disruption
+    description: Identify and disrupt attempts by AI agents to bypass the tool-receipt requirement.
+    status: not-started
+  - id: P4.4
+    title: Dual-Search Compliance (P0)
+    description: Monitor P0 sensing to ensure both Tavily and Brave results are fetched and processed.
+    status: not-started

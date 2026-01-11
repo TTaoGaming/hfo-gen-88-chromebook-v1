@@ -1,0 +1,851 @@
+{
+  "query": "W3C Pointer Event MediaPipe initialization interlocks for Golden Layout v2",
+  "tavily": {
+    "query": "W3C Pointer Event MediaPipe initialization interlocks for Golden Layout v2",
+    "response_time": 1.29,
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://blog.carlosrojas.dev/the-complete-guide-to-pointer-events-21e44b2f9da0",
+        "title": "The Complete Guide to Pointer Events. | by Carlos A. Rojas",
+        "content": "``` [...] ``` [...] ```",
+        "score": 0.17259014,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=MhUCYR9Tb9c",
+        "title": "Learn Pointer Events In 15 Minutes - YouTube",
+        "content": "for the most part we're taking in our event and our dot and in here really all i want to do is i want to set the position of everything so this is going to be setting our width our height our left our top all those different properties so we can just say for example dot dot style dot width is equal to and we can say e dot width and we're going to put our pixels at the end of that and i'm also just going to multiply this by 10 so it's easy to see because something that's one pixel wide is going to be really hard for you to see so we're just going to multiply it by 10. so it's a little bit easier for you to see we're going to do the same thing with our height and then what we want to do is we want to do our left and our top so our left position here is just going to be our page x and then [...] bug in our code that's because this e dot target should be referencing our timeline instead that'll fix this issue so now wherever we move you can see that this is going in the right place but the problem is if i let go of my mouse i've let go of the mouse down button it's still moving we need to make sure when we lift our pointer up we stop setting this position to do this we can just come in here we can say timeline dot add event listener this is going to be for pointer up and we want to make sure that inside of this all we do is remove our event listener for pointer move so remove event listener pointer move and this is the set timeline position and i want to make sure this pointer up only fires once so we're going to say one's true that should be all we need to do so now if i save and [...] video it's going to be linked over here i highly recommend you check it out it's a great follow-up to this video and if you have seen that i highly recommend you check out my full event listener crash course linked over here it covers everything you need to know about event listeners including some of the more nitty gritty advanced features that most people don't even realize you can do with event listeners with that said thank you very much for watching and have a good day",
+        "score": 0.13898711,
+        "raw_content": null
+      },
+      {
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Multi-touch_interaction",
+        "title": "Multi-touch interaction - Pointer events - MDN Web Docs",
+        "content": "This page was last modified on by MDN contributors.\n\nView this page on GitHub \u2022 Report a problem with this content`](/en-US/docs/Web/HTML/Reference/Elements/div) [...] Skip to search\n\nToggle sidebar \n\n1. Web\n2. Web APIs\n3. Pointer events\n4. Multi-touch interaction\n\n \n\nRemember language   Learn more\n\n Deutsch\n English (US)\n \u65e5\u672c\u8a9e\n\n# Multi-touch interaction\n\nPointer events extend DOM input events to support various pointing input devices such as pen/stylus and touch screens as well as mouse. The pointer is a hardware-agnostic device that can target a specific set of screen coordinates. Having a single event model for pointers can simplify creating websites, applications and provide a good user experience regardless of the user's hardware. [...] ### Miscellaneous functions\n\nThese functions support the application but aren't directly involved with the event flow.\n\n#### Cache management\n\nThese functions manage the global event caches evCache1, evCache2 and evCache3.\n\njs",
+        "score": 0.12268103,
+        "raw_content": null
+      },
+      {
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent",
+        "title": "PointerEvent - Web APIs | MDN",
+        "content": "`pointerenter`\n:   This event is fired when a pointing device is moved into the hit test boundaries of an element or one of its descendants, including as a result of a `pointerdown` event from a device that does not support hover (see `pointerdown`). This event type is similar to `pointerover`, but differs in that it does not bubble.\n\n`pointerdown`\n:   The event is fired when a pointer becomes active. For mouse, it is fired when the device transitions from no buttons pressed to at least one button pressed. For touch, it is fired when physical contact is made with the digitizer. For pen, it is fired when the stylus makes physical contact with the digitizer. [...] Skip to search\n\nToggle sidebar \n\n1. Web\n2. Web APIs\n3. PointerEvent\n\n \n\nRemember language   Learn more\n\n Deutsch\n English (US)\n Fran\u00e7ais\n \u65e5\u672c\u8a9e\n \ud55c\uad6d\uc5b4\n \u4e2d\u6587 (\u7b80\u4f53)\n\n# PointerEvent\n\n \n\nBaseline  Widely available  \\\n\nThis feature is well established and works across many devices and browser versions. It\u2019s been available across browsers since \u2068July 2020\u2069.\n\n\\ Some parts of this feature may have varying levels of support.\n\n Learn more\n See full compatibility\n Report feedback\n\nThe `PointerEvent` interface represents the state of a DOM event produced by a pointer such as the geometry of the contact point, the device type that generated the event, the amount of pressure that was applied on the contact surface, etc. [...] `pointercancel`\n:   A browser fires this event if it concludes the pointer will no longer be able to generate events (for example the related device is deactivated).\n\n`pointerout`\n:   This event is fired for several reasons including: pointing device is moved out of the hit test boundaries of an element; firing the `pointerup` event for a device that does not support hover (see `pointerup`); after firing the `pointercancel` event (see `pointercancel`); when a pen stylus leaves the hover range detectable by the digitizer.\n\n`pointerleave`\n:   This event is fired when a pointing device is moved out of the hit test boundaries of an element. For pen devices, this event is fired when the stylus leaves the hover range detectable by the digitizer.",
+        "score": 0.11693554,
+        "raw_content": null
+      },
+      {
+        "url": "https://github.com/paperjs/paper.js/issues/1354",
+        "title": "Support w3c pointer events api #1354 - paperjs/paper.js - GitHub",
+        "content": "Skip to content   \n\n## Navigation Menu\n\nSign in \n\nAppearance settings\n\n# Search code, repositories, users, issues, pull requests...\n\nSearch syntax tips\n\nSign in\n\n Sign up \n\nAppearance settings\n\nYou signed in with another tab or window. Reload to refresh your session. You signed out in another tab or window. Reload to refresh your session. You switched accounts on another tab or window. Reload to refresh your session. Dismiss alert\n\n{{ message }}\n\npaperjs   /  paper.js  Public\n\n Notifications  You must be signed in to change notification settings\n Fork 1.3k\n Star  14.9k\n\n# Support w3c pointer events api #1354\n\nNew issue\n\nCopy link\n\nNew issue\n\nCopy link\n\nOpen\n\nOpen\n\nSupport w3c pointer events api#1354\n\nCopy link\n\nLabels\n\ncat: event-handlingneeds: feedbacktype: feature\n\n## Description [...] ## Description\n\nallforabit\n\nopened on Jul 4, 2017\n\nIssue body actions\n\nIt would be nice to have support for the Pointer events api:  With this it's possible to detect which device is being used for input, e.g. a stylus. Most browsers now support it apart from Safari. However there is a polyfill to work around this: \n\nOSUblake, simonemazzoni, nicholaswmin, namwkim, LittleHuba and 2 more\n\n## Metadata\n\n## Metadata\n\nNo one assigned\n\n### Labels\n\ncat: event-handlingneeds: feedbacktype: feature\n\nNo type\n\nNo projects\n\nNo milestone\n\nNone yet\n\nNo branches or pull requests\n\n## Issue actions\n\nYou can\u2019t perform that action at this time.",
+        "score": 0.07529205,
+        "raw_content": null
+      }
+    ],
+    "request_id": "71e4c99e-91a1-48e6-b74f-fc12ed77e4a4"
+  },
+  "brave": {
+    "query": {
+      "original": "W3C Pointer Event MediaPipe initialization interlocks for Golden Layout v2",
+      "show_strict_warning": false,
+      "is_navigational": false,
+      "is_news_breaking": false,
+      "spellcheck_off": true,
+      "country": "us",
+      "bad_results": false,
+      "should_fallback": false,
+      "postal_code": "",
+      "city": "",
+      "header_country": "",
+      "more_results_available": true,
+      "state": ""
+    },
+    "mixed": {
+      "type": "mixed",
+      "main": [
+        {
+          "type": "web",
+          "index": 0,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 1,
+          "all": false
+        },
+        {
+          "type": "videos",
+          "all": true
+        },
+        {
+          "type": "web",
+          "index": 2,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 3,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 4,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 5,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 6,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 7,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 8,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 9,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 10,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 11,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 12,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 13,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 14,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 15,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 16,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 17,
+          "all": false
+        },
+        {
+          "type": "web",
+          "index": 18,
+          "all": false
+        }
+      ],
+      "top": [],
+      "side": []
+    },
+    "type": "search",
+    "videos": {
+      "type": "videos",
+      "results": [
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=1dItzM7D__g",
+          "title": "AI for Everyone LESSON 23 SOLUTION: Parsing Mediapipe Pose, Face ...",
+          "description": "You guys can help me out over at Patreon, and that will help me keep my gear updated, and help me keep this quality content coming:https://www.patreon.com/Pa...",
+          "age": "December 9, 2021",
+          "page_age": "2021-12-09T15:30:11",
+          "fetched_content_timestamp": 1730752465,
+          "video": {
+            "duration": "52:50",
+            "views": 5175,
+            "creator": "Paul McWhorter",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/KJhjn_1EVqutyXXc19CyaZapL_tTVKhOlBb3o40z61s/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS8x/ZEl0ek03RF9fZy9t/YXhyZXNkZWZhdWx0/LmpwZz9zcXA9LW9h/eW13RW1DSUFLRU5B/RjhxdUtxUU1hOEFF/Qi1BSFVCb0FDNEFP/S0Fnd0lBQkFCR0JN/Z1Z5aF9NQTg9JmFt/cDtycz1BT240Q0xB/UGtUQzh6aXZ2aGg5/TEZXR3hlb3VlUDhn/Z0pB",
+            "original": "https://i.ytimg.com/vi/1dItzM7D__g/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBMgVyh_MA8=&amp;rs=AOn4CLAPkTC8zivvhh9LFWGxeoueP8ggJA"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=xHK-wv2JG18",
+          "title": "AI for Everyone LESSON 18: Mediapipe for Hand Detection and Pose ...",
+          "description": "You guys can help me out over at Patreon, and that will help me keep my gear updated, and help me keep this quality content coming:https://www.patreon.com/Pa...",
+          "age": "November 2, 2021",
+          "page_age": "2021-11-02T15:30:12",
+          "fetched_content_timestamp": 1717158880,
+          "video": {
+            "duration": "59:36",
+            "views": 7656,
+            "creator": "Paul McWhorter",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/i8RpytErQZ2bB3S-32ngycribH70fqMB-mF1ogP0G8k/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS94/SEstd3YySkcxOC9t/YXhyZXNkZWZhdWx0/LmpwZz9zcXA9LW9h/eW13RW1DSUFLRU5B/RjhxdUtxUU1hOEFF/Qi1BSFVCb0FDNEFP/S0Fnd0lBQkFCR0JN/Z1dTaF9NQTg9JmFt/cDtycz1BT240Q0xB/TG5zZHJTOGlqdkd0/TTY0VC1ZVEJ3Nm1X/eDVR",
+            "original": "https://i.ytimg.com/vi/xHK-wv2JG18/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBMgWSh_MA8=&amp;rs=AOn4CLALnsdrS8ijvGtM64T-YTBw6mWx5Q"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=EgjwKM3KzGU",
+          "title": "AI Hand Pose Estimation with MediaPipe | Detect Left and Right ...",
+          "description": "Want to do more with MediaPipe hand pose?Well you can!In this video you'll learn how to wield OpenCV and Python to get the most out of the Hand Pose estimati...",
+          "age": "April 25, 2021",
+          "page_age": "2021-04-25T04:36:51",
+          "fetched_content_timestamp": 1766134511,
+          "video": {
+            "duration": "42:13",
+            "creator": "Nicholas Renotte",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/vA-CYaPtXqnSGsHCSgP-Za5N4K8t3d18Ay8dya8w-PY/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9F/Z2p3S00zS3pHVS9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/EgjwKM3KzGU/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=vQZ4IvB07ec",
+          "title": "AI Hand Pose Estimation with MediaPipe and Python - YouTube",
+          "description": "Short and simple hand detection and tracking using MediaPipe. I wanted to write more for this description but I'm hella tired. I'm not actually sure anyone a...",
+          "age": "April 22, 2021",
+          "page_age": "2021-04-22T04:16:13",
+          "fetched_content_timestamp": 1767268261,
+          "video": {
+            "duration": "36:02",
+            "creator": "Nicholas Renotte",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/wPaGxI7UrPyJtGD2lV5B7YRfob-noq6dlt8dXNyEdFE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS92/UVo0SXZCMDdlYy9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/vQZ4IvB07ec/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=RRBXVu5UE-U",
+          "title": "Hand Tracking with MediaPipe and OpenCV | Step-by-Step - YouTube",
+          "description": "Comprehensive tutorial on hand tracking using MediaPipe and OpenCV. In this step-by-step guide, you'll learn how to harness the power of computer vision to t...",
+          "age": "November 3, 2023",
+          "page_age": "2023-11-03T14:09:23",
+          "fetched_content_timestamp": 1767466694,
+          "video": {
+            "duration": "06:13",
+            "creator": "DIY TechRush",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/o-ACtNqdMjM4zYO-P4Cr45gPegd1w9G2n3vTpg-Vk7o/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9S/UkJYVnU1VUUtVS9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/RRBXVu5UE-U/maxresdefault.jpg"
+          }
+        },
+        {
+          "type": "video_result",
+          "url": "https://www.youtube.com/watch?v=qAw5tuYgVec",
+          "title": "Hand Tracking with Mediapipe | OpenCV Python (2022) | Computer ...",
+          "description": "In this Tutorial we will learn Hand Tracking in real time. In this video we'll go over the basics of mediapipe and how to apply mediapipe to detection and tr...",
+          "age": "January 25, 2022",
+          "page_age": "2022-01-25T16:00:12",
+          "fetched_content_timestamp": 1767707165,
+          "video": {
+            "duration": "29:58",
+            "creator": "Code With Prince",
+            "publisher": "YouTube"
+          },
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "youtube.com",
+            "hostname": "www.youtube.com",
+            "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+            "path": "\u203a watch"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/ilTyQ6_SF2Ia9z8xKx6YeOJHhVt5X5zudSE9XXGr8f8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9x/QXc1dHVZZ1ZlYy9t/YXhyZXNkZWZhdWx0/LmpwZw",
+            "original": "https://i.ytimg.com/vi/qAw5tuYgVec/maxresdefault.jpg"
+          }
+        }
+      ],
+      "mutated_by_goggles": false
+    },
+    "web": {
+      "type": "search",
+      "results": [
+        {
+          "title": "Pointer Events",
+          "url": "https://w3c.github.io/pointerevents/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The features in this specification extend or modify those found in Pointer Events, <strong>a W3C Recommendation that describes events and related interfaces for handling hardware-agnostic pointer input from devices including a mouse, pen, or touchscreen</strong>. For compatibility with existing mouse-based ...",
+          "profile": {
+            "name": "W3C",
+            "url": "https://w3c.github.io/pointerevents/",
+            "long_name": "w3c.github.io",
+            "img": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3c.github.io",
+            "hostname": "w3c.github.io",
+            "favicon": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw",
+            "path": "\u203a pointerevents"
+          }
+        },
+        {
+          "title": "GitHub - w3c/pointerevents: Pointer Events",
+          "url": "https://github.com/w3c/pointerevents",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Pointer Events. Contribute to w3c/pointerevents development by creating an account on GitHub.",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/w3c/pointerevents",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "software",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a w3c  \u203a pointerevents"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/qaFFuQ6mkKww-kyuPl2-KEep6alyhLNr2Zy3e1VgKLU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS83/NTRlZDk4NmQ4MWIx/Y2I2Mzc3NWY3NjAw/NWZiOTAzNmQxMmU4/YmMzYjFhYzI0MDY2/NTA2YjY2NzkxMTgy/M2U5L3czYy9wb2lu/dGVyZXZlbnRz",
+            "original": "https://opengraph.githubassets.com/754ed986d81b1cb63775f76005fb9036d12e8bc3b1ac24066506b667911823e9/w3c/pointerevents",
+            "logo": false
+          }
+        },
+        {
+          "title": "Pointer Events Specification",
+          "url": "https://www.w3.org/submissions/pointer-events/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Document Status Update 2013-05-09: The Pointer Events Working Group has published a document, based on this Member Submission, that is intended to become a W3C Recommendation \u00b7 This document is available under the W3C Document License. See the W3C Intellectual Rights Notice and Legal Disclaimers ...",
+          "profile": {
+            "name": "W3C",
+            "url": "https://www.w3.org/submissions/pointer-events/",
+            "long_name": "w3.org",
+            "img": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3.org",
+            "hostname": "www.w3.org",
+            "favicon": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw",
+            "path": "\u203a submissions  \u203a pointer-events"
+          }
+        },
+        {
+          "title": "Pointer Events | Working Groups | Discover W3C groups | W3C",
+          "url": "https://www.w3.org/groups/wg/pointer-events/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>The mission of the Pointer Events Working Group is to provide methods to enable simple device independent input from pointing devices such as mouse, pen, and multi-touch screen</strong>.",
+          "profile": {
+            "name": "W3C",
+            "url": "https://www.w3.org/groups/wg/pointer-events/",
+            "long_name": "w3.org",
+            "img": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3.org",
+            "hostname": "www.w3.org",
+            "favicon": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw",
+            "path": "\u203a groups  \u203a wg  \u203a pointer-events"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/SzqPfXOoiM7wNxxKQyFIKDVOG2doyIGJKRZyX-PPVoU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/dzMub3JnL2Fzc2V0/cy93ZWJzaXRlLTIw/MjEvaW1hZ2VzL3cz/Yy1vcGVuZ3JhcGgt/aW1hZ2UucG5n",
+            "original": "https://www.w3.org/assets/website-2021/images/w3c-opengraph-image.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "Pointer Lock 2.0",
+          "url": "https://w3c.github.io/pointerlock/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "A history of changes to this document can be found at https://github.com/w3c/pointerlock/commits/gh-pages/index.html \u00b7 Summary of changes since W3C Recommendation 27 October 2016:",
+          "profile": {
+            "name": "W3C",
+            "url": "https://w3c.github.io/pointerlock/",
+            "long_name": "w3c.github.io",
+            "img": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3c.github.io",
+            "hostname": "w3c.github.io",
+            "favicon": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw",
+            "path": "\u203a pointerlock"
+          }
+        },
+        {
+          "title": "Updated Candidate Recommendation: Pointer Events Level 3 | 2025 | News | W3C",
+          "url": "https://www.w3.org/news/2025/updated-candidate-recommendation-pointer-events-level-3/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The Pointer Events Working Group invites implementations of an updated Candidate Recommendation Snapshot of Pointer Events Level 3. The features in this specification extend or modify those found in Pointer Events, a W3C Recommendation that describes events and related interfaces for handling hardware-agnostic pointer input from devices including a mouse, pen, or touchscreen.",
+          "profile": {
+            "name": "W3C",
+            "url": "https://www.w3.org/news/2025/updated-candidate-recommendation-pointer-events-level-3/",
+            "long_name": "w3.org",
+            "img": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3.org",
+            "hostname": "www.w3.org",
+            "favicon": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw",
+            "path": "\u203a news  \u203a 2025  \u203a updated-candidate-recommendation-pointer-events-level-3"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/SzqPfXOoiM7wNxxKQyFIKDVOG2doyIGJKRZyX-PPVoU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/dzMub3JnL2Fzc2V0/cy93ZWJzaXRlLTIw/MjEvaW1hZ2VzL3cz/Yy1vcGVuZ3JhcGgt/aW1hZ2UucG5n",
+            "original": "https://www.w3.org/assets/website-2021/images/w3c-opengraph-image.png",
+            "logo": false
+          }
+        },
+        {
+          "title": "User:Tantekelik/pointer-events - W3C Wiki",
+          "url": "https://www.w3.org/wiki/User:Tantekelik/pointer-events",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "This is a literal copy of work in progress for specifying &#x27;pointer-events&#x27; that has been moved from CSS3-UI to CSS4-UI",
+          "profile": {
+            "name": "W3C",
+            "url": "https://www.w3.org/wiki/User:Tantekelik/pointer-events",
+            "long_name": "w3.org",
+            "img": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3.org",
+            "hostname": "www.w3.org",
+            "favicon": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw",
+            "path": "\u203a wiki  \u203a User:Tantekelik  \u203a pointer-events"
+          }
+        },
+        {
+          "title": "All Results",
+          "url": "https://w3c.github.io/test-results/pointerevents/all.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "All Results \u00b7 Test files: 71; Total subtests: 2470 \u00b7 Test Files \u00b7 /pointerevents/idlharness.html \u00b7 /pointerevents/pointereventconstructor.html \u00b7 /pointerevents/pointerevent_on_event_handlers.html \u00b7 /pointerevents/pointerevent_touch-action-illegal.html \u00b7 /pointerevents/pointerevent_t...",
+          "profile": {
+            "name": "W3C",
+            "url": "https://w3c.github.io/test-results/pointerevents/all.html",
+            "long_name": "w3c.github.io",
+            "img": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3c.github.io",
+            "hostname": "w3c.github.io",
+            "favicon": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw",
+            "path": "\u203a test-results  \u203a pointerevents  \u203a all.html"
+          }
+        },
+        {
+          "title": "Pointer Events - Support Tables - W3cubDocs",
+          "url": "https://docs.w3cub.com/browser_support_tables/pointer",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "<strong>This specification integrates various inputs from mice, touchscreens, and pens</strong>, making separate implementations no longer necessary and authoring \u2026",
+          "profile": {
+            "name": "W3cubDocs",
+            "url": "https://docs.w3cub.com/browser_support_tables/pointer",
+            "long_name": "docs.w3cub.com",
+            "img": "https://imgs.search.brave.com/_IWaiX6Avr7ljpJccMKgBL_EaVugJ5B4fAanpmzo3l8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTVkMGYzOTBm/YjIyMDQwM2Y5YjRh/Y2NlZTkxZmUwMjYz/MTUyOThmNDQ3Zjhk/NzU5YTcyODc0YWIz/NjBmMmJkMS9kb2Nz/LnczY3ViLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "docs.w3cub.com",
+            "hostname": "docs.w3cub.com",
+            "favicon": "https://imgs.search.brave.com/_IWaiX6Avr7ljpJccMKgBL_EaVugJ5B4fAanpmzo3l8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTVkMGYzOTBm/YjIyMDQwM2Y5YjRh/Y2NlZTkxZmUwMjYz/MTUyOThmNDQ3Zjhk/NzU5YTcyODc0YWIz/NjBmMmJkMS9kb2Nz/LnczY3ViLmNvbS8",
+            "path": "\u203a browser_support_tables  \u203a pointer"
+          }
+        },
+        {
+          "title": "Pointer Events Working Group Charter",
+          "url": "https://w3c.github.io/charter-drafts/2023/pointer-events.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The mission of the Pointer Events Working Group is to provide methods to enable simple device-independent input from pointing devices such as mouse, pen, and multi-touch screen \u00b7 Join the Pointer Events Working Group",
+          "profile": {
+            "name": "W3C",
+            "url": "https://w3c.github.io/charter-drafts/2023/pointer-events.html",
+            "long_name": "w3c.github.io",
+            "img": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3c.github.io",
+            "hostname": "w3c.github.io",
+            "favicon": "https://imgs.search.brave.com/W9-CACJn7TI2S5bw4pVfyggC3QQZ5L8elEkZ_ngC4jo/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2UxYzQ3N2Zm/YjQ3MGE1YjdmNDkw/NjdlYzE4MjRmNDYw/ZjM5NTM3MTNhMGYw/NTA2Nzg1N2Q0ZTI5/Mjc1NmVjZS93M2Mu/Z2l0aHViLmlvLw",
+            "path": "\u203a charter-drafts  \u203a 2023  \u203a pointer-events.html"
+          }
+        },
+        {
+          "title": "pointerevents/index.html at gh-pages \u00b7 w3c/pointerevents",
+          "url": "https://github.com/w3c/pointerevents/blob/gh-pages/index.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Pointer Events. Contribute to w3c/pointerevents development by creating an account on GitHub.",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/w3c/pointerevents/blob/gh-pages/index.html",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "software",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a w3c  \u203a pointerevents  \u203a blob  \u203a gh-pages  \u203a index.html"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/bnSEKs3eWN6sgowaqFt1unZ0zITwP6ppKqz9bO7OS38/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS9i/OWNkMWIwZGFiM2Rj/ZDdkOWY0ZjQyMTk4/NDY3NGE5MDA5ZTQ3/NGI3NDcwN2UzYTYw/YjlkMTkwMjdkM2Rl/ZmJlL3czYy9wb2lu/dGVyZXZlbnRz",
+            "original": "https://opengraph.githubassets.com/b9cd1b0dab3dcd7d9f4f421984674a9009e474b74707e3a60b9d19027d3defbe/w3c/pointerevents",
+            "logo": false
+          }
+        },
+        {
+          "title": "PointerEvents/TestAssertions - W3C Wiki",
+          "url": "https://www.w3.org/wiki/PointerEvents/TestAssertions",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Oct 21, 2014: This document contains test assertions for the Pointer Events specification. These assertions helped guide the development of the Pointer Events Test Suite. The test suite is now considered sufficient to test the interoperability of the specification.",
+          "profile": {
+            "name": "W3C",
+            "url": "https://www.w3.org/wiki/PointerEvents/TestAssertions",
+            "long_name": "w3.org",
+            "img": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3.org",
+            "hostname": "www.w3.org",
+            "favicon": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw",
+            "path": "\u203a wiki  \u203a PointerEvents  \u203a TestAssertions"
+          }
+        },
+        {
+          "title": "Pointer events & disabled form elements \u00b7 Issue #177 \u00b7 w3c/pointerevents",
+          "url": "https://github.com/w3c/pointerevents/issues/177",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "http://jsbin.com/botohet/edit?js,output <strong>Neither Edge or Chrome fire pointer events when the mouse is over disabled form controls</strong>. This isn&#x27;t the form control preventing propagation - it also prevents capturing listeners at the window lev...",
+          "page_age": "2017-02-17T10:32:12",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/w3c/pointerevents/issues/177",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "software",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a w3c  \u203a pointerevents  \u203a issues  \u203a 177"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/VD4lhclRVJXuHhH5mG9nH7LbE3cU4-VcVQ4Z1Hjg22s/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS9m/OWJmMGI5MjJiNDRj/OGFmNjc3MjAwY2Yw/ZDY0MmEzYTgxZTU2/MzUxZGQ1YTZkMzI2/MzIwNTQ3YzAzOGE0/NTI0L3czYy9wb2lu/dGVyZXZlbnRzL2lz/c3Vlcy8xNzc",
+            "original": "https://opengraph.githubassets.com/f9bf0b922b44c8af677200cf0d642a3a81e56351dd5a6d326320547c038a4524/w3c/pointerevents/issues/177",
+            "logo": false
+          },
+          "age": "February 17, 2017"
+        },
+        {
+          "title": "PointerEvent - Web APIs - W3cubDocs",
+          "url": "https://docs.w3cub.com/dom/pointerevent",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "The PointerEvent interface represents the state of a DOM event produced by a pointer such as the geometry of the contact point, the device type that \u2026",
+          "profile": {
+            "name": "W3cubDocs",
+            "url": "https://docs.w3cub.com/dom/pointerevent",
+            "long_name": "docs.w3cub.com",
+            "img": "https://imgs.search.brave.com/_IWaiX6Avr7ljpJccMKgBL_EaVugJ5B4fAanpmzo3l8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTVkMGYzOTBm/YjIyMDQwM2Y5YjRh/Y2NlZTkxZmUwMjYz/MTUyOThmNDQ3Zjhk/NzU5YTcyODc0YWIz/NjBmMmJkMS9kb2Nz/LnczY3ViLmNvbS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "docs.w3cub.com",
+            "hostname": "docs.w3cub.com",
+            "favicon": "https://imgs.search.brave.com/_IWaiX6Avr7ljpJccMKgBL_EaVugJ5B4fAanpmzo3l8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMTVkMGYzOTBm/YjIyMDQwM2Y5YjRh/Y2NlZTkxZmUwMjYz/MTUyOThmNDQ3Zjhk/NzU5YTcyODc0YWIz/NjBmMmJkMS9kb2Nz/LnczY3ViLmNvbS8",
+            "path": "\u203a dom  \u203a pointerevent"
+          }
+        },
+        {
+          "title": "PointerEvents/UseCasesAndRequirements - W3C Wiki",
+          "url": "https://www.w3.org/wiki/PointerEvents/UseCasesAndRequirements",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "This document defines Use Cases (UC) and requirements (Reqs) for specifications being developed by the Pointer Events Working Group \u00b7 This document is non-normative i.e. informative and, at the moment, should be considered a Living Document that continues to evolve",
+          "profile": {
+            "name": "W3C",
+            "url": "https://www.w3.org/wiki/PointerEvents/UseCasesAndRequirements",
+            "long_name": "w3.org",
+            "img": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "w3.org",
+            "hostname": "www.w3.org",
+            "favicon": "https://imgs.search.brave.com/EF5cIlxdwMy9taYcHrui64NZ9FzRqrA3WJ8pLpZU0Os/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZjExODVhNjc5/YWNlZDJlMTcxN2Iy/ZjlmYjMyMDk1NDA4/NzY4MTJlOTY4YTAw/Y2ExYTQzMzNhYTcw/YzI0YjllNi93d3cu/dzMub3JnLw",
+            "path": "\u203a wiki  \u203a PointerEvents  \u203a UseCasesAndRequirements"
+          }
+        },
+        {
+          "title": "W3C Pointer Events Working Group-relevant MDN issues | mdn-issue-by-spec",
+          "url": "https://dontcallmedom.github.io/mdn-issue-by-spec/w3c_pointer_events_working_group.html",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Generator of feeds tracking MDN content issues across specs, groups and orgs",
+          "profile": {
+            "name": "mdn-issue-by-spec",
+            "url": "https://dontcallmedom.github.io/mdn-issue-by-spec/w3c_pointer_events_working_group.html",
+            "long_name": "dontcallmedom.github.io",
+            "img": "https://imgs.search.brave.com/Yb-MWIaMTVEMOvzIHREcOz3z2L9AgVXCsdnAaJjKrMY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMGUyMzkzOTAw/ZjFlODlhOTY2MjQ0/NmNhYTE5ZDU5NjM5/OTJjZmIyMzhlMGUy/OTRhMDI5YTVlYTgw/MmVlZWQwNy9kb250/Y2FsbG1lZG9tLmdp/dGh1Yi5pby8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "generic",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "dontcallmedom.github.io",
+            "hostname": "dontcallmedom.github.io",
+            "favicon": "https://imgs.search.brave.com/Yb-MWIaMTVEMOvzIHREcOz3z2L9AgVXCsdnAaJjKrMY/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMGUyMzkzOTAw/ZjFlODlhOTY2MjQ0/NmNhYTE5ZDU5NjM5/OTJjZmIyMzhlMGUy/OTRhMDI5YTVlYTgw/MmVlZWQwNy9kb250/Y2FsbG1lZG9tLmdp/dGh1Yi5pby8",
+            "path": "\u203a mdn-issue-by-spec  \u203a w3c_pointer_events_working_group.html"
+          }
+        },
+        {
+          "title": "Using W3C PointerEvent API and be able to detect a double click?",
+          "url": "https://stackoverflow.com/questions/76074036/using-w3c-pointerevent-api-and-be-able-to-detect-a-double-click",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Writing a rich web application I have the need to support all types of users, some are using a mouse, some are using a touch screen (e.g. on a mobile device). So the W3C PointerEvent API is exactly...",
+          "profile": {
+            "name": "Stack Overflow",
+            "url": "https://stackoverflow.com/questions/76074036/using-w3c-pointerevent-api-and-be-able-to-detect-a-double-click",
+            "long_name": "stackoverflow.com",
+            "img": "https://imgs.search.brave.com/4WRMec_wn8Q9LO6DI43kkBvIL6wD5TYCXztC9C9kEI0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWU3Zjg0ZjA1/YjQ3ZTlkNjQ1ODA1/MjAwODhiNjhjYWU0/OTc4MjM4ZDJlMTBi/ODExYmNiNTkzMjdh/YjM3MGExMS9zdGFj/a292ZXJmbG93LmNv/bS8"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "qa",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "stackoverflow.com",
+            "hostname": "stackoverflow.com",
+            "favicon": "https://imgs.search.brave.com/4WRMec_wn8Q9LO6DI43kkBvIL6wD5TYCXztC9C9kEI0/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNWU3Zjg0ZjA1/YjQ3ZTlkNjQ1ODA1/MjAwODhiNjhjYWU0/OTc4MjM4ZDJlMTBi/ODExYmNiNTkzMjdh/YjM3MGExMS9zdGFj/a292ZXJmbG93LmNv/bS8",
+            "path": "\u203a questions  \u203a 76074036  \u203a using-w3c-pointerevent-api-and-be-able-to-detect-a-double-click"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/7xYts7jy_f89pn-IFVr8VxO1jMDhot5Ln0Buo0It8EM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9zdGFj/a292ZXJmbG93LmNv/bS9Db250ZW50L1Np/dGVzL3N0YWNrb3Zl/cmZsb3cvSW1nL2Fw/cGxlLXRvdWNoLWlj/b25AMi5wbmc_dj03/M2Q3OWE4OWJkZWQ",
+            "original": "https://stackoverflow.com/Content/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
+            "logo": true
+          }
+        },
+        {
+          "title": "Commits \u00b7 w3c/pointerevents",
+          "url": "https://github.com/w3c/pointerevents/commits",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "Pointer Events. Contribute to w3c/pointerevents development by creating an account on GitHub.",
+          "profile": {
+            "name": "GitHub",
+            "url": "https://github.com/w3c/pointerevents/commits",
+            "long_name": "github.com",
+            "img": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "software",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "github.com",
+            "hostname": "github.com",
+            "favicon": "https://imgs.search.brave.com/xxsA4YxzaR0cl-DBsH9-lpv2gsif3KMYgM87p26bs_o/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWQyNWM1NjA5/ZjZmZjNlYzI2MDNk/N2VkNmJhYjE2MzZl/MDY5ZTMxMDUzZmY1/NmU3NWIzNWVmMjk0/NTBjMjJjZi9naXRo/dWIuY29tLw",
+            "path": "\u203a w3c  \u203a pointerevents  \u203a commits"
+          },
+          "thumbnail": {
+            "src": "https://imgs.search.brave.com/k0iR7bmhrdkjdczUxCshDEfBWuM_0qwGG9oW2WnDD9w/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9vcGVu/Z3JhcGguZ2l0aHVi/YXNzZXRzLmNvbS81/NjMwY2Y3MTJmNzZk/MGI4ODc0MzdmNWQ5/YzBmNjc0YmNkN2Nj/MGIwMzUxNzJlOGNj/OGIxMjgyODdjYzcy/OWZlL3czYy9wb2lu/dGVyZXZlbnRz",
+            "original": "https://opengraph.githubassets.com/5630cf712f76d0b887437f5d9c0f674bcd7cc0b035172e8cc8b128287cc729fe/w3c/pointerevents",
+            "logo": false
+          }
+        },
+        {
+          "title": "Pointer Events advance to W3C Recommendation - TPGi",
+          "url": "https://www.tpgi.com/pointer-events-advance-to-w3c-recommendation/",
+          "is_source_local": false,
+          "is_source_both": false,
+          "description": "As a member of the Pointer Events Working Group, I am delighted to see that today Pointer Events advanced to an official W3C Recommendation. Having spent the last few years...",
+          "page_age": "2022-05-11T12:54:07",
+          "profile": {
+            "name": "TPGi",
+            "url": "https://www.tpgi.com/pointer-events-advance-to-w3c-recommendation/",
+            "long_name": "tpgi.com",
+            "img": "https://imgs.search.brave.com/MihIf2fBBTTsQ-qv7uO64uCJlrIQzjlqo-IL91TIFME/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWU3YTVmZjRl/NzBiMjNjMDE0ZGFh/Nzk4OTVmNWRmZmU1/ZDMwYjUwMzk4Zjg0/NjczYTFhNzliMjA3/NDRlMjg5ZS93d3cu/dHBnaS5jb20v"
+          },
+          "language": "en",
+          "family_friendly": true,
+          "type": "search_result",
+          "subtype": "article",
+          "is_live": false,
+          "meta_url": {
+            "scheme": "https",
+            "netloc": "tpgi.com",
+            "hostname": "www.tpgi.com",
+            "favicon": "https://imgs.search.brave.com/MihIf2fBBTTsQ-qv7uO64uCJlrIQzjlqo-IL91TIFME/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWU3YTVmZjRl/NzBiMjNjMDE0ZGFh/Nzk4OTVmNWRmZmU1/ZDMwYjUwMzk4Zjg0/NjczYTFhNzliMjA3/NDRlMjg5ZS93d3cu/dHBnaS5jb20v",
+            "path": "  \u203a home  \u203a blog  \u203a technical  \u203a pointer events advance to w3c recommendation"
+          },
+          "age": "May 11, 2022"
+        }
+      ],
+      "family_friendly": true
+    }
+  },
+  "timestamp": "2026-01-09T18:13:37.216277"
+}

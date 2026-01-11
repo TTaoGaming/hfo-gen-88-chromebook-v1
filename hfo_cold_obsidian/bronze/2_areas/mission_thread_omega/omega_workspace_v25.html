@@ -382,7 +382,7 @@
             const types = { 'pointerdown': 'pointerdown', 'pointermove': 'pointermove', 'pointerup': 'pointerup', 'pointercancel': 'pointercancel' };
             const type = types[hand.fsm.pointerEvent];
             const activeType = type || (hand.fsm.state !== 'IDLE' ? 'pointermove' : null);
-            
+
             if (!activeType || !hand.active) {
                 hand.ghost.classList.remove('active');
                 return;
@@ -395,7 +395,7 @@
             const cursor = hand.cursors[hfoState.physics.p3Source] || hand.cursors.predictive;
             let normX = cursor.x;
             if (hfoState.physics.p3Mirror) normX = 1 - normX;
-            
+
             const x = normX * window.innerWidth;
             const y = cursor.y * window.innerHeight;
 

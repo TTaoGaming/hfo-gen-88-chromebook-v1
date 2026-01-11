@@ -41,9 +41,9 @@ objectives_by_port:
     achievements: ["JSONL Blackboard Stigmergy"]
     backlog: ["1000Hz Interaction Telemetry", "AAR (After-Action Review) Replay"]
   p7_navigate:
-    status: "75% (Spider Sovereign)"
-    achievements: ["Golden Layout UI Integration", "BFT Quorum Hub V7 Active", "Host-Sovereignty Bridge (Port 8889)"]
-    active: ["Official Fork Integration (Piano Genie V52)", "Playwright-to-Host Migration"]
+    status: "80% (Spider Sovereign)"
+    achievements: ["Golden Layout UI Integration", "BFT Quorum Hub V7 Active", "Host-Sovereignty Bridge (Port 8889)", "Automated Playwright Bridge (CDP)"]
+    active: ["Official Fork Integration (Piano Genie V52)", "Zero-Friction AI Workflow"]
     backlog: ["Domain Handover (Excalidraw ↔ Piano)", "Tool Registry Manifold", "Magenta Suite Harvesting"]
 
 magenta_mission_vault:

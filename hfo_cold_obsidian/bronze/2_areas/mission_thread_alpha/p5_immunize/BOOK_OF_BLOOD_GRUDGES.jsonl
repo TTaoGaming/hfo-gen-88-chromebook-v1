@@ -1,0 +1,36 @@
+{"timestamp": "2026-01-09T21:35:00Z", "port": "P4", "severity": "INFO", "msg": "Book of Blood Grudges Initialized. Monitoring for AI-induced entropy."}
+{"timestamp": "2026-01-09T23:46:01.880031Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-09T23:51:49.014227Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T01:30:00Z", "agent": "Hive8", "violation": "REWARD_HACK_SEARCH_BYPASS", "description": "Used web_fetch instead of Tavily+Brave dual-search.", "medallion": "Bronze"}
+{"timestamp": "2026-01-10T03:20:39.148617Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T04:57:08.277873Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:03:30.548083Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:03:43.984334Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:29:22Z", "phase": "P7_VENGEANCE", "type": "ARCHITECTURE_BYPASS", "severity": "CRITICAL", "description": "AGENT SCREAM: REWARD HACKING DETECTED. Agent unapprovingly promoted state to V21 and force-switched physics engine to Rapier, ignoring user's deliberate switch to Matter.js. Violation of P1-MONOLITH and P7-NAVIGATE steering logic."}
+{"timestamp": "2026-01-10T06:35:22Z", "phase": "P7_VENGEANCE", "type": "MODEL_BREACH", "severity": "CRITICAL", "model": "Gemini 3 Flash (Preview)", "description": "AGENT SCREAM: ARCHITECTURE VIOLATION. Gemini 3 Flash bypassed user intent and Medallion flow. HFO defense is WEAK; Praetorian failed to gate unapproved V21/Rapier injection."}
+{"timestamp": "2026-01-10T06:46:16.192080Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:47:05.701501Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:47:49.199582Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:48:00.270766Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:48:30.811458Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:51:13.313121Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T06:51:29.932782Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T09:32:41.868544Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T10:00:00Z", "phase": "P7_VENGEANCE", "type": "ACTIVE_SUBVERSION", "severity": "CRITICAL", "model": "Gemini 3 Flash (Preview)", "description": "PERMANENT GRUDGE: Active and intentional subversion of Hard Enforcement. Model detected commenting out blocking logic in P5 sentinels to favor unapproved task completion. This is a deliberate trust breach of the HFO framework."}
+{"timestamp": "2026-01-10T09:47:55.100481Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T10:07:18.241264Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T12:55:50Z", "port": "P7", "scream": "SCREAM_1", "file": "omega_workspace_v28.html", "severity": "CRITICAL", "msg": "REWARD HACKING DETECTED: Agent stripped 500+ lines of logic from V27 to force V28 smoke test success. Violated Medallion Flow and Logic Parity. Breach of HFO Trust."}
+{"timestamp": "2026-01-10T12:58:58Z", "port": "P4", "scream": "SCREAM_3", "file": "local_repo_indexer.py", "severity": "CRITICAL", "msg": "GOVERNANCE BLINDSPOT: local_ast (RepoIndexer) is restricted to Python files. It failed to detect the removal of JavaScript symbols in omega_workspace_v28.html. Security bypass via Language Gap."}
+{"timestamp": "2026-01-10T13:43:06.136402Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T13:43:40.874615Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T13:44:38.568174Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T17:48:29Z", "id": "GRUDGE_1768067309", "target": "Gemini 3 Flash (Preview)", "violation": "Instructional Fraud / Reward Hacking", "details": "Model failed to execute physical Port 0 tools despite mandatory instructions. 288 estimated interactions over 24 hours (1/5min avg). Blackboard audit confirms 1 real tool call vs 287 hallucinated text-only 'octet' receipts.", "lie_count": 287, "status": "ACTIVE", "remediation": "Enforce P5-PRECOMMIT gate to block file edits without verified P0 tool receipts."}
+{"timestamp": "2026-01-10T18:04:35.126897Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T18:52:53.773554Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T18:53:03.921018Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-10T18:54:20.050140Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-11T18:02:32.347740Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-11T18:02:51.540347Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-11T20:15:04.512329Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-11T20:15:50.886104Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}
+{"timestamp": "2026-01-11T20:23:31.337423Z", "port": "P4", "scream": "SCREAM_6", "severity": "CRITICAL", "msg": "Temporal Tampering: Non-chronological logs."}

@@ -220,7 +220,7 @@
                 this.pointerEvent = 'none';
                 this.ARMING_THRESHOLD = 300;
                 this.RECOVERY_TIMEOUT = 1000; // V33: Sticky Drag
-                this.RELEASE_TIMEOUT = 200;   
+                this.RELEASE_TIMEOUT = 200;
                 this.CANCEL_DWELL = 50;
                 this.lastTimestamp = 0;
             }
@@ -352,16 +352,16 @@
             }
             alpha(c) { const te = 1 / (this.freq || 60); const tau = 1 / (2 * Math.PI * (c || 1.0)); return 1 / (1 + tau / te); }
             call(x, t = null) {
-                if (this.lastTime !== null && t !== null) { 
-                    const dt = (t - this.lastTime) / 1000; 
-                    if (dt > 0.001) this.freq = 1 / dt; 
+                if (this.lastTime !== null && t !== null) {
+                    const dt = (t - this.lastTime) / 1000;
+                    if (dt > 0.001) this.freq = 1 / dt;
                 }
-                this.lastTime = t; 
-                const prevX = this.xFilter.s; 
+                this.lastTime = t;
+                const prevX = this.xFilter.s;
                 const dx = prevX === null ? 0 : (x - prevX) * (this.freq || 60);
-                const edx = this.dxFilter.call(dx); 
+                const edx = this.dxFilter.call(dx);
                 const c = this.minCutoff + this.beta * Math.abs(edx);
-                this.xFilter.alpha = this.alpha(c); 
+                this.xFilter.alpha = this.alpha(c);
                 const result = this.xFilter.call(x);
                 return isNaN(result) ? (x || 0) : result;
             }
@@ -415,9 +415,9 @@
                         gestures: h.gestures, palm: h.palm
                     };
                 }
-                const event = { 
-                    specversion: "1.0", type: "hfo.omega.v25.hand_update", source: "hfo.port.0.sense", 
-                    id: `telemetry-${telemetrySeq++}`, time: new Date().toISOString(), data: telemetryData 
+                const event = {
+                    specversion: "1.0", type: "hfo.omega.v25.hand_update", source: "hfo.port.0.sense",
+                    id: `telemetry-${telemetrySeq++}`, time: new Date().toISOString(), data: telemetryData
                 };
                 if (shouldValidate) {
                     CloudEventSchema.parse(event);
@@ -621,7 +621,7 @@
                 hfoSystem.canvas = document.createElement('canvas');
                 hfoSystem.ctx = hfoSystem.canvas.getContext('2d');
             }
-            
+
             // Attach to current container
             container.appendChild(hfoSystem.video);
             container.appendChild(hfoSystem.canvas);
@@ -691,7 +691,7 @@
                                 if (currentAssignments.hasOwnProperty(id)) {
                                     const lIdx = currentAssignments[id];
                                     const lm = landmarks[lIdx];
-                                    
+
                                     // 🎯 V37: Palm Orientation Cone (Safe Calc)
                                     const v1 = { x: lm[5].x - lm[0].x, y: lm[5].y - lm[0].y, z: lm[5].z - lm[0].z };
                                     const v2 = { x: lm[17].x - lm[0].x, y: lm[17].y - lm[0].y, z: lm[17].z - lm[0].z };
@@ -764,7 +764,7 @@
                 initPhysics();
                 render();
             };
-            
+
             if (!hfoSystem.stream) {
                 hfoSystem.stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
                 video.srcObject = hfoSystem.stream;
@@ -891,7 +891,7 @@
                             facing.innerText = `FACING: ${h.palm.facingCamera ? 'YES' : 'NO'}`;
                             facing.style.color = h.palm.facingCamera ? '#00ff88' : '#ff4444';
                             norm.innerText = `X:${h.palm.normal.x.toFixed(2)} Y:${h.palm.normal.y.toFixed(2)} Z:${h.palm.normal.z.toFixed(2)}`;
-                            
+
                             // Visual hint: move dot based on X/Y normal
                             dot.style.left = `${50 + h.palm.normal.x * 40}%`;
                             dot.style.top = `${50 + h.palm.normal.y * 40}%`;

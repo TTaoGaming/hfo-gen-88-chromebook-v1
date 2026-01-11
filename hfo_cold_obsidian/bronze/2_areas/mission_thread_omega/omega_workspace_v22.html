@@ -89,11 +89,30 @@
             margin-right: 5px;
         }
 
-        .tag-idle { background: #444; color: #aaa; }
-        .tag-arming { background: #ffaa00; color: #000; }
-        .tag-armed { background: #0088ff; color: #fff; }
-        .tag-seq { background: #cc00ff; color: #fff; }
-        .tag-committed { background: #00ff88; color: #000; }
+        .tag-idle {
+            background: #444;
+            color: #aaa;
+        }
+
+        .tag-arming {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .tag-armed {
+            background: #0088ff;
+            color: #fff;
+        }
+
+        .tag-committing {
+            background: #ffcc00;
+            color: #000;
+        }
+
+        .tag-committed {
+            background: #00ff88;
+            color: #000;
+        }
     </style>
 </head>
 
@@ -128,95 +147,117 @@
             specversion: z.literal("1.0"), type: z.string(), source: z.string(), id: z.string(), time: z.string(), data: z.record(HandSchema)
         });
 
-        // 🤖 V22 Sticky Sequence Logic
+        // 🤖 V22 Sticky Logic (IDLE -> ARMING -> ARMED -> COMMITTED)
         class GestureFSM {
             constructor() {
                 this.state = 'IDLE';
                 this.dwellStartTime = 0;
-                this.commitSequenceStartTime = 0;
+                this.recoveryStartTime = 0;
                 this.pointerEvent = 'none';
                 this.lastGesture = 'NONE';
+                this.DWELL_TIMEOUT = 1000;
+                this.RECOVERY_TIMEOUT = 300;
+                this.COMMIT_DWELL = 100;
             }
 
             process(gesture, now) {
                 const g = gesture.toUpperCase().replace(/[\s_]/g, '_');
                 this.pointerEvent = 'none';
 
-                // Sequence Timeout
-                if (['SEQ_PALM', 'SEQ_GAP'].includes(this.state)) {
-                    if (this.commitSequenceStartTime && (now - this.commitSequenceStartTime > 1500)) {
-                        console.log("FSM: Sequence Timeout -> ARMED");
-                        this.state = 'ARMED';
-                        this.commitSequenceStartTime = 0;
-                    }
-                }
-
                 switch (this.state) {
                     case 'IDLE':
-                        if (g === 'OPEN_PALM') { 
-                            this.state = 'ARMING'; 
+                        if (g === 'OPEN_PALM') {
+                            this.state = 'ARMING';
                             this.dwellStartTime = now;
                             console.log("FSM: IDLE -> ARMING");
                         }
                         break;
                     case 'ARMING':
                         if (g === 'OPEN_PALM') {
-                            if (now - this.dwellStartTime > (hfoState.mpOptions.dwellMs || 800)) { 
-                                this.state = 'ARMED'; 
+                            if (now - this.dwellStartTime > this.DWELL_TIMEOUT) {
+                                this.state = 'ARMED';
                                 console.log("FSM: ARMING -> ARMED");
                             }
-                        } else if (g === 'NONE') { /* Sticky */ }
-                        else { 
-                            this.state = 'IDLE'; 
-                            console.log("FSM: ARMING -> IDLE (Rejection)", g);
+                        } else if (g === 'NONE' || g === 'POINTING_UP') {
+                            /* Sticky */
+                        } else {
+                            this.state = 'IDLE';
+                            console.log("FSM: ARMING -> IDLE", g);
                         }
                         break;
                     case 'ARMED':
-                        if (g === 'OPEN_PALM') { 
-                            this.state = 'SEQ_PALM'; 
-                            this.commitSequenceStartTime = now;
-                            console.log("FSM: ARMED -> SEQ_PALM");
-                        } else if (g === 'NONE' || g === 'POINTING_UP') { 
-                            /* Sticky ARMED */ 
-                        } else if (g !== 'NONE') { 
-                            this.state = 'IDLE'; 
-                            console.log("FSM: ARMED -> IDLE (Rejection)", g);
+                        this.pointerEvent = 'pointermove';
+                        if (g === 'POINTING_UP' || g === 'NONE') {
+                            this.state = 'COMMITTING';
+                            this.recoveryStartTime = now;
+                            this.dwellStartTime = now;
+                            console.log("FSM: ARMED -> COMMITTING (Window Start)");
+                        } else if (g === 'OPEN_PALM') {
+                            this.recoveryStartTime = 0;
+                            this.dwellStartTime = 0;
+                        } else {
+                            this.dwellStartTime = 0;
+                            if (!this.recoveryStartTime) this.recoveryStartTime = now;
+                            else if (now - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                console.log("FSM: ARMED -> IDLE (Recovery Timeout)");
+                            }
                         }
                         break;
-                    case 'SEQ_PALM':
-                        if (g === 'NONE') { 
-                            this.state = 'SEQ_GAP'; 
-                            console.log("FSM: SEQ_PALM -> SEQ_GAP");
-                        } else if (g === 'OPEN_PALM') { /* Stay */ }
-                        else { 
-                            this.state = 'ARMED'; 
-                            console.log("FSM: SEQ_PALM -> ARMED (Failed Seq)", g);
-                        }
-                        break;
-                    case 'SEQ_GAP':
-                        if (g === 'POINTING_UP') { 
-                            this.state = 'COMMITTED'; 
-                            this.pointerEvent = 'pointerdown'; 
-                            this.commitSequenceStartTime = now;
-                            console.log("FSM: SEQ_GAP -> COMMITTED");
-                        } else if (g === 'NONE') { /* Stay */ }
-                        else { 
-                            this.state = 'ARMED'; 
-                            console.log("FSM: SEQ_GAP -> ARMED (Failed Seq)", g);
+                    case 'COMMITTING':
+                        this.pointerEvent = 'pointermove';
+                        if (g === 'POINTING_UP') {
+                            if (now - this.dwellStartTime > this.COMMIT_DWELL) {
+                                this.state = 'COMMITTED';
+                                this.pointerEvent = 'pointerdown';
+                                this.dwellStartTime = 0;
+                                this.recoveryStartTime = 0;
+                                console.log("FSM: COMMITTING -> COMMITTED (Confirmed)");
+                            }
+                        } else if (g === 'OPEN_PALM') {
+                            this.state = 'ARMED';
+                            this.recoveryStartTime = 0;
+                            this.dwellStartTime = 0;
+                            console.log("FSM: COMMITTING -> ARMED (Abort)");
+                        } else if (g === 'NONE') {
+                            if (now - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                this.dwellStartTime = 0;
+                                this.recoveryStartTime = 0;
+                                console.log("FSM: COMMITTING -> IDLE (Timeout)");
+                            }
+                        } else {
+                            this.state = 'IDLE';
+                            this.pointerEvent = 'pointercancel';
+                            this.dwellStartTime = 0;
+                            this.recoveryStartTime = 0;
+                            console.log("FSM: COMMITTING -> IDLE (Change)");
                         }
                         break;
                     case 'COMMITTED':
-                        if (g === 'NONE' || g === 'POINTING_UP') { 
-                            this.pointerEvent = 'pointermove'; 
-                        } else if (g === 'OPEN_PALM') { 
-                            this.state = 'ARMED'; 
-                            this.pointerEvent = 'pointerup'; 
-                            this.commitSequenceStartTime = 0;
-                            console.log("FSM: COMMITTED -> ARMED (Release)");
-                        } else { 
-                            this.state = 'IDLE'; 
-                            this.pointerEvent = 'pointercancel'; 
-                            console.log("FSM: COMMITTED -> IDLE (Rejection)", g);
+                        this.pointerEvent = 'pointermove';
+                        if (g === 'OPEN_PALM') {
+                            if (!this.dwellStartTime) this.dwellStartTime = now;
+                            else if (now - this.dwellStartTime > this.COMMIT_DWELL) {
+                                this.state = 'ARMED';
+                                this.pointerEvent = 'pointerup';
+                                this.dwellStartTime = 0;
+                                this.recoveryStartTime = 0;
+                                console.log("FSM: COMMITTED -> ARMED");
+                            }
+                        } else if (g === 'POINTING_UP') {
+                            this.recoveryStartTime = 0;
+                            this.dwellStartTime = 0;
+                        } else {
+                            this.dwellStartTime = 0;
+                            if (!this.recoveryStartTime) this.recoveryStartTime = now;
+                            else if (now - this.recoveryStartTime > this.RECOVERY_TIMEOUT) {
+                                this.state = 'IDLE';
+                                this.pointerEvent = 'pointercancel';
+                                console.log("FSM: COMMITTED -> IDLE (Recovery Timeout)");
+                            }
                         }
                         break;
                 }
@@ -269,7 +310,7 @@
                 const validated = CloudEventSchema.parse(event);
                 hfoState.bridge.lastEvent = validated; hfoState.bridge.status = 'VALID'; return validated;
             } catch (e) {
-                hfoState.bridge.status = 'ERROR'; hfoState.bridge.errorCount++; 
+                hfoState.bridge.status = 'ERROR'; hfoState.bridge.errorCount++;
                 if (hfoState.debug) console.error("P1 Bridge Validation Error:", e);
                 return null;
             }
@@ -286,7 +327,7 @@
                     predictive: { x: 0.5, y: 0.5, body: null, color: `hsl(${hue}, 100%, 30%)`, label: `H${handId} Pred` }
                 },
                 filters: { sx: new OneEuroFilter(30, 0.5, 0.001), sy: new OneEuroFilter(30, 0.5, 0.001), nx: new OneEuroFilter(30, 2.0, 0.1), ny: new OneEuroFilter(30, 2.0, 0.1) },
-                gestures: { active: 'None', score: 0, isDown: false }
+                gestures: { active: 'None', score: 0, isDown: false, pointerEvent: 'none' }
             };
             if (engine) {
                 const { Bodies, Composite, Constraint } = Matter;
@@ -316,13 +357,13 @@
                 runningMode: "VIDEO", ...hfoState.mpOptions
             });
             video.srcObject = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
-            
+
             const render = () => {
                 const now = performance.now();
                 if (hfoState.active && video.readyState >= 2) {
                     const res = gestureRecognizer.recognizeForVideo(video, now); ctx.clearRect(0, 0, canvas.width, canvas.height);
                     const landmarks = res.landmarks || []; const handIds = Object.keys(hfoState.hands); const asg = [];
-                    
+
                     landmarks.forEach((lm, lIdx) => {
                         const tip = lm[8]; let bestD = Infinity, bestId = null;
                         handIds.forEach(id => {
@@ -331,7 +372,7 @@
                         });
                         asg.push({ lIdx, handId: bestId, dist: bestD });
                     });
-                    
+
                     const uH = new Set(), uL = new Set();
                     asg.sort((a, b) => a.dist - b.dist).forEach(a => {
                         if (a.handId !== null && !uH.has(a.handId) && !uL.has(a.lIdx)) {
@@ -339,47 +380,50 @@
                             h.cursors.raw.x = tip.x; h.cursors.raw.y = tip.y; h.lastSeen = now; h.coastCount = 0; h.active = true;
                             h.cursors.smooth.x = h.filters.sx.call(tip.x, now); h.cursors.smooth.y = h.filters.sy.call(tip.y, now);
                             h.cursors.snappy.x = h.filters.nx.call(tip.x, now); h.cursors.snappy.y = h.filters.ny.call(tip.y, now);
-                            
+
                             if (res.gestures?.[a.lIdx]) {
-                                const g = res.gestures[a.lIdx][0]; 
-                                h.fsm.process(g.categoryName, now);
-                                h.gestures = { 
-                                    active: g.categoryName, 
+                                const g = res.gestures[a.lIdx][0];
+                                const fsmRes = h.fsm.process(g.categoryName, now);
+                                h.gestures = {
+                                    active: g.categoryName,
                                     score: g.score,
-                                    isDown: (h.fsm.state === 'COMMITTED')
+                                    isDown: (h.fsm.state === 'COMMITTED'),
+                                    pointerEvent: fsmRes.pointerEvent
                                 };
                             }
                             uH.add(a.handId); uL.add(a.lIdx);
                         }
                     });
-                    
+
                     Object.keys(hfoState.hands).forEach(id => {
                         const h = hfoState.hands[id];
-                        if (!uH.has(id)) { 
-                            h.coastCount++; 
-                            if (h.coastCount > hfoState.physics.persistence.coastFrames) { 
-                                h.active = false; 
-                                h.fsm.process('LOST', now); 
-                            } else {
-                                h.fsm.process('NONE', now);
-                            }
+                        if (!uH.has(id)) {
+                            h.coastCount++;
+                            const fsmRes = (h.coastCount > hfoState.physics.persistence.coastFrames)
+                                ? h.fsm.process('LOST', now)
+                                : h.fsm.process('NONE', now);
+
+                            h.gestures.isDown = (h.fsm.state === 'COMMITTED');
+                            h.gestures.pointerEvent = fsmRes.pointerEvent;
+
+                            if (h.coastCount > hfoState.physics.persistence.coastFrames) h.active = false;
                         }
-                        
+
                         if (h.active && hfoState.debug) {
                             const lIdx = asg.find(a => a.handId === id)?.lIdx;
                             if (lIdx !== undefined) dw.drawConnectors(landmarks[lIdx], HandLandmarker.HAND_CONNECTIONS, { color: "#00FF00", lineWidth: 5 });
                         }
-                        
+
                         if (engine && h.active) {
-                            const isArmed = h.fsm.state === 'ARMED' || h.fsm.state.startsWith('SEQ_');
-                            h.cursors.spring.constraint.stiffness = isArmed ? hfoState.physics.stiffnessArmed : hfoState.physics.stiffness;
+                            const isEngaged = h.fsm.state === 'ARMED' || h.fsm.state === 'COMMITTED';
+                            h.cursors.spring.constraint.stiffness = isEngaged ? hfoState.physics.stiffnessArmed : hfoState.physics.stiffness;
                             Matter.Body.setPosition(h.cursors.spring.anchor, { x: h.cursors[hfoState.physics.springSource].x * canvas.width, y: h.cursors[hfoState.physics.springSource].y * canvas.height });
                             const lead = { x: (h.cursors.snappy.x - h.cursors.smooth.x) * hfoState.physics.lookAhead, y: (h.cursors.snappy.y - h.cursors.smooth.y) * hfoState.physics.lookAhead };
                             Matter.Body.setPosition(h.cursors.predictive.body, { x: (h.cursors[hfoState.physics.predSource].x + lead.x) * canvas.width, y: (h.cursors[hfoState.physics.predSource].y + lead.y) * canvas.height });
                             h.cursors.spring.x = h.cursors.spring.body.position.x / canvas.width; h.cursors.spring.y = h.cursors.spring.body.position.y / canvas.height;
                             h.cursors.predictive.x = h.cursors.predictive.body.position.x / canvas.width; h.cursors.predictive.y = h.cursors.predictive.body.position.y / canvas.height;
                         }
-                        
+
                         [h.cursors.raw, h.cursors.smooth, h.cursors.snappy, h.cursors.spring, h.cursors.predictive].forEach(c => {
                             ctx.beginPath(); ctx.arc(c.x * canvas.width, c.y * canvas.height, 12, 0, 2 * Math.PI);
                             ctx.fillStyle = c.color; ctx.globalAlpha = h.active ? 1.0 : 0.4; ctx.fill();

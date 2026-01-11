@@ -93,13 +93,30 @@ def sense_stigmergy():
                     # Reading the end of the file efficiently
                     f.seek(0, 2)
                     size = f.tell()
+                    if size == 0:
+                        results[key] = []
+                        continue
+
                     # We only need the last few KB usually
-                    f.seek(max(0, size - 10240))
+                    f.seek(max(0, size - 20480))
                     chunk = f.read()
-                    lines = [l for l in chunk.splitlines() if l.strip()]
+
+                    # Ensure we start at a complete line
+                    lines = chunk.splitlines()
+                    if len(lines) > 1 and not chunk.startswith("\n"):
+                        lines = lines[1:] # Skip partial first line
+
+                    valid_lines = [l.strip() for l in lines if l.strip()]
                     count = 5 if key == "hot" else 3
-                    tail = [json.loads(l) for l in lines[-count:]]
-                    results[key] = tail
+
+                    data = []
+                    for l in valid_lines[-count:]:
+                        try:
+                            data.append(json.loads(l))
+                        except json.JSONDecodeError:
+                            continue
+
+                    results[key] = data
             else:
                 results[key] = f"MISSING: {path}"
         except Exception as e:

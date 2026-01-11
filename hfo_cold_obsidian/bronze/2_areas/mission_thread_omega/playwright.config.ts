@@ -10,10 +10,29 @@ export default defineConfig({
     use: {
         trace: 'on-first-retry',
     },
+    webServer: {
+        command: 'python3 p0_server.py',
+        port: 8094,
+        reuseExistingServer: !process.env.CI,
+        cwd: './',
+        timeout: 120000
+    },
     projects: [
         {
-            name: 'chromium',
-            use: { ...devices['Desktop Chrome'] },
+            name: 'hfo-host',
+            use: {
+                // Connect to the ChromeOS host if available
+                connectOptions: {
+                    wsEndpoint: 'ws://localhost:9222/devtools/browser'
+                }
+            },
+        },
+        {
+            name: 'hfo-headless',
+            use: {
+                ...devices['Desktop Chrome'],
+                headless: true, // Always headless in Linux to avoid X11 issues
+            },
         },
     ],
 });

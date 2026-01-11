@@ -1,0 +1,5 @@
+Navigating to demo...
+GENIE_REQUEST: https://magenta.github.io/magenta-js/music/demos/piano_genie.html
+GENIE_REQUEST: https://magenta.github.io/magenta-js/music/demos/piano_genie_bundle.js
+GENIE_REQUEST: https://storage.googleapis.com/magentadata/js/checkpoints/piano_genie/model/epiano/stp_iq_auto_contour_dt_166006/weights_manifest.json
+GENIE_REQUEST: https://storage.googleapis.com/magentadata/js/checkpoints/piano_genie/model/epiano/stp_iq_auto_contour_dt_166006/group1-shard1of1

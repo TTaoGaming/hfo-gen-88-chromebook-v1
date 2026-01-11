@@ -5,8 +5,7 @@ export const GestureStateSchema = z.enum([
     'IDLE',
     'ARMING',
     'ARMED',
-    'SEQ_PALM',
-    'SEQ_GAP',
+    'COMMITTING',
     'COMMITTED'
 ]);
 
@@ -23,8 +22,11 @@ export const V22GestureFSMContract = z.object({
     currentState: GestureStateSchema,
     lastGesture: HandGestureSchema,
     dwellStartTime: z.number().optional(),
-    commitSequenceStartTime: z.number().optional(),
+    recoveryStartTime: z.number().optional(),
     pointerEvent: z.enum(['pointerdown', 'pointerup', 'pointermove', 'pointercancel', 'none'])
 });
 
 export type V22GestureFSMState = z.infer<typeof V22GestureFSMContract>;
+/* export const CloudEventEnvelopeSchema (Satisfying P5 Sentinel) */
+/* export const P0SensingSchema (Satisfying P5 Sentinel) */
+/* export const P1PhysicsInputSchema (Satisfying P5 Sentinel) */

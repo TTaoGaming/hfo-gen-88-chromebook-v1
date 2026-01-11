@@ -1,0 +1,35 @@
+### Page state
+- Page URL: https://chrisdonahue.com/piano-genie/
+- Page Title: Piano Genie
+- Page Snapshot:
+```yaml
+- generic [ref=e12]:
+  - img [ref=e15]
+  - generic [ref=e104]:
+    - button "1 a" [ref=e105]:
+      - text: "1"
+      - text: a
+    - button "2 s" [ref=e106]:
+      - text: "2"
+      - text: s
+    - button "3 d" [ref=e107]:
+      - text: "3"
+      - text: d
+    - button "4 f" [ref=e108]:
+      - text: "4"
+      - text: f
+    - button "5 j" [ref=e109]:
+      - text: "5"
+      - text: j
+    - button "6 k" [ref=e110]:
+      - text: "6"
+      - text: k
+    - button "7 l" [ref=e111]:
+      - text: "7"
+      - text: l
+    - button "8 ;" [ref=e112]:
+      - text: "8"
+      - text: ;
+    - button [ref=e113] [cursor=pointer]:
+      - img [ref=e114]
+```

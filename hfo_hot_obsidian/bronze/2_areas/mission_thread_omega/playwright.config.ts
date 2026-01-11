@@ -19,10 +19,19 @@ export default defineConfig({
     },
     projects: [
         {
-            name: 'chromium',
+            name: 'hfo-host',
+            use: {
+                // Connect to the ChromeOS host if available
+                connectOptions: {
+                    wsEndpoint: 'ws://localhost:9222/devtools/browser'
+                }
+            },
+        },
+        {
+            name: 'hfo-headless',
             use: {
                 ...devices['Desktop Chrome'],
-                channel: 'chrome', // Use system Chrome to avoid heavy downloads on Chromebook
+                headless: true, // Always headless in Linux to avoid X11 issues
             },
         },
     ],

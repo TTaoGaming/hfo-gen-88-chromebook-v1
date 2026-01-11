@@ -445,7 +445,7 @@
                     // Map HAND 0..1 -> TOOL 0..WIDTH
                     finalX = normX * rect.width;
                     finalY = cursor.y * rect.height;
-                    
+
                     // The "Display" location still follows the screen position for the observer
                     // but the "Inject" location is local to the substrate.
                     target = remoteEl; // Target the iframe directly for input testing
@@ -498,7 +498,7 @@
                 target.dispatchEvent(new PointerEvent('pointerover', { bubbles: true, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
                 target.dispatchEvent(new PointerEvent('pointerenter', { bubbles: false, pointerId: Number(hand.id) + 10, clientX: x, clientY: y }));
             }
-            
+
             const movementX = hand.lastX !== undefined ? x - hand.lastX : 0;
             const movementY = hand.lastY !== undefined ? y - hand.lastY : 0;
             hand.lastX = x;
@@ -507,7 +507,7 @@
 
             const ev = new PointerEvent(activeType, {
                 bubbles: true, cancelable: true, pointerType: 'touch',
-                pointerId: Number(hand.id) + 10, 
+                pointerId: Number(hand.id) + 10,
                 clientX: finalX, clientY: finalY,
                 screenX: finalX, screenY: finalY,
                 movementX: movementX, movementY: movementY,

@@ -116,7 +116,7 @@ class Port0Observe:
     def port0_shard4_disrupt(query: str):
         """P0.4: SEAD ([0,4] Sense x Disrupt). Tool: Repo-Grep."""
         try:
-            cmd = ["grep", "-ri", query, "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze"]
+            cmd = ["grep", "-ri", query, "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"]
             result = subprocess.run(cmd, capture_output=True, text=True)
             return {"results": [{"content": line} for line in result.stdout.splitlines()[:10]]}
         except Exception as e: return {"error": str(e)}
@@ -258,15 +258,36 @@ class Port0ObserveV2(Port0Observe):
 class Port1Bridge:
     """The HFO Bridging Octet (Web Weaver). JADC2 Verb: FUSE."""
     @staticmethod
-    def pillar_1_zod_check(schema_name: str):
-        return {"status": "placeholder", "pillar": 1}
+    def pillar_1_zod_check(data: Dict[str, Any]):
+        """P1.0: ZOD ([1,0] Fuse x Sense). Validate and transform P0 data."""
+        # MEDALLION: BRONZE | HIVE: I
+        # Implementing basic Zod-like contract validation for P0 -> P2 bridge
+        if not data:
+            return {"status": "FAIL", "error": "Empty payload"}
+        
+        # Verify schema
+        results = data.get("results", [])
+        if not isinstance(results, list):
+            return {"status": "FAIL", "error": "Invalid schema: 'results' must be a list"}
+            
+        # Transformation: Convert sensor signals to physics target coordinates
+        density = len(results)
+        return {
+            "status": "PASS",
+            "lattice_coordinates": {"x": density * 10, "y": density * 5},
+            "contract": "Zod_6.0_Stable",
+            "audit": "P1_FUSE_SUCCESS"
+        }
+
     @classmethod
     def execute_all(cls):
-        return {"p1": cls.pillar_1_zod_check("default")}
+        last_thought = get_last_thought()
+        return {"p1": cls.pillar_1_zod_check(last_thought.get("p0", {}))}
 
     @staticmethod
     def get_pheromone(output: Dict[str, Any]) -> str:
-        return f"Bridge status: {output.get('p1', {}).get('status')}"
+        res = output.get("p1", {})
+        return f"Bridge status: {res.get('status')} | Lattice: {res.get('lattice_coordinates')}"
 
 # --- PORT 2: SHAPE (HFO: Shaper / Shape | JADC2 Domain: Digital Twin) ---
 class Port2Shape:
@@ -585,31 +606,6 @@ class Port7Navigate:
             "BMC2 Navigator", query, context,
             "NAVIGATE the final BMC2 state space. Determine the deterministic plan for mission execution."
         )
-
-    @staticmethod
-    def port7_shard5_immunize(pheromones: Dict[str, Any], context: str = ""):
-        """P7.5: NAVIGATOR_IMMUNIZE (Security). Strategic Defense & Integrity Gate."""
-        return {"status": "READY", "holographic_role": "Defense Navigator", "defense": "Tactical Integrity Verification"}
-
-    @staticmethod
-    def port7_shard6_assimilate(query: str, context: str = ""):
-        """P7.6: NAVIGATOR_ASSIMILATE (Logistics). Strategic Persistence & Memory Navigator."""
-        return {
-            "status": "ACTIVE", 
-            "holographic_role": "Logistics Navigator",
-            "storage_paradigm": "Mosaic Telemetry (Blackboard)",
-            "adapter": "DuckDB/Parquet (Stigmergy Source)"
-        }
-
-    @staticmethod
-    def port7_shard7_navigate(query: str, context: str = ""):
-        """P7.7: NAVIGATOR_NAVIGATE (State). FSM & State Space Navigator."""
-        return {
-            "status": "ACTIVE", 
-            "holographic_role": "State Space Navigator",
-            "state_model": "Deterministic Mosaic FSM",
-            "active_mode": "HIVE_V6_HUNT"
-        }
 
     @classmethod
     def execute_all(cls, query: str):

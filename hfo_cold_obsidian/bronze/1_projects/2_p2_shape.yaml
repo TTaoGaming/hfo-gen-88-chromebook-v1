@@ -1,0 +1,14 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+id: P2
+name: P2 SHAPE (Mirror Magus)
+mission_thread: Alpha
+status: offline
+tasks:
+  - id: P2.1
+    title: Rapier WASM Initialization
+    description: Set up the Rapier physics engine in the Chromebook environment.
+    status: not-started
+  - id: P2.2
+    title: Physics Cursor Geometry
+    description: Define the bounding boxes and constraints for the virtual cursor.
+    status: not-started

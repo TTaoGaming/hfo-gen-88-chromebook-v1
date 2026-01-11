@@ -1,0 +1,14 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+id: P3
+name: PORT-3-INJECT (Spore Storm)
+mission_thread: Alpha
+status: offline
+tasks:
+  - id: P3.1
+    title: W3C Pointer Event Dispatcher
+    description: Implement the logic to convert physics states to browser events.
+    status: not-started
+  - id: P3.2
+    title: FSM Controller
+    description: Finite State Machine for cursor states (Hover, Click, Drag).
+    status: not-started

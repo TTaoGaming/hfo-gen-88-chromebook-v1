@@ -38,6 +38,7 @@ from versions.hub_v3 import HubV3
 from versions.hub_v4 import HubV4
 from versions.hub_v5 import HubV5
 from versions.hub_v6 import HubV6
+from versions.hub_v7 import HubV7
 
 HUB_REGISTRY = {
     "1": HubV1,
@@ -46,6 +47,7 @@ HUB_REGISTRY = {
     "4": HubV4,
     "5": HubV5,
     "6": HubV6,
+    "7": HubV7,
 }
 
 # --- HFO HEXAGONAL ORCHESTRATION (T0-T7) ---
@@ -64,10 +66,20 @@ def execute_hexagonal_orchestration(query: str):
     # 🎯 ANTI-THEATER: Log H-Phase START before executing the hub
     # This ensures T4_DISRUPT (which runs inside the hub) sees the current thought.
     timestamp_start = datetime.datetime.now(datetime.timezone.utc).isoformat()
-    if version in ["4", "5"]:
-        receipt_hash = f"SHARDED_V{version}_{hashlib.sha256(query.encode()).hexdigest()[:8]}"
+    
+    query_upper = query.upper()
+    if "QUAD/P0_SENSE_SEARCH" in query_upper or "QUAD_SEARCH" in query_upper:
+        prefix = "QUAD_SEARCH"
+    elif "DUAL_SEARCH" in query_upper:
+        prefix = "DUAL_SEARCH"
+    elif version in ["4", "5"]:
+        prefix = f"SHARDED_V{version}"
+    elif version == "7":
+        prefix = "P0_SENSE_SEARCH"
     else:
-        receipt_hash = f"H_PHASE_OK_{hashlib.sha256(query.encode()).hexdigest()[:8]}"
+        prefix = "H_PHASE_OK"
+
+    receipt_hash = f"{prefix}_{hashlib.sha256(query.encode()).hexdigest()[:8]}"
 
     now = timestamp_start + "Z"
     log_to_blackboard({
@@ -117,8 +129,13 @@ if __name__ == "__main__":
         query = sys.argv[2] if len(sys.argv) > 2 else "heartbeat"
         print(json.dumps(execute_hexagonal_orchestration(query)))
     elif cmd == "p0":
-        # Keep legacy P0 compatibility
-        print(Port0Observe.execute_all(sys.argv[2] if len(sys.argv) > 2 else "ping"))
+        # Keep legacy P0 compatibility with V2 support
+        try:
+            from versions.base import Port0ObserveV2
+            print(Port0ObserveV2.execute_all(sys.argv[2] if len(sys.argv) > 2 else "ping"))
+        except ImportError:
+            # Fallback to direct shard call if V2 is not imported
+            print(Port0Observe.port0_shard0_observe(sys.argv[2] if len(sys.argv) > 2 else "ping"))
     elif cmd == "p5":
         results = Port5Immunize.execute_all()
         # Log V-Phase to blackboard for HIVE compliance

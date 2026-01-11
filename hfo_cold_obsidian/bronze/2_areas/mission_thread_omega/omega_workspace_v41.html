@@ -230,9 +230,9 @@
 
                 // � Leaky Bucket for Palm Cone Dwell (Charge on Palm Facing)
                 if (isPalmFacing) {
-                    this.dwellAccumulator = Math.min(this.dwellAccumulator + dt, 1500); 
+                    this.dwellAccumulator = Math.min(this.dwellAccumulator + dt, 1500);
                 } else {
-                    this.dwellAccumulator = Math.max(this.dwellAccumulator - dt * 2, 0); 
+                    this.dwellAccumulator = Math.max(this.dwellAccumulator - dt * 2, 0);
                 }
 
                 // 🌌 HFO Hierarchical Cosmology 
@@ -249,7 +249,7 @@
                     case 'PORT_0_POINTER_READY':
                         this.pointerEvent = 'pointermove';
                         // Baseline: Any gesture detected here is 'READY' presence except the commit trigger
-                        
+
                         // Exit on dwell exhaustion
                         if (this.dwellAccumulator <= 0) {
                             this.state = 'IDLE';
@@ -266,7 +266,7 @@
 
                     case 'PORT_7_POINTER_COMMITTED':
                         this.pointerEvent = 'pointermove';
-                        
+
                         // Sticky Logic: Drag is maintained through NONE/LOST/Low-Confidence noise
                         const isPointing = (currentGesture === 'POINTING_UP' && isConfident);
                         const isNoneOrLost = (currentGesture === 'NONE' || currentGesture === 'LOST' || !isConfident);
@@ -707,7 +707,7 @@
                                             if (assignedLandmarks.has(lIdx)) return;
                                             const d = Math.sqrt((lm[8].x - h.cursors.raw.x) ** 2 + (lm[8].y - h.cursors.raw.y) ** 2);
                                             // 🧬 V41: Remove curl bias for easier snapping. Pure SNN for now.
-                                            const cost = d; 
+                                            const cost = d;
                                             if (cost < minCost) { minCost = cost; bestLIdx = lIdx; }
                                         });
                                         if (bestLIdx !== -1) { assignedLandmarks.add(bestLIdx); currentAssignments[id] = bestLIdx; }

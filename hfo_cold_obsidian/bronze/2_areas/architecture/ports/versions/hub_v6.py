@@ -89,22 +89,39 @@ class HubV6:
         mission_role = "Lidless Legion Sensing (Diamond 1)" if stage == "Port0" else "Spider Sovereign Navigation (Diamond 2)"
         
         prompt = f"""
-        You are the HFO Hive/8 {mission_role} - HUB V6.
-        Target: H-Phase Hunt Expansion (Double Diamond).
+        You are the HFO Hive/8 {mission_role} - HUB V6 (BFT-Aware Orchestrator).
+        Target: H-Phase Hunt Expansion (Double Diamond) with Byzantine Fault Tolerance (BFT).
 
         GALOIS LATTICE ALIGNMENT:
-        This is a fractal system. Every shard must map to its [Verb, Domain] coordinate in the Galois Lattice.
-        Synthesize these 'Mosaic Tiles' into a unified BATON.
+        Every shard maps to its [Verb, Domain] coordinate. Synthesize these 'Mosaic Tiles' into a unified BFT BATON.
+
+        BFT SYSTEM PARAMETERS:
+        - Network Size (n): 8 agents
+        - Fault Tolerance (f): 2 (System handles 3f+1 where n=8)
+        - Quorum Threshold: 6/8 (75%) consensus. (Target consensus score: 78).
 
         QUERY: {query}
 
-        PHEROMONES (Mosaic Tiles):
+        PHEROMONES (Shard Data):
         {json.dumps(pheromones, indent=2)}
+
+        BFT ANALYSIS TASK:
+        1. CONVERGENCE: Identify signals present in 6 or more shards.
+        2. DIVERGENCE: Identify signals that are unique, conflicting, or contradictory.
+        3. QUORUM AUDIT: Explicitly state if we have at least 6 shards (n-f) agreeing on the core mission objective.
+        4. ADVERSARIAL DETECTION: Flag any shards providing erroneous, stalled, or "hallucinated" data (e.g. error messages or empty stubs where results were expected).
 
         OUTPUT FORMAT (STRICT JSON):
         {{
             "artifact_id": "Baton_{stage}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}",
             "status": "GREEN",
+            "bft_metrics": {{
+                "consensus_score": 0.0,
+                "quorum_reached": true,
+                "convergence_summary": "Summary of matching majority signals",
+                "divergence_report": "Summary of minority/conflicting signals",
+                "faulty_nodes": ["shard_name"]
+            }},
             "baton": {{
                 "summary": "Condensation of the holographic state.",
                 "payload": {{
@@ -187,7 +204,23 @@ class HubV6:
             tasks = [HubV6._execute_node(session_id, n, query, {d: nodes[d] for d in n.dependencies} if n.dependencies else None) for n in executable]
             await asyncio.gather(*tasks)
             for n in executable:
-                if n.state == "COMPLETED": completed_nodes.add(n.name)
+                if n.state == "COMPLETED": 
+                    # --- BFT QUORUM AUDIT ---
+                    if "BATON" in n.name and isinstance(n.output, dict):
+                        bft = n.output.get("bft_metrics", {})
+                        if bft:
+                            reached = bft.get("quorum_reached", False)
+                            score = bft.get("consensus_score", 0)
+                            print(f"⚖️ [HUB-V6]: BFT Quorum Audit ({n.name}): {'✅ PASS' if reached else '❌ FAIL'} (Score: {score})")
+                            log_to_blackboard({
+                                "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
+                                "phase": "BFT_AUDIT",
+                                "node": n.name,
+                                "quorum_reached": reached,
+                                "consensus_score": score,
+                                "details": bft
+                            })
+                    completed_nodes.add(n.name)
 
         return nodes["BATON_Port7"].output
 

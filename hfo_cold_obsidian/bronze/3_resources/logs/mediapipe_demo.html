@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaPipe Hand Cursor - 1 Euro Filter Demo</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0a0a0a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        #video {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            opacity: 0.2;
+            transform: scaleX(-1);
+        }
+
+        .cursor {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 100;
+            transition: opacity 0.2s;
+        }
+
+        #cursor-smooth {
+            background: #00f2ff;
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px #00f2ff;
+        }
+
+        #cursor-snappy {
+            background: #ff0055;
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px #ff0055;
+        }
+
+        .label {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(15, 15, 15, 0.85);
+            padding: 20px;
+            border-left: 4px solid #00f2ff;
+            border-radius: 4px;
+            z-index: 200;
+            max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: #00f2ff;
+        }
+
+        p {
+            margin: 5px 0;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: #222;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="video" autoplay playsinline></video>
+
+    <!-- Cursors -->
+    <div id="cursor-smooth" class="cursor">
+        <span class="label">Smooth (fc=0.5, β=0.001)</span>
+    </div>
+    <div id="cursor-snappy" class="cursor">
+        <span class="label">Snappy (fc=1.0, β=0.05)</span>
+    </div>
+
+    <!-- UI Overlay -->
+    <div id="ui">
+        <h2>P0 SENSE: Landmarker</h2>
+        <p>Tracking <strong>Index Tip</strong> (Landmark 8)</p>
+        <p>Filtering: <strong>1 Euro Filter</strong></p>
+        <div id="status" class="status-badge">Initializing MediaPipe...</div>
+    </div>
+
+    <script type="module">
+        import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
+
+        // Constants & DOM
+        const video = document.getElementById("video");
+        const status = document.getElementById("status");
+        const cursorSmooth = document.getElementById("cursor-smooth");
+        const cursorSnappy = document.getElementById("cursor-snappy");
+
+        // 1 Euro Filter Logic
+        class LowPassFilter {
+            constructor(alpha) {
+                this.alpha = alpha;
+                this.lastValue = 0;
+                this.hasLast = false;
+            }
+            filter(value, alpha) {
+                if (alpha !== undefined) this.alpha = alpha;
+                let result = this.hasLast ? this.alpha * value + (1 - this.alpha) * this.lastValue : value;
+                this.lastValue = result;
+                this.hasLast = true;
+                return result;
+            }
+        }
+
+        class OneEuroFilter {
+            constructor(freq, mincutoff = 1.0, beta = 0.0, dcutoff = 1.0) {
+                this.freq = freq;
+                this.mincutoff = mincutoff;
+                this.beta = beta;
+                this.dcutoff = dcutoff;
+                this.x = new LowPassFilter(this._alpha(mincutoff));
+                this.dx = new LowPassFilter(this._alpha(dcutoff));
+                this.lastTime = null;
+            }
+            _alpha(cutoff) {
+                let te = 1.0 / this.freq;
+                let tau = 1.0 / (2 * Math.PI * cutoff);
+                return 1.0 / (1.0 + tau / te);
+            }
+            filter(value, timestamp) {
+                if (this.lastTime !== null && timestamp !== undefined) {
+                    const dt = (timestamp - this.lastTime) / 1000;
+                    if (dt > 0) this.freq = 1.0 / dt;
+                }
+                this.lastTime = timestamp;
+                let dvalue = this.x.hasLast ? (value - this.x.lastValue) * this.freq : 0;
+                let edvalue = this.dx.filter(dvalue, this._alpha(this.dcutoff));
+                let cutoff = this.mincutoff + this.beta * Math.abs(edvalue);
+                return this.x.filter(value, this._alpha(cutoff));
+            }
+        }
+
+        // Initialize Filter instances for X and Y for both presets
+        const filters = {
+            smooth: { x: new OneEuroFilter(60, 0.5, 0.001), y: new OneEuroFilter(60, 0.5, 0.001) },
+            snappy: { x: new OneEuroFilter(60, 1.0, 0.05), y: new OneEuroFilter(60, 1.0, 0.05) }
+        };
+
+        let handLandmarker;
+        async function setup() {
+            try {
+                const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
+                handLandmarker = await HandLandmarker.createFromOptions(vision, {
+                    baseOptions: {
+                        modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+                        delegate: "GPU"
+                    },
+                    runningMode: "VIDEO",
+                    numHands: 1
+                });
+                status.innerText = "MediaPipe Ready. Requesting Camera...";
+                startCamera();
+            } catch (e) {
+                status.innerText = "Error: " + e.message;
+            }
+        }
+
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } }).then(stream => {
+                video.srcObject = stream;
+                video.addEventListener("loadeddata", () => {
+                    status.innerText = "System Active";
+                    predict();
+                });
+            });
+        }
+
+        let lastVideoTime = -1;
+        function predict() {
+            if (video.currentTime !== lastVideoTime) {
+                lastVideoTime = video.currentTime;
+                const startTimeMs = performance.now();
+                const results = handLandmarker.detectForVideo(video, startTimeMs);
+
+                if (results.landmarks && results.landmarks.length > 0) {
+                    const tip = results.landmarks[0][8]; // Index Finger Tip
+
+                    // Map to viewport (Mirrored)
+                    const rawX = (1 - tip.x) * window.innerWidth;
+                    const rawY = tip.y * window.innerHeight;
+
+                    // Apply 1 Euro Filters
+                    const sx = filters.smooth.x.filter(rawX, startTimeMs);
+                    const sy = filters.smooth.y.filter(rawY, startTimeMs);
+                    const nx = filters.snappy.x.filter(rawX, startTimeMs);
+                    const ny = filters.snappy.y.filter(rawY, startTimeMs);
+
+                    // Render
+                    updateCursor(cursorSmooth, sx, sy);
+                    updateCursor(cursorSnappy, nx, ny);
+
+                    cursorSmooth.style.opacity = 1;
+                    cursorSnappy.style.opacity = 1;
+                } else {
+                    cursorSmooth.style.opacity = 0;
+                    cursorSnappy.style.opacity = 0;
+                }
+            }
+            requestAnimationFrame(predict);
+        }
+
+        function updateCursor(el, x, y) {
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+        }
+
+        setup();
+    </script>
+</body>
+
+</html>
