@@ -1712,7 +1712,7 @@
                     genie = new mm.PianoGenie('./assets/piano_genie/');
                     await genie.initialize();
                     player = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus');
-                    
+
                     status.innerText = 'NEURAL INTERFACE HOT';
                     status.style.color = '#00ff88';
                     btnStart.style.display = 'none';
@@ -1729,7 +1729,7 @@
 
             const playNote = async (buttonIndex) => {
                 if (!genie || !player) return;
-                
+
                 // Tone.context.resume() might be needed for some browsers
                 if (mm.Player.tone.context.state !== 'running') {
                     await mm.Player.tone.context.resume();
@@ -1737,10 +1737,10 @@
 
                 const note = genie.next(buttonIndex);
                 const midiNote = note + 21; // Piano Genie outputs 0-87
-                
+
                 // Low-latency playback
-                player.playNote({pitch: midiNote, velocity: 100});
-                
+                player.playNote({ pitch: midiNote, velocity: 100 });
+
                 const btn = div.querySelector(`[data-button="${buttonIndex}"]`);
                 const originalColor = genieColors[buttonIndex];
                 btn.style.filter = 'brightness(1.5)';

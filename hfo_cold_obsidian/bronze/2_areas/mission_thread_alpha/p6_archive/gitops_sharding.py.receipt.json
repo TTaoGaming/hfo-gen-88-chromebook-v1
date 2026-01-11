@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:26.376285Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p6_archive/gitops_sharding.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p6_archive/gitops_sharding.py",
+    "hash": "33e77f720521cee7ea5d526cb1caa18644509b2867ebeff9872b64fac611bc27",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

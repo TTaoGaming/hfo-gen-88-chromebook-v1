@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:34.831661Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_stigmergy_daemon.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/architecture/ports/hfo_stigmergy_daemon.py",
+    "hash": "f612fd2126e486a1d72183b000d5cfd3b1c3796df9795be82a9c540ee164f991",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:34.292717Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/assets/piano_genie/weights_manifest.json",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_omega/assets/piano_genie/weights_manifest.json",
+    "hash": "a018e49e061183c33c0289a0525b452194b5e99b67c88a22196d304c2b3ef7d7",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

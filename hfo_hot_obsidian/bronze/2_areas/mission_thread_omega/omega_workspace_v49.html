@@ -1712,7 +1712,7 @@
                     genie = new mm.PianoGenie('./assets/piano_genie/');
                     await genie.initialize();
                     player = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus');
-                    
+
                     status.innerText = 'GESTURE INTERFACE HOT';
                     status.style.color = '#00ff88';
                     btnStart.style.display = 'none';
@@ -1729,15 +1729,15 @@
 
             const playNote = async (buttonIndex) => {
                 if (!genie || !player) return;
-                
+
                 if (mm.Player.tone.context.state !== 'running') {
                     await mm.Player.tone.context.resume();
                 }
 
                 const note = genie.next(buttonIndex);
-                const midiNote = note + 21; 
-                player.playNote({pitch: midiNote, velocity: 100});
-                
+                const midiNote = note + 21;
+                player.playNote({ pitch: midiNote, velocity: 100 });
+
                 const btn = div.querySelector(`[data-button="${buttonIndex}"]`);
                 btn.style.filter = 'brightness(1.5)';
                 btn.style.transform = 'translateY(4px)';

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:25.246793Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p0_observe/port_0_hardware_sensor.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p0_observe/port_0_hardware_sensor.py",
+    "hash": "98c65887d4fa621fbe397aef4a0eb3c903f552c445dc45058ba87acd6c3311ae",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

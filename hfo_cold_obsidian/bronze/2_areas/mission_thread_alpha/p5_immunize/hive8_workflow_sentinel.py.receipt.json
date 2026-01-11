@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:25.947224Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/hive8_workflow_sentinel.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/hive8_workflow_sentinel.py",
+    "hash": "569ccb6e8ad0a8e1af93ec0ffaa15dc638a1959b4dc527d9954c1b3ec5f01e70",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

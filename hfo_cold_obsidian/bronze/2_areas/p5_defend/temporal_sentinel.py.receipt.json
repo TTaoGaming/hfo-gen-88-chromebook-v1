@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:34.379133Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_defend/temporal_sentinel.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/p5_defend/temporal_sentinel.py",
+    "hash": "f493031109838df7cba638a2ccd669131c470a2619dedc66652313e159337f29",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

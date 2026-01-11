@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:24.234298Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/test_shard_enforcement.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/test_shard_enforcement.py",
+    "hash": "f8c3bbd6bb2f4fb8442dd6268743c5040661c06b3dd2524035e353421d12f44c",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

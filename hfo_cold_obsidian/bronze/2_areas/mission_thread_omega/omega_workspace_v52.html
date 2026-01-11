@@ -1878,20 +1878,6 @@
         layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
         layout.registerComponentFactoryFunction('Guide', c => initGuide(c.element));
         layout.loadLayout(config); window.addEventListener('resize', () => layout.updateSize());
-
-        // 🎵 Global Audio Resume on first REAL interaction
-        window.addEventListener('mousedown', () => {
-            const iframes = document.querySelectorAll('iframe');
-            iframes.forEach(iframe => {
-                try {
-                    if (iframe.contentWindow && iframe.contentWindow.mm) {
-                        iframe.contentWindow.mm.Player.tone.context.resume();
-                    }
-                } catch (e) {
-                    // Cross-origin or other issues
-                }
-            });
-        }, { once: true });
     </script>
 </body>
 

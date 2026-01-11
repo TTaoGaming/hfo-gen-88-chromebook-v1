@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:36.100657Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/logs/theatre_test.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/logs/theatre_test.py",
+    "hash": "8916b87425d59a02e0ff9c74ca6b93607e184a13f677412828f08b943cf736c2",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

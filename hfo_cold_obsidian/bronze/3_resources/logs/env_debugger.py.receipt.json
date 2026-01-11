@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:35.942928Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/logs/env_debugger.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/logs/env_debugger.py",
+    "hash": "3a844788ef7d818cab03dff0381d8af7538cd851994e1d32cd408c9dd84f61a6",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

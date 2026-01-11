@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:35.982140Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/logs/port_0_port_7_matrix.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/logs/port_0_port_7_matrix.py",
+    "hash": "42753cb67a167f40c06ad41f6b894b6c7c906617561532ead4b878927206fbd6",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

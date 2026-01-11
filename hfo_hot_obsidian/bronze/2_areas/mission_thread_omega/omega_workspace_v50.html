@@ -1738,13 +1738,13 @@
                 try {
                     btnStart.innerText = 'SYNCING WEIGHTS...';
                     btnStart.disabled = true;
-                    
+
                     // Initialize with local assets
                     genie = new mm.PianoGenie('./assets/piano_genie/');
                     await genie.initialize();
-                    
+
                     player = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus');
-                    
+
                     status.innerText = 'GENIE READY';
                     status.style.color = 'var(--m3-primary)';
                     btnStart.style.display = 'none';
@@ -1761,14 +1761,14 @@
 
             const buttonDown = async (buttonIndex) => {
                 if (!genie || !player) return;
-                
+
                 if (mm.Player.tone.context.state !== 'running') {
                     await mm.Player.tone.context.resume();
                 }
 
                 const note = genie.next(buttonIndex, temperature);
                 const pitch = LOWEST_MIDI_NOTE + note;
-                
+
                 player.playNoteDown({ pitch: pitch });
                 heldNotes.set(buttonIndex, pitch);
 
@@ -1782,7 +1782,7 @@
                 if (pitch) {
                     player.playNoteUp({ pitch: pitch });
                     heldNotes.delete(buttonIndex);
-                    
+
                     const btn = div.querySelector(`[data-id="${buttonIndex}"]`);
                     btn.style.filter = 'none';
                     btn.style.transform = 'scale(1.0)';

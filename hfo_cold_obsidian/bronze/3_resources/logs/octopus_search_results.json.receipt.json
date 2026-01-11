@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:35.572312Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/logs/octopus_search_results.json",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/logs/octopus_search_results.json",
+    "hash": "82d5c992552cbf686354b4ad15f7b47fc11705226f1082b2637a4e3609315d5f",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

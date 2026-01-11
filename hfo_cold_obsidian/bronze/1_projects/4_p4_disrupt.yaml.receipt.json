@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:22.430297Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/4_p4_disrupt.yaml",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/1_projects/4_p4_disrupt.yaml",
+    "hash": "960c6127f12aba7b2e57959124015593b3a7c414a01bc0fcef58e36218b2ed6c",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}
