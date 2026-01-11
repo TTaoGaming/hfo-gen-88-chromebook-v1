@@ -133,6 +133,13 @@ function updateNumButtons(num) {
 }
 
 function showMainScreen() {
+    // 🎵 Resume AudioContext on user gesture (Autoplay Policy)
+    if (mm.Player.tone.context.state !== 'running') {
+        mm.Player.tone.context.resume().then(() => {
+            console.log("🎵 AudioContext Resumed");
+        });
+    }
+
     const splash = document.querySelector(".splash");
     if (splash) splash.hidden = true;
     const loaded = document.querySelector(".loaded");
