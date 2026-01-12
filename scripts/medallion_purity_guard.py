@@ -58,32 +58,43 @@ def verify_provenance_integrity():
 def enforce_bronze_headers():
     """
     Ensure every source file in HOT_DIR has a Medallion provenance header.
+    Blocks if staged files are missing headers.
+    Warns for legacy files.
     """
     print("🛡️ [P5-PURITY]: Enforcing Medallion Provenance Headers in HOT...")
-    missing_headers = []
+    missing_headers_legacy = []
+    missing_headers_staged = []
     
-    # We only check files that are staged for commit
+    staged_files = []
     try:
         staged_files = subprocess.check_output(["git", "diff", "--cached", "--name-only"]).decode().splitlines()
-        for f in staged_files:
-            if f.startswith(HOT_DIR) and f.endswith(('.py', '.ts', '.html', '.yaml')):
-                # Check for "Medallion:" string in first 5 lines
-                abs_path = os.path.abspath(f)
-                if not os.path.exists(abs_path): continue
+    except: pass
+
+    # Full sweep of HOT_DIR
+    for root, dirs, files in os.walk(HOT_DIR):
+        for f in files:
+            if f.endswith(('.py', '.ts', '.html', '.yaml')):
+                abs_path = os.path.join(root, f)
+                rel_path = os.path.relpath(abs_path, os.getcwd())
                 
                 with open(abs_path, 'r') as file_obj:
                     lines = [file_obj.readline() for _ in range(5)]
                     content = "".join(lines)
                     if "Medallion:" not in content:
-                        missing_headers.append(f)
-    except Exception as e:
-        print(f"⚠️ [P5-PURITY]: Header check error: {e}")
-        
-    if missing_headers:
-        print(f"❌ [P5-FAIL]: {len(missing_headers)} files in HOT lack provenance headers!")
-        for m in missing_headers:
+                        if rel_path in staged_files:
+                            missing_headers_staged.append(rel_path)
+                        else:
+                            missing_headers_legacy.append(rel_path)
+    
+    if missing_headers_legacy:
+        print(f"⚠️ [P5-WARN]: {len(missing_headers_legacy)} legacy files lack headers.")
+    
+    if missing_headers_staged:
+        print(f"❌ [P5-FAIL]: {len(missing_headers_staged)} STAGED files lack provenance headers!")
+        for m in missing_headers_staged:
             print(f"   -> MISSING HEADER: {m}")
         return False
+        
     return True
 
 def main():
