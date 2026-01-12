@@ -501,36 +501,54 @@ class Port5Immunize:
     @classmethod
     def execute_all(cls, file_context: str = None):
         """Executes the 8-Shard Defensive Manifold with Escalation Awareness."""
-        level = cls.get_escalation_level(file_context)
+        base_level = cls.get_escalation_level(file_context)
+        
+        # Pre-emptive Audit for Dynamic Escalation
+        audit_res = cls.shard6_audit()
+        level = "LOCKDOWN" if audit_res.get("action") == "LOCKDOWN_FORCED" else base_level
+
+        # SPEED GATING:
+        # BRONZE (Sandboxes/Hot-Bronze): Fast Shards only (P0-P4).
+        # SILVER/LOCKDOWN (Integration/Gold/Cold): Full Manifold.
         
         results = {
             "commander": "PYRE PRAETORIAN",
-            "p5.0_hardgate": cls.shard0_hardgate(file_context),
-            "p5.1_purity": cls.shard1_purity(),
-            "p5.2_generation": cls.shard2_generation(),
-            "p5.3_slop": cls.shard3_slop(),
-            "p5.4_chronos": cls.shard4_chronos(),
-            "p5.5_trace": cls.shard5_trace(),
-            "p5.6_audit": cls.shard6_audit(),
-            "p5.7_seal": cls.shard7_seal(),
-            "escalation_level": level
+            "escalation_level": level,
+            "shards": {}
         }
         
+        # --- FAST SHARDS (The Vanguard) ---
+        results["shards"]["p5.0_hardgate"] = cls.shard0_hardgate(file_context)      # The Syntax Scythe
+        results["shards"]["p5.1_purity"] = cls.shard1_purity()                 # The Medallion Mirror
+        results["shards"]["p5.2_generation"] = cls.shard2_generation()           # The Temporal Trident
+        results["shards"]["p5.3_slop"] = cls.shard3_slop()                     # The Slop Smasher
+        results["shards"]["p5.4_chronos"] = cls.shard4_chronos()               # The Chain Clock
+        results["shards"]["p5.6_audit"] = audit_res                             # Dynamic Shard
+        
+        # --- SLOW/DEEP SHARDS (The Rear Guard) ---
+        if level in ["SILVER", "LOCKDOWN"]:
+            results["shards"]["p5.5_trace"] = cls.shard5_trace()               # The Provenance Prism
+            results["shards"]["p5.7_seal"] = cls.shard7_seal()                 # The Grudge Gavel
+        else:
+            # Skip slow/IO-heavy shards in BRONZE for fast sandbox iteration
+            results["shards"]["p5.5_trace"] = {"status": "SKIPPED", "message": "BRONZE: Speed Gate Active."}
+            results["shards"]["p5.7_seal"] = {"status": "SKIPPED", "message": "BRONZE: Speed Gate Active."}
+
         # Calculate aggregate defense status based on level
         blockers = ["BLOCK", "FAIL", "RED", "CRITICAL"]
-        failures = [k for k, v in results.items() if isinstance(v, dict) and v.get("status") in blockers]
+        failures = [k for k, v in results["shards"].items() if isinstance(v, dict) and v.get("status") in blockers]
         
         # ESCALATION POLICY:
-        # BRONZE allows "FAIL" but changes it to "WARN" unless it's a structural syntax error
+        # BRONZE allows "FAIL" but changes it to "WARN" unless it's a structural syntax error (P0)
         if level == "BRONZE":
-            critical_failures = [f for f in failures if "syntax" in f or "chronos" in f]
+            critical_failures = [f for f in failures if "hardgate" in f or "chronos" in f]
             if critical_failures:
                 results["aggregate_status"] = "FAIL"
             else:
                 results["aggregate_status"] = "PASS"
                 # Downgrade status for reporting but allow through
                 for f in failures:
-                    results[f]["status"] = "WARN"
+                    results["shards"][f]["status"] = "WARN"
         else:
             results["aggregate_status"] = "FAIL" if failures else "PASS"
             
@@ -557,11 +575,26 @@ class Port5Immunize:
                 
                 # CRITICAL: Local Assets must exist
                 import re
-                srcs = re.findall(r'src="(\./.*?)"', content)
-                for src in srcs:
-                    full_path = os.path.join(os.path.dirname(active_ws), src)
-                    if not os.path.exists(full_path):
-                        return {"status": "FAIL", "message": f"Resource Breach: Missing local asset {src}"}
+                # Wider regex to catch 'src', 'href', 'url(' without requiring ./ prefix
+                # We exclude absolute URLs (http) and root paths (/)
+                # Use word boundary for url() to avoid matching calculateCurl()
+                resource_patterns = [
+                    r'src=["\']((?!http|/|data:).*?)["\']',
+                    r'href=["\']((?!http|/|mailto:|#).*?)["\']',
+                    r'\burl\(["\']?((?!http|/|data:).*?)["\']?\)'
+                ]
+                
+                for pattern in resource_patterns:
+                    matches = re.findall(pattern, content)
+                    for match in matches:
+                        # Normalize path
+                        clean_match = match.split('?')[0].split('#')[0]
+                        if not clean_match: continue
+                        
+                        full_path = os.path.join(os.path.dirname(active_ws), clean_match)
+                        if not os.path.exists(full_path):
+                            print(f"DEBUG: Resource match found: '{match}' (Pattern: {pattern})")
+                            return {"status": "FAIL", "message": f"Resource Breach: Hallucinated/Missing local asset '{clean_match}'"}
 
                 # GOLDILOCKS: Allow standard CDNs but warn on hallucination patterns
                 if "storage.googleapis.com" in content:
@@ -673,17 +706,29 @@ class Port5Immunize:
     @staticmethod
     def shard6_audit():
         """P5.6: AUDIT (BFT Quorum). Shard Performance Evaluation."""
-        # Scan blackboard for ADVERSARIAL_THEATER flags in the last 100 entries
+        # 1. Scan blackboard for ADVERSARIAL_THEATER flags in the last 100 entries
         theater_count = 0
+        is_compromised = False
         if os.path.exists(BLACKBOARD_PATH):
             with open(BLACKBOARD_PATH, "r") as f:
                 lines = f.readlines()[-100:]
                 for line in lines:
-                    if "ADVERSARIAL_THEATER" in line:
+                    if "ADVERSARIAL_THEATER" in line or "INTEGRITY_SIGNAL\": \"RED" in line:
                         theater_count += 1
         
-        if theater_count > 0:
-            return {"status": "YELLOW", "message": f"BFT Quorum Audit: {theater_count} theater flags detected in recent sessions."}
+        # 2. Threshold Escalation: If theater > 20%, signal COMPROMISED
+        if theater_count > 20: 
+            is_compromised = True
+
+        if is_compromised:
+            return {
+                "status": "RED", 
+                "message": f"BFT Quorum Audit: HIGH DENSITY THEATER ({theater_count}). ESCALATING TO LOCKDOWN.",
+                "action": "LOCKDOWN_FORCED"
+            }
+        elif theater_count > 0:
+            return {"status": "YELLOW", "message": f"BFT Quorum Audit: {theater_count} theater flags detected. Monitor for drift."}
+        
         return {"status": "GREEN", "message": "BFT Quorum Metrics: Nominal. No recent theater detected."}
 
     @staticmethod

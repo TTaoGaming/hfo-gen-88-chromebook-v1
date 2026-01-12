@@ -3,15 +3,26 @@
 
 echo "🛡️ [P5-SLOP]: Scanning for AI Theater and Slop Patterns..."
 
-# 1. Block "Existing Code" markers
-# Using char classes to avoid self-triggering during pre-commit audit
-# We ignore report files to avoid false positives from trial documentation
-MARKERS=$(git diff --cached --name-only | grep -vE "reports/|manifest|BOOK_OF_BLOOD_GRUDGES" | xargs -I {} grep -HE "\.\.\.[e]xisting [c]ode\.\.\.|\.\.\.[r]est of the [c]ode\.\.\.|Lines .* [o]mitted" {} 2>/dev/null)
-if [ ! -z "$MARKERS" ]; then
-    echo "🚨 [SLOP-BLOCK]: AI-Generated 'Existing Code' marker detected!"
-    echo "$MARKERS"
-    exit 1
-fi
+# 1. Block "Evasive AI Theater" markers (Narrative Evasion Vector)
+# We target phrases used to skip implementation or hide stubs.
+EVASION_PATTERNS=(
+    "\.\.\.[e]xisting [c]ode\.\.\."
+    "\.\.\.[r]est of the [c]ode\.\.\."
+    "Lines .* [o]mitted"
+    "[r]emainder of .* [b]revity"
+    "[p]reviously [p]rovided"
+    "[s]ame as [b]efore"
+    "[n]o [c]hanges [n]eeded"
+)
+
+for pattern in "${EVASION_PATTERNS[@]}"; do
+    MARKERS=$(git diff --cached --name-only | grep -vE "reports/|manifest|BOOK_OF_BLOOD_GRUDGES" | xargs -I {} grep -HiE "$pattern" {} 2>/dev/null)
+    if [ ! -z "$MARKERS" ]; then
+        echo "🚨 [SLOP-BLOCK]: Narrative Evasion detected ($pattern)!"
+        echo "$MARKERS"
+        exit 1
+    fi
+done
 
 # 2. Block Empty Stubs in sensitive ports
 # Using [[:space:]] to avoid false positives like "bypass"

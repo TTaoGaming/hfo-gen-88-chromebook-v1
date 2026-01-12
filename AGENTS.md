@@ -27,14 +27,14 @@ The goal of **HFO (Hyper-Fractal Obsidian)** is to build an **Apex Ensemble Mosa
   - **P6**: **ASSIMILATOR** / **Assimilate** | **STORE** | **AAR / Telemetry**
   - **P7**: **NAVIGATOR** / **Navigate** | **NAVIGATE** | **BMC2**
 - **Commanders (Gen 88)**:
-  - **P0**: *The Lidless Legion*
-  - **P1**: *The Web Weaver*
-  - **P2**: *The Mirror Magus*
-  - **P3**: *Harmonic Hydra*
-  - **P4**: *The Red Regnant*
-  - **P5**: *The Pyre Praetorian*
-  - **P6**: *The Kraken Keeper*
-  - **P7**: *The Spider Sovereign*
+  - **P0**: *The Lidless Legion* (8 Sensing Shards)
+  - **P1**: *The Web Weaver* (8 Fusion Shards)
+  - **P2**: *The Mirror Magus* (8 Shaping Shards)
+  - **P3**: *Harmonic Hydra* (8 Delivery Shards)
+  - **P4**: *The Red Regnant* (8 Disruption Shards)
+  - **P5**: *The Pyre Praetorian* (8 Defensive Shards)
+  - **P6**: *The Kraken Keeper* (8 Storage Shards)
+  - **P7**: *The Spider Sovereign* (8 Navigation Shards)
 - **Scaling**: **Fractal Octree Recursion**. Context is managed through 8-way hierarchical sharding (Cognitive Octets).
 - **The Galois Lattice (8x8 Quine)**:
   - **Port 0 (Sense)**: [0,0] ISR | [1,0] Relay | [2,0] Fuse | [3,0] Simul | [4,0] SEAD | [5,0] Trace | [6,0] Cache | [7,0] Hunt.

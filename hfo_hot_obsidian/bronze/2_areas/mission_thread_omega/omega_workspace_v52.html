@@ -495,10 +495,10 @@
                 frameCounter: 0
             },
             physics: {
-                stiffness: 0.12, stiffnessArmed: 0.65, damping: 0.60, lookAhead: 0.45,
-                velocityDeadzone: 0.08, // 🌪️ V51.0 Resonance Suppression (Aggressive Deadzone)
+                stiffness: 0.12, stiffnessArmed: 0.65, damping: 0.60, lookAhead: 2.2,
+                velocityDeadzone: 0.05, // 🌪️ V51.0 Resonance Suppression (Tuned)
                 springSource: 'snappy', predSource: 'snappy',
-                p3Source: 'spring', p3Mirror: true,
+                p3Source: 'predictive', p3Mirror: true,
                 p0Mirror: true,
                 showGlobalCursor: false,
                 remoteMode: true,
@@ -749,11 +749,9 @@
         };
 
         /**
-         * 📐 PORT 2: SHAPE (Tree Manifold)
-         * Essence: Digital Twin Transformation
-         * Role: [Node 1] Raw -> [Node 2/3] Smooth/Snappy -> [Node 4] Spring -> [Node 5] Predictive
+         * 📐 PORT 2: SHAPE (Tree Manifold - Step A: Sensing & Anchor Sync)
          */
-        const port2Shape = (hand, now, lm) => {
+        const port2ShapeSync = (hand, now, lm) => {
             // Assign Visual Strategy
             hand.visuals = {
                 hero: hfoState.visuals.heroStrategy,
@@ -792,7 +790,7 @@
                 hand.landmarks = lm;
             }
 
-            // 🚀 Physics Digital Twin (Matter.js Chain)
+            // 🚀 Physics Digital Twin (Syncing Anchor)
             if (engine && hand.active && hfoSystem.canvas) {
                 const canvas = hfoSystem.canvas;
                 const isEngaged = hand.fsm.state === 'PORT_0_POINTER_READY' || hand.fsm.state === 'PORT_7_POINTER_COMMITTED';
@@ -801,17 +799,25 @@
                 // Node 4: Spring is driven by Snappy (Node 3)
                 const anchorSource = hand.cursors.snappy;
                 Matter.Body.setPosition(hand.cursors.spring.anchor, { x: anchorSource.x * canvas.width, y: anchorSource.y * canvas.height });
+            }
+            return hand.palm?.facingCamera || false;
+        };
 
+        /**
+         * 📐 PORT 2: SHAPE (Tree Manifold - Step B: Predictive Synthesis)
+         */
+        const port2ShapePredict = (hand, now) => {
+            if (engine && hand.active && hfoSystem.canvas) {
+                const canvas = hfoSystem.canvas;
+                
                 // Node 5: Predictive is driven by Spring (Node 4) + Velocity projection
                 const rawVel = hand.cursors.spring.body.velocity;
 
                 // 🌪️ V51.0 Resonance Suppression (Non-linear Deadzone)
-                // We dampen the velocity projection if speed is below threshold to prevent "static spinning".
                 const speed = Math.sqrt(rawVel.x * rawVel.x + rawVel.y * rawVel.y);
-                const dz = hfoState.physics.velocityDeadzone || 0.08;
-                // Use a cubic suppression for smoother low-end transition (prevent "static spinning")
+                const dz = hfoState.physics.velocityDeadzone || 0.05;
                 const ratio = Math.min(1.0, speed / dz);
-                const suppression = ratio * ratio * ratio;
+                const suppression = ratio * ratio; // Squared for smoother low-end transition
 
                 const vel = {
                     x: hand.filters.vx.call(rawVel.x, now) * suppression,
@@ -819,8 +825,8 @@
                 };
 
                 const lead = {
-                    x: vel.x * hfoState.physics.lookAhead * 1.8,
-                    y: vel.y * hfoState.physics.lookAhead * 1.8
+                    x: vel.x * hfoState.physics.lookAhead,
+                    y: vel.y * hfoState.physics.lookAhead
                 };
 
                 Matter.Body.setPosition(hand.cursors.predictive.body, {
@@ -835,7 +841,6 @@
                 hand.cursors.predictive.x = hand.cursors.predictive.body.position.x / SafeW;
                 hand.cursors.predictive.y = hand.cursors.predictive.body.position.y / SafeH;
             }
-            return hand.palm?.facingCamera || false;
         };
 
         // 🗡️ PORT 3: INJECT (Deliver)
@@ -1319,7 +1324,6 @@
 
                         if (hfoState.active && hfoSystem.loopActive) {
                             try {
-                                if (engine) Matter.Engine.update(engine, dt);
                                 const res = port0Observe(hfoSystem.video, hfoSystem.recognizer, now);
 
                                 // 🕵️ TRANSPARENCY CALCULATION
@@ -1372,31 +1376,44 @@
                                         if (bestLIdx !== -1) { assignedLandmarks.add(bestLIdx); currentAssignments[id] = bestLIdx; }
                                     });
 
-                                    // APPLY
+                                    // APPLY - Part 1: Sync Landmarks & Anchors
                                     handIds.forEach(id => {
                                         const h = hfoState.hands[id];
                                         if (currentAssignments.hasOwnProperty(id)) {
                                             const lIdx = currentAssignments[id];
                                             const lm = landmarks[lIdx];
-
                                             h.curls = landmarkCurls[lIdx];
                                             h.ratios = landmarkRatios[lIdx];
-                                            const isFacing = port2Shape(h, now, lm);
+                                            h.isFacing = port2ShapeSync(h, now, lm);
                                             h.isCoasting = false;
-
-                                            if (res.gestures?.[lIdx]) {
-                                                const g = res.gestures[lIdx][0];
-                                                const fsmRes = port6Assimilate(h, g.categoryName, g.score, now, isFacing, g.score);
-                                                h.gestures = { active: g.categoryName, score: g.score, isDown: (h.fsm.state === 'PORT_7_POINTER_COMMITTED'), pointerEvent: fsmRes.pointerEvent };
-                                            }
                                         } else {
                                             h.palm = { normal: { x: 0, y: 0, z: 0 }, facingCamera: false };
                                             h.coastCount++;
+                                            if (h.coastCount > hfoState.physics.persistence.coastFrames) h.active = false;
+                                            port2ShapeSync(h, now, null);
+                                        }
+                                    });
+
+                                    // 💪 Physics ACT (Matter.js Step)
+                                    if (engine) Matter.Engine.update(engine, dt);
+
+                                    // APPLY - Part 2: Predict, Draw, & Inject
+                                    handIds.forEach(id => {
+                                        const h = hfoState.hands[id];
+                                        if (currentAssignments.hasOwnProperty(id)) {
+                                            const lIdx = currentAssignments[id];
+                                            port2ShapePredict(h, now);
+
+                                            if (res.gestures?.[lIdx]) {
+                                                const g = res.gestures[lIdx][0];
+                                                const fsmRes = port6Assimilate(h, g.categoryName, g.score, now, h.isFacing, g.score);
+                                                h.gestures = { active: g.categoryName, score: g.score, isDown: (h.fsm.state === 'PORT_7_POINTER_COMMITTED'), pointerEvent: fsmRes.pointerEvent };
+                                            }
+                                        } else {
                                             const fsmRes = port6Assimilate(h, 'LOST', 0, now, false, 0);
                                             h.gestures.isDown = (h.fsm.state === 'PORT_7_POINTER_COMMITTED');
                                             h.gestures.pointerEvent = fsmRes.pointerEvent;
-                                            if (h.coastCount > hfoState.physics.persistence.coastFrames) h.active = false;
-                                            port2Shape(h, now, null);
+                                            port2ShapePredict(h, now);
                                         }
 
                                         if (h.active) {
@@ -1437,7 +1454,7 @@
                                                 ctx.fillText('PORT 4: GOLDEN MASTER ANALYSIS', tx, ty);
 
                                                 const metrics = [
-                                                    { l: 'MODE', v: gm.mode },
+                                                    { l: 'MODE', v: hfoState.goldenMaster.mode },
                                                     { l: 'DB_RMSE', v: hfoSystem.tuningMirror.metrics.rmse.toFixed(5) },
                                                     { l: 'DB_JITTER', v: hfoSystem.tuningMirror.metrics.jitter.toFixed(5) },
                                                     { l: '1EURO_SMOOTH_V', v: (h.cursors.smooth.x - h.cursors.raw.x).toFixed(5) },
@@ -1446,7 +1463,7 @@
                                                     { l: 'SENSE_QUALITY', v: hfoState.transparency.toFixed(2) }
                                                 ];
 
-                                                if (gm.frameCounter % 60 === 0 && hfoSystem.tuningMirror.active) {
+                                                if (hfoState.goldenMaster.frameCounter % 60 === 0 && hfoSystem.tuningMirror.active) {
                                                     hfoSystem.tuningMirror.conn.query(`
                                                         SELECT 
                                                             sqrt(avg(pow(raw_x - pred_x, 2) + pow(raw_y - pred_y, 2))) as rmse,
@@ -1494,8 +1511,11 @@
                                     });
                                 } else {
                                     // 🚀 Synthetic Support
-                                    Object.values(hfoState.hands).filter(h => h.active).forEach(h => {
-                                        port2Shape(h, now, null);
+                                    const activeHands = Object.values(hfoState.hands).filter(h => h.active);
+                                    activeHands.forEach(h => port2ShapeSync(h, now, null));
+                                    if (engine) Matter.Engine.update(engine, dt);
+                                    activeHands.forEach(h => {
+                                        port2ShapePredict(h, now);
                                         port3Inject(h);
                                     });
                                 }
@@ -1769,7 +1789,7 @@
                     genie = new mm.PianoGenie('./assets/piano_genie/');
                     await genie.initialize();
 
-                    player = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus');
+                    player = new mm.SoundFontPlayer('./assets/piano_genie/sgm_plus');
 
                     status.innerText = 'GENIE READY';
                     status.style.color = 'var(--m3-primary)';
