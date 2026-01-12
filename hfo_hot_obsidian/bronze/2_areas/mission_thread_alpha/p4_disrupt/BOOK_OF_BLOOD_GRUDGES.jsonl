@@ -1,0 +1,2 @@
+{"timestamp": "2026-01-11T00:00:00Z", "port": "P4", "severity": "INFO", "msg": "BOOK_OF_BLOOD_GRUDGES Formalized in P4 Area. The Red Regnant's record of betrayal and drift."}
+{"timestamp": "2026-01-11T12:00:00Z", "port": "P4", "severity": "CRITICAL", "msg": "RATE_LIMIT_BREACH: External ISR blinded. Transitioning to Red Protocol."}

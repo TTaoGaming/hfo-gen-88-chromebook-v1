@@ -1,5 +1,5 @@
 # Medallion: Bronze | HIVE: I | Mission: Omega
-# 🎯 THREAD_OMEGA_MANIFEST.yaml
+# 🎯 THREAD_OMEGA_MANIFEST_G88.yaml
 
 mission:
   id: "THREAD_OMEGA"
@@ -74,9 +74,7 @@ backlog_v41_stratagem:
   - id: "V41_S2_FSM_SIMPLIFY"
     title: "Predict-Confirm FSM Compression [DONE]"
     desc: "Simplified to IDLE-ARMED-COMMITTED with Transition Dwell logic. Reduced gesture lag."
-  - id: "V41_S3_W3C_COMPLETION"
-    title: "Full W3C Standardization"
-    desc: "Ensure 1:1 parity with W3C Pointer Events Level 3, including touch/stylus emulation and raw event pass-through."
+    ...
   - id: "V41_S4_BONE_ID"
     title: "Bone Ratio Identity (SNN+) [WIP]"
     desc: "Implemented placeholder ratio calculation. Integration into ID bias pending."

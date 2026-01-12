@@ -1,0 +1,3 @@
+{"timestamp": "2026-01-11T00:00:00Z", "port": "P5", "severity": "INFO", "msg": "DANCE_OF_DEATH_AND_REBIRTH Initialized. The Pyre Praetorian's loop of resurrection and hardening."}
+{"timestamp": "2026-01-12T04:39:24.744968+00:00", "port": "P5", "phase": "V", "type": "DEATH", "msg": "Breach detected via P4 Grudge: RATE_LIMIT_BREACH: External ISR blinded. Transitioning to Red Protocol.. Initiating Pyre Cycle."}
+{"timestamp": "2026-01-12T04:39:24.744968+00:00", "port": "P5", "phase": "E", "type": "REBIRTH", "msg": "Hardening system against: RATE_LIMIT_BREACH: External ISR blinded. Transitioning to Red Protocol.. Synchronizing Praetorian gates."}

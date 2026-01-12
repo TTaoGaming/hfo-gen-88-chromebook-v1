@@ -70,7 +70,7 @@ class HubV7:
             node.state = "COMPLETED"
             
             log_to_blackboard({
-                "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
+                "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 "session_id": session_id,
                 "hive_mode": "HIVE/8_V7_HUNT",
                 "node": node.name,
@@ -225,7 +225,7 @@ class HubV7:
                             score = bft.get("consensus_score", 0)
                             print(f"⚖️ [HUB-V7]: BFT Quorum Audit ({n.name}): {'✅ PASS' if reached else '❌ FAIL'} (Score: {score})")
                             log_to_blackboard({
-                                "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
+                                "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                                 "phase": "BFT_AUDIT",
                                 "node": n.name,
                                 "quorum_reached": reached,

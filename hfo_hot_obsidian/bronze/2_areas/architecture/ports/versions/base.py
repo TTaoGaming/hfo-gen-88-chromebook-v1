@@ -55,31 +55,22 @@ def log_to_blackboard(entry: Dict[str, Any]):
     last_signature = "LEGACY"
     if os.path.exists(BLACKBOARD_PATH):
         try:
-            with open(BLACKBOARD_PATH, "rb") as f:
-                # Seek to end to find the last line efficiently
-                f.seek(0, os.SEEK_END)
-                pos = f.tell() - 2
-                while pos > 0:
-                    f.seek(pos)
-                    if f.read(1) == b"\n": break
-                    pos -= 1
-                last_line = f.readline().decode().strip()
-                if last_line:
-                    try:
+            with open(BLACKBOARD_PATH, "r") as f:
+                lines = f.readlines()
+                if lines:
+                    last_line = lines[-1].strip()
+                    if last_line:
                         last_signature = json.loads(last_line).get("signature", "LEGACY")
-                    except json.JSONDecodeError:
-                        # If the last line is malformed, the purity script should have handled it,
-                        # but we fallback to "ROOT" or a previous identifiable signal
-                        last_signature = "MALFORMED"
-        except:
+        except Exception:
             last_signature = "ERROR"
 
     entry_str = json.dumps(entry, sort_keys=True)
+    # print(f"DEBUG_HASH: {last_signature} | {entry_str}")
     signature = hashlib.sha256(f"{secret}:{last_signature}:{entry_str}".encode()).hexdigest()
     entry["signature"] = signature
 
     with open(BLACKBOARD_PATH, "a") as f:
-        f.write(json.dumps(entry) + "\n")
+        f.write(json.dumps(entry, sort_keys=True) + "\n")
 
 def get_last_thought() -> Dict[str, Any]:
     if not os.path.exists(BLACKBOARD_PATH):

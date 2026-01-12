@@ -118,7 +118,7 @@ def execute_hexagonal_orchestration(query: str):
 
     receipt_hash = f"{prefix}_{hashlib.sha256(query.encode()).hexdigest()[:8]}"
 
-    now = timestamp_start + "Z"
+    now = timestamp_start
     log_to_blackboard({
         "timestamp": now,
         "phase": "H",
@@ -137,7 +137,7 @@ def execute_hexagonal_orchestration(query: str):
     
     # Final log with output
     log_to_blackboard({
-        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "phase": "H_COMPLETE",
         "summary": query,
         "output": thinking
@@ -186,7 +186,7 @@ if __name__ == "__main__":
         results = Port5Immunize.execute_all(file_context=file_context)
         # Log V-Phase to blackboard for HIVE compliance
         log_to_blackboard({
-            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "phase": "V",
             "audit": results,
             "file_context": file_context
@@ -203,7 +203,7 @@ if __name__ == "__main__":
         query = sys.argv[2]
         signal_id = "SIG_" + hashlib.sha256(query.encode()).hexdigest()[:8]
         log_to_blackboard({
-            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "phase": "SIGNAL",
             "signal_id": signal_id,
             "query": query,
