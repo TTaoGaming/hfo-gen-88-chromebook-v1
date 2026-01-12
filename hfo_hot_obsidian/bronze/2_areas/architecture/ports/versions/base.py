@@ -52,7 +52,7 @@ def log_to_blackboard(entry: Dict[str, Any]):
             secret = f.read().strip()
             
     # Calculate Chain Signature (Anti-Theater HMAC)
-    last_signature = "ROOT"
+    last_signature = "LEGACY"
     if os.path.exists(BLACKBOARD_PATH):
         try:
             with open(BLACKBOARD_PATH, "rb") as f:

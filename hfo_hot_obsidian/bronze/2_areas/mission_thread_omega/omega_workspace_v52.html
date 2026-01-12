@@ -495,8 +495,8 @@
                 frameCounter: 0
             },
             physics: {
-                stiffness: 0.12, stiffnessArmed: 0.65, damping: 0.60, lookAhead: 2.2,
-                velocityDeadzone: 0.05, // 🌪️ V51.0 Resonance Suppression (Tuned)
+                stiffness: 0.12, stiffnessArmed: 0.65, damping: 0.85, lookAhead: 2.2,
+                velocityDeadzone: 0.05, // 🌪️ V52.0 Enhanced Resonance Suppression
                 springSource: 'snappy', predSource: 'snappy',
                 p3Source: 'predictive', p3Mirror: true,
                 p0Mirror: true,
@@ -813,11 +813,11 @@
                 // Node 5: Predictive is driven by Spring (Node 4) + Velocity projection
                 const rawVel = hand.cursors.spring.body.velocity;
 
-                // 🌪️ V51.0 Resonance Suppression (Non-linear Deadzone)
+                // 🌪️ V52.0 Resonance Suppression (Non-linear Cubic Deadzone)
                 const speed = Math.sqrt(rawVel.x * rawVel.x + rawVel.y * rawVel.y);
                 const dz = hfoState.physics.velocityDeadzone || 0.05;
                 const ratio = Math.min(1.0, speed / dz);
-                const suppression = ratio * ratio; // Squared for smoother low-end transition
+                const suppression = ratio * ratio * ratio; // Cubic for tighter low-end stabilization
 
                 const vel = {
                     x: hand.filters.vx.call(rawVel.x, now) * suppression,
@@ -1730,42 +1730,44 @@
             div.style.flexDirection = 'column';
             div.style.alignItems = 'center';
             div.style.justifyContent = 'center';
-            div.style.padding = '20px';
+            div.style.padding = '0px'; 
+            div.style.overflow = 'hidden';
 
             // Official Magenta Palette
             const genieColors = [
-                '#EE2B29', // 0
-                '#ff9800', // 1
-                '#ffff00', // 2
-                '#c6ff00', // 3
-                '#00e5ff', // 4
-                '#2979ff', // 5
-                '#651fff', // 6
-                '#d500f9'  // 7
+                '#EE2B29', '#ff9800', '#ffff00', '#c6ff00',
+                '#00e5ff', '#2979ff', '#651fff', '#d500f9'
             ];
 
             div.innerHTML = `
-                <div style="margin-bottom: 20px; color: var(--m3-primary); font-weight: bold; font-family: 'Roboto Mono'; letter-spacing: 4px;">PIANO GENIE</div>
-                <div id="piano-status" style="font-size: 11px; font-family: 'Roboto Mono'; color: #555; margin-bottom: 24px;">WAITING FOR INITIALIZATION</div>
-                <div id="genie-buttons" style="display: flex; gap: 10px; opacity: 0.2; pointer-events: none; width: 100%; height: 300px; max-width: 900px;">
+                <div style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center;">
+                    <div style="color: var(--m3-primary); font-weight: bold; font-family: 'Roboto Mono'; letter-spacing: 4px; font-size: 18px;">PIANO GENIE</div>
+                    <div id="piano-status" style="font-size: 10px; font-family: 'Roboto Mono'; color: #555; margin-top: 8px;">WAITING FOR INITIALIZATION</div>
+                </div>
+                
+                <canvas id="waterfall-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 120px); pointer-events: none;"></canvas>
+
+                <div id="genie-buttons" style="display: flex; gap: 4px; opacity: 0.2; pointer-events: none; width: 100%; height: 120px; position: absolute; bottom: 0; background: #111;">
                     ${[0, 1, 2, 3, 4, 5, 6, 7].map(i => `
-                        <button data-id="${i}" style="
+                        <button data-id="${i}" class="genie-btn" style="
                             flex-grow: 1;
-                            background: ${genieColors[i]};
+                            background: #222;
                             border: none;
-                            border-radius: 4px;
+                            border-top: 4px solid ${genieColors[i]};
                             cursor: pointer;
-                            transition: transform 0.1s linear, filter 0.1s;
+                            transition: background 0.1s;
                             display: flex;
-                            align-items: flex-end;
+                            align-items: center;
                             justify-content: center;
-                            padding-bottom: 20px;
-                            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-                        "><span style="color: rgba(0,0,0,0.5); font-weight: bold; font-size: 18px; pointer-events: none;">${i + 1}</span></button>
+                            position: relative;
+                        ">
+                            <span style="color: #666; font-weight: bold; font-size: 14px; pointer-events: none;">${i + 1}</span>
+                            <div class="active-glow" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: ${genieColors[i]}; opacity: 0; transition: opacity 0.1s;"></div>
+                        </button>
                     `).join('')}
                 </div>
-                <button id="start-audio" style="margin-top: 40px; background: var(--m3-primary); border: none; padding: 16px 32px; color: black; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: 'Roboto Mono'; text-transform: uppercase;">Load Official Model</button>
-                <div style="margin-top: 30px; font-size: 10px; font-family: 'Roboto Mono'; color: #444; letter-spacing: 1px;">MAGENTA.JS | SGM_PLUS | EP-STP-166006</div>
+                
+                <button id="start-audio" style="z-index: 20; background: var(--m3-primary); border: none; padding: 16px 32px; color: black; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: 'Roboto Mono'; text-transform: uppercase;">Load Official Model</button>
             `;
             container.appendChild(div);
 
@@ -1773,12 +1775,17 @@
             const buttons = div.querySelectorAll('[data-id]');
             const btnGroup = div.querySelector('#genie-buttons');
             const btnStart = div.querySelector('#start-audio');
+            const canvas = div.querySelector('#waterfall-canvas');
+            const ctx = canvas.getContext('2d');
 
             let genie;
             let player;
             const heldNotes = new Map();
             const temperature = 0.25;
             const LOWEST_MIDI_NOTE = 21;
+            
+            // 🌊 Waterfall Physics State
+            const activeNotes = []; // { body, color, on }
 
             const init = async () => {
                 try {
@@ -1796,6 +1803,10 @@
                     btnStart.style.display = 'none';
                     btnGroup.style.opacity = '1';
                     btnGroup.style.pointerEvents = 'all';
+
+                    // Start visual loop
+                    resizeCanvas();
+                    requestAnimationFrame(drawLoop);
                 } catch (e) {
                     console.error("Piano Genie Load Failed:", e);
                     status.innerText = 'INITIALIZATION ERROR';
@@ -1805,6 +1816,13 @@
                 }
             };
 
+            const resizeCanvas = () => {
+                const rect = div.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height - 120;
+            };
+            window.addEventListener('resize', resizeCanvas);
+
             const buttonDown = async (buttonIndex) => {
                 if (!genie || !player) return;
 
@@ -1812,27 +1830,76 @@
                     await mm.Player.tone.context.resume();
                 }
 
-                const note = genie.next(buttonIndex, temperature);
-                const pitch = LOWEST_MIDI_NOTE + note;
+                const noteIdx = genie.next(buttonIndex, temperature);
+                const pitch = LOWEST_MIDI_NOTE + noteIdx;
 
                 player.playNoteDown({ pitch: pitch });
-                heldNotes.set(buttonIndex, pitch);
-
+                
+                // create visual body
                 const btn = div.querySelector(`[data-id="${buttonIndex}"]`);
-                btn.style.filter = 'brightness(1.3) saturate(1.2)';
-                btn.style.transform = 'scale(0.98)';
+                const rect = btn.getBoundingClientRect();
+                const divRect = div.getBoundingClientRect();
+                const x = rect.left - divRect.left;
+                const width = rect.width;
+
+                const noteBody = {
+                    x: x,
+                    y: canvas.height, // falling from bottom up? No, traditional is top down.
+                    // But buttons are at the bottom.
+                    width: width,
+                    height: 0,
+                    color: genieColors[buttonIndex],
+                    on: true
+                };
+
+                activeNotes.push(noteBody);
+                heldNotes.set(buttonIndex, { pitch, noteBody });
+
+                btn.querySelector('.active-glow').style.opacity = '0.4';
+                btn.style.background = '#333';
             };
 
             const buttonUp = (buttonIndex) => {
-                const pitch = heldNotes.get(buttonIndex);
-                if (pitch) {
-                    player.playNoteUp({ pitch: pitch });
+                const data = heldNotes.get(buttonIndex);
+                if (data) {
+                    player.playNoteUp({ pitch: data.pitch });
+                    data.noteBody.on = false;
                     heldNotes.delete(buttonIndex);
 
                     const btn = div.querySelector(`[data-id="${buttonIndex}"]`);
-                    btn.style.filter = 'none';
-                    btn.style.transform = 'scale(1.0)';
+                    btn.querySelector('.active-glow').style.opacity = '0';
+                    btn.style.background = '#222';
                 }
+            };
+
+            const drawLoop = () => {
+                if (!genie) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const dy = 4; // Waterfall speed
+                
+                for (let i = activeNotes.length - 1; i >= 0; i--) {
+                    const note = activeNotes[i];
+                    if (note.on) {
+                        note.height += dy;
+                        // Note Grows UPWARDS from the button
+                    } else {
+                        note.y -= dy;
+                        // Finished note floats UPWARDS
+                    }
+
+                    ctx.fillStyle = note.color;
+                    ctx.globalAlpha = 0.8;
+                    // Draw note (growing from bottom of canvas)
+                    ctx.fillRect(note.x, canvas.height - note.y - note.height, note.width, note.height);
+                    
+                    // Cleanup
+                    if (!note.on && (canvas.height - note.y - note.height) < -100) {
+                        activeNotes.splice(i, 1);
+                    }
+                }
+                
+                requestAnimationFrame(drawLoop);
             };
 
             buttons.forEach(btn => {

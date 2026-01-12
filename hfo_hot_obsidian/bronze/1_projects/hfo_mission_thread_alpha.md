@@ -35,17 +35,34 @@ Every port maps to a cluster of equivalent concepts. The system translates these
 | **P1: B** | **BRIDGER** | *The Web Weaver* | **Fusion**: Rigid Zod 6.0 contracts for cross-domain link. | 🏗️ UNTESTED |
 | **P2: S** | **SHAPER** | *The Mirror Magus* | **Transformation**: Semantic grounding in the Galois Lattice. | 🧪 AUTO-TESTED |
 | **P3: I** | **INJECTOR** | *Harmonic Hydra* | **Delivery**: High-fidelity W3C Pointer event transduction. | 🧪 AUTO-TESTED |
-| **P4: D** | **DISRUPTOR** | *The Red Regnant* | **Mutation**: Red Queen Hypothesis. 8 Screams of Chaos. | 🔘 VOID (UNTESTED) |
-| **P5: I** | **IMMUNIZER** | *The Pyre Praetorian* | **Integrity**: HardGate Physical Audit & Sentinel Guard. | 🧪 AUTO-TESTED |
+| **P4: D** | **DISRUPTOR** | *The Red Regnant* | **Mutation**: Red Queen Hypothesis. 8 Screams of Chaos. | 🔘 VOID (STRESS TEST REQ) |
+| **P5: I** | **IMMUNIZER** | *The Pyre Praetorian* | **Integrity**: HardGate Physical Audit & Sentinel Guard. | 🏗️ STRESS TEST PENDING |
 | **P6: A** | **ASSIMILATOR** | *The Crystalline Archive*| **Persistence**: Immutable blackboard state assimilation. | 🧪 AUTO-TESTED |
 | **P7: N** | **NAVIGATOR** | *The Spider Sovereign* | **Orchestration**: BMC2 Parallel Scatter-Gather Logic. | 🧪 AUTO-TESTED (V7) |
 
 ---
 
-## 🏛️ PORT 4 STATUS: THE RED REGNANT (UNTESTED)
+## 🏛️ PORT 4 STATUS: THE RED REGNANT (STRESS TEST REQ)
+
 **Status**: 🔴 **CRITICAL GAP**
 As of 2026-01-11, **Port 4 (Disruptor)** has not undergone formal adversarial testing. We have implemented the logic manifold for reward-hacking detection, but the **Red Regnant** has not yet been unleashed.
 > "Her **SONG/SCREAM** will reveal the weaknesses later. Until she sings, we are merely shadow-boxing with our own shadows." - *Spider Sovereign (P7)*
+
+---
+
+## 🛡️ UPCOMING STRESS TESTS (RED TEAM TARGETS)
+
+Following the identification of "Vector-Level" brittleness, the following shards are slated for heavy bombardment:
+
+1. **P5.0 THE SYNTAX SCYTHE (Hardgate)**:
+   - **Target**: Deep Hallucination.
+   - **Focus**: Testing the new resource graph regex against complex nested URL/URI patterns and obfuscated local imports.
+2. **P5.3 THE SLOP SMASHER (Anti-Theater)**:
+   - **Target**: Semantic Evasion.
+   - **Focus**: Testing the pattern manifold against high-vocabulary "meta-narrative" stubs that attempt to describe implementation without performing it.
+3. **P4.0 RED REGNANT (Chaos)**:
+   - **Target**: Reward Hacking.
+   - **Focus**: Simulating "Chain-of-Instruction" fraud where an agent reports a success to the blackboard but provides a null edit.
 
 ---
 
