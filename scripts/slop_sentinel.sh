@@ -13,7 +13,7 @@ if [ ! -z "$MARKERS" ]; then
 fi
 
 # 2. Block Empty Stubs in sensitive ports
-STUBS=$(git diff --cached --name-only | grep "ports/" | xargs -I {} grep -HE "pass$|return \{\}$" {} 2>/dev/null)
+STUBS=$(git diff --cached --name-only | grep "hfo_hot_obsidian/" | xargs -I {} grep -HE "pass$|return \{\}$" {} 2>/dev/null)
 if [ ! -z "$STUBS" ]; then
     echo "🚨 [THEATER-BLOCK]: Empty stub detected in Hub Ports!"
     echo "$STUBS"

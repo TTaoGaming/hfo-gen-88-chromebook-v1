@@ -55,10 +55,42 @@ def verify_provenance_integrity():
     
     return True
 
+def enforce_bronze_headers():
+    """
+    Ensure every source file in HOT_DIR has a Medallion provenance header.
+    """
+    print("🛡️ [P5-PURITY]: Enforcing Medallion Provenance Headers in HOT...")
+    missing_headers = []
+    
+    # We only check files that are staged for commit
+    try:
+        staged_files = subprocess.check_output(["git", "diff", "--cached", "--name-only"]).decode().splitlines()
+        for f in staged_files:
+            if f.startswith(HOT_DIR) and f.endswith(('.py', '.ts', '.html', '.yaml')):
+                # Check for "Medallion:" string in first 5 lines
+                abs_path = os.path.abspath(f)
+                if not os.path.exists(abs_path): continue
+                
+                with open(abs_path, 'r') as file_obj:
+                    lines = [file_obj.readline() for _ in range(5)]
+                    content = "".join(lines)
+                    if "Medallion:" not in content:
+                        missing_headers.append(f)
+    except Exception as e:
+        print(f"⚠️ [P5-PURITY]: Header check error: {e}")
+        
+    if missing_headers:
+        print(f"❌ [P5-FAIL]: {len(missing_headers)} files in HOT lack provenance headers!")
+        for m in missing_headers:
+            print(f"   -> MISSING HEADER: {m}")
+        return False
+    return True
+
 def main():
     checks = [
         check_raw_copy_bypass,
-        verify_provenance_integrity
+        verify_provenance_integrity,
+        enforce_bronze_headers
     ]
     
     failure = False
