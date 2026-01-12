@@ -73,7 +73,7 @@ def enforce_bronze_headers():
     # Full sweep of HOT_DIR
     for root, dirs, files in os.walk(HOT_DIR):
         for f in files:
-            if f.endswith(('.py', '.ts', '.html', '.yaml')):
+            if f.endswith(('.py', '.ts', '.html', '.yaml', '.md')):
                 abs_path = os.path.join(root, f)
                 rel_path = os.path.relpath(abs_path, os.getcwd())
                 
@@ -85,6 +85,15 @@ def enforce_bronze_headers():
                             missing_headers_staged.append(rel_path)
                         else:
                             missing_headers_legacy.append(rel_path)
+                    else:
+                        # NEW: Check for Layer Mismatch (Fraud)
+                        # If file is in /bronze/ it MUST be Medallion: Bronze
+                        if "/bronze/" in abs_path and "Medallion: Bronze" not in content:
+                            print(f"❌ [P5-FRAUD]: Layer Mismatch in {rel_path}. Directory is 'bronze' but header is not.")
+                            return False
+                        if "/silver/" in abs_path and "Medallion: Silver" not in content:
+                            print(f"❌ [P5-FRAUD]: Layer Mismatch in {rel_path}. Directory is 'silver' but header is not.")
+                            return False
     
     if missing_headers_legacy:
         print(f"⚠️ [P5-WARN]: {len(missing_headers_legacy)} legacy files lack headers.")
