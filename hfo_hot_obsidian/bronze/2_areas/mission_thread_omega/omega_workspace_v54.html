@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO SHARDS | OMEGA V56.0 | HOT BRONZE</title>
+    <title>HFO SHARDS | OMEGA V54.0 | HOT BRONZE</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono&display=swap"
         rel="stylesheet">
     <script src="./assets/piano_genie/magenta_music.js"></script>
@@ -89,21 +89,17 @@
         .video-feed {
             width: 100%;
             height: 100%;
-            object-fit: fill; /* V56: Parity Fix */
+            object-fit: contain;
             border-radius: 4px;
             background: #000;
             filter: grayscale(1) contrast(1.5) brightness(0.6);
-            opacity: 0.8; /* V56: Higher Opacity for Background */
+            opacity: 0.4;
             transition: all 0.3s cubic-bezier(0.1, 0.7, 0.1, 1);
             border: 1px solid var(--m3-outline);
-            position: absolute; /* V56: Layering */
-            top: 0;
-            left: 0;
-            z-index: 1;
         }
 
         .video-feed:hover {
-            opacity: 1.0;
+            opacity: 0.8;
             filter: grayscale(0.2) contrast(1.1) brightness(0.9);
         }
 
@@ -117,9 +113,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill; /* V56: Parity Fix */
+            object-fit: contain;
             pointer-events: none;
-            z-index: 2; /* V56: On top of video */
         }
 
         .overlay-canvas.mirrored {
@@ -314,11 +309,11 @@
     <script type="importmap">
     {
         "imports": {
-            "golden-layout": "./assets/vendor/golden-layout.js",
-            "lil-gui": "./assets/vendor/lil-gui.js",
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
             "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
-            "matter-js": "./assets/vendor/matter-js.js",
-            "zod": "./assets/vendor/zod.js",
+            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm",
             "@duckdb/duckdb-wasm": "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.28.0/+esm"
         }
     }
@@ -450,14 +445,6 @@
             };
         };
 
-        const getPalmHeuristics = (lm) => {
-            const dist = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2 + (p1.z - p2.z) ** 2);
-            const width = dist(lm[5], lm[17]); // MCP Index to MCP Pinky
-            // Z-Effective is an inverted width proxy (smaller width = farther away)
-            const zEffective = 1.0 / (width || 0.1);
-            return { width, zEffective };
-        };
-
         const getCurls = (lm) => ({
             index: calculateCurl(lm, [5, 6, 7, 8]),
             middle: calculateCurl(lm, [9, 10, 11, 12]),
@@ -496,8 +483,7 @@
             visuals: {
                 heroStrategy: 'HEX_SHARD',
                 supportStrategy: 'DOT',
-                showSkeleton: true,
-                excalidrawOpacity: 0.8 // V56: Tunable Hero Opacity
+                showSkeleton: true
             },
             goldenMaster: {
                 active: false,
@@ -516,7 +502,6 @@
                 p0Mirror: true,
                 showGlobalCursor: false,
                 remoteMode: true,
-                purePointerMode: false,
                 remoteTargetId: 'excalidraw-iframe', // Default, but can be dynamic
                 persistence: { snapDistance: 0.15, coastFrames: 60, repulsionDistance: 0.12, teleportLimit: 0.3 }
             },
@@ -787,8 +772,7 @@
                 const normal = { x: cross.x / mag, y: cross.y / mag, z: cross.z / mag };
 
                 const isFacing = Math.abs(normal.z) > 0.5;
-                const { width, zEffective } = getPalmHeuristics(lm);
-                hand.palm = { normal, facingCamera: isFacing, width, zEffective };
+                hand.palm = { normal, facingCamera: isFacing };
 
                 // 🧬 Internal Sharding: The Tree Starts Here
                 // Node 1: Raw
@@ -902,33 +886,12 @@
                 let normX = cursor.x;
                 if (hfoState.physics.p3Mirror) normX = 1 - normX;
 
-                let x, y;
-                let activeRemoteId = hfoState.physics.remoteTargetId;
-                
-                // 🎯 V56: Shared Substrate Calculation (1:1 Parity)
-                if (hfoState.physics.remoteMode && activeRemoteId) {
-                    const remoteEl = document.getElementById(activeRemoteId);
-                    if (remoteEl) {
-                        const rect = remoteEl.getBoundingClientRect();
-                        x = rect.left + normX * rect.width;
-                        y = rect.top + cursor.y * rect.height;
-                    } else {
-                        x = normX * window.innerWidth;
-                        y = cursor.y * window.innerHeight;
-                    }
-                } else {
-                    x = normX * window.innerWidth;
-                    y = cursor.y * window.innerHeight;
-                }
+                let x = normX * window.innerWidth;
+                let y = cursor.y * window.innerHeight;
 
+                // 🎯 V40 EXEMPLAR: Robust Target Capture
                 const pointerId = Number(hand.id) + 10;
                 let target;
-
-                // Check for UI overrides (Genie, etc)
-                const rawTarget = document.elementFromPoint(x, y);
-                if (rawTarget && (rawTarget.closest('.genie-btn') || rawTarget.id === 'start-audio')) {
-                    activeRemoteId = null;
-                }
 
                 if (hand.capturedTarget) {
                     target = hand.capturedTarget;
@@ -956,11 +919,20 @@
                 let finalX = x;
                 let finalY = y;
 
-                // 🎯 V56: Enhanced Coordinate Substrate Parity
+                // 🎯 V52.1: Semantic Context Switching
+                let activeRemoteId = hfoState.physics.remoteTargetId;
+                const rawTarget = document.elementFromPoint(x, y);
+                if (rawTarget && (rawTarget.closest('.genie-btn') || rawTarget.id === 'start-audio')) {
+                    activeRemoteId = null; // Direct interaction for Piano Genie
+                }
+
+                // 🎯 V44.1: Robust Coordinate Parity & Drill
                 if (hfoState.physics.remoteMode && activeRemoteId) {
                     const remoteEl = document.getElementById(activeRemoteId);
                     if (remoteEl) {
                         const rect = remoteEl.getBoundingClientRect();
+
+                        // Calculate local coordinates relative to the remote container
                         const localX = x - rect.left;
                         const localY = y - rect.top;
 
@@ -975,8 +947,9 @@
                                     finalY = localY;
                                 }
                             } catch (e) {
-                                finalX = localX;
-                                finalY = localY;
+                                // Fallback to absolute if iframe is cross-origin or blocked
+                                finalX = x;
+                                finalY = y;
                             }
                         } else {
                             finalX = localX;
@@ -1968,31 +1941,17 @@
             wrapper.style.width = '100%';
             wrapper.style.height = '100%';
             wrapper.style.position = 'relative';
+            wrapper.style.background = '#000';
 
             const iframe = document.createElement('iframe');
             iframe.src = './excalidraw_v31_wrapper.html';
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
-            iframe.style.position = 'absolute';
-            iframe.style.top = '0';
-            iframe.style.left = '0';
-            iframe.style.zIndex = '10'; // Above video and canvas
-            iframe.style.backgroundColor = 'transparent';
-            iframe.style.opacity = hfoState.visuals.excalidrawOpacity; // V56: Apply initial opacity
             iframe.id = 'excalidraw-iframe';
-            iframe.allowTransparency = "true";
             wrapper.appendChild(iframe);
 
             container.appendChild(wrapper);
-
-            // 🎯 V56: Integrate MediaPipe as Background
-            if (window.hfoSystem) {
-                initMediaPipe(wrapper);
-            }
-            
-            // 🎯 V56: Reference for real-time tuning
-            hfoSystem.excalidrawIframe = iframe;
         };
 
         const initGuide = (container) => {
@@ -2047,15 +2006,6 @@
             mp.add(hfoState.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Sense Sensitivity');
             mp.add(hfoState.mpOptions, 'minTrackingConfidence', 0, 1).name('Neural Lock Strength');
             mp.add(hfoState, 'debug').name('Overlay Synapses');
-            
-            const v56 = gui.addFolder('V56: Hero Optic');
-            v56.add(hfoState.visuals, 'excalidrawOpacity', 0, 1).name('Excalidraw Opacity').onChange(val => {
-                if (hfoSystem.excalidrawIframe) {
-                    hfoSystem.excalidrawIframe.style.opacity = val;
-                }
-            });
-            v56.open();
-            
             mp.open();
 
             container.appendChild(gui.domElement);
@@ -2096,6 +2046,12 @@
                                     { type: 'component', componentType: 'Guide', title: 'P7: GUIDE' },
                                     { type: 'component', componentType: 'Interaction', title: 'P3: TEST' }
                                 ]
+                            },
+                            {
+                                type: 'component',
+                                componentType: 'MediaPipe',
+                                title: 'P0: OBSERVE (SENSE)',
+                                height: 50
                             }
                         ]
                     }
@@ -2105,6 +2061,7 @@
         const layout = new GoldenLayout(document.getElementById('layout-container'));
         layout.registerComponentFactoryFunction('Transparency', c => initTransparencyPanel(c.element));
         layout.registerComponentFactoryFunction('PianoGenie', c => initPianoGenie(c.element));
+        layout.registerComponentFactoryFunction('MediaPipe', c => initMediaPipe(c.element));
         layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
         layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
         layout.registerComponentFactoryFunction('PalmCone', c => initPalmConePanel(c.element));

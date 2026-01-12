@@ -2,8 +2,8 @@
 id: P9
 name: Mission Thread Omega: Total Tool Virtualization
 mission_thread: Omega
-status: "active (Resonance Suppression: 2026-01-11T18:10:00Z)"
-version: "V47.0"
+status: "active (4-State FSM Formalization: 2026-01-12T08:23:00Z)"
+version: "V55.0"
 tasks:
   - id: P9.1
     title: Tool Onboarding: MediaPipe
@@ -60,4 +60,8 @@ tasks:
   - id: P9.16
     title: "V48.0: Piano Genie Offline Integration"
     description: "Phase 1: Download Magenta.js and model weights. Phase 2: Create window module for Omega Workspace. Phase 3: Dual-hand W3C Pointer support (P7 Committed Gesture)."
+    status: completed
+  - id: P9.17
+    title: "V55.0: 4-State FSM Formalization"
+    description: Transitioning to 4-state user FSM (PORT_0_IDLE, PORT_1_POINTER_READY, PORT_7_POINTER_COMMIT, PORT_5_POINTER_RELEASE) to align with JADC2 Mosaic port mapping.
     status: active

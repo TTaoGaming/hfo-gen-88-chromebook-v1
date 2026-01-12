@@ -30,6 +30,7 @@ Every port maps to a cluster of equivalent concepts. The system translates these
 | **P7** | **Navigator / Navigate** | **NAVIGATE** | **BMC2** | *Spider Sovereign* |
 
 ---
+
 ## 🌀 THE STRANGE LOOP DATABASES (P4-P5 Synchronization)
 
 In the Bronze Medallion layer, we utilize `.jsonl` blackboards to track the feedback loops between **Disruption** and **Immunity**. These are "Strange Loop" databases that intervene and affect each other deeply, forming the foundation for future Hot Gold SOTA databases.
@@ -42,6 +43,7 @@ In the Bronze Medallion layer, we utilize `.jsonl` blackboards to track the feed
 > *Intervention Logic*: A "Grudge" entry in P4 triggers a "Death" event in P5, followed by a "Rebirth" (Hardening) cycle. Conversely, a successful "Rebirth" reduces the drift coefficient monitored by the Red Regnant.
 
 ---
+
 ## 🐝 THE OBSIDIAN SHARD HIVE (Port Synergies)
 
 | Port | Shard Name | Commander | Logic / Synergy | Status |
@@ -52,8 +54,8 @@ In the Bronze Medallion layer, we utilize `.jsonl` blackboards to track the feed
 | **P3: I** | **INJECTOR** | *Harmonic Hydra* | **Delivery**: High-fidelity W3C Pointer event transduction. | 🧪 AUTO-TESTED |
 | **P4: D** | **DISRUPTOR** | *The Red Regnant* | **Mutation**: Red Queen Hypothesis. 8 Screams of Chaos. | 🔘 VOID (STRESS TEST REQ) |
 | **P5: I** | **IMMUNIZER** | *The Pyre Praetorian* | **Integrity**: HardGate Physical Audit & Sentinel Guard. | 🏗️ STRESS TEST PENDING |
-| **P6: A** | **ASSIMILATOR** | *The Crystalline Archive*| **Persistence**: Immutable blackboard state assimilation. | 🧪 AUTO-TESTED |
-| **P7: N** | **NAVIGATOR** | *The Spider Sovereign* | **Orchestration**: BMC2 Parallel Scatter-Gather Logic. | 🧪 AUTO-TESTED (V7) |
+| **P6: A** | **ASSIMILATOR** | *The Crystalline Archive*| **Persistence**: Discovery of Data-Driven Leverage Points. | 🏗️ PHASING IN |
+| **P7: N** | **NAVIGATOR** | *The Spider Sovereign* | **Orchestration**: Cynefin (5C) BMC2 Mapping. | 🏗️ PHASING IN |
 
 ---
 
@@ -97,6 +99,10 @@ Following the identification of "Vector-Level" brittleness, the following shards
   - 🧪 O5: Blackboard (Signal/Persistence Intel)
   - 🧪 O6: Wikipedia (Offline Persistence)
   - 🧪 O7: Agents/Notes (Orchestration Logic)
+- [ ] **Assimilator (P6) Configuration**: (Phasing In)
+  - 🏗️ A6: Leverage Points (Donella Meadows). Mission-specific data-driven discovery. FIND high-leverage intervention points wherever they exist. Exemplars are one subset of leverage points.
+- [ ] **Navigator (P7) Configuration**: (Phasing In)
+  - 🏗️ N7: Sinafin (Cynefin 5C). Categorize problem domains (Clear, Complicated, Complex, Chaotic, Confused). Inform orchestration strategy.
 - [x] **OpenRouter Linkage**: `google/gemma-3-27b-it` (Orchestration Wing) online. (Auto-tested)
 - [x] **Transparency Credit**: Utility score bonus (120/100) awarded for honest state reporting.
 - [ ] **Mosaic Verification**: **UNTESTED**. Run a full 8-Port "Kill-Web" sweep with valid tool receipts.

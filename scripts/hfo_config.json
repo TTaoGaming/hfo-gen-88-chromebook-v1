@@ -1,5 +1,5 @@
 {
-    "activeVersion": "56.0",
+    "activeVersion": "55",
     "hubVersion": "7",
     "baseUrl": "http://localhost:8889/omega_workspace_v",
     "suffix": ".html"

@@ -19,7 +19,7 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background: #0d0d0d;
+            background: transparent !important;
         }
     </style>
 </head>
@@ -36,6 +36,7 @@
             const App = () => {
                 return React.createElement(lib.Excalidraw, {
                     theme: "dark",
+                    viewBackgroundColor: "transparent",
                     UIOptions: { canvasActions: { loadScene: false } },
                     excalidrawAPI: (api) => {
                         window.excalidrawAPI = api;

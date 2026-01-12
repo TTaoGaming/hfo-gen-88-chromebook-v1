@@ -1,11 +1,11 @@
-<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO SHARDS | OMEGA V56.0 | HOT BRONZE</title>
+    <title>HFO SHARDS | OMEGA V55.0 | HOT BRONZE</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono&display=swap"
         rel="stylesheet">
     <script src="./assets/piano_genie/magenta_music.js"></script>
@@ -89,25 +89,23 @@
         .video-feed {
             width: 100%;
             height: 100%;
-            object-fit: fill; /* V56: Parity Fix */
+            object-fit: fill;
+            /* 🛠️ V55.1: Critical for 1:1 Landmark-to-Canvas parity */
             border-radius: 4px;
             background: #000;
             filter: grayscale(1) contrast(1.5) brightness(0.6);
-            opacity: 0.8; /* V56: Higher Opacity for Background */
+            opacity: 0.4;
             transition: all 0.3s cubic-bezier(0.1, 0.7, 0.1, 1);
             border: 1px solid var(--m3-outline);
-            position: absolute; /* V56: Layering */
-            top: 0;
-            left: 0;
-            z-index: 1;
         }
 
         .video-feed:hover {
-            opacity: 1.0;
+            opacity: 0.8;
             filter: grayscale(0.2) contrast(1.1) brightness(0.9);
         }
 
-        .video-feed.mirrored {
+        .video-feed.mirrored,
+        .overlay-canvas.mirrored {
             transform: scaleX(-1);
         }
 
@@ -117,13 +115,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill; /* V56: Parity Fix */
+            object-fit: fill;
+            /* 🛠️ V55.1 Match video stretch */
             pointer-events: none;
-            z-index: 2; /* V56: On top of video */
-        }
-
-        .overlay-canvas.mirrored {
-            transform: scaleX(-1);
         }
 
         /* M3 Elevated Card with HFO Shard Claw */
@@ -171,36 +165,51 @@
             letter-spacing: 0.05em;
         }
 
-        .tag-idle {
+        .tag-port_0_idle {
             background: #1c1b1f;
             color: #938f99;
             border: 1px solid #49454f;
         }
 
-        .tag-arming {
-            background: #310001;
-            color: #ffb4ab;
-            border: 1px solid #690005;
-        }
-
-        .tag-armed {
+        .tag-port_1_pointer_ready {
             background: #690005;
             color: #ffffff;
             box-shadow: 0 0 15px rgba(105, 0, 5, 0.5);
         }
 
-        .tag-committing {
-            background: var(--m3-primary);
-            color: #fff;
+        .tag-port_7_pointer_commit {
+            background: #b3261e;
+            color: #ffffff;
+            animation: pulse-red 2s infinite;
         }
 
-        .tag-committed {
+        .tag-port_5_pointer_release {
+            background: #ff8800;
+            color: #ffffff;
+            opacity: 0.8;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0px rgba(179, 38, 30, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(179, 38, 30, 0.8);
+            }
+
+            100% {
+                box-shadow: 0 0 0px rgba(179, 38, 30, 0.4);
+            }
+        }
+
+        .tag-port_7_pointer_commit {
             background: var(--m3-primary);
             color: #fff;
             box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
         }
 
-        .tag-releasing {
+        .tag-port_5_pointer_release {
             background: #ff8800;
             color: #000;
             border: 1px solid #ffaa00;
@@ -350,78 +359,73 @@
             specversion: z.literal("1.0"), type: z.string(), source: z.string(), id: z.string(), time: z.string(), data: z.record(Port1HandBridgeSchema)
         });
 
-        // 🤖 V42: Hierarchical Anti-Midas FSM (Dwell + Palm Cone + Gesture)
+        // 🤖 V55: Formalized 4-State Mosaic FSM with Leaky Bucket
         class GestureFSM {
             constructor() {
-                this.state = 'IDLE';
+                this.state = 'PORT_0_IDLE';
                 this.pointerEvent = 'none';
-                this.dwellMs = 500;
-                this.dwellAccumulator = 0;
+                this.bucketFill = 0;
                 this.lastTimestamp = 0;
+                this.dwellRatio = 0;
             }
 
-            process(gesture, timestamp, score = 1.0, isPalmFacing = false, currentCurls = null) {
+            process(gesture, timestamp, score = 1.0, isPalmConeFacing = false, currentCurls = null) {
                 const currentGesture = gesture.toUpperCase().replace(/[\s_]/g, '_');
                 const dt = this.lastTimestamp ? (timestamp - this.lastTimestamp) : 0;
                 this.lastTimestamp = timestamp;
                 this.pointerEvent = 'none';
                 const isConfident = score > 0.6;
+                const config = hfoState.leakyBucket;
 
-                if (isPalmFacing) {
-                    this.dwellAccumulator = Math.min(this.dwellAccumulator + dt, 1000);
+                // 💧 Leaky Bucket Accumulator (H-Phase Shard)
+                if (isPalmConeFacing) {
+                    this.bucketFill = Math.min(this.bucketFill + dt * config.fillRate, config.threshold);
                 } else {
-                    this.dwellAccumulator = Math.max(this.dwellAccumulator - dt * (this.state === 'PORT_7_POINTER_COMMITTED' ? 1 : 3), 0);
+                    this.bucketFill = Math.max(this.bucketFill - dt * config.drainRate, 0);
                 }
 
+                this.dwellRatio = this.bucketFill / config.threshold;
+
                 switch (this.state) {
-                    case 'IDLE':
-                        if (isPalmFacing && this.dwellAccumulator > 0) this.state = 'PORT_0_READY_DWELL';
+                    case 'PORT_0_IDLE':
+                        if (this.bucketFill >= config.threshold) {
+                            this.state = 'PORT_1_POINTER_READY';
+                        }
                         break;
-                    case 'PORT_0_READY_DWELL':
-                        if (this.dwellAccumulator >= this.dwellMs) this.state = 'PORT_0_POINTER_READY';
-                        else if (this.dwellAccumulator <= 0) this.state = 'IDLE';
-                        break;
-                    case 'PORT_0_POINTER_READY':
+                    case 'PORT_1_POINTER_READY':
                         this.pointerEvent = 'pointermove';
-                        if (this.dwellAccumulator <= 0) this.state = 'IDLE';
-                        else if (currentGesture === 'NONE' || !isConfident) this.state = 'PORT_7_COMMIT_PENDING';
-                        else if (currentGesture === 'POINTING_UP' && isConfident) {
-                            this.state = 'PORT_7_POINTER_COMMITTED';
+                        if (this.bucketFill <= 0) {
+                            this.state = 'PORT_0_IDLE';
+                        } else if (currentGesture === 'POINTING_UP' && isConfident) {
+                            this.state = 'PORT_7_POINTER_COMMIT';
                             this.pointerEvent = 'pointerdown';
                         }
                         break;
-                    case 'PORT_7_COMMIT_PENDING':
-                        this.pointerEvent = 'pointermove';
-                        if (currentGesture === 'POINTING_UP' && isConfident) {
-                            this.state = 'PORT_7_POINTER_COMMITTED';
-                            this.pointerEvent = 'pointerdown';
-                        } else if (this.dwellAccumulator <= 0 || (currentGesture !== 'NONE' && currentGesture !== 'POINTING_UP' && isConfident)) {
-                            this.state = isPalmFacing ? 'PORT_0_POINTER_READY' : 'IDLE';
-                        }
-                        break;
-                    case 'PORT_7_POINTER_COMMITTED':
+                    case 'PORT_7_POINTER_COMMIT':
                         this.pointerEvent = 'pointermove';
                         const isNoneOrLost = (currentGesture === 'NONE' || currentGesture === 'LOST' || !isConfident);
-                        if (isNoneOrLost) this.state = 'PORT_7_RELEASE_PENDING';
-                        else if (currentGesture !== 'POINTING_UP' && isConfident) {
-                            this.state = isPalmFacing ? 'PORT_0_POINTER_READY' : 'IDLE';
+                        if (isNoneOrLost) {
+                            this.state = 'PORT_5_POINTER_RELEASE';
+                        } else if (currentGesture !== 'POINTING_UP' && isConfident) {
+                            this.state = 'PORT_5_POINTER_RELEASE';
                             this.pointerEvent = 'pointerup';
                         }
-                        if (this.dwellAccumulator <= 0) {
-                            this.state = 'IDLE';
+                        if (this.bucketFill <= 0) {
+                            this.state = 'PORT_0_IDLE';
                             this.pointerEvent = 'pointercancel';
                         }
                         break;
-                    case 'PORT_7_RELEASE_PENDING':
+                    case 'PORT_5_POINTER_RELEASE':
                         this.pointerEvent = 'pointermove';
-                        if (currentGesture === 'POINTING_UP' && isConfident) this.state = 'PORT_7_POINTER_COMMITTED';
-                        else if (currentGesture === 'VICTORY' || currentGesture === 'OPEN_PALM' || (this.dwellAccumulator <= 0)) {
-                            this.state = (this.dwellAccumulator > 0) ? 'PORT_0_POINTER_READY' : 'IDLE';
+                        if (currentGesture === 'POINTING_UP' && isConfident) {
+                            this.state = 'PORT_7_POINTER_COMMIT';
+                        } else if (currentGesture === 'VICTORY' || currentGesture === 'OPEN_PALM' || (this.bucketFill <= 0)) {
+                            this.state = (this.bucketFill > 0) ? 'PORT_1_POINTER_READY' : 'PORT_0_IDLE';
                             this.pointerEvent = 'pointerup';
                         }
                         break;
                 }
-                return { state: this.state, pointerEvent: this.pointerEvent };
+                return { state: this.state, pointerEvent: this.pointerEvent, dwellRatio: this.dwellRatio };
             }
         }
 
@@ -492,12 +496,17 @@
         const hfoState = window.hfoState = {
             active: true, debug: true,
             transparency: 1.0, // 🕵️ REAL-TIME SENSING QUALITY (0.0 - 1.0)
-            mpOptions: { numHands: 2, minHandDetectionConfidence: 0.6, minHandPresenceConfidence: 0.6, minTrackingConfidence: 0.6, dwellMs: 1000 },
+            mpOptions: { numHands: 2, minHandDetectionConfidence: 0.6, minHandPresenceConfidence: 0.6, minTrackingConfidence: 0.6 },
+            leakyBucket: {
+                fillRate: 2.5,  // Accumulator units per ms (Multiplier for isPalmFacing)
+                drainRate: 1.0, // Drain units per ms
+                threshold: 1000 // Units required for PORT_1_POINTER_READY
+            },
             visuals: {
-                heroStrategy: 'HEX_SHARD',
+                heroStrategy: 'ELEMENTAL_JUICE',
                 supportStrategy: 'DOT',
                 showSkeleton: true,
-                excalidrawOpacity: 0.8 // V56: Tunable Hero Opacity
+                excalidrawOpacity: 0.8
             },
             goldenMaster: {
                 active: false,
@@ -530,6 +539,7 @@
             video: null,
             canvas: null,
             ctx: null,
+            overlays: [], // 🛰️ Multi-screen contexts
             recognizer: null,
             stream: null,
             loopActive: false,
@@ -698,15 +708,34 @@
          * 🎨 PORT 2: VISUAL STRATEGIES
          * Essence: Aesthetic Form & Strategy Pattern
          */
+        const hfoFillText = (ctx, text, x, y) => {
+            if (ctx.canvas.classList.contains('mirrored')) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.scale(-1, 1);
+                ctx.fillText(text, 0, 0);
+                ctx.restore();
+            } else {
+                ctx.fillText(text, x, y);
+            }
+        };
+
         const VisualStrategies = {
-            HEX_SHARD: (ctx, cursor, size, state, dwellRatio, color) => {
-                const canvas = hfoSystem.canvas;
+            HEX_SHARD: (ctx, hand, size, state, dwellRatio, color) => {
+                const canvas = ctx.canvas;
+                const lm = hand.landmarks;
+                const cursor = hand.cursors[hfoState.physics.p3Source] || hand.cursors.predictive;
+
+                // Use raw landmark 0 (wrist) as center in IDLE to avoid smoothing delay
+                const targetX = (state === 'PORT_0_IDLE' && lm) ? lm[0].x * canvas.width : (cursor.x * canvas.width);
+                const targetY = (state === 'PORT_0_IDLE' && lm) ? lm[0].y * canvas.height : (cursor.y * canvas.height);
+
                 ctx.beginPath();
-                const shardSize = size * (state === 'PORT_7_POINTER_COMMITTED' ? 1.5 : (state === 'PORT_0_POINTER_READY' ? 1.2 : 1.0));
+                const shardSize = size * (state === 'PORT_7_POINTER_COMMIT' ? 1.5 : (state === 'PORT_1_POINTER_READY' ? 1.2 : 1.0));
                 for (let i = 0; i < 6; i++) {
-                    const angle = (i * Math.PI) / 3 + (state === 'PORT_7_POINTER_COMMITTED' ? (Date.now() / 500) : 0);
-                    const hx = cursor.x * canvas.width + shardSize * Math.cos(angle);
-                    const hy = cursor.y * canvas.height + shardSize * Math.sin(angle);
+                    const angle = (i * Math.PI) / 3 + (state === 'PORT_7_POINTER_COMMIT' ? (Date.now() / 500) : 0);
+                    const hx = targetX + shardSize * Math.cos(angle);
+                    const hy = targetY + shardSize * Math.sin(angle);
                     if (i === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
                 }
                 ctx.closePath();
@@ -716,22 +745,23 @@
                 let shadowColor = 'transparent';
                 let lineWidth = 2;
 
-                if (state === 'PORT_0_READY_DWELL') {
-                    strokeColor = `rgba(255, 0, 0, ${dwellRatio})`;
-                    lineWidth = 1 + dwellRatio * 2;
-                } else if (state === 'PORT_0_POINTER_READY') {
+                if (state === 'PORT_0_IDLE') {
+                    // 🛡️ V55: Raw Wireframe look for Idle
+                    if (lm) {
+                        const dw = new DrawingUtils(ctx);
+                        dw.drawConnectors(lm, HandLandmarker.HAND_CONNECTIONS, { color: `rgba(255, 255, 255, ${0.1 + dwellRatio * 0.4})`, lineWidth: 1 });
+                    }
+                    strokeColor = `rgba(255, 255, 255, ${0.1 + dwellRatio * 0.4})`;
+                    lineWidth = 1;
+                } else if (state === 'PORT_1_POINTER_READY') {
                     strokeColor = '#690005';
                     lineWidth = 3;
-                } else if (state === 'PORT_7_COMMIT_PENDING') {
-                    strokeColor = '#ff0000';
-                    lineWidth = 4;
-                    ctx.setLineDash([2, 5]);
-                } else if (state === 'PORT_7_POINTER_COMMITTED') {
+                } else if (state === 'PORT_7_POINTER_COMMIT') {
                     strokeColor = '#ff3333';
                     lineWidth = 4;
                     shadowBlur = 25;
                     shadowColor = '#ff0000';
-                } else if (state === 'PORT_7_RELEASE_PENDING') {
+                } else if (state === 'PORT_5_POINTER_RELEASE') {
                     strokeColor = '#ff8800';
                     lineWidth = 2;
                     ctx.setLineDash([5, 5]);
@@ -742,6 +772,16 @@
                 ctx.shadowBlur = shadowBlur;
                 ctx.shadowColor = shadowColor;
                 ctx.stroke();
+
+                // 🎯 V55.2: Leaky Bucket Dwell Progress Ring
+                if (state === 'PORT_0_IDLE' && dwellRatio > 0.05) {
+                    ctx.beginPath();
+                    ctx.arc(targetX, targetY, shardSize + 5, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * dwellRatio));
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 + dwellRatio * 0.6})`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+
                 ctx.setLineDash([]);
                 ctx.shadowBlur = 0;
 
@@ -749,13 +789,97 @@
                 ctx.globalAlpha = 1.0;
                 ctx.fill();
             },
-            DOT: (ctx, cursor, size, state, dwellRatio, color) => {
-                const canvas = hfoSystem.canvas;
+            DOT: (ctx, hand, size, state, dwellRatio, color) => {
+                const canvas = ctx.canvas;
+                const cursor = hand.cursors[hfoState.physics.p3Source] || hand.cursors.predictive;
                 ctx.beginPath();
                 ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, size, 0, 2 * Math.PI);
                 ctx.fillStyle = color;
                 ctx.globalAlpha = 0.2;
                 ctx.fill();
+            },
+            ELEMENTAL_JUICE: (ctx, hand, size, state, dwellRatio, color) => {
+                const canvas = ctx.canvas;
+                const lm = hand.landmarks;
+                if (!lm) return;
+
+                const cursor = hand.cursors[hfoState.physics.p3Source] || hand.cursors.predictive;
+                const cx = cursor.x * canvas.width;
+                const cy = cursor.y * canvas.height;
+
+                // 🎯 1. Kinetic Compression
+                const dist3D = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2 + (p1.z - p2.z) ** 2);
+                const compression = dist3D(lm[4], lm[12]);
+                const chargeRatio = Math.max(0, Math.min(1, (0.35 - compression) / 0.3));
+
+                // 🎯 1.5. Pyre Resonance
+                const pyreIntensity = (state === 'PORT_0_IDLE') ? (dwellRatio * 0.5) : (0.5 + dwellRatio * 0.5);
+
+                // 🛡️ V55: Idle should show raw wireframes (no smoothing)
+                if (state === 'PORT_0_IDLE') {
+                    const dw = new DrawingUtils(ctx);
+                    dw.drawConnectors(lm, HandLandmarker.HAND_CONNECTIONS, { color: `rgba(255, 255, 255, ${0.1 + dwellRatio * 0.4})`, lineWidth: 1 });
+                    if (dwellRatio < 0.2) return; // Only show fire after some charge
+                }
+
+                const fireRadius = size * (1.0 + pyreIntensity * 6.0 + chargeRatio * 4.0);
+
+                // Use raw landmark 9 (middle finger mcp) for center in IDLE to avoid cursor smoothing delay
+                const targetX = (state === 'PORT_0_IDLE') ? lm[9].x * canvas.width : cx;
+                const targetY = (state === 'PORT_0_IDLE') ? lm[9].y * canvas.height : cy;
+
+                // 🎯 2. Elemental Flow: Wrist-to-Tip spread
+                const wrist = lm[0];
+                const wristX = wrist.x * canvas.width;
+                const wristY = wrist.y * canvas.height;
+
+                const tips = [4, 8, 12, 16, 20];
+                ctx.save();
+                tips.forEach((tIdx, i) => {
+                    const tip = lm[tIdx];
+                    const tx = tip.x * canvas.width;
+                    const ty = tip.y * canvas.height;
+
+                    const grad = ctx.createLinearGradient(wristX, wristY, tx, ty);
+                    const alpha = Math.max(0, (pyreIntensity - (i * 0.1)));
+                    grad.addColorStop(0, `rgba(255, 60, 0, ${alpha * 0.2})`);
+                    grad.addColorStop(0.5, `rgba(255, 100, 0, ${alpha * chargeRatio})`);
+                    grad.addColorStop(1, `rgba(255, 235, 59, ${alpha})`);
+
+                    ctx.beginPath();
+                    ctx.moveTo(wristX, wristY);
+                    ctx.quadraticCurveTo(
+                        (wristX + tx) / 2 + (Math.sin(Date.now() / 100 + i) * 15 * pyreIntensity),
+                        (wristY + ty) / 2 + (Math.cos(Date.now() / 100 + i) * 15 * pyreIntensity),
+                        tx, ty
+                    );
+                    ctx.strokeStyle = grad;
+                    ctx.lineWidth = 1 + (pyreIntensity * 3) + (chargeRatio * 5);
+                    ctx.stroke();
+                });
+                ctx.restore();
+
+                // 🎯 3. Central Plasma Orb
+                if (pyreIntensity > 0.05) {
+                    const fireGrad = ctx.createRadialGradient(targetX, targetY, 0, targetX, targetY, fireRadius);
+                    fireGrad.addColorStop(0, '#fff');
+                    fireGrad.addColorStop(0.2, '#ffeb3b');
+                    fireGrad.addColorStop(0.4, `rgba(255, 152, 0, ${0.5 + pyreIntensity * 0.5})`);
+                    fireGrad.addColorStop(1, 'rgba(255, 87, 34, 0)');
+
+                    ctx.beginPath();
+                    ctx.arc(targetX, targetY, fireRadius, 0, Math.PI * 2);
+                    ctx.fillStyle = fireGrad;
+                    ctx.fill();
+                }
+
+                if (state === 'PORT_7_POINTER_COMMIT') {
+                    ctx.shadowBlur = 20 + chargeRatio * 30;
+                    ctx.shadowColor = '#ff5722';
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1 + chargeRatio * 2;
+                    ctx.stroke();
+                }
             },
             SKELETON: (ctx, landmarks, dw) => {
                 dw.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, { color: "#cc0000", lineWidth: 5 });
@@ -790,25 +914,35 @@
                 const { width, zEffective } = getPalmHeuristics(lm);
                 hand.palm = { normal, facingCamera: isFacing, width, zEffective };
 
+                // 🎯 Landmark Smoothing Lifecycle (V55.2 Stickiness)
+                if (hand.fsm.state !== 'PORT_0_IDLE') {
+                    // Armed/Sticky: All 21 landmarks are 1Euro filtered
+                    hand.landmarks = lm.map((pt, i) => ({
+                        x: hand.filters.landmarks[i].x.call(pt.x, now),
+                        y: hand.filters.landmarks[i].y.call(pt.y, now),
+                        z: pt.z
+                    }));
+                } else {
+                    // Idle/Dwell: Use raw landmarks for snappier detection but raw wireframe
+                    hand.landmarks = lm;
+                }
+
                 // 🧬 Internal Sharding: The Tree Starts Here
                 // Node 1: Raw
                 hand.cursors.raw.x = lm[8].x; hand.cursors.raw.y = lm[8].y;
                 hand.lastSeen = now; hand.coastCount = 0; hand.active = true;
 
-                // Node 2 & 3: Filtered Children of Raw
+                // Node 2 & 3: Filtered Children of Raw (Always based on raw landmark for snappiness)
                 hand.cursors.smooth.x = hand.filters.sx.call(hand.cursors.raw.x, now);
                 hand.cursors.smooth.y = hand.filters.sy.call(hand.cursors.raw.y, now);
                 hand.cursors.snappy.x = hand.filters.nx.call(hand.cursors.raw.x, now);
                 hand.cursors.snappy.y = hand.filters.ny.call(hand.cursors.raw.y, now);
-
-                // Store landmarks for skeleton strategy
-                hand.landmarks = lm;
             }
 
             // 🚀 Physics Digital Twin (Syncing Anchor)
             if (engine && hand.active && hfoSystem.canvas) {
                 const canvas = hfoSystem.canvas;
-                const isEngaged = hand.fsm.state === 'PORT_0_POINTER_READY' || hand.fsm.state === 'PORT_7_POINTER_COMMITTED';
+                const isEngaged = hand.fsm.state === 'PORT_1_POINTER_READY' || hand.fsm.state === 'PORT_7_POINTER_COMMIT';
                 hand.cursors.spring.constraint.stiffness = isEngaged ? hfoState.physics.stiffnessArmed : hfoState.physics.stiffness;
 
                 // Node 4: Spring is driven by Snappy (Node 3)
@@ -890,7 +1024,7 @@
 
                 const types = { 'pointerdown': 'pointerdown', 'pointermove': 'pointermove', 'pointerup': 'pointerup', 'pointercancel': 'pointercancel' };
                 const type = types[hand.fsm.pointerEvent];
-                const activeType = type || (hand.fsm.state !== 'IDLE' ? 'pointermove' : null);
+                const activeType = type || (hand.fsm.state !== 'PORT_0_IDLE' ? 'pointermove' : null);
 
                 if (!activeType || !hand.active) {
                     hand.ghost.classList.remove('active');
@@ -903,19 +1037,16 @@
                 if (hfoState.physics.p3Mirror) normX = 1 - normX;
 
                 let x, y;
+
+                // Dynamic Coordinate Mapping
                 let activeRemoteId = hfoState.physics.remoteTargetId;
-                
-                // 🎯 V56: Shared Substrate Calculation (1:1 Parity)
-                if (hfoState.physics.remoteMode && activeRemoteId) {
-                    const remoteEl = document.getElementById(activeRemoteId);
-                    if (remoteEl) {
-                        const rect = remoteEl.getBoundingClientRect();
-                        x = rect.left + normX * rect.width;
-                        y = rect.top + cursor.y * rect.height;
-                    } else {
-                        x = normX * window.innerWidth;
-                        y = cursor.y * window.innerHeight;
-                    }
+                const remoteEl = activeRemoteId ? document.getElementById(activeRemoteId) : null;
+
+                if (hfoState.physics.remoteMode && remoteEl) {
+                    const rect = remoteEl.getBoundingClientRect();
+                    // 🛠️ V55.2: 1:1 Parity for 'object-fit: fill'. No letterbox offsets needed.
+                    x = rect.left + (normX * rect.width);
+                    y = rect.top + (cursor.y * rect.height);
                 } else {
                     x = normX * window.innerWidth;
                     y = cursor.y * window.innerHeight;
@@ -923,69 +1054,29 @@
 
                 const pointerId = Number(hand.id) + 10;
                 let target;
-
-                // Check for UI overrides (Genie, etc)
-                const rawTarget = document.elementFromPoint(x, y);
-                if (rawTarget && (rawTarget.closest('.genie-btn') || rawTarget.id === 'start-audio')) {
-                    activeRemoteId = null;
-                }
-
-                if (hand.capturedTarget) {
-                    target = hand.capturedTarget;
-                } else {
-                    target = document.elementFromPoint(x, y) || document.body;
-                }
-
-                // ⚡ Hardened Click Logic: If we are on a DOWN transition, ensure we trigger a real click
-                if (activeType === 'pointerdown' && target && !hand.capturedTarget) {
-                    // Inject hovering/focusing sequence for sensitive UIs (Excalidraw)
-                    const overEvent = new PointerEvent('pointerover', { bubbles: true, cancelable: true, pointerId, x, y, clientX: x, clientY: y });
-                    const enterEvent = new PointerEvent('pointerenter', { bubbles: true, cancelable: true, pointerId, x, y, clientX: x, clientY: y });
-                    target.dispatchEvent(overEvent);
-                    target.dispatchEvent(enterEvent);
-
-                    // Specific fix for Excalidraw buttons: If button is detected, call .click() directly on next tick
-                    if (target.tagName === 'BUTTON' || target.closest('button')) {
-                        const btn = target.tagName === 'BUTTON' ? target : target.closest('button');
-                        requestAnimationFrame(() => {
-                            if (btn) btn.click();
-                        });
-                    }
-                }
+                if (hand.capturedTarget) target = hand.capturedTarget;
+                else target = document.elementFromPoint(x, y) || document.body;
 
                 let finalX = x;
                 let finalY = y;
 
-                // 🎯 V56: Enhanced Coordinate Substrate Parity
-                if (hfoState.physics.remoteMode && activeRemoteId) {
-                    const remoteEl = document.getElementById(activeRemoteId);
-                    if (remoteEl) {
-                        const rect = remoteEl.getBoundingClientRect();
-                        const localX = x - rect.left;
-                        const localY = y - rect.top;
-
-                        if (!hand.capturedTarget) target = remoteEl;
-
-                        if (remoteEl.tagName === 'IFRAME') {
-                            try {
-                                const innerTarget = remoteEl.contentDocument.elementFromPoint(localX, localY);
-                                if (innerTarget && !hand.capturedTarget) {
-                                    target = innerTarget;
-                                    finalX = localX;
-                                    finalY = localY;
-                                }
-                            } catch (e) {
+                if (hfoState.physics.remoteMode && activeRemoteId && remoteEl) {
+                    const rect = remoteEl.getBoundingClientRect();
+                    const localX = x - rect.left;
+                    const localY = y - rect.top;
+                    if (!hand.capturedTarget) target = remoteEl;
+                    if (remoteEl.tagName === 'IFRAME') {
+                        try {
+                            const innerTarget = remoteEl.contentDocument.elementFromPoint(localX, localY);
+                            if (innerTarget && !hand.capturedTarget) {
+                                target = innerTarget;
                                 finalX = localX;
                                 finalY = localY;
                             }
-                        } else {
-                            finalX = localX;
-                            finalY = localY;
-                        }
-                    }
+                        } catch (e) { finalX = localX; finalY = localY; }
+                    } else { finalX = localX; finalY = localY; }
                 }
 
-                // 🎯 V44.1: Local Cursor Management (Shared Substrate Visualization)
                 if (hfoState.physics.remoteMode && hfoState.physics.remoteTargetId) {
                     const remoteEl = document.getElementById(hfoState.physics.remoteTargetId);
                     if (remoteEl) {
@@ -1000,87 +1091,61 @@
                         hand.localCursor.style.top = `${rect.top + finalY - 5}px`;
                         hand.localCursor.className = `local-cursor ${hand.fsm.state.toLowerCase().replace(/_/g, '-')}`;
                     }
-                } else {
-                    if (hand.localCursor) hand.localCursor.style.display = 'none';
-                }
+                } else if (hand.localCursor) hand.localCursor.style.display = 'none';
 
                 if (hfoState.physics.showGlobalCursor) {
-                    hand.ghost.classList.add('active');
                     hand.ghost.style.left = `${x - 10}px`;
                     hand.ghost.style.top = `${y - 10}px`;
+                    hand.ghost.classList.add('active');
+                    const colors = {
+                        'PORT_0_IDLE': '#938f99',
+                        'PORT_1_POINTER_READY': '#ff5252',
+                        'PORT_7_POINTER_COMMIT': '#ff0000',
+                        'PORT_5_POINTER_RELEASE': '#ff8800'
+                    };
+                    hand.ghost.style.background = colors[hand.fsm.state] || '#ff0000';
                     hand.ghost.className = `ghost-cursor active ${hand.fsm.state.toLowerCase().replace(/_/g, '-')}`;
+                    if (hand.fsm.state === 'PORT_7_POINTER_COMMIT') hand.ghost.classList.add('committed');
+                    else hand.ghost.classList.remove('committed');
                 } else hand.ghost.classList.remove('active');
 
-                // 🧬 BRIDGE INTERCEPTION: Sequence Hardening
                 if (activeType === 'pointerdown') {
                     hand.lastTargetOnDown = target;
-                    // Hover sequence
                     target.dispatchEvent(new PointerEvent('pointerover', { bubbles: true, pointerId, clientX: finalX, clientY: finalY }));
                     target.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, clientX: finalX, clientY: finalY }));
-
-                    if (hfoState.physics.remoteTargetId === 'excalidraw-iframe') {
-                        const btn = target.closest('button, .ToolIcon, label[title]');
-                        if (btn) {
-                            const label = (btn.getAttribute('aria-label') || btn.title || "").toLowerCase();
-                            const tools = ['selection', 'rectangle', 'diamond', 'ellipse', 'arrow', 'line', 'freedraw', 'text', 'eraser'];
-                            const match = tools.find(t => label.includes(t));
-                            if (match) document.getElementById('excalidraw-iframe').contentWindow.postMessage({ type: 'SET_TOOL', data: { tool: match } }, '*');
-                        }
-                    }
                 }
 
-                // 🎯 CAPTURE LOGIC
                 if (activeType === 'pointerdown' && target.setPointerCapture) {
-                    try {
-                        target.setPointerCapture(pointerId);
-                        hand.capturedTarget = target;
-                    } catch (e) { console.warn("Pointer capture failed", e); }
+                    try { target.setPointerCapture(pointerId); hand.capturedTarget = target; } catch (e) { }
                 }
 
                 if (hand.lastTarget && hand.lastTarget !== target && !hand.capturedTarget) {
-                    hand.lastTarget.dispatchEvent(new PointerEvent('pointerout', { bubbles: true, pointerId: pointerId, clientX: x, clientY: y }));
-                    hand.lastTarget.dispatchEvent(new PointerEvent('pointerleave', { bubbles: false, pointerId: pointerId, clientX: x, clientY: y }));
-                    target.dispatchEvent(new PointerEvent('pointerover', { bubbles: true, pointerId: pointerId, clientX: x, clientY: y }));
-                    target.dispatchEvent(new PointerEvent('pointerenter', { bubbles: false, pointerId: pointerId, clientX: x, clientY: y }));
+                    hand.lastTarget.dispatchEvent(new PointerEvent('pointerout', { bubbles: true, pointerId, clientX: x, clientY: y }));
+                    target.dispatchEvent(new PointerEvent('pointerover', { bubbles: true, pointerId, clientX: x, clientY: y }));
                 }
 
                 const movementX = hand.lastX !== undefined ? x - hand.lastX : 0;
                 const movementY = hand.lastY !== undefined ? y - hand.lastY : 0;
                 hand.lastX = x; hand.lastY = y; hand.lastTarget = target;
 
-                const isDown = (hand.fsm.state === 'PORT_7_POINTER_COMMITTED');
-
-                // 🧬 V44: Intent-Based Primacy (Hot Hand Handoff)
-                // Logic: Priority goes to Committed hands, then Ready hands, filtered by activity.
+                const isDown = (hand.fsm.state === 'PORT_7_POINTER_COMMIT');
                 const handList = Object.values(hfoState.hands).filter(h => h.active);
-                const committedHands = handList.filter(h => h.fsm.state === 'PORT_7_POINTER_COMMITTED').sort((a, b) => a.id - b.id);
-                const readyHands = handList.filter(h => h.fsm.state === 'PORT_0_POINTER_READY').sort((a, b) => a.id - b.id);
+                const committedHands = handList.filter(h => h.fsm.state === 'PORT_7_POINTER_COMMIT').sort((a, b) => a.id - b.id);
+                const readyHands = handList.filter(h => h.fsm.state === 'PORT_1_POINTER_READY').sort((a, b) => a.id - b.id);
 
                 let isPrimary = false;
-                if (committedHands.length > 0) {
-                    isPrimary = (Number(hand.id) === Number(committedHands[0].id));
-                } else if (readyHands.length > 0) {
-                    isPrimary = (Number(hand.id) === Number(readyHands[0].id));
-                }
+                if (committedHands.length > 0) isPrimary = (Number(hand.id) === Number(committedHands[0].id));
+                else if (readyHands.length > 0) isPrimary = (Number(hand.id) === Number(readyHands[0].id));
 
                 const ev = new PointerEvent(activeType, {
-                    bubbles: true, cancelable: true,
-                    pointerType: 'touch', // 💠 Set to touch for better gesture/multi-point harmony
+                    bubbles: true, cancelable: true, pointerType: 'touch',
                     view: (target.ownerDocument ? target.ownerDocument.defaultView : window),
-                    pointerId: pointerId, clientX: finalX, clientY: finalY,
-                    movementX: movementX, movementY: movementY,
-                    width: 20, height: 20, // Simulate finger contact patch
-                    pressure: isDown ? 0.9 : 0.0,
-                    buttons: isDown ? 1 : 0,
-                    button: (activeType === 'pointerdown' || activeType === 'pointerup') ? 0 : -1,
-                    isPrimary: isPrimary
+                    pointerId, clientX: finalX, clientY: finalY, movementX, movementY,
+                    width: 20, height: 20, pressure: isDown ? 0.9 : 0.0, buttons: isDown ? 1 : 0,
+                    button: (activeType === 'pointerdown' || activeType === 'pointerup') ? 0 : -1, isPrimary
                 });
                 target.dispatchEvent(ev);
 
-                // �️ Legacy Polyfill (Option C Standard): 
-                // Only dispatch MouseEvents for Hand 0 (Primary) to maintain compatibility with 
-                // legacy UI frameworks (Excalidraw buttons, etc.) without polluting 2-hand concurrency.
-                // 🛡️ V43 Hardening: Manual click dispatch
                 if (!hfoState.physics.purePointerMode && isPrimary && (activeType === 'pointerdown' || activeType === 'pointerup')) {
                     const mouseType = activeType === 'pointerdown' ? 'mousedown' : 'mouseup';
                     target.dispatchEvent(new MouseEvent(mouseType, { bubbles: true, clientX: finalX, clientY: finalY, button: 0, buttons: isDown ? 1 : 0 }));
@@ -1091,15 +1156,12 @@
                     }
                 }
 
-                // �🎯 RELEASE LOGIC
                 if ((activeType === 'pointerup' || activeType === 'pointercancel') && hand.capturedTarget) {
                     try { hand.capturedTarget.releasePointerCapture(pointerId); } catch (e) { }
                     hand.capturedTarget = null;
                 }
 
-            } catch (err) {
-                if (hfoState.debug) console.error("W3C Injection Error:", err);
-            }
+            } catch (err) { if (hfoState.debug) console.error("W3C Injection Error:", err); }
         };
 
         /**
@@ -1125,12 +1187,10 @@
             }
 
             const validTransitions = {
-                'IDLE': ['IDLE', 'PORT_0_READY_DWELL'],
-                'PORT_0_READY_DWELL': ['IDLE', 'PORT_0_READY_DWELL', 'PORT_0_POINTER_READY'],
-                'PORT_0_POINTER_READY': ['IDLE', 'PORT_0_POINTER_READY', 'PORT_7_COMMIT_PENDING', 'PORT_7_POINTER_COMMITTED'],
-                'PORT_7_COMMIT_PENDING': ['IDLE', 'PORT_0_POINTER_READY', 'PORT_7_COMMIT_PENDING', 'PORT_7_POINTER_COMMITTED'],
-                'PORT_7_POINTER_COMMITTED': ['IDLE', 'PORT_7_POINTER_COMMITTED', 'PORT_7_RELEASE_PENDING', 'PORT_0_POINTER_READY'],
-                'PORT_7_RELEASE_PENDING': ['IDLE', 'PORT_0_POINTER_READY', 'PORT_7_RELEASE_PENDING', 'PORT_7_POINTER_COMMITTED']
+                'PORT_0_IDLE': ['PORT_0_IDLE', 'PORT_1_POINTER_READY'],
+                'PORT_1_POINTER_READY': ['PORT_0_IDLE', 'PORT_1_POINTER_READY', 'PORT_7_POINTER_COMMIT'],
+                'PORT_7_POINTER_COMMIT': ['PORT_0_IDLE', 'PORT_7_POINTER_COMMIT', 'PORT_5_POINTER_RELEASE'],
+                'PORT_5_POINTER_RELEASE': ['PORT_0_IDLE', 'PORT_1_POINTER_READY', 'PORT_5_POINTER_RELEASE', 'PORT_7_POINTER_COMMIT']
             };
 
             const allowed = validTransitions[prevState]?.includes(nextState) || false;
@@ -1145,9 +1205,9 @@
          * Essence: State Persistence & Assimilation
          * Role: [A]ssimilating gesture telemetry into the FSM store.
          */
-        const port6Assimilate = (hand, gestureName, score, now, isFacing, confidence = 1.0) => {
+        const port6Assimilate = (hand, gestureName, score, now, isPalmConeFacing, confidence = 1.0) => {
             // P5 HardGate Validation with Coasting Support
-            const fsmRes = hand.fsm.process(gestureName, now, score, isFacing);
+            const fsmRes = hand.fsm.process(gestureName, now, score, isPalmConeFacing);
             const auditResult = port5Immunize(hand, fsmRes.state, confidence);
 
             if (auditResult === 'ALLOW') {
@@ -1155,10 +1215,10 @@
             } else if (auditResult === 'COAST') {
                 hand.fsm.lastTimestamp = now;
                 hand.isCoasting = true;
-                return { state: hand.fsm.state, pointerEvent: 'none' };
+                return { state: hand.fsm.state, pointerEvent: 'none', dwellRatio: hand.fsm.dwellRatio };
             } else {
                 hand.fsm.lastTimestamp = now;
-                return { state: hand.fsm.state, pointerEvent: 'none' };
+                return { state: hand.fsm.state, pointerEvent: 'none', dwellRatio: hand.fsm.dwellRatio };
             }
         };
 
@@ -1181,7 +1241,11 @@
                 filters: {
                     sx: new OneEuroFilter(30, 0.5, 0.001), sy: new OneEuroFilter(30, 0.5, 0.001),
                     nx: new OneEuroFilter(30, 1.0, 0.01), ny: new OneEuroFilter(30, 1.0, 0.01),
-                    vx: new OneEuroFilter(30, 0.5, 0.01), vy: new OneEuroFilter(30, 0.5, 0.01) // Velocity Filters for Pred
+                    vx: new OneEuroFilter(30, 0.5, 0.01), vy: new OneEuroFilter(30, 0.5, 0.01), // Velocity Filters for Pred
+                    landmarks: Array(21).fill(0).map(() => ({
+                        x: new OneEuroFilter(30, 1.0, 0.01),
+                        y: new OneEuroFilter(30, 1.0, 0.01)
+                    }))
                 },
                 gestures: { active: 'None', score: 0, isDown: false, pointerEvent: 'none' },
                 lastTarget: null,
@@ -1232,42 +1296,14 @@
                 btnFlip.className = 'camera-btn flip';
                 btnFlip.innerText = 'Flip';
 
-                const btnGolden = document.createElement('button');
-                btnGolden.className = 'camera-btn golden';
-                btnGolden.innerText = 'Golden Master: OFF';
-
                 controls.appendChild(btnStart);
                 controls.appendChild(btnStop);
                 controls.appendChild(btnFlip);
-                controls.appendChild(btnGolden);
                 container.appendChild(controls);
 
                 const updateButtons = (active) => {
                     btnStart.style.display = active ? 'none' : 'block';
                     btnStop.style.display = active ? 'block' : 'none';
-                };
-
-                btnGolden.onclick = () => {
-                    const modes = ['STRAIGHT', 'LOW_NOISE', 'HIGH_NOISE'];
-                    const currentIdx = modes.indexOf(hfoState.goldenMaster.mode);
-
-                    if (!hfoState.goldenMaster.active) {
-                        hfoState.goldenMaster.active = true;
-                    } else if (currentIdx === modes.length - 1) {
-                        hfoState.goldenMaster.active = false;
-                        hfoState.goldenMaster.mode = modes[0];
-                    } else {
-                        hfoState.goldenMaster.mode = modes[currentIdx + 1];
-                    }
-
-                    hfoState.goldenMaster.dropProbability = hfoState.goldenMaster.mode === 'HIGH_NOISE' ? 0.3 : 0;
-                    btnGolden.innerText = hfoState.goldenMaster.active ? `Golden: ${hfoState.goldenMaster.mode}` : 'Golden: OFF';
-                    btnGolden.classList.toggle('active', hfoState.goldenMaster.active);
-
-                    if (hfoState.goldenMaster.active) {
-                        hfoSystem.loopActive = true;
-                        if (!hfoSystem.initialized) initPhysics();
-                    }
                 };
 
                 btnStart.onclick = async () => {
@@ -1305,13 +1341,15 @@
                     hfoState.physics.p0Mirror = !hfoState.physics.p0Mirror;
                     hfoState.physics.p3Mirror = hfoState.physics.p0Mirror; // 🛡️ SYNC: Ensure pointer logic follows visual flip
 
-                    if (hfoState.physics.p0Mirror) {
-                        hfoSystem.video.classList.add('mirrored');
-                        hfoSystem.canvas.classList.add('mirrored');
-                    } else {
-                        hfoSystem.video.classList.remove('mirrored');
-                        hfoSystem.canvas.classList.remove('mirrored');
+                    const isMirrored = hfoState.physics.p0Mirror;
+                    if (hfoSystem.video) {
+                        if (isMirrored) hfoSystem.video.classList.add('mirrored');
+                        else hfoSystem.video.classList.remove('mirrored');
                     }
+                    hfoSystem.overlays.forEach(target => {
+                        if (isMirrored) target.canvas.classList.add('mirrored');
+                        else target.canvas.classList.remove('mirrored');
+                    });
                 };
             }
 
@@ -1327,12 +1365,13 @@
                     hfoSystem.video = document.createElement('video');
                     hfoSystem.video.autoplay = true;
                     hfoSystem.video.playsinline = true;
-                    hfoSystem.video.className = 'video-feed mirrored';
+                    hfoSystem.video.className = `video-feed ${hfoState.physics.p0Mirror ? 'mirrored' : ''}`;
                 }
                 if (!hfoSystem.canvas) {
                     hfoSystem.canvas = document.createElement('canvas');
                     hfoSystem.ctx = hfoSystem.canvas.getContext('2d');
-                    hfoSystem.canvas.className = 'overlay-canvas mirrored';
+                    hfoSystem.canvas.className = `overlay-canvas ${hfoState.physics.p0Mirror ? 'mirrored' : ''}`;
+                    hfoSystem.overlays.push({ canvas: hfoSystem.canvas, ctx: hfoSystem.ctx, mode: 'MAIN' });
                 }
 
                 // Force mount to current container (singleton moves)
@@ -1379,12 +1418,27 @@
                                 hfoState.transparency = Math.max(0, Math.min(1.0, rawQuality - fpsPenalty));
 
                                 if (res) {
-                                    const ctx = hfoSystem.ctx;
-                                    const canvas = hfoSystem.canvas;
-                                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                                    const dw = new DrawingUtils(ctx);
+                                    // 🖌️ CLEAR & PREP ALL OVERLAYS
+                                    hfoSystem.overlays.forEach(target => {
+                                        target.ctx.clearRect(0, 0, target.canvas.width, target.canvas.height);
+                                    });
+
+                                    const drawAll = (drawFn) => {
+                                        hfoSystem.overlays.forEach(target => {
+                                            const dw = new DrawingUtils(target.ctx);
+                                            drawFn(target.ctx, dw);
+                                        });
+                                    };
 
                                     const landmarks = res.landmarks || [];
+
+                                    // ⚡ G88 PASS: RAW BACKGROUND SKELETON
+                                    drawAll((ctx, dw) => {
+                                        landmarks.forEach(lm => {
+                                            dw.drawConnectors(lm, HandLandmarker.HAND_CONNECTIONS, { color: "rgba(255, 255, 255, 0.15)", lineWidth: 2 });
+                                        });
+                                    });
+
                                     const landmarkCurls = landmarks.map(lm => getCurls(lm));
                                     const landmarkRatios = landmarks.map(lm => getBoneRatios(lm));
 
@@ -1426,10 +1480,11 @@
                                             const lm = landmarks[lIdx];
                                             h.curls = landmarkCurls[lIdx];
                                             h.ratios = landmarkRatios[lIdx];
-                                            h.isFacing = port2ShapeSync(h, now, lm);
+                                            h.isPalmConeFacing = port2ShapeSync(h, now, lm);
                                             h.isCoasting = false;
                                         } else {
                                             h.palm = { normal: { x: 0, y: 0, z: 0 }, facingCamera: false };
+                                            h.isPalmConeFacing = false;
                                             h.coastCount++;
                                             if (h.coastCount > hfoState.physics.persistence.coastFrames) h.active = false;
                                             port2ShapeSync(h, now, null);
@@ -1448,97 +1503,104 @@
 
                                             if (res.gestures?.[lIdx]) {
                                                 const g = res.gestures[lIdx][0];
-                                                const fsmRes = port6Assimilate(h, g.categoryName, g.score, now, h.isFacing, g.score);
-                                                h.gestures = { active: g.categoryName, score: g.score, isDown: (h.fsm.state === 'PORT_7_POINTER_COMMITTED'), pointerEvent: fsmRes.pointerEvent };
+                                                const fsmRes = port6Assimilate(h, g.categoryName, g.score, now, h.isPalmConeFacing, g.score);
+                                                h.gestures = { active: g.categoryName, score: g.score, isDown: (h.fsm.state === 'PORT_7_POINTER_COMMIT'), pointerEvent: fsmRes.pointerEvent };
                                             }
                                         } else {
                                             const fsmRes = port6Assimilate(h, 'LOST', 0, now, false, 0);
-                                            h.gestures.isDown = (h.fsm.state === 'PORT_7_POINTER_COMMITTED');
+                                            h.gestures.isDown = (h.fsm.state === 'PORT_7_POINTER_COMMIT');
                                             h.gestures.pointerEvent = fsmRes.pointerEvent;
                                             port2ShapePredict(h, now);
                                         }
 
                                         if (h.active) {
-                                            if (h.visuals.showSkeleton && h.landmarks) {
-                                                VisualStrategies.SKELETON(ctx, h.landmarks, dw);
-                                            }
+                                            hfoSystem.overlays.forEach(target => {
+                                                const ctx = target.ctx;
+                                                const canvas = target.canvas;
+                                                const dw = new DrawingUtils(ctx);
 
-                                            [h.cursors.raw, h.cursors.smooth, h.cursors.snappy, h.cursors.spring, h.cursors.predictive].forEach(c => {
-                                                const isHero = c.label.includes('Pred');
-                                                if (!hfoState.debug && !isHero) return;
-
-                                                const state = h.fsm.state;
-                                                const dwellRatio = h.fsm.dwellAccumulator / h.fsm.dwellMs;
-                                                const strategy = isHero ? h.visuals.hero : h.visuals.support;
-                                                const size = isHero ? 14 : 3;
-
-                                                if (VisualStrategies[strategy]) {
-                                                    VisualStrategies[strategy](ctx, c, size, state, dwellRatio, c.color);
+                                                if (h.visuals.showSkeleton && h.landmarks) {
+                                                    VisualStrategies.SKELETON(ctx, h.landmarks, dw);
                                                 }
 
-                                                if (hfoState.debug) {
-                                                    ctx.globalAlpha = 1.0;
-                                                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; ctx.font = '10px Roboto';
-                                                    ctx.fillText(c.label.split(' ')[1], c.x * canvas.width + size + 8, c.y * canvas.height + 3);
-                                                }
-                                            });
+                                                [h.cursors.raw, h.cursors.smooth, h.cursors.snappy, h.cursors.spring, h.cursors.predictive].forEach(c => {
+                                                    const isHero = c.label.includes('Pred');
+                                                    if (!hfoState.debug && !isHero) return;
 
-                                            // 📊 PORT 4: ANALYSIS (Golden Master Results)
-                                            if (hfoState.goldenMaster.active && hfoState.debug) {
-                                                const tx = 50, ty = 100;
-                                                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                                                ctx.fillRect(tx - 10, ty - 20, 250, 150);
-                                                ctx.strokeStyle = '#ff0000';
-                                                ctx.strokeRect(tx - 10, ty - 20, 250, 150);
+                                                    const state = h.fsm.state;
+                                                    const dwellRatio = h.fsm.bucketFill / hfoState.leakyBucket.threshold;
+                                                    const strategy = isHero ? h.visuals.hero : h.visuals.support;
+                                                    const size = isHero ? 14 : 3;
 
-                                                ctx.fillStyle = '#fff';
-                                                ctx.font = 'bold 12px Roboto';
-                                                ctx.fillText('PORT 4: GOLDEN MASTER ANALYSIS', tx, ty);
+                                                    if (VisualStrategies[strategy]) {
+                                                        VisualStrategies[strategy](ctx, h, size, state, dwellRatio, c.color);
+                                                    }
 
-                                                const metrics = [
-                                                    { l: 'MODE', v: hfoState.goldenMaster.mode },
-                                                    { l: 'DB_RMSE', v: hfoSystem.tuningMirror.metrics.rmse.toFixed(5) },
-                                                    { l: 'DB_JITTER', v: hfoSystem.tuningMirror.metrics.jitter.toFixed(5) },
-                                                    { l: '1EURO_SMOOTH_V', v: (h.cursors.smooth.x - h.cursors.raw.x).toFixed(5) },
-                                                    { l: 'STIFFNESS_ERROR', v: (h.cursors.spring.body.position.x - h.cursors.spring.anchor.position.x).toFixed(5) },
-                                                    { l: 'PRED_BIAS', v: (h.cursors.predictive.x - h.cursors.spring.x).toFixed(5) },
-                                                    { l: 'SENSE_QUALITY', v: hfoState.transparency.toFixed(2) }
-                                                ];
+                                                    if (hfoState.debug) {
+                                                        ctx.globalAlpha = 1.0;
+                                                        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; ctx.font = '10px Roboto';
+                                                        hfoFillText(ctx, c.label.split(' ')[1], c.x * canvas.width + size + 8, c.y * canvas.height + 3);
+                                                    }
+                                                });
 
-                                                if (hfoState.goldenMaster.frameCounter % 60 === 0 && hfoSystem.tuningMirror.active) {
-                                                    hfoSystem.tuningMirror.conn.query(`
-                                                        SELECT 
-                                                            sqrt(avg(pow(raw_x - pred_x, 2) + pow(raw_y - pred_y, 2))) as rmse,
-                                                            avg(abs(pred_x - lag(pred_x) over (order by ts))) as jitter
-                                                        FROM telemetry 
-                                                        WHERE ts > ${now - 2000}
-                                                    `).then(res => {
-                                                        const row = res.toArray()[0];
-                                                        if (row) {
-                                                            hfoSystem.tuningMirror.metrics.rmse = row.rmse || 0;
-                                                            hfoSystem.tuningMirror.metrics.jitter = row.jitter || 0;
-                                                        }
+                                                // 📊 PORT 4: ANALYSIS (Golden Master Results)
+                                                if (hfoState.goldenMaster.active && hfoState.debug && target.mode === 'MAIN') {
+                                                    const tx = 50, ty = 100;
+                                                    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                                                    ctx.fillRect(tx - 10, ty - 20, 250, 150);
+                                                    ctx.strokeStyle = '#ff0000';
+                                                    ctx.strokeRect(tx - 10, ty - 20, 250, 150);
+
+                                                    ctx.fillStyle = '#fff';
+                                                    ctx.font = 'bold 12px Roboto';
+                                                    hfoFillText(ctx, 'PORT 4: GOLDEN MASTER ANALYSIS', tx, ty);
+
+                                                    const metrics = [
+                                                        { l: 'MODE', v: hfoState.goldenMaster.mode },
+                                                        { l: 'DB_RMSE', v: hfoSystem.tuningMirror.metrics.rmse.toFixed(5) },
+                                                        { l: 'DB_JITTER', v: hfoSystem.tuningMirror.metrics.jitter.toFixed(5) },
+                                                        { l: '1EURO_SMOOTH_V', v: (h.cursors.smooth.x - h.cursors.raw.x).toFixed(5) },
+                                                        { l: 'STIFFNESS_ERROR', v: (h.cursors.spring.body.position.x - h.cursors.spring.anchor.position.x).toFixed(5) },
+                                                        { l: 'PRED_BIAS', v: (h.cursors.predictive.x - h.cursors.spring.x).toFixed(5) },
+                                                        { l: 'SENSE_QUALITY', v: hfoState.transparency.toFixed(2) }
+                                                    ];
+
+                                                    if (hfoState.goldenMaster.frameCounter % 60 === 0 && hfoSystem.tuningMirror.active) {
+                                                        hfoSystem.tuningMirror.conn.query(`
+                                                            SELECT 
+                                                                sqrt(avg(pow(raw_x - pred_x, 2) + pow(raw_y - pred_y, 2))) as rmse,
+                                                                avg(abs(pred_x - lag(pred_x) over (order by ts))) as jitter
+                                                            FROM telemetry 
+                                                            WHERE ts > ${now - 2000}
+                                                        `).then(res => {
+                                                            const row = res.toArray()[0];
+                                                            if (row) {
+                                                                hfoSystem.tuningMirror.metrics.rmse = row.rmse || 0;
+                                                                hfoSystem.tuningMirror.metrics.jitter = row.jitter || 0;
+                                                            }
+                                                        });
+                                                    }
+
+                                                    metrics.forEach((m, i) => {
+                                                        ctx.fillStyle = '#ff5252';
+                                                        hfoFillText(ctx, m.l + ':', tx, ty + 25 + i * 20);
+                                                        ctx.fillStyle = '#fff';
+                                                        hfoFillText(ctx, m.v, tx + 100, ty + 25 + i * 20);
                                                     });
                                                 }
 
-                                                metrics.forEach((m, i) => {
-                                                    ctx.fillStyle = '#ff5252';
-                                                    ctx.fillText(m.l + ':', tx, ty + 25 + i * 20);
-                                                    ctx.fillStyle = '#fff';
-                                                    ctx.fillText(m.v, tx + 100, ty + 25 + i * 20);
-                                                });
-                                            }
+                                                // 🧬 Node Telemetry
+                                                if (hfoState.debug && target.mode === 'MAIN') {
+                                                    const tx = h.cursors.raw.x * canvas.width + 15;
+                                                    const ty = h.cursors.raw.y * canvas.height + 25;
+                                                    ctx.fillStyle = '#ff0000';
+                                                    ctx.font = '11px Roboto Mono';
+                                                    const curlStr = `N1-Index: ${h.curls.index.toFixed(2)}`;
+                                                    hfoFillText(ctx, curlStr, tx, ty);
+                                                    hfoFillText(ctx, `COLLECTIVE_ID: ${h.id}`, tx, ty + 14);
+                                                }
+                                            });
 
-                                            // 🧬 Node Telemetry
-                                            if (hfoState.debug) {
-                                                const tx = h.cursors.raw.x * canvas.width + 15;
-                                                const ty = h.cursors.raw.y * canvas.height + 25;
-                                                ctx.fillStyle = '#ff0000';
-                                                ctx.font = '11px Roboto Mono';
-                                                const curlStr = `N1-Index: ${h.curls.index.toFixed(2)}`;
-                                                ctx.fillText(curlStr, tx, ty);
-                                                ctx.fillText(`COLLECTIVE_ID: ${h.id}`, tx, ty + 14);
-                                            }
                                             port3Inject(h);
 
                                             // 📥 Log to Tuning Mirror
@@ -1657,7 +1719,7 @@
                             s.innerHTML = `<div class="data-card" style="border-left-color: #cc00ff; padding: 10px; margin-bottom:10px;">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
                                     <h3 style="margin:0; font-size:12px;">HAND ${id}</h3>
-                                    <span class="val-tag state-tag tag-idle">IDLE</span>
+                                    <span class="val-tag state-tag tag-port_0_idle">PORT_0_IDLE</span>
                                 </div>
                                 <h1 class="val-gesture" style="font-size: 24px; margin: 10px 0;">NONE</h1>
                                 <div style="display:flex; gap: 5px; align-items:center;">
@@ -1673,7 +1735,7 @@
                         if (s) {
                             const tag = s.querySelector('.val-tag');
                             tag.innerText = h.fsm;
-                            tag.className = `val-tag state-tag tag-${h.fsm.toLowerCase().split('_')[0]}`;
+                            tag.className = `val-tag state-tag tag-${h.fsm.toLowerCase()}`;
                             s.querySelector('.val-gesture').innerText = h.gestures.active;
                             s.querySelector('.val-event').innerText = h.gestures.pointerEvent;
                             s.querySelector('.val-score').innerText = `Conf: ${(h.gestures.score * 100).toFixed(1)}%`;
@@ -1760,7 +1822,7 @@
             });
             btn.addEventListener('click', () => {
                 status.innerText = 'Hive Status: INTENT_COMMITTED 🚀';
-                setTimeout(() => { if (status.innerText.includes('PORT_7_POINTER_COMMITTED')) status.innerText = 'Hive Status: Idle'; }, 2000);
+                setTimeout(() => { if (status.innerText.includes('PORT_7_POINTER_COMMIT')) status.innerText = 'Hive Status: Idle'; }, 2000);
             });
         };
 
@@ -1968,31 +2030,81 @@
             wrapper.style.width = '100%';
             wrapper.style.height = '100%';
             wrapper.style.position = 'relative';
+            wrapper.style.background = '#000';
 
+            // 🎥 Background Camera Layer
+            const bgVideo = document.createElement('video');
+            bgVideo.autoplay = true;
+            bgVideo.playsinline = true;
+            bgVideo.muted = true;
+            bgVideo.style.position = 'absolute';
+            bgVideo.style.top = '0';
+            bgVideo.style.left = '0';
+            bgVideo.style.width = '100%';
+            bgVideo.style.height = '100%';
+            bgVideo.style.objectFit = 'fill'; // 🛠️ V55.1: Match CSS fill for parity
+            bgVideo.style.zIndex = '0';
+            bgVideo.className = 'video-feed mirrored';
+            wrapper.appendChild(bgVideo);
+
+            // 🖍️ Excalidraw Iframe Layer (The actual tool)
             const iframe = document.createElement('iframe');
-            iframe.src = './excalidraw_v31_wrapper.html';
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
+            iframe.id = 'excalidraw-iframe';
+            // 🛠️ V55.2: Force dark theme and remove mirroring to keep UI readable
+            iframe.src = 'https://excalidraw.com?embed=1&theme=dark';
             iframe.style.position = 'absolute';
             iframe.style.top = '0';
             iframe.style.left = '0';
-            iframe.style.zIndex = '10'; // Above video and canvas
-            iframe.style.backgroundColor = 'transparent';
-            iframe.style.opacity = hfoState.visuals.excalidrawOpacity; // V56: Apply initial opacity
-            iframe.id = 'excalidraw-iframe';
-            iframe.allowTransparency = "true";
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.zIndex = '1';
+            // Start with base opacity
+            iframe.style.opacity = hfoState.visuals.excalidrawOpacity || 0.8;
             wrapper.appendChild(iframe);
+            hfoSystem.excalidrawIframe = iframe;
+
+            // 🖍️ Overlay Canvas (Hero Visuals for Excalidraw)
+            const overlay = document.createElement('canvas');
+            overlay.className = 'overlay-canvas';
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.pointerEvents = 'none';
+            overlay.style.zIndex = '100';
+            wrapper.appendChild(overlay);
+
+            const resize = () => {
+                overlay.width = overlay.clientWidth;
+                overlay.height = overlay.clientHeight;
+            };
+            window.addEventListener('resize', resize);
+            setTimeout(resize, 500);
+
+            hfoSystem.overlays.push({ canvas: overlay, ctx: overlay.getContext('2d'), mode: 'EXCALIDRAW' });
+
+            // Sync with global stream
+            const syncCamera = () => {
+                if (hfoSystem.stream && bgVideo.srcObject !== hfoSystem.stream) {
+                    bgVideo.srcObject = hfoSystem.stream;
+                }
+                const isMirrored = hfoState.physics.p0Mirror;
+                if (isMirrored) {
+                    bgVideo.classList.add('mirrored');
+                    overlay.classList.add('mirrored');
+                } else {
+                    bgVideo.classList.remove('mirrored');
+                    overlay.classList.remove('mirrored');
+                }
+            };
+
+            // 🛠️ V55.2: Sync only on play/init once and then very infrequently to reduce stutter
+            bgVideo.onplay = syncCamera;
+            const syncInterval = setInterval(syncCamera, 3000);
 
             container.appendChild(wrapper);
-
-            // 🎯 V56: Integrate MediaPipe as Background
-            if (window.hfoSystem) {
-                initMediaPipe(wrapper);
-            }
-            
-            // 🎯 V56: Reference for real-time tuning
-            hfoSystem.excalidrawIframe = iframe;
         };
 
         const initGuide = (container) => {
@@ -2000,27 +2112,34 @@
             div.className = 'component-container';
             div.innerHTML = `
                 <div class="guide-section">
-                    <h2 style="font-size: 18px; margin-bottom: 24px; border-bottom: 2px solid var(--m3-primary); padding-bottom: 8px;">Hive Directive</h2>
-                    <div class="guide-item">
-                        <h3>Collective Primacy (V44)</h3>
-                        <p>Individual hands are nodes in the collective. The first node to achieve <strong>COMMITTED</strong> frequency (index finger extension) claims control over the primary cursor stream.</p>
+                    <h2 style="font-size: 18px; margin-bottom: 24px; border-bottom: 2px solid var(--m3-primary); padding-bottom: 8px;">HFO G88: KINETIC COMMAND</h2>
+                    
+                    <div class="guide-item" style="border-left-color: #444; background: rgba(255,255,255,0.02);">
+                        <h3 style="color: #888;">0. GHOST LAYER (IDLE)</h3>
+                        <p><strong>Tracking Active:</strong> A high-transparency MediaPipe skeleton is visible as long as the camera sees you. This confirms spatial alignment before engagement.</p>
                     </div>
-                    <div class="guide-item">
-                        <h3>Kinetic Carapace (Nodes)</h3>
-                        <p><strong>Raw Input:</strong> The sensory surface of the hive.</p>
-                        <p><strong>Spring Core:</strong> The structural core of the intent.</p>
-                        <p><strong>Predictive Scout:</strong> Anticipating the hive's next state using kinetic vectors.</p>
+
+                    <div class="guide-item" style="border-left-color: #ff9800; background: rgba(255,152,0,0.05);">
+                        <h3 style="color: #ff9800;">1. AWAKENING (READY)</h3>
+                        <p><strong>Face Palm towards Camera:</strong> Triggers the dwell timer. Once the "Elemental Juice" ignites (yellow fire), the system enters <code>POINTER_READY</code>.</p>
                     </div>
+                    
+                    <div class="guide-item" style="border-left-color: #ff5722; background: rgba(255,87,34,0.05);">
+                        <h3 style="color: #ff5722;">2. COMMAND (COMMIT)</h3>
+                        <p><strong>Pointer UP + Thumb-Middle Compression:</strong> Extend your index finger for <code>POINTER_COMMIT</code>. Compress your thumb towards your middle finger to increase fireball density and trigger digital effects.</p>
+                    </div>
+                    
+                    <div class="guide-item" style="border-left-color: #938f99; background: rgba(147,143,153,0.05);">
+                        <h3 style="color: #938f99;">3. DISSOLUTION (RELEASE)</h3>
+                        <p><strong>Palm Away:</strong> Turn palm away or drop hand to enter <code>POINTER_RELEASE</code>. The fire will fade from tip to wrist as connectivity is severed.</p>
+                    </div>
+
                     <div class="guide-item">
-                        <h3>Optimization Protocol</h3>
+                        <h3>Calibration Protocol</h3>
                         <ul>
-                            <li><strong>Light:</strong> Ensure high contrast for sensor clarity.</li>
-                            <li><strong>State:</strong> Hold palm flat to reset the hive's orientation.</li>
+                            <li><strong>Elemental Juice:</strong> Visual intensity is driven by kinetic distance (Thumb to Middle finger).</li>
+                            <li><strong>Ghost Layer:</strong> If the skeleton disappears, the hive has lost its lock.</li>
                         </ul>
-                    </div>
-                    <div class="guide-item" style="border-left-color: #ff9800; border-right: 1px solid rgba(255,152,0,0.2);">
-                        <h3 style="color: #ff9800;">PENDING ADAPTATION (STUBS)</h3>
-                        <p><strong>Haptic Pheromones:</strong> Sub-threshold haptics not yet evolved.</p>
                     </div>
                 </div>
             `;
@@ -2043,20 +2162,26 @@
             p3.add(hfoState.physics, 'purePointerMode').name('Raw Injection');
             p3.open();
 
+            const vis = gui.addFolder('Elemental Visuals');
+            vis.add(hfoState.visuals, 'excalidrawOpacity', 0, 1).name('Canvas Clarity').onChange(v => {
+                if (hfoSystem.excalidrawIframe) {
+                    hfoSystem.excalidrawIframe.style.opacity = v;
+                }
+            });
+            vis.add(hfoState.visuals, 'showSkeleton').name('Wireframe Carapace');
+            vis.open();
+
             const mp = gui.addFolder('Sensor Intelligence');
             mp.add(hfoState.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Sense Sensitivity');
             mp.add(hfoState.mpOptions, 'minTrackingConfidence', 0, 1).name('Neural Lock Strength');
             mp.add(hfoState, 'debug').name('Overlay Synapses');
-            
-            const v56 = gui.addFolder('V56: Hero Optic');
-            v56.add(hfoState.visuals, 'excalidrawOpacity', 0, 1).name('Excalidraw Opacity').onChange(val => {
-                if (hfoSystem.excalidrawIframe) {
-                    hfoSystem.excalidrawIframe.style.opacity = val;
-                }
-            });
-            v56.open();
-            
             mp.open();
+
+            const bucket = gui.addFolder('Pyre Resonance (Leaky Bucket)');
+            bucket.add(hfoState.leakyBucket, 'fillRate', 0.1, 10).name('Ignition Speed');
+            bucket.add(hfoState.leakyBucket, 'drainRate', 0.1, 10).name('Heat Decay');
+            bucket.add(hfoState.leakyBucket, 'threshold', 100, 3000).name('Flashpoint');
+            bucket.open();
 
             container.appendChild(gui.domElement);
         };
@@ -2066,7 +2191,7 @@
                 type: 'row', content: [
                     {
                         type: 'stack',
-                        width: 70,
+                        width: 61.8,
                         content: [
                             {
                                 type: 'component',
@@ -2082,20 +2207,25 @@
                     },
                     {
                         type: 'column',
-                        width: 30,
+                        width: 38.2,
                         content: [
                             {
                                 type: 'stack',
-                                height: 50,
+                                height: 61.8,
                                 content: [
-                                    { type: 'component', componentType: 'Transparency', title: 'P5: IMMUNIZE (FORCE PROTECTION)' },
-                                    { type: 'component', componentType: 'PalmCone', title: 'P0: OBSERVE (ISR)' },
-                                    { type: 'component', componentType: 'Gestures', title: 'P3: INJECT (KILL-WEB)' },
-                                    { type: 'component', componentType: 'Physics', title: 'P2: SHAPE (DIGITAL TWIN)' },
-                                    { type: 'component', componentType: 'Settings', title: 'P7: NAVIGATE (BMC2)' },
-                                    { type: 'component', componentType: 'Guide', title: 'P7: GUIDE' },
-                                    { type: 'component', componentType: 'Interaction', title: 'P3: TEST' }
+                                    { type: 'component', componentType: 'Guide', title: 'P7: GETTING STARTED' },
+                                    { type: 'component', componentType: 'Transparency', title: 'P5: IMMUNIZE' },
+                                    { type: 'component', componentType: 'Settings', title: 'P7: NAVIGATE' },
+                                    { type: 'component', componentType: 'Physics', title: 'P2: SHAPE' },
+                                    { type: 'component', componentType: 'Gestures', title: 'P3: INJECT' },
+                                    { type: 'component', componentType: 'PalmCone', title: 'P0: OBSERVE' }
                                 ]
+                            },
+                            {
+                                type: 'component',
+                                componentType: 'MediaPipe',
+                                title: 'P0: SENSOR (ISR)',
+                                height: 38.2
                             }
                         ]
                     }
@@ -2105,6 +2235,7 @@
         const layout = new GoldenLayout(document.getElementById('layout-container'));
         layout.registerComponentFactoryFunction('Transparency', c => initTransparencyPanel(c.element));
         layout.registerComponentFactoryFunction('PianoGenie', c => initPianoGenie(c.element));
+        layout.registerComponentFactoryFunction('MediaPipe', c => initMediaPipe(c.element));
         layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
         layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
         layout.registerComponentFactoryFunction('PalmCone', c => initPalmConePanel(c.element));
