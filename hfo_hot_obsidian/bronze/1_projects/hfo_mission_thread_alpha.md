@@ -62,7 +62,9 @@ Every port maps to a cluster of equivalent concepts. The system translates these
 
 ### 🛡️ ACTIVE DEFENSES
 
-- **HardGate Physical Integrity**: P5 Sentinel active.
+- **P5 Sentinel Daemon**: Real-time watchdog monitoring `hfo_hot_obsidian` via `scripts/p5_sentinel_daemon.py`.
+- **Hub Interlock**: `hfo_orchestration_hub.py` checks for `BREACH` signals before execution.
+- **Defense in Depth**: Layered gates (Sentinel -> Hub -> Pre-commit).
 - **Utility Reward Floor**: 88/100 required for Gold promotion.
 - **Transparency Mandate**: STUB reporting rewarded; Hallucinated tools penalized.
 

@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "P5 Sentinel Daemon",
+            "type": "shell",
+            "command": "python3 scripts/p5_sentinel_daemon.py",
+            "isBackground": true,
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "hfo-defense"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
+            "label": "Port 5: Forensic Audit (Manual)",
+            "type": "shell",
+            "command": "python3 hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}

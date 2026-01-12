@@ -50,6 +50,43 @@ HUB_REGISTRY = {
     "7": HubV7,
 }
 
+def check_p5_safety():
+    """
+    Check the blackboard for the most recent Sentinel or P5 signal.
+    If it's a BREACH, scream and warn the operator.
+    """
+    from versions.base import BLACKBOARD_PATH
+    if not os.path.exists(BLACKBOARD_PATH):
+        return False
+
+    try:
+        with open(BLACKBOARD_PATH, "r") as f:
+            lines = f.readlines()
+            if not lines:
+                return False
+            
+            # Search for the most recent status entry
+            for line in reversed(lines[-50:]):
+                try:
+                    entry = json.loads(line.strip())
+                    status = entry.get("status")
+                    if status:
+                        if status == "BREACH":
+                            timestamp = entry.get("timestamp")
+                            file_name = entry.get("file", "Unknown")
+                            print(f"\n🚨 [HUB-INTERLOCK]: STOP! A BREACH was recently detected.")
+                            print(f"🚨 [HUB-INTERLOCK]: Timestamp: {timestamp}")
+                            print(f"🚨 [HUB-INTERLOCK]: Violator: {file_name}")
+                            print(f"🚨 [HUB-INTERLOCK]: The system is in 'Red Alarm' state. Fix the baseline before proceeding.\n")
+                            return True
+                        elif status == "PASS":
+                            return False
+                except (json.JSONDecodeError, ValueError):
+                    continue
+    except Exception as e:
+        print(f"⚠️ [HUB-FAIL]: Safety check error: {e}")
+    return False
+
 # --- HFO HEXAGONAL ORCHESTRATION (T0-T7) ---
 def execute_hexagonal_orchestration(query: str):
     """Octree recursive cognitive sharding with version-aware dispatch."""
@@ -126,6 +163,10 @@ if __name__ == "__main__":
     
     cmd = sys.argv[1].lower()
     if cmd == "think":
+        if check_p5_safety():
+            # In interactive mode, we warn. In automated mode, we would exit.
+            print("⚠️ WARNING: Proceeding despite P5 breach. Use at your own risk.")
+            
         query = sys.argv[2] if len(sys.argv) > 2 else "heartbeat"
         print(json.dumps(execute_hexagonal_orchestration(query)))
     elif cmd == "p0":
@@ -145,6 +186,10 @@ if __name__ == "__main__":
             "audit": results
         })
         print(json.dumps(results))
+        # EXIT GATE: Block if aggregate status is not PASS
+        if results.get("aggregate_status") != "PASS":
+            sys.exit(1)
+        sys.exit(0)
     elif cmd == "signal":
         if len(sys.argv) < 3:
             print("Usage: python3 hfo_orchestration_hub.py signal \"<query>\"")
