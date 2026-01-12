@@ -1,0 +1,75 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: E
+id: OMEGA_GEN2
+name: "Mission Thread Omega Gen 2: Portable Standalone Phoenix"
+mission_thread: Omega
+status: "Active (Executing V3: Port 1 Bridger)"
+version: "V3.0"
+date: "2026-01-12"
+
+roadmap:
+  V1: 
+    title: "PORT 0 (SENSE): MediaPipe Landmarks"
+    description: "Initialize MediaPipe Tasks-Vision and establish basic landmark acquisition (21 hand points)."
+    status: completed
+  V2: 
+    title: "PORT 0 (SENSE): MediaPipe Gestures"
+    description: "Implement GestureRecognizer and localized Tab-based indicator for gesture telemetry."
+    status: completed
+  V3: 
+    title: "PORT 1 (BRIDGE): Zod Contracts & Decoupling"
+    description: "Introduce Zod-validated HFO Data Fabric. Decouple P0 sensing from application state."
+    status: completed
+  V4: 
+    title: "PORT 2 (SHAPE): OneEuro Preprocessing"
+    description: "Establish high-fidelity signal smoothing for hand coordinates to eliminate sensing jitter."
+    status: in-progress
+  V5: 
+    title: "PORT 2 (SHAPE): Physics System (Mass/Spring/Dampener)"
+    description: "Integrate Matter.js or Rapier.js for virtual inertia and elastic cursor behavior."
+    status: not-started
+  V6: 
+    title: "PORT 2 (SHAPE): Physics Predictive Kinetic Look-ahead"
+    description: "Implement velocity-based prediction to compensate for camera latency and motion blur."
+    status: not-started
+  V7: 
+    title: "PORT 3 (DELIVER): Finite State Machine (FSM)"
+    description: "Formalize 3-stage user FSM: IDLE -> POINTER_READY -> POINTER_COMMIT."
+    status: not-started
+  V8: 
+    title: "PORT 3 (DELIVER): W3C Pointer Injection"
+    description: "Bridge virtual physics cursor events into standard W3C browser events."
+    status: not-started
+  V9: 
+    title: "UI: Excalidraw Shell Integration"
+    description: "Embed Excalidraw as the primary HERO canvas with full interactive capability."
+    status: not-started
+  V10: 
+    title: "PORT 4 (DISRUPT): Elemental Juice Animations"
+    description: "Implement 'FIRE' effects and visual leaky-bucket feedback for armed states."
+    status: not-started
+  V11: 
+    title: "PORT 7 (NAVIGATE): Multi-hand Hot Seat Primacy"
+    description: "Handle hand-hand handovers and primary-hand selection for multi-user scenarios."
+    status: not-started
+  V12: 
+    title: "THE PROJECT: The Cast / Final Branding"
+    description: "Finalize the 'Phoenix' project identity and packaging for standalone deployment."
+    status: not-started
+  V13: 
+    title: "GOVERNANCE: Evolutionary Tuning Parameters"
+    description: "Expose all internal magic numbers to PORT 7 (lil-gui) for real-time biological tuning."
+    status: not-started
+
+long_term_goals:
+  - "Total Tool Virtualization: High-fidelity virtual tool creation from user intent (function + form)."
+  - "Galois Lattice Alignment: Full 8x8 Port mapping for mission-critical sensing and delivery."
+  - "JADC2 Mosaic Warfare: Composable capability tiles for hybrid physical-virtual mission engineering."
+  - "strange loop autonomy: Achieving a level of interaction fidelity where the tool evolves with the user."
+  - "Portable Standalone: Complete decoupling from the HFO Hub for simplified edge deployments."
+  - "Mission Mosaic: Unifying sensing, physics, and interaction into a single seamless substrate."
+
+provenance:
+  layer: Bronze
+  hive: E
+  shards: 8_WAY_SYMMETRY
+

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-12T22:02:06.747156Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/mission_thread_omega_gen_2.yaml",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/1_projects/mission_thread_omega_gen_2.yaml",
+    "hash": "f5547340d6480cd51245b398e8515d7fa9b7476ae6ce755774a60b6680bf6095",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

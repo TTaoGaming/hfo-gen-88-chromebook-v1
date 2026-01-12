@@ -1,0 +1,426 @@
+<!-- Medallion: Bronze | GEN 2 V1 | HIVE: I -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | OMEGA GEN 2 V2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono&display=swap"
+        rel="stylesheet">
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <style>
+        :root {
+            --m3-bg: #000000;
+            --m3-surface: #121212;
+            --m3-primary: #ff0000;
+            --m3-text: #e6e1e5;
+            --m3-outline: #49454f;
+            --m3-radius: 16px;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--m3-bg);
+            color: var(--m3-text);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #layout-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .component-container {
+            padding: 16px;
+            height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            background-color: var(--m3-bg);
+            position: relative;
+        }
+
+        .video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+            background: #000;
+        }
+
+        .video-feed.mirrored {
+            transform: scaleX(-1);
+        }
+
+        .overlay-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .overlay-canvas.mirrored {
+            transform: scaleX(-1);
+        }
+
+        .camera-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: var(--m3-surface);
+            color: var(--m3-text);
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--m3-primary);
+        }
+
+        /* Gesture Card Styles */
+        .gesture-card {
+            background: var(--m3-surface);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--m3-primary);
+            margin-bottom: 8px;
+        }
+
+        .gesture-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--m3-primary);
+            display: block;
+        }
+
+        .gesture-score {
+            font-size: 12px;
+            color: #888;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .gesture-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 4px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout-container"></div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+
+        const resolutionMap = {
+            '480p': { w: 640, h: 480 },
+            '720p': { w: 1280, h: 720 },
+            '1080p': { w: 1920, h: 1080 }
+        };
+
+        const state = {
+            active: false,
+            mirrored: true,
+            numHands: 2,
+            minHandDetectionConfidence: 0.5,
+            minHandPresenceConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+            minGestureConfidence: 0.5,
+            showSkeleton: true,
+            showLandmarks: true,
+            resolution: '720p',
+            gestures: [] // Dynamic hand data
+        };
+
+        let recognizer;
+        let video, canvas, ctx;
+        let stream;
+
+        const initMediaPipe = async () => {
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm");
+            recognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: "GPU"
+                },
+                runningMode: "VIDEO",
+                numHands: state.numHands,
+                minHandDetectionConfidence: state.minHandDetectionConfidence,
+                minHandPresenceConfidence: state.minHandPresenceConfidence,
+                minTrackingConfidence: state.minTrackingConfidence
+            });
+        };
+
+        const toggleVideo = async () => {
+            if (!state.active) {
+                try {
+                    const res = resolutionMap[state.resolution];
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            width: { ideal: res.w },
+                            height: { ideal: res.h }
+                        }
+                    });
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        state.active = true;
+                        if (startBtn) startBtn.innerText = "Stop Video";
+
+                        // Sync canvas size to video actual size
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+
+                        requestAnimationFrame(renderLoop);
+                    };
+                } catch (e) { console.error(e); }
+            } else {
+                if (stream) {
+                    stream.getTracks().forEach(t => t.stop());
+                }
+                video.srcObject = null;
+                state.active = false;
+                if (startBtn) startBtn.innerText = "Start Video";
+            }
+        };
+
+        const renderLoop = () => {
+            if (!state.active || !recognizer) return;
+
+            const now = performance.now();
+            if (video.readyState < 2) {
+                requestAnimationFrame(renderLoop);
+                return;
+            }
+
+            const results = recognizer.recognizeForVideo(video, now);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            state.gestures = [];
+
+            if (results) {
+                if (results.landmarks) {
+                    const drawingUtils = new DrawingUtils(ctx);
+                    for (const landmarks of results.landmarks) {
+                        if (state.showSkeleton) {
+                            drawingUtils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: "#FF0000", lineWidth: 5 });
+                        }
+                        if (state.showLandmarks) {
+                            drawingUtils.drawLandmarks(landmarks, { color: "#FFFFFF", lineWidth: 2 });
+                        }
+                    }
+                }
+
+                if (results.gestures) {
+                    results.gestures.forEach((gestureList, index) => {
+                        if (gestureList.length > 0) {
+                            const mainGesture = gestureList[0];
+                            if (mainGesture.score >= state.minGestureConfidence) {
+                                state.gestures.push({
+                                    handIndex: index,
+                                    name: mainGesture.categoryName,
+                                    score: mainGesture.score,
+                                    handedness: (results.handedness && results.handedness[index] && results.handedness[index][0]) ? results.handedness[index][0].categoryName : 'Unknown'
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+            requestAnimationFrame(renderLoop);
+        };
+
+        let startBtn; // Global reference for GUI sync
+
+        // Layout Components
+        const HeroComponent = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+
+            video = document.createElement('video');
+            video.className = `video-feed ${state.mirrored ? 'mirrored' : ''}`;
+            video.autoplay = true;
+            video.playsinline = true;
+
+            canvas = document.createElement('canvas');
+            canvas.className = `overlay-canvas ${state.mirrored ? 'mirrored' : ''}`;
+            ctx = canvas.getContext('2d');
+
+            const controls = document.createElement('div');
+            controls.className = 'camera-controls';
+
+            startBtn = document.createElement('button');
+            startBtn.className = 'btn';
+            startBtn.innerText = 'Start Video';
+            startBtn.onclick = () => toggleVideo();
+
+            const flipBtn = document.createElement('button');
+            flipBtn.className = 'btn';
+            flipBtn.innerText = 'Flip';
+            flipBtn.onclick = () => {
+                state.mirrored = !state.mirrored;
+                video.classList.toggle('mirrored', state.mirrored);
+                canvas.classList.toggle('mirrored', state.mirrored);
+            };
+
+            controls.appendChild(startBtn);
+            controls.appendChild(flipBtn);
+
+            div.appendChild(video);
+            div.appendChild(canvas);
+            div.appendChild(controls);
+            container.element.appendChild(div);
+
+            const resizeHandler = () => {
+                if (video.videoWidth) {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                }
+            };
+            container.on('resize', resizeHandler);
+        };
+
+        const GestureIndicatorComponent = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container p-3 bg-dark h-100 overflow-auto';
+            div.innerHTML = `
+                <div class="text-muted small mb-2">PORT 0: GESTURE TELEMETRY</div>
+                <div id="gesture-results"></div>
+            `;
+            container.element.appendChild(div);
+            const display = div.querySelector('#gesture-results');
+
+            const update = () => {
+                if (!state.gestures || state.gestures.length === 0) {
+                    display.innerHTML = '<div class="text-muted italic">No hand detected</div>';
+                    return;
+                }
+                display.innerHTML = state.gestures.map(g => `
+                    <div class="gesture-card">
+                        <span class="gesture-name">${g.name}</span>
+                        <div class="d-flex justify-content-between small opacity-75">
+                            <span>Confidence: ${(g.score * 100).toFixed(1)}%</span>
+                            <span>Hand: ${g.handedness}</span>
+                        </div>
+                    </div>
+                `).join('');
+            };
+
+            setInterval(update, 100);
+        };
+
+        const SettingsComponent = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            container.element.appendChild(div);
+
+            const gui = new GUI({ container: div, touchStyles: true, title: 'PORT 7 CONTROLS' });
+
+            const camFolder = gui.addFolder('Camera Settings');
+            camFolder.add(state, 'active').name('Camera Active').listen().onChange(v => {
+                if (v !== !!video.srcObject) toggleVideo();
+            });
+            camFolder.add(state, 'mirrored').name('Mirrored View').onChange(v => {
+                video.classList.toggle('mirrored', v);
+                canvas.classList.toggle('mirrored', v);
+            });
+            camFolder.add(state, 'resolution', Object.keys(resolutionMap)).name('Resolution').onChange(async () => {
+                if (state.active) {
+                    await toggleVideo(); // Stop current
+                    await toggleVideo(); // Re-start with new resolution
+                }
+            });
+
+            const mpFolder = gui.addFolder('MediaPipe Core');
+            mpFolder.add(state, 'numHands', 1, 4, 1).name('Max Hands').onChange(v => {
+                if (recognizer) recognizer.setOptions({ numHands: v });
+            });
+            mpFolder.add(state, 'minHandDetectionConfidence', 0, 1).name('Detect Confidence').onChange(v => {
+                if (recognizer) recognizer.setOptions({ minHandDetectionConfidence: v });
+            });
+            mpFolder.add(state, 'minHandPresenceConfidence', 0, 1).name('Presence Confidence').onChange(v => {
+                if (recognizer) recognizer.setOptions({ minHandPresenceConfidence: v });
+            });
+            mpFolder.add(state, 'minTrackingConfidence', 0, 1).name('Tracking Confidence').onChange(v => {
+                if (recognizer) recognizer.setOptions({ minTrackingConfidence: v });
+            });
+
+            const gestureFolder = gui.addFolder('Gesture Settings');
+            gestureFolder.add(state, 'minGestureConfidence', 0, 1).name('Min Gesture Conf');
+            gestureFolder.add(state, 'showSkeleton').name('Show Skeleton');
+            gestureFolder.add(state, 'showLandmarks').name('Show Landmarks');
+
+            mpFolder.open();
+            camFolder.open();
+            gestureFolder.open();
+        };
+
+        // Initialize Golden Layout
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        layout.registerComponentFactoryFunction('Hero', HeroComponent);
+        layout.registerComponentFactoryFunction('Settings', SettingsComponent);
+        layout.registerComponentFactoryFunction('Gestures', GestureIndicatorComponent);
+
+        layout.loadLayout({
+            root: {
+                type: 'row',
+                content: [
+                    { type: 'component', componentType: 'Hero', title: 'PORT 0 MEDIAPIPELINE HANDS', width: 75 },
+                    {
+                        type: 'column',
+                        width: 25,
+                        content: [
+                            { type: 'component', componentType: 'Settings', title: 'PORT 7 SETTINGS', height: 70 },
+                            { type: 'component', componentType: 'Gestures', title: 'PORT 0 GESTURES', height: 30 }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        window.addEventListener('resize', () => layout.updateSize());
+        initMediaPipe();
+    </script>
+</body>
+
+</html>

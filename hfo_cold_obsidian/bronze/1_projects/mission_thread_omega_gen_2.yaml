@@ -1,0 +1,46 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: E
+id: P100
+name: "Mission Thread Omega Gen 2: Portable Standalone Phoenix"
+mission_thread: Omega
+status: "active (Bootstrap Initiated: 2026-01-12T11:00:00Z)"
+version: "V100.0"
+short_term_goals:
+  - "Extract patterns from Omega Gen 1 without code replication"
+  - "Implement MediaPipe + Gesture Recognizer (1 gesture: pointer_up)"
+  - "Integrate 1EuroFilter with 'Smooth' and 'Snappy' presets"
+  - "Configure Matter.js physics with spring dampener and predictive velocity"
+  - "Establish 3-stage FSM (IDLE, POINTER_READY, POINTER_COMMIT)"
+  - "Deploy Golden Layout with lil-gui for hot-swap settings"
+  - "Configure HERO: Excalidraw, settings panel, video feed (flip controls)"
+  - "Implement Excalidraw transparency (Whiteboard/Blackboard overlay)"
+  - "Add Leaky Bucket animations (FIRE effects)"
+  - "Handle low confidence with Coast + Snapshot + Sticky State"
+tasks:
+  - id: P100.1
+    title: "Project Initialization: Standalone V100"
+    description: "Create portable standalone structure for Omega Gen 2."
+    status: in-progress
+  - id: P100.2
+    title: "Pattern Extraction: MediaPipe & Gestures"
+    description: "Initialize MediaPipe with a single 'pointer_up' gesture and confidence threshold."
+    status: not-started
+  - id: P100.3
+    title: "Pattern Extraction: 1EuroFilter"
+    description: "Implement 1EuroFilter with two presets: Smooth and Snappy."
+    status: not-started
+  - id: P100.4
+    title: "Pattern Extraction: Matter.js Physics"
+    description: "Set up Matter.js physics pointer with spring dampener and predictive velocity."
+    status: not-started
+  - id: P100.5
+    title: "Pattern Extraction: 3-Stage FSM"
+    description: "IDLE -> PORT_0_POINTER_READY -> PORT_7_POINTER_COMMIT with leaky bucket logic."
+    status: not-started
+  - id: P100.6
+    title: "UI Scaffolding: Golden Layout & lil-gui"
+    description: "Implement Golden Layout interface with lil-gui for runtime configuration."
+    status: not-started
+  - id: P100.7
+    title: "HERO Configuration & Transparency"
+    description: "Integrate Excalidraw with transparency over a live video feed."
+    status: not-started
