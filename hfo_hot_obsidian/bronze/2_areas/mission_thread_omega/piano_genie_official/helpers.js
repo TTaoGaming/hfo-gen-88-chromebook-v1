@@ -38,7 +38,7 @@ const MIDI_IN_MAPPING = {
  ************************/
 class Player {
     constructor() {
-        this.player = new mm.SoundFontPlayer("https://chrisdonahue.com/piano-genie/bucket/soundfonts/sgm_plus");
+        this.player = new mm.SoundFontPlayer("../assets/piano_genie/sgm_plus");
         this.midiOut = [];
         this.midiIn = [];
         this.usingMidiOut = false;

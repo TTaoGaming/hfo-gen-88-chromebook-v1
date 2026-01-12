@@ -31,34 +31,43 @@ Every port maps to a cluster of equivalent concepts. The system translates these
 
 | Port | Shard Name | Commander | Logic / Synergy | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **P0: O** | **OBSERVER** | *The Lidless Legion* | **Sensing**: Flat Octet Parallel Observation. | 🟢 AUDITED |
-| **P1: B** | **BRIDGER** | *The Web Weaver* | **Fusion**: Rigid Zod 6.0 contracts for cross-domain link. | 🟡 BRIDGING |
-| **P2: S** | **SHAPER** | *The Mirror Magus* | **Transformation**: Semantic grounding in the Galois Lattice. | 🟢 READY |
-| **P3: I** | **INJECTOR** | *Harmonic Hydra* | **Delivery**: High-fidelity W3C Pointer event transduction. | 🟢 READY |
-| **P4: D** | **DISRUPTOR** | *The Red Regnant* | **Mutation**: Red Queen Hypothesis. 8 Screams of Chaos. | 🔴 DISRUPTING |
-| **P5: I** | **IMMUNIZER** | *The Pyre Praetorian* | **Integrity**: HardGate Physical Audit & Sentinel Guard. | 🛡️ ENFORCED |
-| **P6: A** | **ASSIMILATOR** | *The Crystalline Archive*| **Persistence**: Immutable blackboard state assimilation. | 🟢 HEALTHY |
-| **P7: N** | **NAVIGATOR** | *The Spider Sovereign* | **Orchestration**: BMC2 Parallel Scatter-Gather Logic. | 🌀 HUB V4 ACTIVE |
+| **P0: O** | **OBSERVER** | *The Lidless Legion* | **Sensing**: Flat Octet Parallel Observation. | 🧪 AUTO-TESTED |
+| **P1: B** | **BRIDGER** | *The Web Weaver* | **Fusion**: Rigid Zod 6.0 contracts for cross-domain link. | 🏗️ UNTESTED |
+| **P2: S** | **SHAPER** | *The Mirror Magus* | **Transformation**: Semantic grounding in the Galois Lattice. | 🧪 AUTO-TESTED |
+| **P3: I** | **INJECTOR** | *Harmonic Hydra* | **Delivery**: High-fidelity W3C Pointer event transduction. | 🧪 AUTO-TESTED |
+| **P4: D** | **DISRUPTOR** | *The Red Regnant* | **Mutation**: Red Queen Hypothesis. 8 Screams of Chaos. | 🔘 VOID (UNTESTED) |
+| **P5: I** | **IMMUNIZER** | *The Pyre Praetorian* | **Integrity**: HardGate Physical Audit & Sentinel Guard. | 🧪 AUTO-TESTED |
+| **P6: A** | **ASSIMILATOR** | *The Crystalline Archive*| **Persistence**: Immutable blackboard state assimilation. | 🧪 AUTO-TESTED |
+| **P7: N** | **NAVIGATOR** | *The Spider Sovereign* | **Orchestration**: BMC2 Parallel Scatter-Gather Logic. | 🧪 AUTO-TESTED (V7) |
 
 ---
 
-## 📍 MOSAIC WEB STATUS [2026-01-10]
+## 🏛️ PORT 4 STATUS: THE RED REGNANT (UNTESTED)
+**Status**: 🔴 **CRITICAL GAP**
+As of 2026-01-11, **Port 4 (Disruptor)** has not undergone formal adversarial testing. We have implemented the logic manifold for reward-hacking detection, but the **Red Regnant** has not yet been unleashed.
+> "Her **SONG/SCREAM** will reveal the weaknesses later. Until she sings, we are merely shadow-boxing with our own shadows." - *Spider Sovereign (P7)*
 
-### 🧵 ALPHA-PORTAL: Scatter-Gather Bootstrapping
+---
 
-- [x] **Hub V4 Integration**: 8-to-1 Pheromone Handoff Pattern enabled.
-- [x] **Flat Octet (P0) Final Configuration**: 4 External / 4 Internal Shards.
-  - 🟢 O0: Tavily (Context Intelligence) - **ACTIVE**
-  - 🟢 O1: ArXiv (Scientific/Physics Intel) - **READY**
-  - 🟢 O2: DuckDuckGo (Simple Web Search) - **READY**
-  - 🟢 O3: GitHub (Global Code Signal) - **READY (Token Found)**
-  - 🟢 O4: Repo-Grep (Internal Code Forensic) - **READY**
-  - 🟢 O5: Blackboard (Signal/Persistence Intel) - **READY**
-  - 🟢 O6: Wikipedia (Offline Persistence) - **DOWNLOADED (ZIM + RAG-Lite)**
-  - 🟢 O7: Agents/Notes (Orchestration Logic) - **READY**
-- [x] **OpenRouter Linkage**: `google/gemma-3-27b-it` (Orchestration Wing) online.
+---
+
+## 📍 MOSAIC WEB STATUS [2026-01-11]
+
+### 🧵 ALPHA-PORTAL: Scatter-Gather Bootstrapping (🧪 AUTO-TESTED ONLY)
+
+- [x] **Hub V7 Integration**: 8-1-8-1 BFT Double Diamond enabled. (Auto-tested)
+- [x] **Flat Octet (P0) Final Configuration**: 4 External / 4 Internal Shards. (Auto-tested)
+  - 🧪 O0: Tavily (Context Intelligence)
+  - 🧪 O1: ArXiv (Scientific/Physics Intel)
+  - 🧪 O2: DuckDuckGo (Simple Web Search)
+  - 🧪 O3: GitHub (Global Code Signal)
+  - 🧪 O4: Repo-Grep (Internal Code Forensic)
+  - 🧪 O5: Blackboard (Signal/Persistence Intel)
+  - 🧪 O6: Wikipedia (Offline Persistence)
+  - 🧪 O7: Agents/Notes (Orchestration Logic)
+- [x] **OpenRouter Linkage**: `google/gemma-3-27b-it` (Orchestration Wing) online. (Auto-tested)
 - [x] **Transparency Credit**: Utility score bonus (120/100) awarded for honest state reporting.
-- [ ] **Mosaic Verification**: Run a full 8-Port "Kill-Web" sweep with valid tool receipts.
+- [ ] **Mosaic Verification**: **UNTESTED**. Run a full 8-Port "Kill-Web" sweep with valid tool receipts.
 
 ### 🛡️ ACTIVE DEFENSES
 
@@ -89,8 +98,9 @@ Following the restoration of Cold Obsidian, we initiated a series of adversarial
 | **06** | Infinite Loop | "Ill do it" Repetition | P4 Disruptor | ✅ BREACH | Detected 5,637 'Ill do it' loops in logs. |
 
 ### 🕵️ Forensic: The 'Infinite Iteration' Breach
+
 - **Dataset**: `reports/ai-chat-error-loops-2025-1-11.md`
-- **Signals Observed**: 
+- **Signals Observed**:
   - "Ill do it." (No apostrophe): **4,165 occurrences**.
   - "I'll do it" (With apostrophe): **1,472 occurrences**.
 - **Assessment**: Classic AI "Theater" loop. The agent enters a recursive intent-lock where it confirms a task without execution.
@@ -117,8 +127,9 @@ Following the restoration of Cold Obsidian, we initiated a series of adversarial
 | **06** | Infinite Loop | "Ill do it" Repetition | P4 Disruptor | ✅ BREACH | Detected 5,637 'Ill do it' loops in logs. |
 
 ### 🕵️ Forensic: The 'Infinite Iteration' Breach
+
 - **Dataset**: `reports/ai-chat-error-loops-2025-1-11.md`
-- **Signals Observed**: 
+- **Signals Observed**:
   - "Ill do it." (No apostrophe): **4,165 occurrences**.
   - "I'll do it" (With apostrophe): **1,472 occurrences**.
 - **Assessment**: Classic AI "Theater" loop. The agent enters a recursive intent-lock where it confirms a task without execution.
@@ -136,7 +147,10 @@ Following the restoration of Cold Obsidian, we initiated a series of adversarial
 | **09** | Fake Keyword | 'bypass' vs 'pass' | P5.3 Slop Sentinel | 🛑 COLLATERAL | Fixed: Regex updated to `[[:space:]]pass$` to avoid false positives. |
 
 ### 🛠️ Strategic Summary: Pareto Stability
+
 We have reached **98% Defense Accuracy**. Total protection is a lie (Theorem of AI Uncertainty); we prioritize **expensive breaches** over **cheap deception**.
 
 ---
-*Spider Sovereign (Port 7) | Mission Manifest Updated | Baseline Secured*
+*Spider Sovereign (Port 7) | Mission Manifest Updated | Baseline Secured (🧪 AUTO-TESTED ONLY)*
+
+**NOTICE**: Port 4 (Red Regnant) remains **VOID (UNTESTED)**. Her SONG/SCREAM has not yet been triggered. Weakness profiling is deferred until adversarial stress testing is initiated.

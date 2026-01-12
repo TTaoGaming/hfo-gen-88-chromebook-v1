@@ -45,9 +45,9 @@ class P5SentinelHandler(FileSystemEventHandler):
 
     def run_p5_audit(self, file_path):
         try:
-            # Hub P5 command executes all registered Port 5 tools
+            # Hub P5 command executes all registered Port 5 tools with file context
             result = subprocess.run(
-                ["python3", HUB_PATH, "p5"],
+                ["python3", HUB_PATH, "p5", file_path],
                 capture_output=True,
                 text=True
             )

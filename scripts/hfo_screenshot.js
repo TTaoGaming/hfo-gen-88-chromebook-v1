@@ -16,15 +16,15 @@ async function capture(mode = 'headless') {
       browser = await chromium.connectOverCDP('http://localhost:9222');
       const pages = await browser.contexts()[0].pages();
       const page = pages[0] || await browser.newPage();
-      await page.goto('http://localhost:8889/omega_workspace_v52.html');
+      await page.goto('http://localhost:8888/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/piano_genie_official/index.html');
       await page.screenshot({ path: filename, fullPage: true });
     } else {
       // Launch headless internal Chromium
       browser = await chromium.launch({ headless: true });
       const page = await browser.newPage();
-      await page.goto('http://localhost:8889/omega_workspace_v52.html');
+      await page.goto('http://localhost:8888/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/piano_genie_official/index.html');
       // Wait for Piano Genie to settle
-      await page.waitForTimeout(2000);
+      await page.waitForTimeout(5000);
       await page.screenshot({ path: filename, fullPage: true });
     }
     console.log(`✅ HFO: Screenshot saved to: ${filename}`);

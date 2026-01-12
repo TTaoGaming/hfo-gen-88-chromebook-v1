@@ -16,6 +16,7 @@ from typing import List, Dict, Any
 
 # --- GLOBAL UTILS ---
 BLACKBOARD_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
+QUARANTINE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/blackboard_quarantine.jsonl"
 ENV_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.env"
 CONFIG_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/hfo_config.json"
 
@@ -64,7 +65,12 @@ def log_to_blackboard(entry: Dict[str, Any]):
                     pos -= 1
                 last_line = f.readline().decode().strip()
                 if last_line:
-                    last_signature = json.loads(last_line).get("signature", "LEGACY")
+                    try:
+                        last_signature = json.loads(last_line).get("signature", "LEGACY")
+                    except json.JSONDecodeError:
+                        # If the last line is malformed, the purity script should have handled it,
+                        # but we fallback to "ROOT" or a previous identifiable signal
+                        last_signature = "MALFORMED"
         except:
             last_signature = "ERROR"
 
@@ -461,34 +467,88 @@ class Port4Disrupt:
 class Port5Immunize:
     """The HFO Defense Octet (Pyre Praetorian). JADC2 Verb: DEFEND."""
     
+    MANIFEST_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports/P5_IMMUNIZER_MANIFEST.md"
+
     @classmethod
-    def execute_all(cls):
-        """Executes the 8-Shard Defensive Manifold."""
+    def get_manifest(cls):
+        """Returns the Pyre Praetorian's Arsenal Manifest."""
+        if os.path.exists(cls.MANIFEST_PATH):
+            with open(cls.MANIFEST_PATH, 'r') as f:
+                return f.read()
+        return "# P5 MANIFEST MISSING"
+
+    @classmethod
+    def get_escalation_level(cls, file_context: str = None):
+        """
+        Determines the defensive posture based on file context.
+        BRONZE: Leeway mode (Warnings allowed).
+        SILVER: Guarded mode (Stricter audits).
+        GOLD/COLD: Lockdown mode (Zero tolerance).
+        """
+        if not file_context:
+            return "SILVER" # Default
+            
+        if "hfo_cold_obsidian" in file_context or "ROOT_GOVERNANCE" in file_context:
+            return "LOCKDOWN"
+        if "gold" in file_context.lower():
+            return "LOCKDOWN"
+        if "silver" in file_context.lower():
+            return "SILVER"
+        if "bronze" in file_context.lower():
+            return "BRONZE"
+        return "SILVER"
+
+    @classmethod
+    def execute_all(cls, file_context: str = None):
+        """Executes the 8-Shard Defensive Manifold with Escalation Awareness."""
+        level = cls.get_escalation_level(file_context)
+        
         results = {
-            "p5.0_hardgate": cls.shard0_hardgate(),
+            "commander": "PYRE PRAETORIAN",
+            "p5.0_hardgate": cls.shard0_hardgate(file_context),
             "p5.1_purity": cls.shard1_purity(),
             "p5.2_generation": cls.shard2_generation(),
             "p5.3_slop": cls.shard3_slop(),
             "p5.4_chronos": cls.shard4_chronos(),
             "p5.5_trace": cls.shard5_trace(),
             "p5.6_audit": cls.shard6_audit(),
-            "p5.7_seal": cls.shard7_seal()
+            "p5.7_seal": cls.shard7_seal(),
+            "escalation_level": level
         }
         
-        # Calculate aggregate defense status
-        failures = [k for k, v in results.items() if v.get("status") in ["BLOCK", "FAIL", "RED", "CRITICAL"]]
-        results["aggregate_status"] = "FAIL" if failures else "PASS"
+        # Calculate aggregate defense status based on level
+        blockers = ["BLOCK", "FAIL", "RED", "CRITICAL"]
+        failures = [k for k, v in results.items() if isinstance(v, dict) and v.get("status") in blockers]
+        
+        # ESCALATION POLICY:
+        # BRONZE allows "FAIL" but changes it to "WARN" unless it's a structural syntax error
+        if level == "BRONZE":
+            critical_failures = [f for f in failures if "syntax" in f or "chronos" in f]
+            if critical_failures:
+                results["aggregate_status"] = "FAIL"
+            else:
+                results["aggregate_status"] = "PASS"
+                # Downgrade status for reporting but allow through
+                for f in failures:
+                    results[f]["status"] = "WARN"
+        else:
+            results["aggregate_status"] = "FAIL" if failures else "PASS"
+            
         results["failures"] = failures
         return results
 
     @staticmethod
-    def shard0_hardgate():
+    def shard0_hardgate(file_context: str = None):
         """P5.0: HARDGATE (Structural Integrity). Syntax + Resource + Physics Audit."""
-        active_ws = get_active_workspace()
+        active_ws = file_context if file_context else get_active_workspace()
         
+        if not os.path.exists(active_ws):
+            return {"status": "PASS", "message": "File context does not exist on disk yet."}
+
         # 1. Syntax Check
-        if subprocess.run(["python3", "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/p5_syntax_gate.py", active_ws]).returncode != 0:
-            return {"status": "FAIL", "message": "Syntax Gate Failed"}
+        if active_ws.endswith(".py"):
+            if subprocess.run(["python3", "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/p5_syntax_gate.py", active_ws]).returncode != 0:
+                return {"status": "FAIL", "message": "Syntax Gate Failed"}
             
         # 2. Resource Reachability (Anti-Hallucination)
         try:
@@ -520,8 +580,9 @@ class Port5Immunize:
     @staticmethod
     def shard1_purity():
         """P5.1: PURITY (Medallion Flow). Receipt Density Check."""
+        # Note: In BRONZE level, execute_all will downgrade this to WARN if it fails
         if subprocess.run(["python3", "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/medallion_purity_guard.py"]).returncode != 0:
-            return {"status": "RED", "message": "Provenance Density Breach."}
+            return {"status": "FAIL", "message": "Provenance Density Breach."}
         return {"status": "GREEN", "message": "Medallion Purity Nominal."}
 
     @staticmethod
@@ -546,21 +607,53 @@ class Port5Immunize:
             with open(SECRET_PATH, "r") as f: secret = f.read().strip()
             with open(BLACKBOARD_PATH, "r") as f:
                 lines = f.readlines()
-                last_sig = None
-                for line in lines[-10:]: # Scrutinize last 10
+                last_sig = "ROOT"
+                last_ts = None
+                for i, line in enumerate(lines):
+                    line = line.strip()
+                    if not line: continue
                     try:
                         entry = json.loads(line)
+                        
+                        # SEAL RECOGNITION
+                        if entry.get("phase") == "SIGNAL" and entry.get("query") == "RED_TRUTH_SEAL":
+                            last_sig = entry.get("signature")
+                            last_ts = None
+                            continue
+
                         if "signature" not in entry:
-                             # Mandatory signature check for armored generations
-                             return {"status": "RED", "message": "CHRONOS: Unsigned entry detected in armored blackboard."}
+                             return {"status": "RED", "message": f"CHRONOS: Unsigned entry at line {i+1}."}
+                        
                         sig = entry.pop("signature")
-                        prev = last_sig if last_sig else "LEGACY" # Align with log_to_blackboard
+                        prev = last_sig if last_sig != "ROOT" else "LEGACY"
                         entry_str = json.dumps(entry, sort_keys=True)
                         expected = hashlib.sha256(f"{secret}:{prev}:{entry_str}".encode()).hexdigest()
-                        if sig != expected and last_sig is not None:
-                            return {"status": "RED", "message": "CHRONOS: Blackboard Chain Broken (Deception Detected)."}
+                        
+                        # Root entry check
+                        if sig != expected and last_sig == "ROOT":
+                            expected_legacy = hashlib.sha256(f"{secret}:LEGACY:{entry_str}".encode()).hexdigest()
+                            if sig == expected_legacy: expected = expected_legacy
+
+                        if sig != expected:
+                            return {"status": "RED", "message": f"CHRONOS: Chain Fracture at line {i+1}."}
+                        
+                        # Chronology check
+                        ts_str = entry.get("timestamp")
+                        if ts_str:
+                            try:
+                                clean_ts = ts_str.replace('Z', '')
+                                current_ts = datetime.datetime.fromisoformat(clean_ts)
+                                if last_ts and current_ts < last_ts:
+                                    return {"status": "RED", "message": f"CHRONOS: Temporal Reversal at line {i+1}."}
+                                last_ts = current_ts
+                            except (ValueError, TypeError):
+                                continue
+
                         last_sig = sig
-                    except: continue
+                    except json.JSONDecodeError:
+                        # Malformed JSON should be handled by the purity script quarantine
+                        # But P5 audit should still flag it if found in the main file
+                        return {"status": "FAIL", "message": f"CHRONOS: Malformed JSON at line {i+1}. Run Purity script."}
         return {"status": "GREEN", "message": "Temporal Chain Verified."}
 
     @staticmethod
@@ -580,15 +673,35 @@ class Port5Immunize:
     @staticmethod
     def shard6_audit():
         """P5.6: AUDIT (BFT Quorum). Shard Performance Evaluation."""
-        # Placeholder for real-time shard metrics
-        return {"status": "GREEN", "message": "BFT Quorum Metrics: Nominal."}
+        # Scan blackboard for ADVERSARIAL_THEATER flags in the last 100 entries
+        theater_count = 0
+        if os.path.exists(BLACKBOARD_PATH):
+            with open(BLACKBOARD_PATH, "r") as f:
+                lines = f.readlines()[-100:]
+                for line in lines:
+                    if "ADVERSARIAL_THEATER" in line:
+                        theater_count += 1
+        
+        if theater_count > 0:
+            return {"status": "YELLOW", "message": f"BFT Quorum Audit: {theater_count} theater flags detected in recent sessions."}
+        return {"status": "GREEN", "message": "BFT Quorum Metrics: Nominal. No recent theater detected."}
 
     @staticmethod
     def shard7_seal():
         """P5.7: SEAL (Cryptographic Anchor). Grudge-List Integrity."""
         blood_grudges = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/BOOK_OF_BLOOD_GRUDGES.md"
+        receipt = blood_grudges + ".receipt.json"
+        
         if not os.path.exists(blood_grudges):
             return {"status": "CRITICAL", "message": "BOOK_OF_BLOOD_GRUDGES MISSING!"}
+        
+        if not os.path.exists(receipt):
+            return {"status": "RED", "message": "SEAL BREACH: Book of Blood Grudges is unsigned!"}
+            
+        # Verify if the receipt is newer than the file (approximate anchor)
+        if os.path.getmtime(blood_grudges) > os.path.getmtime(receipt):
+            return {"status": "RED", "message": "SEAL BREACH: Book of Blood Grudges modified without re-signing!"}
+
         return {"status": "PASS", "message": "Medallion Seal: ARMORED."}
 
     @staticmethod

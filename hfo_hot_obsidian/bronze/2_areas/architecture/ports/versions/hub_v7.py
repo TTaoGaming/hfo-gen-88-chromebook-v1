@@ -126,7 +126,7 @@ class HubV7:
         OUTPUT FORMAT (STRICT JSON):
         {{
             "artifact_id": "Baton_{stage}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}",
-            "status": "GREEN",
+            "status": "RED|YELLOW|GREEN",
             "bft_metrics": {{
                 "consensus_score": 0.0,
                 "quorum_reached": true,

@@ -178,14 +178,20 @@ if __name__ == "__main__":
             # Fallback to direct shard call if V2 is not imported
             print(Port0Observe.port0_shard0_observe(sys.argv[2] if len(sys.argv) > 2 else "ping"))
     elif cmd == "p5":
-        results = Port5Immunize.execute_all()
+        if len(sys.argv) > 2 and sys.argv[2].lower() == "manifest":
+            print(Port5Immunize.get_manifest())
+            sys.exit(0)
+            
+        file_context = sys.argv[2] if len(sys.argv) > 2 else None
+        results = Port5Immunize.execute_all(file_context=file_context)
         # Log V-Phase to blackboard for HIVE compliance
         log_to_blackboard({
-            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
             "phase": "V",
-            "audit": results
+            "audit": results,
+            "file_context": file_context
         })
-        print(json.dumps(results))
+        print(json.dumps(results, indent=2))
         # EXIT GATE: Block if aggregate status is not PASS
         if results.get("aggregate_status") != "PASS":
             sys.exit(1)

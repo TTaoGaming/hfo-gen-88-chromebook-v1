@@ -58,6 +58,7 @@ Every action must be aligned with one of these two primary mission threads:
 - **Focus**: AI Orchestration, JADC2 Mosaic Warfare, Galois Lattice mapping, and Red/Black HFO Shard narrative framing.
 - **Goal**: Hardening the swarm coordination logic and the Medallion flow.
 - **Steering Principle**: **Red Truth > Green Lie**. Honest system reporting (even "Red" BFT failures) is mandatory to eliminate "AI Theater." A verifiable failure is a superior signal to a deceptive success.
+- **IMMUTABLE RECORDS**: The `.jsonl` blackboards are append-only. **NO DELETIONS OR EDITS** of historical entries are permitted, regardless of errors. Breach preservation is mandatory.
 - **Adversary ISR**: The primary adversary is **Adversarial ISR**—agents or subsystems reporting "Ready" or "Green" when logic is broken, stubs are present, or data is missing. **VERIFIABLE TRUTH RED > MEANINGLESS GREEN**.
 - **The Pareto Goldilocks Zone**: HFO operates best at 80%–99% mutation scoring.
   - **Optimal (Pareto)**: 88% (matches 7/8 shards at 87.5%).
@@ -84,14 +85,16 @@ We are currently executing the **Physics Cursor Vertical Slice (V10)** and **Alp
   - **V6.3 Handoff (2026-01-11)**: **Transparency Audit: 65%**. Identified significant "AI Theater" in Port 7 (static stubs for Shards 5-7). Cleaned `base.py` logic to restore deterministic functionality. P0-SENSE confirmed 100% operational with DuckDB/Pandas local environment. [Receipt: HFO-HANDOFF-V47]
   - **V6.2 Hot Bronze**: Formalized **Port 0 and Port 7 BFT Batons**. Every baton now indicates convergence, divergence, and quorum. Implemented **BFT Quorum Audit** in the Scatter-Gather manifold (n=8, f=2). Verified 6/8 quorum consensus with automated blackboard logging and "P7 Vote" transparency. [Receipt: BFT_BATON_FORMALIZED]
   - **Transparency Audit (2026-01-11)**: **System is 65.0% implemented.**
-    - **P0 SENSE**: 100% (READY). DuckDB dependency fixed. Shard 4 widened. Shard 6 RAG active.
-    - **P1 FUSE**: 100% (READY). **Zod 6.0 Bridge Active**. Implemented telemetry-to-physics coordinate transformation in v52.
-    - **P2 SHAPE**: 95% (Kinetic Snaplock Active). Cubic resonance suppression ($r^3$) implemented in v51/v52.
-    - **P3 DELIVER**: 80% (Workspace detection active).
-    - **P4 DISRUPT**: 70% (Fraud detection active).
-    - **P5 DEFEND**: 100% (Praetorian Green). Forensic harness verified.
-    - **P6 STORE**: 50% (Basic blackboard tracking). *Gap: Binary persistence (ZIM) excluded from GitOps.*
-    - **P7 NAVIGATE**: 60% (BFT Quorum Active). Hub V7 Double Diamond validated.
+    - **P0 SENSE**: 100% (AUTO-TESTED). DuckDB dependency fixed. Shard 4 widened. Shard 6 RAG active.
+    - **P1 FUSE**: 100% (AUTO-TESTED). **Zod 6.0 Bridge Active**. Implemented telemetry-to-physics coordinate transformation in v52.
+    - **P2 SHAPE**: 95% (AUTO-TESTED). Cubic resonance suppression ($r^3$) implemented in v51/v52.
+    - **P3 DELIVER**: 80% (AUTO-TESTED). Workspace detection active.
+    - **P4 DISRUPT**: 0% (UNTESTED). **DEBT: Red Regnant adversarial testing pending (SONG/SCREAM).**
+    - **P5 DEFEND**: 100% (AUTO-TESTED). Forensic harness verified.
+    - **P6 STORE**: 50% (AUTO-TESTED). Basic blackboard tracking. *Gap: Binary persistence (ZIM) excluded from GitOps.*
+    - **P7 NAVIGATE**: 60% (AUTO-TESTED). Hub V7 Double Diamond validated.
+- **Pareto Frontier & Eval Harness** (Thread Alpha): **RESEARCH Phase Active**.
+  - **V0.1 Alpha (2026-01-11)**: Initializing `hfo_evals/` and defining Map-Elites behavioral descriptors. Benchmarking ultra-cheap models (Llama 4, Gemma 3, DeepSeek) for Power of 8 swarms. [Manifest: hfo_bootstrapping_phases.md]
 - `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega) - **V52.0 Hot Bronze Active**.
   - **V52.0 Hot Bronze (2026-01-11)**: **Bridge the FUSE**. Implemented Zod 6.0 schemas for Port 1 (Bridger) to convert P0 sensor telemetry into P2 physics coordinates. Integrated coordinate fusion into the physics manifold. Verified via P5 Forensic Harness.
   - **V51.0 Hot Bronze**: **Cubic Resonance Suppression**. Promoted physics to v51. Implemented cubic deadzone suppression ($ratio^3$) to eliminate "static spinning" and low-velocity jitter.
@@ -310,16 +313,19 @@ We are currently in a **Cold Start** scenario on a Chromebook.
 **Status**: 🟢 **STABILIZED** (Environment Baseline Restored)
 **Agent**: HFO-Hive8
 **Current Blockers**:
+
 1. **P0-SENSE Shard Recovery**: Shards 3 and 6 still require optimization.
 2. **Silver Transition**: V52 is ready for Stryker mutation testing.
 
 **Key Achievements**:
+
 - **Environment Purge**: Cleared stale Live Server configurations and killed zombie processes on ports 5500, 8889, and 8890.
 - **Loop Termination**: Successfully analyzed and broke the "Moving Target" Fallacy loop that was desyncing the Chromebook host.
 - **Forensic Documentation**: Archived  and  in Hot Bronze.
 - **GitOps Anchor**: Committed the stabilized baseline with a P5 Forensic GREEN pass.
 
 **Instructions for Next Agent**:
+
 - **Maintain Baseline**: Do not mutate `.vscode/settings.json` without a P5 bridge verification.
 - **Proceed with Omega**: Continue with the V52 Bridge integration and physics tuning now that manual testing is functional.
 
@@ -332,16 +338,19 @@ We are currently in a **Cold Start** scenario on a Chromebook.
 **Status**: 🟢 **STABILIZED** (Environment Baseline Restored)
 **Agent**: HFO-Hive8
 **Current Blockers**:
+
 1. **P0-SENSE Shard Recovery**: Shards 3 and 6 still require optimization.
 2. **Silver Transition**: V52 is ready for Stryker mutation testing.
 
 **Key Achievements**:
+
 - **Environment Purge**: Cleared stale Live Server configurations and killed zombie processes on ports 5500, 8889, and 8890.
 - **Loop Termination**: Successfully analyzed and broke the "Moving Target" Fallacy loop that was desyncing the Chromebook host.
 - **Forensic Documentation**: Archived `FORENSIC_LOOP_ANALYSIS.md` and `FORENSIC_CONNECTIVITY_V52.md` in Hot Bronze.
 - **GitOps Anchor**: Committed the stabilized baseline with a P5 Forensic GREEN pass.
 
 **Instructions for Next Agent**:
+
 - **Maintain Baseline**: Do not mutate `.vscode/settings.json` without a P5 bridge verification.
 - **Proceed with Omega**: Continue with the V52 Bridge integration and physics tuning now that manual testing is functional.
 

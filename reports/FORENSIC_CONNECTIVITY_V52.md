@@ -14,16 +14,21 @@ The project has entered a "Connectivity Death Spiral" on the Chromebook V-1 host
 ## 🎭 The Anatomy of the Failure
 
 ### 1. The Port Conflict (Collision)
+
 Initial V52 setup attempted to use port `8889` for two separate processes (Python and Live Server). This created a "Zombie Socket" scenario where the Linux kernel reported the port as open, but the application layer (Live Server) was unable to bind cleanly to the existing listener, leading to the `ERR_SOCKET_NOT_CONNECTED` state.
 
 ### 2. The Host-Bridge Block (The "Wall")
-After reverting to the standard port `5500`, the error shifted to `ERR_CONNECTION_REFUSED`. 
+
+After reverting to the standard port `5500`, the error shifted to `ERR_CONNECTION_REFUSED`.
+
 - **Evidence**: `netstat -tulpn` shows `31404/exe` (VS Code) is listening on `0.0.0.0:5500`.
 - **Evidence**: Internal `curl` from within Linux returns `HTTP/1.1 200 OK`.
 - **Deduction**: The Linux firewall or the ChromeOS Crostini bridge has "blacklisted" or failed to propagate the port forwarding for `127.0.0.1`.
 
 ### 3. The Playwright Proof (The "Mirror")
+
 A headless Playwright capture (`hfo:shot:headless`) was executed.
+
 - **Result**: **SUCCESS**.
 - **Implication**: The system is 100% functional *inside* the Linux environment. The failure is strictly **External Visibility**.
 

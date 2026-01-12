@@ -50,6 +50,7 @@ Update `AGENTS.md` ONLY if mission parameters shift.
 - **Medallion Flow**: Never skip Bronze. No direct Gold injections.
 - **Provenance**: Use headers in ALL files: `// Medallion: [Bronze|Silver|Gold] | Mutation: [Score]% | HIVE: [H|I|V|E]`
 - **Zod 6.0**: Mandatory for all cross-port communication schemas.
+- **Immutable Blackboards**: **NEVER** edit or delete lines from the `.jsonl` blackboards. Even if a timestamp is wrong or a 429 error occurs, it must be preserved. Fixes must be new append-only entries, never deletions/edits of previous logic breaches. "Red Truth > Green Lie."
 
 ---
 *Spider Sovereign (Port 7) | Symbiotic Canalization Active*

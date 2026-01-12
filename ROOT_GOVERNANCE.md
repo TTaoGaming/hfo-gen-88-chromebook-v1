@@ -34,5 +34,11 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 2. **Medallion Pathing**: Do not commit experimental logic directly to `silver/` or `gold/` without a `bronze/` cooling period.
 3. **Atomic Changes**: Commit based on Port functionality or HIVE phase completion.
 
+## 📓 Immutable Blackboard (Red Truth)
+The `.jsonl` blackboards (`hfo_hot_obsidian/hot_obsidian_blackboard.jsonl` and `hfo_cold_obsidian/cold_obsidian_blackboard.jsonl`) are **Immutable Append-Only Records**.
+1. **No Editing/Deletion**: Deleting lines, fixing timestamps after the fact, or "cleaning" the blackboard is strictly forbidden. 
+2. **Red Truth > Green Lie**: A detected 429, a BFT failure, or a BREACH must remain in the record forever.
+3. **Theater Prohibition**: AI agents are forbidden from "correcting" the blackboard to make the system look "Green" or to resolve "Moving Target" loops via deletion. The record MUST reflect the actual sequence of events, including failures.
+
 ---
-*Spider Sovereign (Port 7) | Law established on 2026-01-09*
+*Spider Sovereign (Port 7) | Law updated on 2026-01-11*
