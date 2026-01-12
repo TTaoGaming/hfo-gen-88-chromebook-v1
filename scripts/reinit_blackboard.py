@@ -34,7 +34,7 @@ def reinit_blackboard():
     reinit_entry["signature"] = signature
     
     with open(BLACKBOARD_PATH, "w") as f:
-        f.write(json.dumps(reinit_entry) + "\n")
+        f.write(json.dumps(reinit_entry, sort_keys=True) + "\n")
     
     print("✅ Blackboard REINIT successful. Chain started.")
 
