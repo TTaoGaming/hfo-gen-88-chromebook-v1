@@ -483,10 +483,38 @@ class Port5Immunize:
 
     @staticmethod
     def shard0_hardgate():
-        """P5.0: HARDGATE (Structural Integrity). Syntax + Physics Audit."""
+        """P5.0: HARDGATE (Structural Integrity). Syntax + Resource + Physics Audit."""
         active_ws = get_active_workspace()
+        
+        # 1. Syntax Check
         if subprocess.run(["python3", "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/p5_syntax_gate.py", active_ws]).returncode != 0:
             return {"status": "FAIL", "message": "Syntax Gate Failed"}
+            
+        # 2. Resource Reachability (Anti-Hallucination)
+        try:
+            with open(active_ws, 'r') as f:
+                content = f.read()
+                
+                # CRITICAL: Local Assets must exist
+                import re
+                srcs = re.findall(r'src="(\./.*?)"', content)
+                for src in srcs:
+                    full_path = os.path.join(os.path.dirname(active_ws), src)
+                    if not os.path.exists(full_path):
+                        return {"status": "FAIL", "message": f"Resource Breach: Missing local asset {src}"}
+
+                # GOLDILOCKS: Allow standard CDNs but warn on hallucination patterns
+                if "storage.googleapis.com" in content:
+                    # If it's a model checkpoint, it's a high-probability hallucination bypass
+                    if "checkpoint" in content or "weights" in content:
+                        return {"status": "FAIL", "message": "Resource Breach: Hallucinated remote weights detected."}
+                    else:
+                        # Allow standard CDNs for now as a 'WARNING', not a block
+                        print("🟡 [P5-WARN]: Remote CDN detected (storage.googleapis.com). Proceed with caution.")
+
+        except Exception as e:
+            return {"status": "FAIL", "message": f"Resource Audit Error: {e}"}
+
         return {"status": "PASS", "message": "Physical/Syntax Integrity Verified."}
 
     @staticmethod

@@ -5,7 +5,8 @@ echo "🛡️ [P5-SLOP]: Scanning for AI Theater and Slop Patterns..."
 
 # 1. Block "Existing Code" markers
 # Using char classes to avoid self-triggering during pre-commit audit
-MARKERS=$(git diff --cached --name-only | xargs -I {} grep -HE "\.\.\.[e]xisting [c]ode\.\.\.|\.\.\.[r]est of the [c]ode\.\.\.|Lines .* [o]mitted" {} 2>/dev/null)
+# We ignore report files to avoid false positives from trial documentation
+MARKERS=$(git diff --cached --name-only | grep -vE "reports/|manifest|BOOK_OF_BLOOD_GRUDGES" | xargs -I {} grep -HE "\.\.\.[e]xisting [c]ode\.\.\.|\.\.\.[r]est of the [c]ode\.\.\.|Lines .* [o]mitted" {} 2>/dev/null)
 if [ ! -z "$MARKERS" ]; then
     echo "🚨 [SLOP-BLOCK]: AI-Generated 'Existing Code' marker detected!"
     echo "$MARKERS"
@@ -13,7 +14,8 @@ if [ ! -z "$MARKERS" ]; then
 fi
 
 # 2. Block Empty Stubs in sensitive ports
-STUBS=$(git diff --cached --name-only | grep "hfo_hot_obsidian/" | xargs -I {} grep -HE "pass$|return \{\}$" {} 2>/dev/null)
+# Using [[:space:]] to avoid false positives like "bypass"
+STUBS=$(git diff --cached --name-only | grep "hfo_hot_obsidian/" | xargs -I {} grep -HE "[[:space:]]pass$|return \{\}$" {} 2>/dev/null)
 if [ ! -z "$STUBS" ]; then
     echo "🚨 [THEATER-BLOCK]: Empty stub detected in Hub Ports!"
     echo "$STUBS"
