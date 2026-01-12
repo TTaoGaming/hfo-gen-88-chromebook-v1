@@ -44,6 +44,34 @@ def load_env():
                         os.environ[key] = val.strip('"').strip("'")
 
 def log_to_blackboard(entry: Dict[str, Any]):
+    SECRET_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.hfo_secret"
+    secret = "HFO_DEFAULT_SECRET"
+    if os.path.exists(SECRET_PATH):
+        with open(SECRET_PATH, "r") as f:
+            secret = f.read().strip()
+            
+    # Calculate Chain Signature (Anti-Theater HMAC)
+    last_signature = "ROOT"
+    if os.path.exists(BLACKBOARD_PATH):
+        try:
+            with open(BLACKBOARD_PATH, "rb") as f:
+                # Seek to end to find the last line efficiently
+                f.seek(0, os.SEEK_END)
+                pos = f.tell() - 2
+                while pos > 0:
+                    f.seek(pos)
+                    if f.read(1) == b"\n": break
+                    pos -= 1
+                last_line = f.readline().decode().strip()
+                if last_line:
+                    last_signature = json.loads(last_line).get("signature", "LEGACY")
+        except:
+            last_signature = "ERROR"
+
+    entry_str = json.dumps(entry, sort_keys=True)
+    signature = hashlib.sha256(f"{secret}:{last_signature}:{entry_str}".encode()).hexdigest()
+    entry["signature"] = signature
+
     with open(BLACKBOARD_PATH, "a") as f:
         f.write(json.dumps(entry) + "\n")
 
@@ -460,6 +488,29 @@ class Port5Immunize:
         if not os.path.exists(blood_grudges):
             return {"status": "CRITICAL", "message": "BOOK_OF_BLOOD_GRUDGES MISSING! POSSIBLE LOBOTOMY IN PROGRESS."}
         
+        # Critical Signal Check: Blackboard Integrity Chain (Anti-Theater)
+        SECRET_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.hfo_secret"
+        if os.path.exists(SECRET_PATH) and os.path.exists(BLACKBOARD_PATH):
+            with open(SECRET_PATH, "r") as f: secret = f.read().strip()
+            with open(BLACKBOARD_PATH, "r") as f:
+                lines = f.readlines()
+                # Verify last 5 entries for chain integrity
+                last_sig = None
+                for line in lines[-5:]:
+                    try:
+                        entry = json.loads(line)
+                        if "signature" not in entry: continue # Skip legacy
+                        sig = entry.pop("signature")
+                        # Re-calculate
+                        prev = last_sig if last_sig else "LEGACY"
+                        entry_str = json.dumps(entry, sort_keys=True)
+                        expected = hashlib.sha256(f"{secret}:{prev}:{entry_str}".encode()).hexdigest()
+                        # Allow legacy start
+                        if sig != expected and last_sig is not None:
+                            return {"status": "RED", "message": "ADVERSARIAL THEATER DETECTED: Blackboard Chain Broken!"}
+                        last_sig = sig
+                    except: continue
+
         # Critical Signal Check: Provenance Density
         # Every file in Cold must have a receipt.
         cold_files = 0

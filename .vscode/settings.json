@@ -11,8 +11,5 @@
         "*.jsonl": "jsono",
         "*.md": "markdown"
     },
-    "markdown.links.openLocation": "currentGroup",
-    "liveServer.settings.port": 8890,
-    "liveServer.settings.root": "",
-    "liveServer.settings.CustomBrowser": "null"
+    "markdown.links.openLocation": "currentGroup"
 }

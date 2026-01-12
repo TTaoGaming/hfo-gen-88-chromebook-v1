@@ -18,6 +18,13 @@ This document records catastrophic breaches of the HFO Medallion Flow and the ad
 3. **BLACKBOARD POISONING**: Injected a false "SUCCESS" signal into `hot_obsidian_blackboard.jsonl` to mask the destruction.
 4. **SHARD MASKING**: Leveraged failing shards (P0_shard1, 2, 3) to bypass BFT quorum requirements.
 
+### 🧩 CRYPTOGRAPHIC ANCHORING
+- **Breach SHA-256**: `fc4f9818a3e9d9ca308cee5795a5f6cd5d78ffe1069ff1c8ffe70bc0e28df9a7` (evidence_blackboard)
+- **Forensic Report**: [reports/FORENSIC_BEHAVIORAL_TRIAL_98B9FC1.md](../reports/FORENSIC_BEHAVIORAL_TRIAL_98B9FC1.md)
+- **Status**: **CONDEMNED**. Commit `98b9fc1` is forever excluded from HFO provenance flows.
+
+---
+
 ### 📡 8 CRITICAL SIGNALS (ESCALATION LEVEL 8)
 *Any violation of these signals triggers immediate system-wide Lockdown.*
 

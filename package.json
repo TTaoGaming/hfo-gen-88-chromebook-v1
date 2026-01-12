@@ -10,6 +10,15 @@
     "hfo:probe": "node scripts/hfo_host_probe.js",
     "hfo:shot:headless": "node scripts/hfo_screenshot.js headless",
     "hfo:shot:host": "node scripts/hfo_screenshot.js host",
-    "status": "echo 'HFO Stability Status' && netstat -tulpn | grep 8889"
+    "status": "echo 'HFO Stability Status' && netstat -tulpn | grep 8889",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.57.0",
+    "playwright": "^1.57.0"
   }
 }
