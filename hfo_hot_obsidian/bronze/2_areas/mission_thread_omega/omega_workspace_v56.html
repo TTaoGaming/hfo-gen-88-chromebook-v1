@@ -98,6 +98,13 @@
             border: 1px solid var(--m3-outline);
         }
 
+        .video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            background: #000;
+        }
+
         .video-feed:hover {
             opacity: 0.8;
             filter: grayscale(0.2) contrast(1.1) brightness(0.9);
@@ -113,7 +120,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: fill;
             pointer-events: none;
         }
 
@@ -484,9 +491,26 @@
             }
         }
 
+        /**
+         * 🧬 HFO Mirror Legibility Helper
+         * Ensures text remains readable when the canvas is visually mirrored (transform: scaleX(-1))
+         */
+        const hfoFillText = (ctx, text, x, y, mirrored = false) => {
+            if (!mirrored) {
+                ctx.fillText(text, x, y);
+                return;
+            }
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(-1, 1);
+            ctx.fillText(text, 0, 0);
+            ctx.restore();
+        };
+
         const hfoState = window.hfoState = {
             active: true, debug: true,
-            transparency: 1.0, // 🕵️ REAL-TIME SENSING QUALITY (0.0 - 1.0)
+            sensingQuality: 1.0, 
+            excalidrawOpacity: 0.7, // 🕵️ V56: Default to 70% for layered view
             mpOptions: { numHands: 2, minHandDetectionConfidence: 0.6, minHandPresenceConfidence: 0.6, minTrackingConfidence: 0.6, dwellMs: 1000 },
             visuals: {
                 heroStrategy: 'HEX_SHARD',
@@ -896,8 +920,10 @@
                 let normX = cursor.x;
                 if (hfoState.physics.p3Mirror) normX = 1 - normX;
 
-                let x = normX * window.innerWidth;
-                let y = cursor.y * window.innerHeight;
+                // 📐 V56: Bounding Box Parity (Shared Substrate)
+                const rect = hfoSystem.canvas ? hfoSystem.canvas.getBoundingClientRect() : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+                let x = rect.left + normX * rect.width;
+                let y = rect.top + cursor.y * rect.height;
 
                 // 🎯 V40 EXEMPLAR: Robust Target Capture
                 const pointerId = Number(hand.id) + 10;
@@ -1359,7 +1385,7 @@
 
                                 // Penalty for low FPS (Target 30fps = 33ms)
                                 const fpsPenalty = dt > 50 ? 0.2 : 0;
-                                hfoState.transparency = Math.max(0, Math.min(1.0, rawQuality - fpsPenalty));
+                                hfoState.sensingQuality = Math.max(0, Math.min(1.0, rawQuality - fpsPenalty));
 
                                 if (res) {
                                     const ctx = hfoSystem.ctx;
@@ -1462,7 +1488,7 @@
                                                 if (hfoState.debug) {
                                                     ctx.globalAlpha = 1.0;
                                                     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; ctx.font = '10px Roboto';
-                                                    ctx.fillText(c.label.split(' ')[1], c.x * canvas.width + size + 8, c.y * canvas.height + 3);
+                                                    hfoFillText(ctx, c.label.split(' ')[1], c.x * canvas.width + size + 8, c.y * canvas.height + 3, hfoState.physics.p0Mirror);
                                                 }
                                             });
 
@@ -1476,7 +1502,7 @@
 
                                                 ctx.fillStyle = '#fff';
                                                 ctx.font = 'bold 12px Roboto';
-                                                ctx.fillText('PORT 4: GOLDEN MASTER ANALYSIS', tx, ty);
+                                                hfoFillText(ctx, 'PORT 4: GOLDEN MASTER ANALYSIS', tx, ty, hfoState.physics.p0Mirror);
 
                                                 const metrics = [
                                                     { l: 'MODE', v: hfoState.goldenMaster.mode },
@@ -1485,7 +1511,7 @@
                                                     { l: '1EURO_SMOOTH_V', v: (h.cursors.smooth.x - h.cursors.raw.x).toFixed(5) },
                                                     { l: 'STIFFNESS_ERROR', v: (h.cursors.spring.body.position.x - h.cursors.spring.anchor.position.x).toFixed(5) },
                                                     { l: 'PRED_BIAS', v: (h.cursors.predictive.x - h.cursors.spring.x).toFixed(5) },
-                                                    { l: 'SENSE_QUALITY', v: hfoState.transparency.toFixed(2) }
+                                                    { l: 'SENSE_QUALITY', v: hfoState.sensingQuality.toFixed(2) }
                                                 ];
 
                                                 if (hfoState.goldenMaster.frameCounter % 60 === 0 && hfoSystem.tuningMirror.active) {
@@ -1506,9 +1532,9 @@
 
                                                 metrics.forEach((m, i) => {
                                                     ctx.fillStyle = '#ff5252';
-                                                    ctx.fillText(m.l + ':', tx, ty + 25 + i * 20);
+                                                    hfoFillText(ctx, m.l + ':', tx, ty + 25 + i * 20, hfoState.physics.p0Mirror);
                                                     ctx.fillStyle = '#fff';
-                                                    ctx.fillText(m.v, tx + 100, ty + 25 + i * 20);
+                                                    hfoFillText(ctx, m.v, tx + 100, ty + 25 + i * 20, hfoState.physics.p0Mirror);
                                                 });
                                             }
 
@@ -1519,8 +1545,8 @@
                                                 ctx.fillStyle = '#ff0000';
                                                 ctx.font = '11px Roboto Mono';
                                                 const curlStr = `N1-Index: ${h.curls.index.toFixed(2)}`;
-                                                ctx.fillText(curlStr, tx, ty);
-                                                ctx.fillText(`COLLECTIVE_ID: ${h.id}`, tx, ty + 14);
+                                                hfoFillText(ctx, curlStr, tx, ty, hfoState.physics.p0Mirror);
+                                                hfoFillText(ctx, `COLLECTIVE_ID: ${h.id}`, tx, ty + 14, hfoState.physics.p0Mirror);
                                             }
                                             port3Inject(h);
 
@@ -1952,12 +1978,33 @@
             wrapper.style.height = '100%';
             wrapper.style.position = 'relative';
             wrapper.style.background = '#000';
+            wrapper.style.overflow = 'hidden';
+
+            // 🤳 SUBSTRATE INJECTION (Camera + Overlay Canvas)
+            // We force singletons into this container for 1:1 coordinate parity
+            if (hfoSystem.video) {
+                hfoSystem.video.style.position = 'absolute';
+                hfoSystem.video.style.top = '0';
+                hfoSystem.video.style.left = '0';
+                wrapper.appendChild(hfoSystem.video);
+            }
+            if (hfoSystem.canvas) {
+                hfoSystem.canvas.style.position = 'absolute';
+                hfoSystem.canvas.style.top = '0';
+                hfoSystem.canvas.style.left = '0';
+                wrapper.appendChild(hfoSystem.canvas);
+            }
 
             const iframe = document.createElement('iframe');
             iframe.src = './excalidraw_v31_wrapper.html';
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.zIndex = '10';
+            iframe.style.opacity = hfoState.excalidrawOpacity;
             iframe.id = 'excalidraw-iframe';
             wrapper.appendChild(iframe);
 
@@ -2017,6 +2064,14 @@
             mp.add(hfoState.mpOptions, 'minTrackingConfidence', 0, 1).name('Neural Lock Strength');
             mp.add(hfoState, 'debug').name('Overlay Synapses');
             mp.open();
+
+            const vis = gui.addFolder('Visual Synthesis');
+            vis.add(hfoState, 'excalidrawOpacity', 0, 1).name('Tool Opacity').onChange(v => {
+                const iframe = document.getElementById('excalidraw-iframe');
+                if (iframe) iframe.style.opacity = v;
+            });
+            vis.add(hfoState.visuals, 'showSkeleton').name('Show Skeleton');
+            vis.open();
 
             container.appendChild(gui.domElement);
         };
