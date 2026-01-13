@@ -368,7 +368,7 @@
                 super();
                 this.SCALE = 100.0; // 100px = 1m
                 this.world = planck.World({ gravity: planck.Vec2(0, 0) });
-                
+
                 // Cursor Body (Dynamic)
                 this.cursor = this.world.createBody({
                     type: 'dynamic',
@@ -398,13 +398,13 @@
             update(targetX, targetY, dt) {
                 const tx = targetX / this.SCALE;
                 const ty = targetY / this.SCALE;
-                
+
                 this.target.setPosition(planck.Vec2(tx, ty));
-                
+
                 // Step world (fixed timestep recommended for Planck, but we use adaptive for simplicity here)
                 // In production, we'd use a fixed accumulator.
                 this.world.step(Math.min(dt / 1000, 0.033));
-                
+
                 const pos = this.cursor.getPosition();
                 this.lastPos = { x: pos.x * this.SCALE, y: pos.y * this.SCALE };
                 return this.lastPos;
@@ -608,7 +608,7 @@
                                     );
                                     systemState.p1.physicsState[i].reset(smoothedX, smoothedY);
                                 }
-                                
+
                                 // Sync params in case they changed in GUI
                                 systemState.p1.physicsState[i].setParams({
                                     stiffness: systemState.parameters.physics.planckStiffness,
@@ -1216,7 +1216,7 @@
                     systemState.p1.cursors.forEach((c) => {
                         const tx = (c.screenX / (systemState.p0.videoBounds?.width || 1)) * canvas.width;
                         const ty = (c.screenY / (systemState.p0.videoBounds?.height || 1)) * canvas.height;
-                        
+
                         // Origin Pointer (Raw Sensing)
                         const rx = (c.rawX / (systemState.p0.videoBounds?.width || 1)) * canvas.width;
                         const ry = (c.rawY / (systemState.p0.videoBounds?.height || 1)) * canvas.height;
@@ -1372,7 +1372,7 @@
                 if (fsmState === 'IDLE') return;
 
                 const color = fsmState === 'COMMIT' ? '#FF4136' : (fsmState === 'READY' ? '#FFD700' : '#0074D9');
-                
+
                 // Draw Beam Path (Rod)
                 if (systemState.parameters.physics.showLaserBeam) {
                     ctx.beginPath();

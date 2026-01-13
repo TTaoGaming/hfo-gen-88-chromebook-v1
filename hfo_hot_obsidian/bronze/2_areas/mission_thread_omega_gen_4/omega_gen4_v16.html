@@ -318,10 +318,10 @@
                 p0Active: false,
                 devMode: false
             },
-            fsm: { 
-                currentState: 'IDLE', 
-                lastState: 'IDLE', 
-                lastCommitTime: 0, 
+            fsm: {
+                currentState: 'IDLE',
+                lastState: 'IDLE',
+                lastCommitTime: 0,
                 commitExitStartTime: 0,
                 primaryHandIndex: null // Hot Seat Primacy [V15]
             },
@@ -574,7 +574,7 @@
                                 } else if (!hasConfidence) {
                                     // Drop to IDLE or COAST? User said READY tracking loss should drain to IDLE.
                                     // We'll let the bucket drain naturally above.
-                                } else if (isPointing && isPalmFacing) { 
+                                } else if (isPointing && isPalmFacing) {
                                     if (isSeatAvailable) {
                                         fsmStateNew = 'COMMIT';
                                         systemState.fsm.primaryHandIndex = i; // Claim Hot Seat
@@ -615,14 +615,14 @@
                         // Coasting Logic for missing landmarks (V16: Bucket-driven)
                         const last = systemState.p1.lastData[i];
                         const fsmState = systemState.p1.fsmStates[i];
-                        
+
                         if (last && fsmState !== 'IDLE') {
                             // Apply Bucket Drain (even when landmarks missing)
                             const isCoasting = (fsmState === 'COAST' || fsmState === 'COMMIT');
                             const drainTime = isCoasting ? systemState.parameters.fsm.coastDrainTimeMs : systemState.parameters.fsm.releaseTimeMs;
                             const drainAmount = (100 / drainTime) * dt;
                             systemState.p1.buckets[i] = Math.max(0, systemState.p1.buckets[i] - drainAmount);
-                            
+
                             const bucket = systemState.p1.buckets[i];
                             if (bucket > systemState.parameters.fsm.hysteresisLow) {
                                 // Continue Coasting using last known data
@@ -640,7 +640,7 @@
                     if (cursorData) {
                         const validated = FusionSchema.parse({ ...cursorData, timestamp: now });
                         cursors.push(validated);
-                        
+
                         // V15: Global state follows committer, or hand 0
                         const primary = systemState.fsm.primaryHandIndex;
                         if (primary !== null) {
@@ -710,11 +710,11 @@
 
         function dispatchPointerEvents() {
             if (systemState.p1.cursors.length === 0) return;
-            
+
             // V16: Hot Seat Primacy - Follow the Committer or the Coaster
             const primary = systemState.fsm.primaryHandIndex;
             let cursor;
-            
+
             if (primary !== null) {
                 // Find data for precisely the primary hand
                 cursor = systemState.p1.cursors.find(c => {
@@ -726,18 +726,18 @@
                     return systemState.p1.lastData[primary] === c || (c.handIndex === primary);
                 });
             }
-            
+
             // Fallback to finding COMMIT or first cursor
             if (!cursor) cursor = systemState.p1.cursors.find(c => c.fsmState === 'COMMIT');
             if (!cursor) cursor = systemState.p1.cursors[0];
 
             if (!cursor) return;
 
-            const eventType = cursor.fsmState === 'COMMIT' ? 'pointermove' : 'pointermove'; 
+            const eventType = cursor.fsmState === 'COMMIT' ? 'pointermove' : 'pointermove';
 
             // Pressure logic: COMMIT = 1.0, COAST = 0.5 (Inertia), else 0.0
             const pressure = cursor.fsmState === 'COMMIT' ? 1.0 : (cursor.fsmState === 'COAST' ? 0.5 : 0.0);
-            
+
             const event = new PointerEvent(eventType, {
                 bubbles: true,
                 cancelable: true,
@@ -796,10 +796,10 @@
                 'COAST': ['rgba(255, 255, 255, 0.4)', 'rgba(145, 213, 255, 0.3)', 'rgba(9, 109, 217, 0.2)', 'rgba(9, 109, 217, 0)']
             };
             const c = colors[state] || colors['READY'];
-            
+
             ctx.save();
             ctx.globalCompositeOperation = 'screen';
-            
+
             // Outer Gloom/Heat Distortion
             const bloomSize = size * (4 + Math.sin(time / 150) * 0.5);
             const bloomGrad = ctx.createRadialGradient(x, y, 0, x, y, bloomSize);
@@ -814,12 +814,12 @@
             coreGrad.addColorStop(0.3, c[1]);
             coreGrad.addColorStop(0.7, c[2]);
             coreGrad.addColorStop(1, c[3]);
-            
+
             ctx.fillStyle = coreGrad;
             ctx.beginPath();
             ctx.arc(x, y, size * 2, 0, Math.PI * 2);
             ctx.fill();
-            
+
             // Pulsing spikes/tendrils
             if (state === 'COMMIT') {
                 ctx.strokeStyle = c[1];
@@ -833,7 +833,7 @@
                     ctx.stroke();
                 }
             }
-            
+
             ctx.restore();
         }
 
@@ -841,24 +841,24 @@
             if (bucketLevel <= 5) return;
             const intensity = bucketLevel / 100;
             const time = Date.now();
-            
+
             ctx.save();
             ctx.globalCompositeOperation = 'screen';
-            
+
             // Scale points based on intensity (0=wrist, 20=tips)
             const targetPoints = [0, 1, 2, 3, 4, 5, 8, 9, 12, 13, 16, 17, 20];
             const activeCount = Math.floor(targetPoints.length * intensity);
-            
+
             for (let i = 0; i < activeCount; i++) {
                 const lm = landmarks[targetPoints[i]];
                 const x = lm.x * canvasWidth;
                 const y = lm.y * canvasHeight;
-                
+
                 const size = (15 + Math.sin(time / 100 + i) * 5) * intensity;
                 const grad = ctx.createRadialGradient(x, y, 0, x, y, size);
                 grad.addColorStop(0, `rgba(255, ${100 + Math.random() * 50}, 50, ${0.6 * intensity})`);
                 grad.addColorStop(1, 'rgba(255, 50, 0, 0)');
-                
+
                 ctx.fillStyle = grad;
                 ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
 
@@ -883,16 +883,16 @@
                         const gesture = results.gestures?.[i]?.[0]?.categoryName || 'None';
                         const score = results.gestures?.[i]?.[0]?.score || 0;
                         const handedness = results.handedness?.[i]?.[0]?.categoryName || 'Unknown';
-                        const cursor = systemState.p1.cursors[i]; 
+                        const cursor = systemState.p1.cursors[i];
                         const isCoasting = cursor?.fsmState === 'COAST';
                         const stateColor = cursor?.fsmState === 'COMMIT' ? 'var(--hfo-red)' : (isCoasting ? '#FFA500' : 'var(--md-sys-color-primary)');
-                        
+
                         // Deep Debug Data
                         const rawLM = results.landmarks?.[i]?.[8];
                         const rawX = rawLM ? (rawLM.x * 100).toFixed(1) : '0';
                         const rawY = rawLM ? (rawLM.y * 100).toFixed(1) : '0';
                         const phys = systemState.p1.physicsState[i];
-                        const vel = phys ? Math.sqrt(phys.vel.x**2 + phys.vel.y**2).toFixed(2) : '0.00';
+                        const vel = phys ? Math.sqrt(phys.vel.x ** 2 + phys.vel.y ** 2).toFixed(2) : '0.00';
 
                         const isPrimary = systemState.fsm.primaryHandIndex === i;
                         const labelPrefix = isPrimary ? '🎖️ [PRIMARY] ' : '';
@@ -948,7 +948,7 @@
                         // 🟢 Palm Orientation Sphere (Enhanced V14)
                         const enterT = systemState.parameters.palm.enterThreshold;
                         const exitT = systemState.parameters.palm.exitThreshold;
-                        
+
                         // Background Sphere
                         ctx.beginPath();
                         ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -1171,14 +1171,14 @@
                         const charge = systemState.p1.buckets[pIdx] || 0;
                         const high = systemState.parameters.fsm.hysteresisHigh;
                         const low = systemState.parameters.fsm.hysteresisLow;
-                        
+
                         ctx.fillStyle = '#222';
                         ctx.fillRect(nx - nodeWidth / 2, ny + 22, nodeWidth, 6);
-                        
+
                         // Fill
                         ctx.fillStyle = (node.id === 'COAST' ? '#FFA500' : '#FFD700');
                         ctx.fillRect(nx - nodeWidth / 2, ny + 22, nodeWidth * (charge / 100), 6);
-                        
+
                         // HFO Threshold Markers (80/64)
                         ctx.strokeStyle = '#fff';
                         ctx.lineWidth = 1;
@@ -1186,7 +1186,7 @@
                         ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * (high / 100), ny + 20);
                         ctx.lineTo(nx - nodeWidth / 2 + nodeWidth * (high / 100), ny + 30);
                         ctx.stroke();
-                        
+
                         ctx.strokeStyle = '#444';
                         ctx.beginPath();
                         ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * (low / 100), ny + 20);

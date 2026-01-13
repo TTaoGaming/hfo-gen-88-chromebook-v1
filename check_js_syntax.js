@@ -9,7 +9,7 @@ if (scripts) {
     scripts.forEach((script, i) => {
         // Remove the <script> tags
         let code = script.replace(/<script[^>]*>/, '').replace(/<\/script>/, '');
-        
+
         // If it's the module script, we can check it
         if (script.includes('type="module"')) {
             console.log(`Checking script ${i}...`);

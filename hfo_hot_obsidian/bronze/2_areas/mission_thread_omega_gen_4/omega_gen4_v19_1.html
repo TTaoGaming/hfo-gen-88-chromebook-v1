@@ -353,41 +353,41 @@
             constructor(parent) {
                 this.container = new PIXI.Container();
                 parent.addChild(this.container);
-                
+
                 this.fireball = new PIXI.Graphics();
                 this.container.addChild(this.fireball);
-                
+
                 this.bloom = new PIXI.Graphics();
                 this.container.addChild(this.bloom);
-                
+
                 this.timer = 0;
             }
 
             update(x, y, state) {
                 this.timer += 0.15;
                 this.container.position.set(x, y);
-                
+
                 const isReady = state === 'READY' || state === 'COMMIT';
                 const isCommit = state === 'COMMIT';
-                
+
                 this.fireball.visible = isReady;
                 this.bloom.visible = isCommit;
-                
+
                 if (isReady) {
                     this.fireball.clear();
                     const pulse = Math.sin(this.timer) * 3;
                     const radius = (isCommit ? 18 : 12) + pulse;
-                    
+
                     // Core
                     this.fireball.beginFill(0xFFD700, 0.8);
                     this.fireball.drawCircle(0, 0, radius * 0.6);
-                    
+
                     // Outer Flame
                     this.fireball.beginFill(0xFF4136, 0.4);
                     this.fireball.drawCircle(0, 0, radius);
                     this.fireball.endFill();
                 }
-                
+
                 if (isCommit) {
                     this.bloom.clear();
                     const bloomPulse = (Math.sin(this.timer * 2) + 1) * 20;
@@ -454,7 +454,7 @@
                 super();
                 this.SCALE = 100.0; // 100px = 1m
                 this.world = planck.World({ gravity: planck.Vec2(0, 0) });
-                
+
                 // Cursor Body (Dynamic)
                 this.cursor = this.world.createBody({
                     type: 'dynamic',
@@ -484,13 +484,13 @@
             update(targetX, targetY, dt) {
                 const tx = targetX / this.SCALE;
                 const ty = targetY / this.SCALE;
-                
+
                 this.target.setPosition(planck.Vec2(tx, ty));
-                
+
                 // Step world (fixed timestep recommended for Planck, but we use adaptive for simplicity here)
                 // In production, we'd use a fixed accumulator.
                 this.world.step(Math.min(dt / 1000, 0.033));
-                
+
                 const pos = this.cursor.getPosition();
                 this.lastPos = { x: pos.x * this.SCALE, y: pos.y * this.SCALE };
                 return this.lastPos;
@@ -696,7 +696,7 @@
                                     );
                                     systemState.p1.physicsState[i].reset(smoothedX, smoothedY);
                                 }
-                                
+
                                 // Sync params in case they changed in GUI
                                 systemState.p1.physicsState[i].setParams({
                                     stiffness: systemState.parameters.physics.planckStiffness,
@@ -716,7 +716,7 @@
                                 const vx = physicsPos.x - anchorX;
                                 const vy = physicsPos.y - anchorY;
                                 const d_proj = vx * ux + vy * uy; // Project onto axis
-                                
+
                                 finalX = anchorX + ux * d_proj;
                                 finalY = anchorY + uy * d_proj;
                             }
@@ -1315,7 +1315,7 @@
                     systemState.p1.cursors.forEach((c) => {
                         const tx = (c.screenX / (systemState.p0.videoBounds?.width || 1)) * canvas.width;
                         const ty = (c.screenY / (systemState.p0.videoBounds?.height || 1)) * canvas.height;
-                        
+
                         // Origin Pointer (Raw Sensing)
                         const rx = (c.rawX / (systemState.p0.videoBounds?.width || 1)) * canvas.width;
                         const ry = (c.rawY / (systemState.p0.videoBounds?.height || 1)) * canvas.height;
@@ -1471,11 +1471,11 @@
                 if (fsmState === 'IDLE') return;
 
                 const color = fsmState === 'COMMIT' ? '#FF4136' : (fsmState === 'READY' ? '#FFD700' : '#0074D9');
-                
+
                 // --- V19.1: CLAW VISUALS (Rigid Rod) ---
                 if (systemState.parameters.physics.showLaserBeam) {
                     ctx.save();
-                    
+
                     // Main Claw Body (Tapered feel)
                     ctx.beginPath();
                     ctx.moveTo(rawX, rawY);
@@ -1494,7 +1494,7 @@
                     ctx.lineWidth = fsmState === 'COMMIT' ? 3 : 2;
                     ctx.globalAlpha = 0.4;
                     ctx.stroke();
-                    
+
                     ctx.restore();
                 }
 
@@ -1712,7 +1712,7 @@
             const wrap = document.createElement('div');
             wrap.className = 'component-container';
             container.getElement().appendChild(wrap);
-            
+
             systemState.ui.juice = new JuiceSubstrate(wrap);
 
             const handleResize = () => {

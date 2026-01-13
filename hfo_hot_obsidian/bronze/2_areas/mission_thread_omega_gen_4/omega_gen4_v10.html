@@ -716,10 +716,10 @@
                 'COAST': ['rgba(255, 255, 255, 0.4)', 'rgba(145, 213, 255, 0.3)', 'rgba(9, 109, 217, 0.2)', 'rgba(9, 109, 217, 0)']
             };
             const c = colors[state] || colors['READY'];
-            
+
             ctx.save();
             ctx.globalCompositeOperation = 'screen';
-            
+
             // Outer Gloom/Heat Distortion
             const bloomSize = size * (4 + Math.sin(time / 150) * 0.5);
             const bloomGrad = ctx.createRadialGradient(x, y, 0, x, y, bloomSize);
@@ -734,12 +734,12 @@
             coreGrad.addColorStop(0.3, c[1]);
             coreGrad.addColorStop(0.7, c[2]);
             coreGrad.addColorStop(1, c[3]);
-            
+
             ctx.fillStyle = coreGrad;
             ctx.beginPath();
             ctx.arc(x, y, size * 2, 0, Math.PI * 2);
             ctx.fill();
-            
+
             // Pulsing spikes/tendrils
             if (state === 'COMMIT') {
                 ctx.strokeStyle = c[1];
@@ -753,7 +753,7 @@
                     ctx.stroke();
                 }
             }
-            
+
             ctx.restore();
         }
 
@@ -761,24 +761,24 @@
             if (bucketLevel <= 5) return;
             const intensity = bucketLevel / 100;
             const time = Date.now();
-            
+
             ctx.save();
             ctx.globalCompositeOperation = 'screen';
-            
+
             // Scale points based on intensity (0=wrist, 20=tips)
             const targetPoints = [0, 1, 2, 3, 4, 5, 8, 9, 12, 13, 16, 17, 20];
             const activeCount = Math.floor(targetPoints.length * intensity);
-            
+
             for (let i = 0; i < activeCount; i++) {
                 const lm = landmarks[targetPoints[i]];
                 const x = lm.x * canvasWidth;
                 const y = lm.y * canvasHeight;
-                
+
                 const size = (15 + Math.sin(time / 100 + i) * 5) * intensity;
                 const grad = ctx.createRadialGradient(x, y, 0, x, y, size);
                 grad.addColorStop(0, `rgba(255, ${100 + Math.random() * 50}, 50, ${0.6 * intensity})`);
                 grad.addColorStop(1, 'rgba(255, 50, 0, 0)');
-                
+
                 ctx.fillStyle = grad;
                 ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
 
@@ -803,15 +803,15 @@
                         const gesture = results.gestures?.[i]?.[0]?.categoryName || 'None';
                         const score = results.gestures?.[i]?.[0]?.score || 0;
                         const handedness = results.handedness?.[i]?.[0]?.categoryName || 'Unknown';
-                        const cursor = systemState.p1.cursors[i]; 
+                        const cursor = systemState.p1.cursors[i];
                         const stateColor = cursor?.fsmState === 'COMMIT' ? 'var(--hfo-red)' : 'var(--md-sys-color-primary)';
-                        
+
                         // Deep Debug Data
                         const rawLM = results.landmarks?.[i]?.[8];
                         const rawX = rawLM ? (rawLM.x * 100).toFixed(1) : '0';
                         const rawY = rawLM ? (rawLM.y * 100).toFixed(1) : '0';
                         const phys = systemState.p1.physicsState[i];
-                        const vel = phys ? Math.sqrt(phys.vel.x**2 + phys.vel.y**2).toFixed(2) : '0.00';
+                        const vel = phys ? Math.sqrt(phys.vel.x ** 2 + phys.vel.y ** 2).toFixed(2) : '0.00';
 
                         html += `
                             <div class="m3-card" style="border-left: 4px solid ${stateColor}">
@@ -1052,14 +1052,14 @@
                         const charge = systemState.p1.buckets[0] || 0;
                         const high = systemState.parameters.fsm.hysteresisHigh;
                         const low = systemState.parameters.fsm.hysteresisLow;
-                        
+
                         ctx.fillStyle = '#222';
                         ctx.fillRect(nx - nodeWidth / 2, ny + 22, nodeWidth, 6);
-                        
+
                         // Fill
                         ctx.fillStyle = (node.id === 'COAST' ? '#FFA500' : '#FFD700');
                         ctx.fillRect(nx - nodeWidth / 2, ny + 22, nodeWidth * (charge / 100), 6);
-                        
+
                         // HFO Threshold Markers (80/64)
                         ctx.strokeStyle = '#fff';
                         ctx.lineWidth = 1;
@@ -1067,7 +1067,7 @@
                         ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * (high / 100), ny + 20);
                         ctx.lineTo(nx - nodeWidth / 2 + nodeWidth * (high / 100), ny + 30);
                         ctx.stroke();
-                        
+
                         ctx.strokeStyle = '#444';
                         ctx.beginPath();
                         ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * (low / 100), ny + 20);
