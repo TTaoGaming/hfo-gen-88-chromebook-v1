@@ -46,7 +46,10 @@ if __name__ == "__main__":
         config = json.load(f)
     
     version = config["activeVersion"]
-    target_file = f"hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v{version}.html"
+    if version.startswith("4_"):
+        target_file = f"hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen{version}.html"
+    else:
+        target_file = f"hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v{version}.html"
     
     steps = [
         ("P5 Syntax Gate", ["python3", "scripts/p5_syntax_gate.py", target_file]),

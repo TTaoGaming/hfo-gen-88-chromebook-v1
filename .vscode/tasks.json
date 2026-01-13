@@ -4,7 +4,7 @@
         {
             "label": "P5 Sentinel Daemon",
             "type": "shell",
-            "command": "python3 scripts/p5_sentinel_daemon.py",
+            "command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/p5_sentinel_daemon.py",
             "isBackground": true,
             "problemMatcher": [],
             "presentation": {
@@ -20,7 +20,7 @@
         {
             "label": "Port 5: Forensic Audit (Manual)",
             "type": "shell",
-            "command": "python3 hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5",
+            "command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5",
             "problemMatcher": [],
             "group": {
                 "kind": "test",

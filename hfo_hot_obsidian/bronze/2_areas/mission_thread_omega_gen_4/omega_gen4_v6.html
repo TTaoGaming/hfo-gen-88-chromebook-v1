@@ -194,7 +194,8 @@
                 hysteresisHigh: z.number().min(0).max(100),
                 hysteresisLow: z.number().min(0).max(100),
                 fillRate: z.number().min(0),
-                drainRate: z.number().min(0)
+                drainRate: z.number().min(0),
+                commitExitDelayMs: z.number().min(0)
             }),
             coasting: z.object({
                 timeoutMs: z.number().min(0),
@@ -231,20 +232,20 @@
                 landmarks: { minConfidence: 0.5, minTrackingConfidence: 0.5, minPresenceConfidence: 0.5, numHands: 2, showSkeleton: true },
                 gestures: { minGestureConfidence: 0.7, preferredHand: 'Any' },
                 palm: { normalThreshold: 0.5 },
-                fsm: { hysteresisHigh: 85, hysteresisLow: 15, fillRate: 2.5, drainRate: 1.5 },
+                fsm: { hysteresisHigh: 85, hysteresisLow: 15, fillRate: 2.5, drainRate: 1.5, commitExitDelayMs: 300 },
                 coasting: { timeoutMs: 150, confidenceThreshold: 0.4 },
                 p0Active: false,
                 devMode: false
             },
-            fsm: { currentState: 'IDLE', lastCommitTime: 0 },
+            fsm: { currentState: 'IDLE', lastCommitTime: 0, commitExitStartTime: 0 },
             p0: { recognizer: null, video: null, canvas: null, ctx: null, videoBounds: null },
-            p1: { 
+            p1: {
                 cursors: [],
                 buckets: [0, 0, 0, 0], // Per-hand leaky buckets
                 lastData: [null, null, null, null], // Per-hand coasting data
                 coastStartTimes: [0, 0, 0, 0] // Per-hand coast timers
             },
-            ui: { gestures: null, palm: null, palmCtx: null }
+            ui: { gestures: null, palm: null, palmCtx: null, fsm: null, fsmCtx: null }
         };
 
         window.hfoState = systemState;
@@ -342,9 +343,19 @@
                                     }
                                 }
                             } else if (fsmState === 'COMMIT') {
-                                // Commit only exits to IDLE on release or boundary exit
-                                if (category === 'None' || bucket <= systemState.parameters.fsm.hysteresisLow) {
-                                    fsmState = 'IDLE';
+                                // 🔒 STICKY COMMIT: Locked until deliberate palm cone EXIT
+                                if (bucket <= systemState.parameters.fsm.hysteresisLow) {
+                                    if (systemState.fsm.commitExitStartTime === 0) {
+                                        systemState.fsm.commitExitStartTime = now;
+                                    }
+                                    const elapsed = now - systemState.fsm.commitExitStartTime;
+                                    if (elapsed >= systemState.parameters.fsm.commitExitDelayMs) {
+                                        fsmState = 'IDLE';
+                                        systemState.fsm.commitExitStartTime = 0;
+                                    }
+                                } else {
+                                    // Palm cone is still active; remain in COMMIT
+                                    systemState.fsm.commitExitStartTime = 0;
                                 }
                             }
 
@@ -505,11 +516,11 @@
                             // Bg
                             ctx.fillStyle = '#111';
                             ctx.fillRect(barX, barY, barW, barH);
-                            
+
                             // Hysteresis Markers
                             const highY = barY + barH * (1 - systemState.parameters.fsm.hysteresisHigh / 100);
                             const lowY = barY + barH * (1 - systemState.parameters.fsm.hysteresisLow / 100);
-                            
+
                             ctx.strokeStyle = '#555';
                             ctx.setLineDash([2, 2]);
                             ctx.beginPath(); ctx.moveTo(barX, highY); ctx.lineTo(barX + barW, highY); ctx.stroke();
@@ -535,6 +546,72 @@
                         }
                     });
                 }
+            }
+
+            // Update FSM Visualization Panel
+            if (systemState.ui.fsmCtx) {
+                const ctx = systemState.ui.fsmCtx;
+                const canvas = systemState.ui.fsm;
+                if (canvas.width === 0) return;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const nodes = [
+                    { id: 'IDLE', x: 0.2, y: 0.5 },
+                    { id: 'READY', x: 0.45, y: 0.5 },
+                    { id: 'COMMIT', x: 0.7, y: 0.5 },
+                    { id: 'COAST', x: 0.45, y: 0.8 }
+                ];
+
+                const nodeWidth = 80, nodeHeight = 35;
+                const current = systemState.fsm.currentState;
+
+                // Draw Transitions
+                ctx.strokeStyle = '#333';
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                // IDLE -> READY
+                ctx.moveTo(canvas.width * 0.2 + nodeWidth / 2, canvas.height * 0.5);
+                ctx.lineTo(canvas.width * 0.45 - nodeWidth / 2, canvas.height * 0.5);
+                // READY -> COMMIT
+                ctx.moveTo(canvas.width * 0.45 + nodeWidth / 2, canvas.height * 0.5);
+                ctx.lineTo(canvas.width * 0.7 - nodeWidth / 2, canvas.height * 0.5);
+                // COMMIT -> IDLE (Curved)
+                ctx.moveTo(canvas.width * 0.7, canvas.height * 0.5 - nodeHeight / 2);
+                ctx.quadraticCurveTo(canvas.width * 0.45, canvas.height * 0.2, canvas.width * 0.2, canvas.height * 0.5 - nodeHeight / 2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                nodes.forEach(node => {
+                    const nx = canvas.width * node.x;
+                    const ny = canvas.height * node.y;
+                    const isActive = node.id === current;
+
+                    // Glow for active node
+                    if (isActive) {
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = (node.id === 'COMMIT' ? '#FF4136' : (node.id === 'READY' ? '#FFD700' : '#D0BCFF'));
+                    }
+
+                    ctx.fillStyle = isActive ? '#000' : '#111';
+                    ctx.strokeStyle = isActive ? (node.id === 'COMMIT' ? '#FF4136' : (node.id === 'READY' ? '#FFD700' : '#D0BCFF')) : '#444';
+                    ctx.beginPath();
+                    ctx.roundRect(nx - nodeWidth / 2, ny - nodeHeight / 2, nodeWidth, nodeHeight, 8);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = isActive ? (node.id === 'COMMIT' ? '#FF4136' : (node.id === 'READY' ? '#FFD700' : '#D0BCFF')) : '#888';
+                    ctx.font = 'bold 11px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(node.id, nx, ny + 5);
+
+                    if (isActive && node.id === 'COMMIT' && systemState.fsm.commitExitStartTime > 0) {
+                        const elapsed = performance.now() - systemState.fsm.commitExitStartTime;
+                        const pct = Math.max(0, 1 - (elapsed / systemState.parameters.fsm.commitExitDelayMs));
+                        ctx.fillStyle = '#FFF';
+                        ctx.fillRect(nx - nodeWidth / 2, ny + nodeHeight / 2 + 2, nodeWidth * pct, 2);
+                    }
+                });
             }
         }
 
@@ -590,6 +667,7 @@
                 fFSM.add(systemState.parameters.fsm, 'hysteresisLow', 0, 100).name('Idle Threshold');
                 fFSM.add(systemState.parameters.fsm, 'fillRate', 0.1, 10).name('Bucket Fill Rate');
                 fFSM.add(systemState.parameters.fsm, 'drainRate', 0.1, 10).name('Bucket Drain Rate');
+                fFSM.add(systemState.parameters.fsm, 'commitExitDelayMs', 0, 2000).name('Commit Exit Delay (ms)');
 
                 const fCoast = gui.addFolder('P4: Coasting Control');
                 fCoast.add(systemState.parameters.coasting, 'timeoutMs', 0, 1000).name('Coast Timeout (ms)');
@@ -691,6 +769,23 @@
             systemState.ui.gestures = wrap;
         });
 
+        layout.registerComponentFactoryFunction('fsm-viz', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'component-container';
+            wrap.style.display = 'flex'; wrap.style.alignItems = 'center'; wrap.style.justifyContent = 'center';
+            wrap.style.background = '#050505';
+            const canvas = document.createElement('canvas');
+            wrap.appendChild(canvas);
+            container.getElement().appendChild(wrap);
+            systemState.ui.fsm = canvas;
+            systemState.ui.fsmCtx = canvas.getContext('2d');
+            container.on('resize', () => {
+                const rect = wrap.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+            });
+        });
+
         layout.registerComponentFactoryFunction('palm', (container) => {
             const wrap = document.createElement('div');
             wrap.className = 'component-container';
@@ -718,13 +813,14 @@
                     {
                         type: 'column', width: 40, content: [
                             {
-                                type: 'row', height: 40, content: [
+                                type: 'row', height: 30, content: [
                                     { type: 'component', componentType: 'gestures', title: 'P1: Gestures' },
                                     { type: 'component', componentType: 'palm', title: 'P1: Palm Orientation' }
                                 ]
                             },
-                            { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 40 },
-                            { type: 'component', componentType: 'logs', title: 'System Telemetry', height: 20 }
+                            { type: 'component', componentType: 'fsm-viz', title: 'Tactical FSM Visualization', height: 25 },
+                            { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 35 },
+                            { type: 'component', componentType: 'logs', title: 'System Telemetry', height: 10 }
                         ]
                     }
                 ]

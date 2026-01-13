@@ -19,8 +19,8 @@ export const test = base.extend<{ hfoPage: HFOPage }>({
         const hfoPage = page as HFOPage;
 
         hfoPage.initHFO = async () => {
-            // Unlock Hero Button if present
-            const heroBtn = page.locator('#hero-button');
+            // Support both old and new (Gen 4) buttons
+            const heroBtn = page.locator('#hero-button, #btn-ignite');
             if (await heroBtn.isVisible()) {
                 await heroBtn.click();
                 await expect(heroBtn).not.toBeVisible();

@@ -1,0 +1,98 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+# Provenance: Omega Gen 4 HIVE Spec v1.0
+
+mission: Thread Omega
+generation: 4
+medallion: Bronze
+status: Phoenix Rebirth
+
+# 🐝 HFO HIVE Base 8 Workflow alignment
+workflow_sequence:
+  1_hunt:
+    ports: [0, 7]
+    focus: [Hindsight, Hyper-heuristics]
+    p0_sense:
+      role: ISR / Observer
+      logic: MediaPipe Landmark Acquisition (21 Points)
+      tunables:
+        min_detection_confidence: 0.5
+        min_tracking_confidence: 0.5
+        model_complexity: 1
+    p7_navigate:
+      role: BMC2 / Navigator
+      logic: Coordinate Mapping & Global Orchestration
+      tunables:
+        canvas_parity_ratio: 1.0
+        coordinate_flip_x: true
+
+  2_interlock:
+    ports: [1, 6]
+    focus: [Insight, Interfaces]
+    p1_fuse:
+      role: Data Fabric / Bridger
+      logic: Zod 6.0 Schema Bridge & Smoothing
+      tunables:
+        one_euro_filter_beta: 0.01  # Snap/Smooth balance
+        one_euro_filter_dcutoff: 1.0
+        one_euro_filter_mincutoff: 1.0
+    p6_store:
+      role: AAR / Assimilator
+      logic: Telemetry Cache & Parquet Logging
+      tunables:
+        logging_interval_ms: 100
+        cache_retention_limit: 1000
+
+  3_validate:
+    ports: [2, 5]
+    focus: [Foresight, Vanguards]
+    p2_shape:
+      role: Digital Twin / Shaper
+      logic: Physics Manifold (Mass-Spring-Dampener / Rapier)
+      tunables:
+        physics_stiffness: 0.65
+        physics_damping: 0.88
+        predictive_lookahead_frames: 3
+    p5_defend:
+      role: Zero Trust / Immunizer
+      logic: Forensic Integrity Audit & Purity Gates
+      tunables:
+        audit_frequency_hz: 1
+        purity_threshold: 0.88
+
+  4_evolve:
+    ports: [3, 4]
+    focus: [Evolutionary Strange Loop, Engines]
+    p3_deliver:
+      role: Effect Delivery / Injector
+      logic: W3C Pointer Injection & FSM Dispatch
+    p4_disrupt:
+      role: MDO / Disruptor
+      logic: Feedback Loops & Adversarial Jitter Suppression
+      tunables:
+        jitter_suppression_ratio: 0.05
+        low_velocity_deadzone: 0.01
+
+# 🕹️ FSM & Multi-User Logic
+fsm_logic:
+  states: [IDLE, READY, COMMIT]
+  gestures:
+    default_commit: pointer_up
+    supported: [pointer_up, pinch, fist, open_palm] # Any user defined
+  activation_gate:
+    logic: Leaky Bucket Hysteresis + Palm Orientation
+    tunables:
+      palm_normal_z_threshold: -0.4 # Facing camera
+      leaky_bucket_fill_rate: 0.2
+      leaky_bucket_drain_rate: 0.1
+      dwell_activation_ms: 300
+      activation_confidence_threshold: 0.8
+  hot_seat:
+    logic: First to Commit Lockout
+    behavior: Multiple users can be IDLE or READY; only 1 participant can be COMMIT at a time.
+    priority: Temporal (first signature to hit COMMIT state)
+
+# 🛠️ System Configuration
+ui_patterns:
+  exposure: Progressive Disclosure
+  theme: Red/Black HFO Shards
+  transparency: 0.7 # User tunable
