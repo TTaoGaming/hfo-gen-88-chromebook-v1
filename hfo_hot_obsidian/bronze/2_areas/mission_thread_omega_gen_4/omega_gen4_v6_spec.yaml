@@ -101,17 +101,30 @@ fsm_logic:
       trigger: "Tracking Confidence < Coast Threshold"
       logic: "predictive_drift"
       description: "Engineer for consumer hardware tracking loss. Coast the pointer using last known velocity until physics system (P2) is ready."
-      timeout_ms: 150
+      tunables:
+        coast_timeout_ms:
+          value: 150
+          tag: "Normal"
+          description: "Duration to maintain pointer state during tracking loss before IDLE reset."
     COAST_TO_SNAPLOCK:
       trigger: "Tracking Resumed + Confidence >= Snap Threshold"
       logic: "proximity_lock"
       description: "Smoothly snap to resumed tracking location if within proximity threshold."
+      tunables:
+        snap_threshold:
+          value: 0.8
+          tag: "Dev"
+          description: "Confidence level required to break COAST and lock to new landmark."
     COAST_TO_IDLE:
       trigger: "Timeout Exceeded"
   pre_arm_behavior:
     description: "Anti-Midas Dwell Persistence. The leaky bucket drains slowly, allowing rapid re-arming if the user re-enters the cone quickly (Coyote Time Pattern)."
     leaky_bucket_persistence: true
-    drain_factor: 0.5 # Slower drain than fill for re-entry grace
+    tunables:
+      drain_factor:
+        value: 0.5
+        tag: "Dev"
+        description: "Scale factor for bucket drainage relative to fill rate."
   activation_gate:
     logic: Palm Orientation Gated Dwell + Leaky Bucket
     visuals:
@@ -121,10 +134,22 @@ fsm_logic:
       color_map: { idling: "#444", charging: "#f00", locked: "#ff0", coasting: "#00f" }
     behavior:
       palm_orientation_required: true
-      dwell_activation_ms: 300
-      leaky_bucket_hysteresis: true
-      hysteresis_high: 85.0
-      hysteresis_low: 15.0
+      tunables:
+        dwell_activation_ms:
+          value: 300
+          tag: "Normal"
+        hysteresis_high:
+          value: 85.0
+          tag: "Dev"
+        hysteresis_low:
+          value: 15.0
+          tag: "Dev"
+        leaky_bucket_fill_rate:
+          value: 2.5
+          tag: "Dev"
+        leaky_bucket_drain_rate:
+          value: 1.5
+          tag: "Dev"
 
 # 🛠️ System Configuration
 ui_patterns:
