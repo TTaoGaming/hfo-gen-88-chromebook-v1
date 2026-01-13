@@ -1,0 +1,15 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: E
+id: OMEGA-GEN3-V1
+name: "Omega Gen 3: Standalone V1 - Hexagonal Mosaic"
+mission_thread: Omega
+status: "Active (Phase 3 Integration)"
+version: "V1.1.0-RED"
+
+phases:
+  - id: B1
+    title: "Phase 1: Sensing Substrate"
+    status: "PASS (Audit)"
+  - id: B3
+    title: "Phase 3: UI Substrate"
+    status: "PASS (Audit)"
+    prototype: "omega_gen3_v1_1.html"

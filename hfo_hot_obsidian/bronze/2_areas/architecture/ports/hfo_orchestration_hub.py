@@ -183,9 +183,10 @@ if __name__ == "__main__":
         try:
             from versions.base import Port0ObserveV2
             print(Port0ObserveV2.execute_all(sys.argv[2] if len(sys.argv) > 2 else "ping"))
-        except ImportError:
-            # Fallback to direct shard call if V2 is not imported
-            print(Port0Observe.port0_shard0_observe(sys.argv[2] if len(sys.argv) > 2 else "ping"))
+        except (ImportError, AttributeError):
+            # Fallback to direct shard call if V2 is not imported correctly
+            shard_results = Port0Observe.port0_shard0_observe(sys.argv[2] if len(sys.argv) > 2 else "ping")
+            print(json.dumps(shard_results))
     elif cmd == "p5":
         if len(sys.argv) > 2 and sys.argv[2].lower() == "manifest":
             print(Port5Immunize.get_manifest())

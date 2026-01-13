@@ -1,0 +1,312 @@
+<!-- Medallion: Bronze | Mutation: 25% | HIVE: I -->
+<!-- OMEGA GEN 4 V3.0 - NAVIGATOR ENHANCED -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | OMEGA GEN 4 V3.0 - PORT 7 NAVIGATOR</title>
+    
+    <!-- CSS Dependencies -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    
+    <style>
+        :root {
+            --md-sys-color-primary: #D0BCFF;
+            --md-sys-color-on-primary: #381E72;
+            --md-sys-color-primary-container: #4F378B;
+            --md-sys-color-on-primary-container: #EADDFF;
+            --md-sys-color-surface: #1C1B1F;
+            --md-sys-color-on-surface: #E6E1E5;
+            --md-sys-color-surface-variant: #49454F;
+            --md-sys-color-outline: #938F99;
+            --hfo-red: #FF4136;
+            --hfo-black: #000000;
+            --m3-radius: 12px;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100vh; width: 100vw;
+            overflow: hidden; background: var(--hfo-black); 
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Roboto', system-ui, sans-serif;
+        }
+
+        #layout-container { width: 100%; height: calc(100% - 28px); }
+
+        #status-bar { 
+            height: 28px; background: var(--md-sys-color-surface);
+            display: flex; align-items: center; padding: 0 16px;
+            font-size: 10px; border-top: 1px solid var(--md-sys-color-outline);
+            text-transform: uppercase;
+        }
+
+        .component-container { height: 100%; overflow: hidden; position: relative; }
+
+        /* M3 Style Scrollbar for Panels */
+        .scrollable-panel {
+            overflow-y: auto !important;
+            height: 100%;
+            padding-bottom: 20px;
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--md-sys-color-outline); 
+            border-radius: 10px;
+        }
+
+        .hero-view-container {
+            position: relative; width: 100%; height: 100%;
+            background: #000; display: flex; align-items: center; justify-content: center;
+        }
+
+        #video-feed {
+            position: absolute; width: 100%; height: 100%;
+            object-fit: contain; transform: scaleX(-1);
+            filter: grayscale(0.5) brightness(0.7);
+        }
+
+        #overlay-canvas {
+            position: absolute; transform: scaleX(-1); 
+            pointer-events: none; z-index: 5;
+        }
+
+        .hfo-btn {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none; padding: 12px 32px;
+            border-radius: 24px; cursor: pointer;
+            font-weight: 600; font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        /* lil-gui custom branding */
+        .lil-gui {
+            --background-color: transparent;
+            --widget-color: var(--md-sys-color-surface-variant);
+            --focus-color: var(--md-sys-color-primary);
+            --title-background-color: var(--md-sys-color-primary-container);
+            --title-text-color: var(--md-sys-color-on-primary-container);
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="layout-container"></div>
+    <div id="status-bar">
+        <span>[HFO OMEGA V3.0]</span>
+        <span id="p5-status" style="margin-left: 16px; color: #00FF41;">P5: SECURED</span>
+        <span style="margin-left: auto;" id="state-indicator">P7: NAVIGATOR ACTIVE | MISSION: OMEGA</span>
+    </div>
+
+    <!-- Import Map -->
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import { z } from 'zod';
+
+        // --- P1: FUSE CONTRACTS ---
+        const LandmarkSchema = z.object({ x: z.number(), y: z.number(), z: z.number() });
+        const HandResultSchema = z.object({
+            landmarks: z.array(LandmarkSchema).length(21),
+            gesture: z.string(),
+            handedness: z.string()
+        });
+
+        // --- PRODUCTION STATE ---
+        const systemState = {
+            parameters: {
+                camera: {
+                    resolution: '1280x720',
+                    facingMode: 'user',
+                    fpsTarget: 30,
+                    mirror: true
+                },
+                landmarks: {
+                    minConfidence: 0.5,
+                    minTrackingConfidence: 0.5,
+                    minPresenceConfidence: 0.5,
+                    numHands: 2,
+                    showSkeleton: true
+                },
+                gestures: {
+                    minGestureConfidence: 0.5,
+                    preferredHand: 'Any'
+                },
+                p0Active: false
+            },
+            fsm: { currentState: 'IDLE' },
+            p0: { recognizer: null, video: null, canvas: null, ctx: null, videoBounds: null },
+            p1: { cursors: [] }
+        };
+
+        window.hfoState = systemState;
+
+        // --- P7: NAVIGATOR (SETTINGS MANIFOLD) ---
+        class P7Navigator {
+            static initSettings(container) {
+                const scrollWrap = document.createElement('div');
+                scrollWrap.className = 'scrollable-panel';
+                container.appendChild(scrollWrap);
+
+                const gui = new GUI({ container: scrollWrap, title: '🛰️ PORT 7: BMC2 CONFIG', autoPlace: false });
+                
+                // Subpanel: Camera Settings
+                const fCam = gui.addFolder('P0: Camera (Optical Range)');
+                fCam.add(systemState.parameters.camera, 'resolution', ['640x480', '1280x720', '1920x1080']).name('Resolution');
+                fCam.add(systemState.parameters.camera, 'fpsTarget', 15, 60, 1).name('Target FPS');
+                fCam.add(systemState.parameters.camera, 'mirror').name('Mirror Feed');
+
+                // Subpanel: Landmark Settings
+                const fLand = gui.addFolder('P0: Landmarks (Neural Shards)');
+                fLand.add(systemState.parameters.landmarks, 'minConfidence', 0, 1).name('Min Detection');
+                fLand.add(systemState.parameters.landmarks, 'minTrackingConfidence', 0, 1).name('Min Tracking');
+                fLand.add(systemState.parameters.landmarks, 'minPresenceConfidence', 0, 1).name('Min Presence');
+                fLand.add(systemState.parameters.landmarks, 'numHands', 1, 4, 1).name('Max Hands').onChange(updateP0);
+                fLand.add(systemState.parameters.landmarks, 'showSkeleton').name('Render Skeleton');
+
+                // Subpanel: Gesture Settings
+                const fGest = gui.addFolder('P0: Gestures (Intent Fusion)');
+                fGest.add(systemState.parameters.gestures, 'minGestureConfidence', 0, 1).name('Min Intent');
+                fGest.add(systemState.parameters.gestures, 'preferredHand', ['Any', 'Left', 'Right']).name('Hand Preference');
+
+                function updateP0() {
+                    if (systemState.p0.recognizer) {
+                        systemState.p0.recognizer.setOptions({
+                            numHands: systemState.parameters.landmarks.numHands,
+                            minHandDetectionConfidence: systemState.parameters.landmarks.minConfidence,
+                            minHandPresenceConfidence: systemState.parameters.landmarks.minPresenceConfidence,
+                            minTrackingConfidence: systemState.parameters.landmarks.minTrackingConfidence
+                        });
+                    }
+                }
+            }
+        }
+
+        // --- P0: SENSE ---
+        async function initP0() {
+            logMission("P0: Igniting MediaPipe Shards...");
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
+            systemState.p0.recognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: 'GPU'
+                },
+                runningMode: "VIDEO",
+                numHands: systemState.parameters.landmarks.numHands
+            });
+        }
+
+        function predictLoop() {
+            if (!systemState.parameters.p0Active) return;
+            const now = performance.now();
+            const results = systemState.p0.recognizer.recognizeForVideo(systemState.p0.video, now);
+            drawResults(results);
+            requestAnimationFrame(predictLoop);
+        }
+
+        function drawResults(results) {
+            const { ctx, canvas } = systemState.p0;
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (results.landmarks && systemState.parameters.landmarks.showSkeleton) {
+                const utils = new DrawingUtils(ctx);
+                for (const landmarks of results.landmarks) {
+                    utils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: '#D0BCFF', lineWidth: 2 });
+                    utils.drawLandmarks(landmarks, { color: '#FF4136', radius: 2 });
+                }
+            }
+        }
+
+        function resizeCanvas() {
+            const { video, canvas } = systemState.p0;
+            if (!video || !canvas || !video.videoWidth) return;
+            const rect = video.getBoundingClientRect();
+            const videoRatio = video.videoWidth / video.videoHeight;
+            let drawW = rect.width, drawH = rect.width / videoRatio;
+            if (drawH > rect.height) { drawH = rect.height; drawW = drawH * videoRatio; }
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.style.width = `${drawW}px`; canvas.style.height = `${drawH}px`;
+            systemState.p0.videoBounds = { width: drawW, height: drawH };
+        }
+
+        function logMission(msg) {
+            const logs = document.getElementById('mission-logs');
+            if (!logs) return;
+            const entry = document.createElement('div');
+            entry.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logs.prepend(entry);
+        }
+
+        // --- LAYOUT ---
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        
+        layout.registerComponentFactoryFunction('hero', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'hero-view-container';
+            wrap.innerHTML = `
+                <video id="video-feed" autoplay playsinline></video>
+                <canvas id="overlay-canvas"></canvas>
+                <button id="btn-ignite" class="hfo-btn" style="position:absolute; bottom:40px; z-index:30;">IGNITE BATTLESPACE</button>
+            `;
+            container.getElement().appendChild(wrap);
+            systemState.p0.video = wrap.querySelector('#video-feed');
+            systemState.p0.canvas = wrap.querySelector('#overlay-canvas');
+            systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
+            
+            wrap.querySelector('#btn-ignite').onclick = async (e) => {
+                e.target.style.display = 'none';
+                await initP0();
+                const [w, h] = systemState.parameters.camera.resolution.split('x');
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { width: parseInt(w), height: parseInt(h) } 
+                });
+                systemState.p0.video.srcObject = stream;
+                systemState.p0.video.onloadeddata = () => {
+                    systemState.parameters.p0Active = true;
+                    resizeCanvas(); predictLoop();
+                };
+            };
+        });
+
+        layout.registerComponentFactoryFunction('navigator', (container) => {
+            P7Navigator.initSettings(container.getElement());
+        });
+
+        layout.registerComponentFactoryFunction('logs', (container) => {
+            const div = document.createElement('div');
+            div.id = 'mission-logs';
+            div.className = 'scrollable-panel';
+            div.style.padding = '8px'; div.style.fontSize = '10px'; div.style.fontFamily = 'monospace';
+            container.getElement().appendChild(div);
+        });
+
+        layout.loadLayout({
+            root: { type: 'row', content: [
+                { type: 'component', componentType: 'hero', title: 'Tactical Viewport', width: 70 },
+                { type: 'column', width: 30, content: [
+                    { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 60 },
+                    { type: 'component', componentType: 'logs', title: 'Mission Logs', height: 40 }
+                ]}
+            ]}
+        });
+        
+        window.onresize = () => { layout.updateSize(); resizeCanvas(); };
+    </script>
+</body>
+</html>

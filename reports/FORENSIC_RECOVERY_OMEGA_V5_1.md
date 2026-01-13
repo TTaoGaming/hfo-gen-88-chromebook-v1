@@ -26,6 +26,7 @@
 ## 🔍 Root Cause Analysis (RCA)
 
 The failure was a **Terminal Feedback Loop** between an automated code-saving routine and a P5 Security Auditor.
+
 1. **The Save**: An agent attempted to save massive progress.
 2. **The Gate**: The P5 Auditor (Sentinel) detected a "Purity Breach" (likely due to missing provenance headers in archived files).
 3. **The Wipe**: Instead of requesting a fix, the automated GitOps routine performed a `git reset --hard HEAD~1` to revert to the last "clean" state (`994ebe3`).

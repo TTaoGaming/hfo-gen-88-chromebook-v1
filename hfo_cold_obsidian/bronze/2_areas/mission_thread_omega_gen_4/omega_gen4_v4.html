@@ -1,0 +1,396 @@
+<!-- Medallion: Bronze | Mutation: 37.5% | HIVE: I -->
+<!-- OMEGA GEN 4 V4.0 - COORDINATE SHARD STABILIZED -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | OMEGA GEN 4 V4.0 - UI SHELL ENFORCED</title>
+    
+    <!-- CSS Dependencies -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    
+    <style>
+        :root {
+            --md-sys-color-primary: #D0BCFF;
+            --md-sys-color-on-primary: #381E72;
+            --md-sys-color-primary-container: #4F378B;
+            --md-sys-color-on-primary-container: #EADDFF;
+            --md-sys-color-surface: #1C1B1F;
+            --md-sys-color-on-surface: #E6E1E5;
+            --md-sys-color-surface-variant: #49454F;
+            --md-sys-color-outline: #938F99;
+            --hfo-red: #FF4136;
+            --hfo-black: #000000;
+            --m3-radius: 12px;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100vh; width: 100vw;
+            overflow: hidden; background: var(--hfo-black); 
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Roboto', system-ui, sans-serif;
+        }
+
+        #layout-container { width: 100%; height: calc(100% - 28px); }
+
+        #status-bar { 
+            height: 28px; background: var(--md-sys-color-surface);
+            display: flex; align-items: center; padding: 0 16px;
+            font-size: 10px; border-top: 1px solid var(--md-sys-color-outline);
+            text-transform: uppercase;
+            z-index: 1000;
+        }
+
+        .component-container { 
+            height: 100%; width: 100%; overflow: hidden; position: relative;
+            background: var(--hfo-black);
+        }
+
+        /* 📜 SECURED SCROLLING PANEL */
+        .scrollable-panel {
+            overflow-y: auto !important;
+            height: 100% !important;
+            padding: 12px;
+            box-sizing: border-box;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--hfo-black); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--md-sys-color-surface-variant); 
+            border-radius: 10px;
+            border: 2px solid var(--hfo-black);
+        }
+
+        .hero-view-container {
+            position: relative; width: 100%; height: 100%;
+            background: #000; display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+
+        #video-feed {
+            position: absolute; width: 100%; height: 100%;
+            object-fit: contain; transform: scaleX(-1);
+            filter: grayscale(0.5) contrast(1.1);
+        }
+
+        #overlay-canvas {
+            position: absolute; transform: scaleX(-1); 
+            pointer-events: none; z-index: 5;
+        }
+
+        .hfo-btn {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none; padding: 12px 32px;
+            border-radius: 24px; cursor: pointer;
+            font-weight: 600; font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+        .hfo-btn:active { transform: scale(0.95); }
+
+        .lil-gui {
+            --background-color: transparent;
+            --widget-color: var(--md-sys-color-surface-variant);
+            --focus-color: var(--md-sys-color-primary);
+            --title-background-color: var(--md-sys-color-primary-container);
+            --title-text-color: var(--md-sys-color-on-primary-container);
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="layout-container"></div>
+    <div id="status-bar">
+        <span>[HFO OMEGA V4.0]</span>
+        <span id="p5-status" style="margin-left: 16px; color: #00FF41;">P5: ENFORCED</span>
+        <span style="margin-left: auto;" id="state-indicator">P1: CONTRACTS ACTIVE | FSM: IDLE</span>
+    </div>
+
+    <!-- Import Map -->
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import { z } from 'zod';
+
+        // --- P1: FUSE CONTRACTS (The Bridger) ---
+        const ConfigSchema = z.object({
+            camera: z.object({
+                resolution: z.enum(['640x480', '1280x720', '1920x1080']),
+                fpsTarget: z.number().min(1).max(120),
+                mirror: z.boolean()
+            }),
+            landmarks: z.object({
+                minConfidence: z.number().min(0).max(1),
+                minTrackingConfidence: z.number().min(0).max(1),
+                minPresenceConfidence: z.number().min(0).max(1),
+                numHands: z.number().min(1).max(4),
+                showSkeleton: z.boolean()
+            }),
+            gestures: z.object({
+                minGestureConfidence: z.number().min(0).max(1),
+                preferredHand: z.enum(['Any', 'Left', 'Right'])
+            })
+        });
+
+        const LandmarkSchema = z.object({
+            x: z.number(),
+            y: z.number(),
+            z: z.number()
+        });
+
+        const CoordinateSchema = z.object({
+            screenX: z.number(),
+            screenY: z.number(),
+            fsmState: z.enum(['IDLE', 'POINTER_READY', 'POINTER_COMMIT']),
+            gesture: z.string()
+        });
+
+        // --- PRODUCTION STATE ---
+        const systemState = {
+            parameters: {
+                camera: { resolution: '1280x720', fpsTarget: 30, mirror: true },
+                landmarks: { minConfidence: 0.5, minTrackingConfidence: 0.5, minPresenceConfidence: 0.5, numHands: 2, showSkeleton: true },
+                gestures: { minGestureConfidence: 0.5, preferredHand: 'Any' },
+                p0Active: false
+            },
+            fsm: { currentState: 'IDLE' },
+            p0: { recognizer: null, video: null, canvas: null, ctx: null, videoBounds: null },
+            p1: { cursors: [] }
+        };
+
+        window.hfoState = systemState;
+
+        // --- P1 BRIDGER: CONTRACT ENFORCEMENT ---
+        class P1Bridger {
+            static validateConfig(config) {
+                try {
+                    return ConfigSchema.parse(config);
+                } catch (e) {
+                    console.error("🚨 P1_CONFIG_CONTRACT_BREACH:", e.errors);
+                    return null;
+                }
+            }
+
+            static fuse(results) {
+                const cursors = [];
+                if (!results.landmarks) return cursors;
+
+                results.landmarks.forEach((landmarks, index) => {
+                    try {
+                        // Validate raw landmarks (P1 Contract Grounding)
+                        const validatedLandmarks = landmarks.map(l => LandmarkSchema.parse(l));
+                        const tip = validatedLandmarks[8];
+                        const { width, height } = systemState.p0.videoBounds || { width: 0, height: 0 };
+                        
+                        const screenX = tip.x * width;
+                        const screenY = tip.y * height;
+                        
+                        const category = results.gestures?.[index]?.[0]?.categoryName || 'None';
+                        const state = (category === 'Closed_Fist' || category === 'Pointing_Up') ? 'POINTER_COMMIT' : 'POINTER_READY';
+
+                        cursors.push(CoordinateSchema.parse({
+                            screenX, screenY, fsmState: state, gesture: category
+                        }));
+                    } catch (e) {
+                        console.error("🚨 P1_FUSE_CONTRACT_BREACH:", e);
+                    }
+                });
+                return cursors;
+            }
+        }
+
+        // --- P0: SENSE ---
+        async function initP0() {
+            logMission("P0: Initializing MediaPipe Shards...");
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
+            systemState.p0.recognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: 'GPU'
+                },
+                runningMode: "VIDEO",
+                numHands: systemState.parameters.landmarks.numHands
+            });
+            logMission("✅ P0: Sensing Cluster Online");
+        }
+
+        function predictLoop() {
+            if (!systemState.parameters.p0Active) return;
+            const now = performance.now();
+            const results = systemState.p0.recognizer.recognizeForVideo(systemState.p0.video, now);
+            
+            // P1 BRIDGE: Fusing sensing to coordinates under contract
+            systemState.p1.cursors = P1Bridger.fuse(results);
+            
+            if (systemState.p1.cursors.length > 0) {
+                updateFSM(systemState.p1.cursors[0].fsmState);
+            } else {
+                updateFSM('IDLE');
+            }
+
+            drawResults(results);
+            requestAnimationFrame(predictLoop);
+        }
+
+        function updateFSM(state) {
+            if (systemState.fsm.currentState !== state) {
+                systemState.fsm.currentState = state;
+                const status = document.getElementById('state-indicator');
+                status.innerText = `P1: CONTRACTS ACTIVE | FSM: ${state}`;
+            }
+        }
+
+        function drawResults(results) {
+            const { ctx, canvas } = systemState.p0;
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (results.landmarks && systemState.parameters.landmarks.showSkeleton) {
+                const utils = new DrawingUtils(ctx);
+                for (const landmarks of results.landmarks) {
+                    utils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: '#D0BCFF', lineWidth: 2 });
+                    utils.drawLandmarks(landmarks, { color: '#FF4136', radius: 2 });
+                }
+            }
+        }
+
+        // --- P7: NAVIGATOR (Settings Shell) ---
+        class P7Navigator {
+            static init(container) {
+                const div = document.createElement('div');
+                div.className = 'scrollable-panel';
+                container.appendChild(div);
+
+                const gui = new GUI({ container: div, title: '🛰️ NAVIGATOR CONFIG', autoPlace: false });
+                
+                const fCam = gui.addFolder('P0: Camera Range');
+                fCam.add(systemState.parameters.camera, 'resolution', ['640x480', '1280x720', '1920x1080']).onChange(syncConfig);
+                fCam.add(systemState.parameters.camera, 'fpsTarget', 15, 60, 1).onChange(syncConfig);
+                fCam.add(systemState.parameters.camera, 'mirror').onChange(syncConfig);
+
+                const fLand = gui.addFolder('P0: Neural Shards');
+                fLand.add(systemState.parameters.landmarks, 'minConfidence', 0.1, 1).onChange(syncConfig);
+                fLand.add(systemState.parameters.landmarks, 'numHands', 1, 4, 1).onChange(syncConfig);
+                fLand.add(systemState.parameters.landmarks, 'showSkeleton');
+
+                function syncConfig() {
+                    const valid = P1Bridger.validateConfig(systemState.parameters);
+                    if (valid) {
+                        if (systemState.p0.recognizer) {
+                            systemState.p0.recognizer.setOptions({
+                                numHands: valid.landmarks.numHands,
+                                minHandDetectionConfidence: valid.landmarks.minConfidence
+                            });
+                        }
+                        logMission("P7: Configuration Synchronized & Validated");
+                    } else {
+                        logMission("⚠️ P1: Configuration Breach Detected", '#FF4136');
+                    }
+                }
+            }
+        }
+
+        function resizeCanvas() {
+            const { video, canvas } = systemState.p0;
+            if (!video || !canvas || !video.videoWidth) return;
+            const parent = video.parentElement;
+            const pRect = parent.getBoundingClientRect();
+            const vRatio = video.videoWidth / video.videoHeight;
+            
+            let drawW = pRect.width, drawH = pRect.width / vRatio;
+            if (drawH > pRect.height) { drawH = pRect.height; drawW = drawH * vRatio; }
+            
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.style.width = `${drawW}px`; canvas.style.height = `${drawH}px`;
+            systemState.p0.videoBounds = { width: drawW, height: drawH };
+        }
+
+        function logMission(msg, color = '#00ff41') {
+            const logs = document.getElementById('mission-logs');
+            if (!logs) return;
+            const entry = document.createElement('div');
+            entry.style.color = color;
+            entry.innerText = `[${new Date().toLocaleTimeString('en-GB')}] ${msg}`;
+            logs.prepend(entry);
+        }
+
+        // --- LAYOUT ENGINE ---
+        const container = document.getElementById('layout-container');
+        const layout = new GoldenLayout(container);
+
+        layout.registerComponentFactoryFunction('hero', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'component-container';
+            wrap.innerHTML = `
+                <div class="hero-view-container">
+                    <video id="video-feed" autoplay playsinline></video>
+                    <canvas id="overlay-canvas"></canvas>
+                    <button id="btn-ignite" class="hfo-btn" style="position:absolute; bottom:30px; z-index:20;">IGNITE OMEGA</button>
+                </div>
+            `;
+            container.getElement().appendChild(wrap);
+            systemState.p0.video = wrap.querySelector('#video-feed');
+            systemState.p0.canvas = wrap.querySelector('#overlay-canvas');
+            systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
+            
+            wrap.querySelector('#btn-ignite').onclick = async (e) => {
+                e.target.style.display = 'none';
+                await initP0();
+                const [w, h] = systemState.parameters.camera.resolution.split('x');
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { width: parseInt(w), height: parseInt(h) } });
+                systemState.p0.video.srcObject = stream;
+                systemState.p0.video.onloadeddata = () => {
+                    systemState.parameters.p0Active = true;
+                    resizeCanvas(); predictLoop();
+                };
+            };
+            
+            // Responsiveness: Hub Listener
+            container.on('resize', () => resizeCanvas());
+        });
+
+        layout.registerComponentFactoryFunction('navigator', (container) => {
+            P7Navigator.init(container.getElement());
+        });
+
+        layout.registerComponentFactoryFunction('logs', (container) => {
+            const div = document.createElement('div');
+            div.id = 'mission-logs';
+            div.className = 'scrollable-panel';
+            div.style.background = '#000'; div.style.fontSize = '10px'; div.style.fontFamily = 'monospace';
+            container.getElement().appendChild(div);
+            logMission("SYSTEM_LOGS: READY");
+        });
+
+        layout.loadLayout({
+            root: { type: 'row', content: [
+                { type: 'component', componentType: 'hero', title: 'Tactical Workspace', width: 70 },
+                { type: 'column', width: 30, content: [
+                    { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 60 },
+                    { type: 'component', componentType: 'logs', title: 'System Telemetry', height: 40 }
+                ]}
+            ]}
+        });
+
+        window.addEventListener('resize', () => { 
+            layout.updateSize(); 
+            resizeCanvas(); 
+        });
+    </script>
+</body>
+</html>
