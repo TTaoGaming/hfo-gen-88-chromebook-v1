@@ -21,6 +21,7 @@ For high-fidelity cursor behavior (Inertia, Spring-Damping, Attractors), the eng
 | **Phaser (Matter)**| Wrapper | Light | ⭐⭐⭐ | Rapid game-loop integration, built-in state management. |
 
 ### 🧬 Physics Integration Topology
+
 ```mermaid
 graph TD
     A[MediaPipe Shards] -->|P1: Fuse| B{Physics Engine}
@@ -50,6 +51,7 @@ To achieve "Beautiful, Stable, and Quick" fire and laser effects on mobile hardw
 | **Phaser** | Canvas/WebGL | Moderate| ⭐⭐⭐ | All-in-one UI, sound, and visual management. |
 
 ### ⚡ Visual Flow Pattern
+
 ```mermaid
 flowchart LR
     State(FSM State) -->|READY| Gold(Gold Ray P1)
@@ -69,15 +71,22 @@ flowchart LR
 
 ---
 
-## 🎯 3. Executive Recommendation: The "Apex Mosaic"
+## 🎯 3. Executive Recommendation: The "Agnostic Manifold"
 
-For the **OMEGA MAXIMALIST** vision, we recommend a **Hybrid Mosaic Architecture**:
+For the **OMEGA MAXIMALIST** vision, we prioritize **Interface Abstraction** over vendor lock-in.
 
-1.  **Physics**: **Rapier.js**. Its WASM nature ensures that physics calculations never block the main JS thread during high-frequency MediaPipe updates.
-2.  **Visuals**: **PixiJS + Custom Shaders**. PixiJS provides the "Maximal" scaffolding (z-indexing, container management), while custom GLSL Shaders injected into Pixi Meshes provide the "Elemental Juice" (Fireballs) with zero performance penalty on the Chromebook's GPU.
+1. **Kinetic Adapter Layer (P2 SHAPE)**:
+    - **Selection**: **Planck.js** (Box2D).
+    - **Reasoning**: Planck.js (Box2D) represents the "Cold Truth" of physics engines—mature, deterministic, and providing the highest fidelity for constrained engineering problems (2-rod linkage).
+2. **Visual Adapter Layer (P3 DELIVER)**:
+    - **Selection**: **PixiJS**.
+    - **Reasoning**: Highly efficient WebGL/WebGPU wrapper for "Juicy" effects.
+3. **Core Architecture: The Pointer Bridge**:
+    - The system is anchored to the **Gesture-to-W3C Pointer Input Layer**.
+    - Physics and Rendering are treated as **swappable adapters**. V18 will implement the `IPhysicsAdapter` interface using **Planck.js** to ground the kinetic behavior.
 
-**Why not Phaser?**  
-While Phaser is an excellent "all-in-one", it brings significant overhead for a modular monolith. HFO's hexagonal architecture benefits more from the "best-in-class" specialization of Rapier + PixiJS.
+**Why Planck.js over Matter.js?**  
+While Matter.js is easier to set up, Planck.js (Box2D) provides a more robust mathematical foundation for complex constrained linkages (Shoulder-to-Elbow-to-Pointer). By using an **Adapter Pattern**, we preserve the ability to swap to Rapier or Matter without touching the core FSM or W3C Pointer logic.
 
 ---
-*Spider Sovereign (Port 7) | Phoenix Reconstruction | RED_TRUTH*
+*Spider Sovereign (Port 7) | Phoenix Reconstruction | AGNOSTIC PIVOT*

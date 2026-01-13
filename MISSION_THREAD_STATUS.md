@@ -21,23 +21,25 @@
 ---
 
 ## 🧵 THREAD OMEGA: TOTAL TOOL VIRTUALIZATION (Gen 4 - Production)
-**Current Focus**: High-fidelity virtual tool creation (MediaPipe + Rapier Physics).
-**Status**: 🚀 **V10.1 STABILIZED**
+**Current Focus**: High-fidelity virtual tool creation (V18: Matter.js + PixiJS).
+**Status**: 🚀 **V17.0 PROMOTED / V18.0 BLUEPRINTING**
 
 ### ✅ Key Achievements
-- **Omega Gen 4 V10.1**: Performance-hardened monolith. Removed "Elemental Juice" visuals to prioritize deep visual debugging.
+- **Omega Gen 4 V17.0**: Promoted with **Visual Subterfuge** (150ms masks) and **Inertial Stepping**. High stability on tracking loss.
 - **80/64 Alignment**: Hysteresis thresholds locked at 0.80 (Enter) and 0.64 (Exit).
 - **Rigid Rod Physics**: Z-invariant extension fixed at 64% of index finger length.
 - **Port 1 Contracts**: Zod-based coordinate fusion verified and integrated.
+- **V18 Pivot**: Confirmed **Matter.js** for physics and **PixiJS** for Visual Juice Substrate.
 
 ### ⚠️ Current Blockers/Risks
-- **Visual Regression**: Fire effects currently disabled; pending performance re-validation.
-- **Rapier Stress Test**: Nightly Stress Event (NSE) pending to verify FSM stability under noise.
+- **V18 Integration**: Transitioning manual MassSpring logic to Matter.js engine.
+- **Elemental Juice**: Implementing PixiJS particle emitters and GLSL shaders for fireballs.
+- **Rapier Stress Test**: Nightly Stress Event (NSE) pending for comparison against Matter baseline.
 
 ---
 
 ## 📍 SYSTEM GROUND TRUTH
-- **Active Version**: `omega_gen4_v10.html` (V10.1)
+- **Active Version**: `omega_gen4_v17.html` (V17.0)
 - **Environment**: Linux on Chromebook (V-1)
 - **Defensive State**: Praetorian Immunizer active. P5 Sentinel running.
 
