@@ -14,11 +14,14 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@stryker-mutator/typescript-checker": "^9.4.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7"
+    "lint-staged": "^16.2.7",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@playwright/test": "^1.57.0",
-    "playwright": "^1.57.0"
+    "playwright": "^1.57.0",
+    "zod": "^3.22.4"
   }
 }

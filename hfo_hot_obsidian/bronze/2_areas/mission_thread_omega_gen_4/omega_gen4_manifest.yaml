@@ -1,0 +1,42 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: E
+# Generation: 4
+# Focus: Modular Monolith HTML & Production-Ready Silver Transition
+id: OMEGA-GEN4-HOT-BRONZE
+name: "Omega Gen 4: Phoenix Production Monolith"
+mission_thread: Omega
+status: "Bootstrapping (Phase 1)"
+version: "V1.0.0-RED"
+
+phases:
+  - id: B1
+    title: "Phase 1: Sensing & Contract (P0/P1)"
+    description: "Stabilize MediaPipe & Zod 6.0 production schemas within the monolith. Ensure 100% P1 Contract Pass Rate."
+    goal: "Eliminate telemetry jitter and bridge to physics coordinates."
+    status: "Active (P0 Integrated)"
+
+  - id: B2
+    title: "Phase 2: Physics Digital Twin (P2)"
+    description: "Integration of hardened Rapier.js/Matter.js sharding. Focus on 'Elemental Juice' (Visual feedback loops)."
+    goal: "88%+ Mutation scoring on core physics logic."
+    status: "Pending"
+
+  - id: B3
+    title: "Phase 3: Effect Delivery & FSM (P3/P7)"
+    description: "Simplified 3-state production FSM (IDLE, READY, COMMIT). High-fidelity W3C event injection."
+    goal: "Zero latency between Sensing and Event Delivery."
+    status: "Pending"
+
+  - id: B4
+    title: "Phase 4: Silver Promotion & Defensive Audit (P5)"
+    description: "Full P5 Forensic Audit for Silver Medallion promotion. Execution of Nightly Stress Event (NSE)."
+    goal: "Pareto Optimal Silver Baseline (88%-98%)."
+    status: "Pending"
+
+governance:
+  medallion_purity: "Strict Bronze-to-Silver Refinement"
+  anti_slop: "Zero-Stub Enforcement"
+  chronos_sync: "Addressing Chronos line fractures before Silver freeze"
+
+receipt:
+  thinking_octet: "Baton_Port7_20260112_193010"
+  p5_audit: "FAIL (Chronos Breach line 1)"

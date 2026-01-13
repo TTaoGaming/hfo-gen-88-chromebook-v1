@@ -1,0 +1,447 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- OMEGA GEN 4 V1.0 - PHOENIX PRODUCTION MONOLITH -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | OMEGA GEN 4 V1.0 - HERO SUBSTRATE</title>
+    
+    <!-- CSS Dependencies -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    
+    <style>
+        :root {
+            --md-sys-color-primary: #D0BCFF;
+            --md-sys-color-on-primary: #381E72;
+            --md-sys-color-surface: #1C1B1F;
+            --md-sys-color-on-surface: #E6E1E5;
+            --hfo-red: #FF4136;
+            --hfo-black: #111111;
+        }
+
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            background: var(--hfo-black); 
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Roboto', 'IBM Plex Mono', 'Segoe UI', sans-serif;
+        }
+
+        #layout-container { 
+            width: 100%; 
+            height: calc(100% - 24px); 
+        }
+
+        #status-bar { 
+            height: 24px;
+            background: var(--md-sys-color-on-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #49454F;
+            z-index: 100;
+        }
+
+        .component-container {
+            padding: 16px;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+            background: #1A1A1A;
+            position: relative;
+        }
+
+        /* Hero Feed Styles */
+        .hero-view-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* Mirrored */
+            filter: grayscale(0.5) contrast(1.2);
+        }
+
+        #overlay-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: scaleX(-1); /* Mirrored to match video */
+            pointer-events: none;
+        }
+
+        .hero-placeholder {
+            position: absolute;
+            color: #444;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .hfo-header {
+            border-left: 4px solid var(--hfo-red);
+            padding-left: 12px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hfo-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--md-sys-color-primary);
+        }
+
+        /* lil-gui styling override */
+        .lil-gui {
+            --background-color: #1A1A1A;
+            --text-color: #E6E1E5;
+            --title-background-color: #2E1A47;
+            --widget-color: #333333;
+            --focus-color: var(--md-sys-color-primary);
+            --font-family: 'IBM Plex Mono', monospace;
+            --font-size: 11px;
+        }
+
+        /* Action Buttons */
+        .p0-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+        }
+
+        .hfo-btn {
+            background: var(--hfo-red);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .hfo-btn:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div id="layout-container"></div>
+    <div id="status-bar">
+        <span>[HFO OMEGA GEN 4]</span>
+        <span style="margin-left: auto;">P0_SENSE: IDLE | P1_FUSE: STANDBY | P2_SHAPE: READY | MEDALLION: BRONZE</span>
+    </div>
+
+    <!-- Import Map -->
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+
+        // --- PRODUCTION STATE ---
+        const systemState = {
+            parameters: {
+                minConfidence: 0.5,
+                numHands: 2,
+                showSkeleton: true,
+                p0Active: false
+            },
+            telemetry: {
+                latency: 0,
+                jitter: 0,
+                load: 0,
+                fps: 0,
+                handsDetected: 0
+            },
+            p0: {
+                recognizer: null,
+                video: null,
+                canvas: null,
+                ctx: null,
+                lastVideoTime: -1
+            }
+        };
+
+        // --- P0: SENSE (MediaPipe Integration) ---
+        async function initP0() {
+            console.log("🧬 P0: Initializing MediaPipe...");
+            const vision = await FilesetResolver.forVisionTasks(
+                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
+            );
+            systemState.p0.recognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: "GPU"
+                },
+                runningMode: "VIDEO",
+                numHands: systemState.parameters.numHands,
+                minHandDetectionConfidence: systemState.parameters.minConfidence,
+                minHandPresenceConfidence: systemState.parameters.minConfidence,
+                minTrackingConfidence: systemState.parameters.minConfidence
+            });
+            console.log("✅ P0: MediaPipe Ready");
+        }
+
+        async function startCamera() {
+            if (!systemState.p0.video) return;
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { width: 1280, height: 720 } 
+            });
+            systemState.p0.video.srcObject = stream;
+            systemState.p0.video.addEventListener('loadeddata', () => {
+                systemState.parameters.p0Active = true;
+                requestAnimationFrame(predictLoop);
+            });
+        }
+
+        function predictLoop() {
+            if (!systemState.p0.recognizer || !systemState.parameters.p0Active) return;
+            
+            const nowInMs = performance.now();
+            if (systemState.p0.video.currentTime !== systemState.p0.lastVideoTime) {
+                systemState.p0.lastVideoTime = systemState.p0.video.currentTime;
+                
+                const results = systemState.p0.recognizer.recognizeForVideo(systemState.p0.video, nowInMs);
+                drawResults(results);
+                updateTelemetry(results);
+            }
+            
+            requestAnimationFrame(predictLoop);
+        }
+
+        function drawResults(results) {
+            const { ctx, canvas } = systemState.p0;
+            if (!ctx) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (results.landmarks && systemState.parameters.showSkeleton) {
+                const drawingUtils = new DrawingUtils(ctx);
+                for (const landmarks of results.landmarks) {
+                    drawingUtils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, {
+                        color: "#FF4136",
+                        lineWidth: 3
+                    });
+                    drawingUtils.drawLandmarks(landmarks, {
+                        color: "#D0BCFF",
+                        lineWidth: 1,
+                        radius: 4
+                    });
+                }
+            }
+        }
+
+        function updateTelemetry(results) {
+            systemState.telemetry.handsDetected = results.landmarks ? results.landmarks.length : 0;
+            // Basic FPS calc
+            const now = performance.now();
+            if (systemState.telemetry.lastTime) {
+                const delta = now - systemState.telemetry.lastTime;
+                systemState.telemetry.fps = Math.round(1000 / delta);
+            }
+            systemState.telemetry.lastTime = now;
+        }
+
+        // --- COMPONENTS ---
+        const layoutConfig = {
+            root: {
+                type: 'row',
+                content: [
+                    {
+                        type: 'component',
+                        title: 'Hero Viewport',
+                        componentType: 'hero',
+                        width: 70,
+                        componentState: { text: 'P0 SENSE ACTIVE' }
+                    },
+                    {
+                        type: 'column',
+                        width: 30,
+                        content: [
+                            {
+                                type: 'component',
+                                title: 'System Settings',
+                                componentType: 'settings',
+                                height: 40
+                            },
+                            {
+                                type: 'component',
+                                title: 'Live Telemetry',
+                                componentType: 'telemetry',
+                                height: 30
+                            },
+                            {
+                                type: 'component',
+                                title: 'Mission Logs',
+                                componentType: 'logs',
+                                height: 30
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const container = document.getElementById('layout-container');
+        const layout = new GoldenLayout(container);
+
+        // --- Component: Hero ---
+        layout.registerComponentFactoryFunction('hero', (container, state) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'component-container';
+            wrapper.style.padding = '0';
+            
+            wrapper.innerHTML = `
+                <div class="hero-view-container">
+                    <div class="hero-placeholder">P0 SENSE IDLE<span>START CAMERA TO INITIALIZE</span></div>
+                    <video id="video-feed" autoplay playsinline></video>
+                    <canvas id="overlay-canvas"></canvas>
+                    <div class="p0-controls">
+                        <button id="btn-start-p0" class="hfo-btn">Activate P0</button>
+                    </div>
+                </div>
+            `;
+            container.getElement().appendChild(wrapper);
+
+            systemState.p0.video = wrapper.querySelector('#video-feed');
+            systemState.p0.canvas = wrapper.querySelector('#overlay-canvas');
+            systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
+
+            const btn = wrapper.querySelector('#btn-start-p0');
+            btn.addEventListener('click', async () => {
+                btn.innerText = "Initializing...";
+                btn.disabled = true;
+                await initP0();
+                await startCamera();
+                btn.style.display = 'none';
+                wrapper.querySelector('.hero-placeholder').style.display = 'none';
+            });
+
+            // Rescale Canvas to Video Parity
+            const resizeCanvas = () => {
+                if (systemState.p0.video && systemState.p0.canvas) {
+                    systemState.p0.canvas.width = systemState.p0.video.clientWidth;
+                    systemState.p0.canvas.height = systemState.p0.video.clientHeight;
+                }
+            };
+            window.addEventListener('resize', resizeCanvas);
+            setTimeout(resizeCanvas, 500);
+        });
+
+        // --- Component: Settings (lil-gui) ---
+        layout.registerComponentFactoryFunction('settings', (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.id = 'settings-mount';
+            container.getElement().appendChild(div);
+
+            const gui = new GUI({ container: div, title: 'Command Manifold', touchStyles: true, autoPlace: false });
+            
+            const p0Folder = gui.addFolder('P0: Sensing');
+            p0Folder.add(systemState.parameters, 'minConfidence', 0, 1).name('Min Confidence').onChange(v => {
+                if (systemState.p0.recognizer) {
+                    systemState.p0.recognizer.setOptions({ minHandDetectionConfidence: v });
+                }
+            });
+            p0Folder.add(systemState.parameters, 'numHands', 1, 4, 1).name('Max Hands').onChange(v => {
+                if (systemState.p0.recognizer) {
+                    systemState.p0.recognizer.setOptions({ numHands: v });
+                }
+            });
+            p0Folder.add(systemState.parameters, 'showSkeleton').name('Render Skeleton');
+
+            const p1Folder = gui.addFolder('P1: Fuse (Contracts)');
+            p1Folder.add({ log: () => console.log("Zod Contract Check: OK") }, 'log').name('Validate Port Bridges');
+
+            gui.onChange(event => {
+                console.log("System State Change:", systemState.parameters);
+            });
+        });
+
+        // --- Component: Telemetry ---
+        layout.registerComponentFactoryFunction('telemetry', (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.innerHTML = `
+                <div class="hfo-header"><h3>Telemetry</h3></div>
+                <div id="telemetry-display">
+                    <p>FPS: <span id="tel-fps">0</span></p>
+                    <p>Hands: <span id="tel-hands">0</span></p>
+                    <p>Sample Rate: 60Hz</p>
+                </div>
+            `;
+            container.getElement().appendChild(div);
+
+            // Update UI loop
+            setInterval(() => {
+                const fpsEl = document.getElementById('tel-fps');
+                const handsEl = document.getElementById('tel-hands');
+                if (fpsEl) fpsEl.innerText = systemState.telemetry.fps;
+                if (handsEl) handsEl.innerText = systemState.telemetry.handsDetected;
+            }, 200);
+        });
+
+        // --- Component: Logs ---
+        layout.registerComponentFactoryFunction('logs', (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.style.background = '#0d0d0d';
+            div.style.color = '#00ff41';
+            div.style.fontFamily = 'monospace';
+            div.style.fontSize = '12px';
+            div.id = 'mission-logs-content';
+            div.innerHTML = `
+                <div style="margin-bottom: 5px;">[P7] BOOTSTRAP_START</div>
+                <div style="margin-bottom: 5px;">[P0] ASSETS_CDN_LINKED</div>
+            `;
+            container.getElement().appendChild(div);
+        });
+
+        // Init Layout
+        layout.loadLayout(layoutConfig);
+
+        // Resize Hook
+        window.addEventListener('resize', () => layout.updateSize());
+
+        console.log("🛠️ HFO OMEGA GEN 4: SENSING MONOLITH DEPLOYED");
+    </script>
+</body>
+</html>

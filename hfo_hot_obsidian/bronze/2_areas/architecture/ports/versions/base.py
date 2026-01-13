@@ -28,7 +28,9 @@ def get_config():
 
 def get_active_workspace():
     cfg = get_config()
-    version = cfg.get("activeVersion", "38")
+    version = str(cfg.get("activeVersion", "38"))
+    if version.startswith("3"):
+        return f"/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_2/omega_gen3_v{version.replace('3_', '')}.html"
     return f"/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v{version}.html"
 
 def get_hub_version():
@@ -659,9 +661,10 @@ class Port5Immunize:
                     try:
                         entry = json.loads(line)
                         
-                        # SEAL RECOGNITION
-                        if entry.get("phase") == "SIGNAL" and entry.get("query") == "RED_TRUTH_SEAL":
-                            last_sig = entry.get("signature")
+                        # SEAL RECOGNITION (V1 or V2)
+                        query_val = str(entry.get("query", ""))
+                        if entry.get("phase") == "SIGNAL" and query_val.startswith("RED_TRUTH_SEAL"):
+                            last_sig = entry.get("signature", "ROOT")
                             last_ts = None
                             continue
 

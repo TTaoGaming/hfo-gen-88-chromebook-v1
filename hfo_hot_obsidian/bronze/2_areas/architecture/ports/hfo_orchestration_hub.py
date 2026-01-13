@@ -40,6 +40,14 @@ from versions.hub_v5 import HubV5
 from versions.hub_v6 import HubV6
 from versions.hub_v7 import HubV7
 
+class HubV8(HubV7):
+    """Version 8: Promotion & Archival Commander. Inherits V7 Multi-Diamond logic.
+    Provides semantic sharding and BFT quorum reinforcement for Generation 88.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.version = "8.1.0-BRONZE"
+
 HUB_REGISTRY = {
     "1": HubV1,
     "2": HubV2,
@@ -48,6 +56,7 @@ HUB_REGISTRY = {
     "5": HubV5,
     "6": HubV6,
     "7": HubV7,
+    "8": HubV8,
 }
 
 def check_p5_safety():

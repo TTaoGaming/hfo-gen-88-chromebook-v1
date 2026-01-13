@@ -83,10 +83,12 @@ Every action must be aligned with one of these two primary mission threads:
 
 ## 📍 Current Phase: Gen 88 Phoenix Reconstruction
 
-We are currently executing the **Omega Gen 2 Bootstrap** and **Alpha Bootstrapping**.
+We are currently executing the **Omega Silver Gen 1 Initializtion**, **Omega Gen 2 Bootstrap** and **Alpha Bootstrapping**.
 
 **Active Mission Projects**:
 
+- `omega_gen4_v1.html`: Phoenix Production Monolith (Thread Omega Gen 4) - **P0 Sensing Integrated**.
+- `omega_silver_v1.html`: Modular Hexagonal Monolith (Thread Omega Silver) - **REJECTED/PURGED**.
 - `hfo_orchestration_hub.py`: Unified Port Sharding (Thread Alpha) - **Hub V7 Active**.
 - `mission_thread_omega_gen_2.yaml`: Omega Gen 2 (Thread Omega Gen 2) - **BOOTSTRAP ACTIVE**.
 - `9_omega_tools.yaml`: Total Tool Virtualization (Thread Omega Gen 1) - **SUNSETTING**.
@@ -441,7 +443,7 @@ We are currently in a **Cold Start** scenario on a Chromebook.
 **Current Blockers**:
 
 1. **P5-CHRONOS fracture**: Fracture persists at line 3 of `hot_obsidian_blackboard.jsonl`. Chain integrity audit failing (aggregate FAIL).
-2. **P7 SHARD-3 ADVERSARIAL THEATER**: Hub V7 detected 14 theater flags during the last thinking octet. 
+2. **P7 SHARD-3 ADVERSARIAL THEATER**: Hub V7 detected 14 theater flags during the last thinking octet.
 
 **Key Achievements**:
 
