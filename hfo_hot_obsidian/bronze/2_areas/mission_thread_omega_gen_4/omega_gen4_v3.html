@@ -2,15 +2,18 @@
 <!-- OMEGA GEN 4 V3.0 - NAVIGATOR ENHANCED -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HFO | OMEGA GEN 4 V3.0 - PORT 7 NAVIGATOR</title>
-    
+
     <!-- CSS Dependencies -->
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
-    
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+
     <style>
         :root {
             --md-sys-color-primary: #D0BCFF;
@@ -26,23 +29,39 @@
             --m3-radius: 12px;
         }
 
-        body, html { 
-            margin: 0; padding: 0; height: 100vh; width: 100vw;
-            overflow: hidden; background: var(--hfo-black); 
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--hfo-black);
             color: var(--md-sys-color-on-surface);
             font-family: 'Roboto', system-ui, sans-serif;
         }
 
-        #layout-container { width: 100%; height: calc(100% - 28px); }
+        #layout-container {
+            width: 100%;
+            height: calc(100% - 28px);
+        }
 
-        #status-bar { 
-            height: 28px; background: var(--md-sys-color-surface);
-            display: flex; align-items: center; padding: 0 16px;
-            font-size: 10px; border-top: 1px solid var(--md-sys-color-outline);
+        #status-bar {
+            height: 28px;
+            background: var(--md-sys-color-surface);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 10px;
+            border-top: 1px solid var(--md-sys-color-outline);
             text-transform: uppercase;
         }
 
-        .component-container { height: 100%; overflow: hidden; position: relative; }
+        .component-container {
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
 
         /* M3 Style Scrollbar for Panels */
         .scrollable-panel {
@@ -50,37 +69,56 @@
             height: 100%;
             padding-bottom: 20px;
         }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { 
-            background: var(--md-sys-color-outline); 
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--md-sys-color-outline);
             border-radius: 10px;
         }
 
         .hero-view-container {
-            position: relative; width: 100%; height: 100%;
-            background: #000; display: flex; align-items: center; justify-content: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #video-feed {
-            position: absolute; width: 100%; height: 100%;
-            object-fit: contain; transform: scaleX(-1);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scaleX(-1);
             filter: grayscale(0.5) brightness(0.7);
         }
 
         #overlay-canvas {
-            position: absolute; transform: scaleX(-1); 
-            pointer-events: none; z-index: 5;
+            position: absolute;
+            transform: scaleX(-1);
+            pointer-events: none;
+            z-index: 5;
         }
 
         .hfo-btn {
             background: var(--md-sys-color-primary);
             color: var(--md-sys-color-on-primary);
-            border: none; padding: 12px 32px;
-            border-radius: 24px; cursor: pointer;
-            font-weight: 600; font-size: 14px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            border: none;
+            padding: 12px 32px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         /* lil-gui custom branding */
@@ -94,6 +132,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="layout-container"></div>
     <div id="status-bar">
@@ -165,7 +204,7 @@
                 container.appendChild(scrollWrap);
 
                 const gui = new GUI({ container: scrollWrap, title: '🛰️ PORT 7: BMC2 CONFIG', autoPlace: false });
-                
+
                 // Subpanel: Camera Settings
                 const fCam = gui.addFolder('P0: Camera (Optical Range)');
                 fCam.add(systemState.parameters.camera, 'resolution', ['640x480', '1280x720', '1920x1080']).name('Resolution');
@@ -255,7 +294,7 @@
 
         // --- LAYOUT ---
         const layout = new GoldenLayout(document.getElementById('layout-container'));
-        
+
         layout.registerComponentFactoryFunction('hero', (container) => {
             const wrap = document.createElement('div');
             wrap.className = 'hero-view-container';
@@ -268,13 +307,13 @@
             systemState.p0.video = wrap.querySelector('#video-feed');
             systemState.p0.canvas = wrap.querySelector('#overlay-canvas');
             systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
-            
+
             wrap.querySelector('#btn-ignite').onclick = async (e) => {
                 e.target.style.display = 'none';
                 await initP0();
                 const [w, h] = systemState.parameters.camera.resolution.split('x');
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { width: parseInt(w), height: parseInt(h) } 
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: parseInt(w), height: parseInt(h) }
                 });
                 systemState.p0.video.srcObject = stream;
                 systemState.p0.video.onloadeddata = () => {
@@ -297,16 +336,21 @@
         });
 
         layout.loadLayout({
-            root: { type: 'row', content: [
-                { type: 'component', componentType: 'hero', title: 'Tactical Viewport', width: 70 },
-                { type: 'column', width: 30, content: [
-                    { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 60 },
-                    { type: 'component', componentType: 'logs', title: 'Mission Logs', height: 40 }
-                ]}
-            ]}
+            root: {
+                type: 'row', content: [
+                    { type: 'component', componentType: 'hero', title: 'Tactical Viewport', width: 70 },
+                    {
+                        type: 'column', width: 30, content: [
+                            { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 60 },
+                            { type: 'component', componentType: 'logs', title: 'Mission Logs', height: 40 }
+                        ]
+                    }
+                ]
+            }
         });
-        
+
         window.onresize = () => { layout.updateSize(); resizeCanvas(); };
     </script>
 </body>
+
 </html>

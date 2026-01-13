@@ -2,15 +2,18 @@
 <!-- OMEGA GEN 4 V2.0 - MODULAR HEXAGONAL MONOLITH -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HFO | OMEGA GEN 4 V2.0 - SILVER FOUNDATION</title>
-    
+
     <!-- CSS Dependencies -->
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
-    
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+
     <style>
         :root {
             --md-sys-color-primary: #D0BCFF;
@@ -26,61 +29,103 @@
             --m3-radius: 12px;
         }
 
-        body, html { 
-            margin: 0; padding: 0; height: 100vh; width: 100vw;
-            overflow: hidden; background: var(--hfo-black); 
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--hfo-black);
             color: var(--md-sys-color-on-surface);
             font-family: 'Roboto', system-ui, sans-serif;
         }
 
-        #layout-container { width: 100%; height: calc(100% - 28px); }
+        #layout-container {
+            width: 100%;
+            height: calc(100% - 28px);
+        }
 
-        #status-bar { 
-            height: 28px; background: var(--md-sys-color-surface);
-            display: flex; align-items: center; padding: 0 16px;
-            font-size: 10px; border-top: 1px solid var(--md-sys-color-outline);
+        #status-bar {
+            height: 28px;
+            background: var(--md-sys-color-surface);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 10px;
+            border-top: 1px solid var(--md-sys-color-outline);
             text-transform: uppercase;
         }
 
-        .component-container { height: 100%; overflow: hidden; position: relative; }
+        .component-container {
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
 
         .hero-view-container {
-            position: relative; width: 100%; height: 100%;
-            background: #000; display: flex; align-items: center; justify-content: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #video-feed {
-            position: absolute; width: 100%; height: 100%;
-            object-fit: contain; transform: scaleX(-1);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scaleX(-1);
             filter: grayscale(0.5) brightness(0.7);
         }
 
         #overlay-canvas {
-            position: absolute; transform: scaleX(-1); 
-            pointer-events: none; z-index: 5;
+            position: absolute;
+            transform: scaleX(-1);
+            pointer-events: none;
+            z-index: 5;
         }
 
         .hfo-btn {
             background: var(--md-sys-color-primary);
             color: var(--md-sys-color-on-primary);
-            border: none; padding: 12px 32px;
-            border-radius: 24px; cursor: pointer;
-            font-weight: 600; font-size: 14px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            border: none;
+            padding: 12px 32px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         /* FSM Indicator Overlay */
         #fsm-overlay {
-            position: absolute; top: 16px; left: 16px;
-            z-index: 20; display: flex; gap: 8px;
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            z-index: 20;
+            display: flex;
+            gap: 8px;
         }
+
         .fsm-shard {
-            width: 12px; height: 12px; border-radius: 2px;
-            background: #333; transition: all 0.3s;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            background: #333;
+            transition: all 0.3s;
         }
-        .fsm-shard.active { background: var(--hfo-red); box-shadow: 0 0 10px var(--hfo-red); }
+
+        .fsm-shard.active {
+            background: var(--hfo-red);
+            box-shadow: 0 0 10px var(--hfo-red);
+        }
     </style>
 </head>
+
 <body>
     <div id="layout-container"></div>
     <div id="status-bar">
@@ -173,7 +218,7 @@
                         // Using Index Tip (Landmark 8) as cursor
                         const tip = handData.landmarks[8];
                         const { width, height } = systemState.p0.videoBounds || { width: 0, height: 0 };
-                        
+
                         const screenX = tip.x * width;
                         const screenY = tip.y * height;
 
@@ -215,10 +260,10 @@
 
         function predictLoop() {
             if (!systemState.parameters.p0Active) return;
-            
+
             const now = performance.now();
             const results = systemState.p0.recognizer.recognizeForVideo(systemState.p0.video, now);
-            
+
             // PORT 1 BRIDGE: Fusing P0 raw data into P3-compatible cursors
             systemState.p1.cursors = P1Bridger.fuse(results);
 
@@ -247,7 +292,7 @@
             const { ctx, canvas } = systemState.p0;
             if (!ctx) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             if (results.landmarks && systemState.parameters.showSkeleton) {
                 const utils = new DrawingUtils(ctx);
                 for (const landmarks of results.landmarks) {
@@ -266,7 +311,7 @@
             const videoRatio = video.videoWidth / video.videoHeight;
             let drawW = rect.width, drawH = rect.width / videoRatio;
             if (drawH > rect.height) { drawH = rect.height; drawW = drawH * videoRatio; }
-            
+
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.style.width = `${drawW}px`;
@@ -284,7 +329,7 @@
 
         // --- LAYOUT & BOOTSTRAP ---
         const layout = new GoldenLayout(document.getElementById('layout-container'));
-        
+
         layout.registerComponentFactoryFunction('hero', (container) => {
             const wrap = document.createElement('div');
             wrap.className = 'hero-view-container';
@@ -297,7 +342,7 @@
             systemState.p0.video = wrap.querySelector('#video-feed');
             systemState.p0.canvas = wrap.querySelector('#overlay-canvas');
             systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
-            
+
             wrap.querySelector('#btn-ignite').onclick = async (e) => {
                 e.target.style.display = 'none';
                 await initP0();
@@ -319,13 +364,16 @@
         });
 
         layout.loadLayout({
-            root: { type: 'row', content: [
-                { type: 'component', componentType: 'hero', title: 'Tactical View', width: 75 },
-                { type: 'component', componentType: 'logs', title: 'System Logs', width: 25 }
-            ]}
+            root: {
+                type: 'row', content: [
+                    { type: 'component', componentType: 'hero', title: 'Tactical View', width: 75 },
+                    { type: 'component', componentType: 'logs', title: 'System Logs', width: 25 }
+                ]
+            }
         });
-        
+
         window.onresize = () => { layout.updateSize(); resizeCanvas(); };
     </script>
 </body>
+
 </html>

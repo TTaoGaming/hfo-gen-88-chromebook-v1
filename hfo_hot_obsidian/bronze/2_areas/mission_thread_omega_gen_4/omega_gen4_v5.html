@@ -2,15 +2,18 @@
 <!-- OMEGA GEN 4 V5.0 - GESTURE CONFIDENCE & PALM ORIENTATION -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HFO | OMEGA GEN 4 V5.0 - GESTURE & PALM ENFORCED</title>
-    
+
     <!-- CSS Dependencies -->
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
-    
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+
     <style>
         :root {
             --md-sys-color-primary: #D0BCFF;
@@ -26,25 +29,40 @@
             --m3-radius: 12px;
         }
 
-        body, html { 
-            margin: 0; padding: 0; height: 100vh; width: 100vw;
-            overflow: hidden; background: var(--hfo-black); 
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--hfo-black);
             color: var(--md-sys-color-on-surface);
             font-family: 'Roboto', system-ui, sans-serif;
         }
 
-        #layout-container { width: 100%; height: calc(100% - 28px); }
+        #layout-container {
+            width: 100%;
+            height: calc(100% - 28px);
+        }
 
-        #status-bar { 
-            height: 28px; background: var(--md-sys-color-surface);
-            display: flex; align-items: center; padding: 0 16px;
-            font-size: 10px; border-top: 1px solid var(--md-sys-color-outline);
+        #status-bar {
+            height: 28px;
+            background: var(--md-sys-color-surface);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 10px;
+            border-top: 1px solid var(--md-sys-color-outline);
             text-transform: uppercase;
             z-index: 1000;
         }
 
-        .component-container { 
-            height: 100%; width: 100%; overflow: hidden; position: relative;
+        .component-container {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
             background: var(--hfo-black);
         }
 
@@ -55,42 +73,64 @@
             padding: 12px;
             box-sizing: border-box;
         }
-        
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--hfo-black); }
-        ::-webkit-scrollbar-thumb { 
-            background: var(--md-sys-color-surface-variant); 
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--hfo-black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--md-sys-color-surface-variant);
             border-radius: 10px;
             border: 2px solid var(--hfo-black);
         }
 
         .hero-view-container {
-            position: relative; width: 100%; height: 100%;
-            background: #000; display: flex; align-items: center; justify-content: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
 
         #video-feed {
-            position: absolute; width: 100%; height: 100%;
-            object-fit: contain; transform: scaleX(-1);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scaleX(-1);
             filter: grayscale(0.5) contrast(1.1);
         }
 
         #overlay-canvas {
-            position: absolute; transform: scaleX(-1); 
-            pointer-events: none; z-index: 5;
+            position: absolute;
+            transform: scaleX(-1);
+            pointer-events: none;
+            z-index: 5;
         }
 
         .hfo-btn {
             background: var(--md-sys-color-primary);
             color: var(--md-sys-color-on-primary);
-            border: none; padding: 12px 32px;
-            border-radius: 24px; cursor: pointer;
-            font-weight: 600; font-size: 14px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            border: none;
+            padding: 12px 32px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             transition: transform 0.2s;
         }
-        .hfo-btn:active { transform: scale(0.95); }
+
+        .hfo-btn:active {
+            transform: scale(0.95);
+        }
 
         .lil-gui {
             --background-color: transparent;
@@ -102,6 +142,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="layout-container"></div>
     <div id="status-bar">
@@ -226,10 +267,10 @@
                         const validatedLandmarks = landmarks.map(l => LandmarkSchema.parse(l));
                         const tip = validatedLandmarks[8];
                         const { width, height } = systemState.p0.videoBounds || { width: 0, height: 0 };
-                        
+
                         const screenX = tip.x * width;
                         const screenY = tip.y * height;
-                        
+
                         // Palm Orientation (from V52)
                         const lm = validatedLandmarks;
                         const v1 = { x: lm[5].x - lm[0].x, y: lm[5].y - lm[0].y, z: lm[5].z - lm[0].z };
@@ -266,7 +307,7 @@
                         }
 
                         cursors.push(CoordinateSchema.parse({
-                            screenX, screenY, fsmState: state, gesture: category, 
+                            screenX, screenY, fsmState: state, gesture: category,
                             confidence, isPalmFacing, curls
                         }));
                     } catch (e) {
@@ -296,10 +337,10 @@
             if (!systemState.parameters.p0Active) return;
             const now = performance.now();
             const results = systemState.p0.recognizer.recognizeForVideo(systemState.p0.video, now);
-            
+
             // P1 BRIDGE: Fusing sensing to coordinates under contract
             systemState.p1.cursors = P1Bridger.fuse(results);
-            
+
             if (systemState.p1.cursors.length > 0) {
                 updateFSM(systemState.p1.cursors[0].fsmState);
             } else {
@@ -320,7 +361,7 @@
                         const gesture = results.gestures?.[i]?.[0]?.categoryName || 'None';
                         const score = results.gestures?.[i]?.[0]?.score || 0;
                         const handedness = results.handedness?.[i]?.[0]?.categoryName || 'Unknown';
-                        
+
                         html += `
                             <div style="margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
                                 <b style="color:var(--md-sys-color-primary)">HAND ${i} (${handedness})</b><br/>
@@ -344,7 +385,7 @@
                 const ctx = systemState.ui.palmCtx;
                 const canvas = systemState.ui.palm;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
+
                 if (systemState.p1.cursors.length > 0) {
                     systemState.p1.cursors.forEach((c, i) => {
                         const x = (i === 0 ? canvas.width * 0.25 : canvas.width * 0.75);
@@ -362,7 +403,7 @@
                         // This is a simplified 2D projection of the 3D normal
                         // Since normal Z > 0.5 is 'facing', we can use X/Y for the offset
                         // We need to get the normal from somewhere - let's add it to the cursor data or recalc
-                        
+
                         // Recalculating for visualization parity
                         const landmarks = results.landmarks[i];
                         if (landmarks) {
@@ -427,7 +468,7 @@
                 container.appendChild(div);
 
                 const gui = new GUI({ container: div, title: '🛰️ NAVIGATOR CONFIG', autoPlace: false });
-                
+
                 const fCam = gui.addFolder('P0: Camera Range');
                 fCam.add(systemState.parameters.camera, 'resolution', ['640x480', '1280x720', '1920x1080']).onChange(syncConfig);
                 fCam.add(systemState.parameters.camera, 'fpsTarget', 15, 60, 1).onChange(syncConfig);
@@ -468,10 +509,10 @@
             const parent = video.parentElement;
             const pRect = parent.getBoundingClientRect();
             const vRatio = video.videoWidth / video.videoHeight;
-            
+
             let drawW = pRect.width, drawH = pRect.width / vRatio;
             if (drawH > pRect.height) { drawH = pRect.height; drawW = drawH * vRatio; }
-            
+
             canvas.width = video.videoWidth; canvas.height = video.videoHeight;
             canvas.style.width = `${drawW}px`; canvas.style.height = `${drawH}px`;
             systemState.p0.videoBounds = { width: drawW, height: drawH };
@@ -504,7 +545,7 @@
             systemState.p0.video = wrap.querySelector('#video-feed');
             systemState.p0.canvas = wrap.querySelector('#overlay-canvas');
             systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
-            
+
             wrap.querySelector('#btn-ignite').onclick = async (e) => {
                 e.target.style.display = 'none';
                 await initP0();
@@ -516,7 +557,7 @@
                     resizeCanvas(); predictLoop();
                 };
             };
-            
+
             // Responsiveness: Hub Listener
             container.on('resize', () => resizeCanvas());
         });
@@ -550,10 +591,10 @@
             const canvas = document.createElement('canvas');
             wrap.appendChild(canvas);
             container.getElement().appendChild(wrap);
-            
+
             systemState.ui.palm = canvas;
             systemState.ui.palmCtx = canvas.getContext('2d');
-            
+
             container.on('resize', () => {
                 const rect = wrap.getBoundingClientRect();
                 canvas.width = rect.width;
@@ -562,23 +603,30 @@
         });
 
         layout.loadLayout({
-            root: { type: 'row', content: [
-                { type: 'component', componentType: 'hero', title: 'Tactical Workspace', width: 60 },
-                { type: 'column', width: 40, content: [
-                    { type: 'row', height: 40, content: [
-                        { type: 'component', componentType: 'gestures', title: 'P1: Gestures' },
-                        { type: 'component', componentType: 'palm', title: 'P1: Palm Orientation' }
-                    ]},
-                    { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 40 },
-                    { type: 'component', componentType: 'logs', title: 'System Telemetry', height: 20 }
-                ]}
-            ]}
+            root: {
+                type: 'row', content: [
+                    { type: 'component', componentType: 'hero', title: 'Tactical Workspace', width: 60 },
+                    {
+                        type: 'column', width: 40, content: [
+                            {
+                                type: 'row', height: 40, content: [
+                                    { type: 'component', componentType: 'gestures', title: 'P1: Gestures' },
+                                    { type: 'component', componentType: 'palm', title: 'P1: Palm Orientation' }
+                                ]
+                            },
+                            { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 40 },
+                            { type: 'component', componentType: 'logs', title: 'System Telemetry', height: 20 }
+                        ]
+                    }
+                ]
+            }
         });
 
-        window.addEventListener('resize', () => { 
-            layout.updateSize(); 
-            resizeCanvas(); 
+        window.addEventListener('resize', () => {
+            layout.updateSize();
+            resizeCanvas();
         });
     </script>
 </body>
+
 </html>

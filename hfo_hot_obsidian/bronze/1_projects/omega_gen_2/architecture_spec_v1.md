@@ -83,6 +83,7 @@ governance:
 ```
 
 ## 📜 Metadata
+
 - **Last Updated:** 2026-01-13
 - **Source:** Handwritten Notes (Thread Omega Gen 2)
 - **Status:** Pending Clarification
