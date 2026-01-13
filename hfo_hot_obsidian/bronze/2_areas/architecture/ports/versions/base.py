@@ -663,7 +663,12 @@ class Port5Immunize:
                         
                         # SEAL RECOGNITION (V1 or V2)
                         query_val = str(entry.get("query", ""))
-                        if entry.get("phase") == "SIGNAL" and query_val.startswith("RED_TRUTH_SEAL"):
+                        msg_val = str(entry.get("message", ""))
+                        is_seal = (entry.get("phase") == "SIGNAL" and 
+                                  (query_val.startswith("RED_TRUTH_SEAL") or 
+                                   "RED_TRUTH_LOCKDOWN" in str(entry.get("signature_seal", ""))))
+                        
+                        if is_seal:
                             last_sig = entry.get("signature", "ROOT")
                             last_ts = None
                             continue
@@ -839,6 +844,7 @@ class Port7Navigate:
     @staticmethod
     def _navigator_llm_call(role: str, query: str, context: str, prompt_template: str):
         """Helper to perform a domain-specific LLM navigation call."""
+        load_env()
         api_key = os.getenv("OPENROUTER_API_KEY")
         if not api_key:
             return {"status": "DEGRADED", "error": "No API Key"}
@@ -895,6 +901,7 @@ class Port7Navigate:
     def port7_shard3_inject(query: str, context: str = ""):
         """P7.3: LOGIC ([3,7] Deliver x Navigate). Strategic Reasoning."""
         # Kept as sequential thinking for high-fidelity reasoning
+        load_env()
         api_key = os.getenv("OPENROUTER_API_KEY")
         if api_key and context:
             proposal_prompt = f"Role: Logic Navigator (P7.3). Context: {context}\n\nDELIVER a LOGIC MODEL with 3 potential strategies for: {query}"
