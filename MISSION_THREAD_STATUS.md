@@ -15,6 +15,9 @@
 - **Cognitive Octets**: Sharding task into 8-port cognitive manifold (T0-T7) is standard protocol.
 - **P5 Sentinel Restoration**: Sentinel Daemon is now active after dependency repair (`watchdog`).
 - **Loop Termination**: Successfully resolved the 700-line "Analysis Paralysis" recursion.
+- **Strategic Roadmap 2030**: Formalized 5-year vision for HFO-Omni (Cloud/Wearable) and Biometric/Thermal Poker Mission Tiles.
+- **BFT Interlock**: Implemented consecutive low-score (score < 0.35) blocking in Hub V8.
+- **Stigmergy Anchor**: Scheduled backup/cleanup daemon active (10m interval).
 
 ### ⚠️ Current Blockers/Risks
 
@@ -31,7 +34,9 @@
 
 ### ✅ Key Achievements
 
-- **Omega Gen 4 V17.0**: Promoted with **Visual Subterfuge** (150ms masks) and **Inertial Stepping**. High stability on tracking loss.
+- **Omega Gen 4 V20.4**: Promoted with **HFO Trigram Bagua** presets. **FIRE (LI)** implemented as default with **Fixed Standoff** logic to stop oscillation. Includes rising sparks and flicker dynamics.
+- **Omega Gen 4 V20.3**: Promoted with **Anatomical Stability Anchor**. Hardened rod against longitudinal bouncing using absolute measures (Index-to-Pinky span) and Palm Cone Angle damping.
+- **Omega Gen 4 V20.2**: Promoted with **Nematocyst Injector** (P3). Integrated W3C Pointer event delivery bridge.
 - **80/64 Alignment**: Hysteresis thresholds locked at 0.80 (Enter) and 0.64 (Exit).
 - **Rigid Rod Physics**: Z-invariant extension fixed at 64% of index finger length.
 - **Port 1 Contracts**: Zod-based coordinate fusion verified and integrated.

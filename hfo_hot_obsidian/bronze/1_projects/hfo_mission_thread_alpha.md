@@ -107,9 +107,31 @@ Following the identification of "Vector-Level" brittleness, the following shards
 - [x] **Transparency Credit**: Utility score bonus (120/100) awarded for honest state reporting.
 - [ ] **Mosaic Verification**: **UNTESTED**. Run a full 8-Port "Kill-Web" sweep with valid tool receipts.
 
+---
+
+## 🗺️ LONG-TERM STRATEGIC ROADMAP (5-YEAR HORIZON)
+
+The following objectives represent the "Cold Horizon" expansion of the HFO substrate. These are 5-year trajectories for the evolution of the Apex Ensemble.
+
+### 🛰️ Substrate Expansion (HFO-Omni)
+
+- **HFO-Cloud**: Migrating the Orchestration Hub to distributed cloud environments for global scale.
+- **HFO-Mobile/Wearable**: Transitioning the sensing-to-physics loop to smart devices (Mobile/Smartglasses).
+- **Glass Integration**: Direct JADC2 Mosaic Warfare Tile injection into smartglass overlays (Camera/HUD).
+
+### 🧿 Mission Tile: POKER (High-Fidelity Biometric Testbed)
+
+- **Multi-Sensor Fusion**: Integration of Thermal Cameras, Emotion Sensing (Micro-expressions), and Physiological telemetry into the P0-SENSE stream.
+- **Card Counting LLM**: Specialized shard for real-time probability and deck composition tracking.
+- **The "Effector-Only" Strategy**: Operating as a pure physical interface (eyes closed) while masking thermal and cognitive signatures behind the HFO logical manifold. Thoughts and bio-signals are suppressed or spoofed to ensure zero-predictability for external observers (Adversarial ISR).
+
+---
+
 ### 🛡️ ACTIVE DEFENSES
 
 - **P5 Sentinel Daemon**: Real-time watchdog monitoring `hfo_hot_obsidian` via `scripts/p5_sentinel_daemon.py`.
+- **BFT Interlock**: `hfo_orchestration_hub.py` blocks execution if consensus score < 0.35 for 2 consecutive turns.
+- **Stigmergy Anchor**: Scheduled backup/cleanup daemon active via `scripts/hfo_stigmergy_anchor.py` (10m interval).
 - **Hub Interlock**: `hfo_orchestration_hub.py` checks for `BREACH` signals before execution.
 - **Defense in Depth**: Layered gates (Sentinel -> Hub -> Pre-commit).
 - **Utility Reward Floor**: 88/100 required for Gold promotion.
