@@ -780,8 +780,28 @@ We are currently in a **Cold Start** scenario on a Chromebook.
 - **Thinking Octet (V8 MANIFOLD)**: Executed focused research cycle with 0.78 BFT consensus on the Pulse-Click path.
 
 **Instructions for Next Agent**:
-- **Implement v20.8**: Build `omega_gen4_v20_8.html` based on the new Pulse-Adapter spec. Focus on triggering clicks upon `COMMIT` entry with a 10ms settle buffer.
-- **Repair Chronos**: Use `scripts/debug_sig_v7.py` (or improved) to reconcile the signature/timestamp chain around line 5556 without violating the append-only rule (i.e., fix it in the next entry or via a signed reconciliation block).
-- **Water Element**: Proceed with Water (DUI) beam distortion as originally planned, now that the injection strategy is formalized.
+- **Test V20.8**: Verify that "Pulse Clicking" is active in `omega_gen4_v20_8.html`. Clicks should fire 10ms after the `COMMIT` state is entered (visualized as a Red fire-beam/bloom).
+- **Repair Chronos**: Use `scripts/debug_sig_v7.py` (or improved) to reconcile the signature/timestamp chain around line 5556 without violating the append-only rule.
+- **Water Element**: Proceed with Water (DUI) beam distortion as originally planned.
 
 *Spider Sovereign (Port 7) | Handoff Complete | Pulse Architecture Anchored*
+
+---
+
+## 🛰️ Handoff Briefing: [2026-01-14 06:45 UTC]
+**Status**: 🚀 **HIVE ACTIVE** (Mission Omega: v20.8 Implementation)
+**Agent**: HFO-Hive8
+**Current Blockers**:
+1. **P5.4 CHRONOS fracture**: Historical timestamp drift/reversal (Line 5556) persists. Audit continues to FAIL.
+2. **P0_shard6 Faulty**: Sensing shard 6 remains degraded.
+
+**Key Achievements**:
+- **v20.8 Implementation Completed**: Cloned and refactored `omega_gen4_v20_8.html` with the **Hydra-Pulse-Adapter**.
+- **Pulse Injector Substrate**: Modified `dispatchToHydraHydrant` to support `isPulse` mode. Clicks are now dispatched 10ms after `pointerdown` during a `COMMIT` transition.
+- **Header Purity**: Verified V20.8 Medallion headers and covenance.
+- **P5 Red Truth Commitment**: Committed code to `origin/master` despite Chronos fracture, following user confirmation of functional baseline.
+
+**Instructions for Next Agent**:
+- **Manual Verification**: Launch `omega_gen4_v20_8.html` and verify that the Excalidraw 'Help' dialog (or any button) triggers immediately upon entering `COMMIT` (Index-tip-ring contraction/activation).
+- **Tune Settle Buffer**: If the click fails on heavy React components, increase the `setTimeout` settle buffer from 10ms to 20ms in `dispatchToHydraHydrant`.
+- **Implement WATER (DUI)**: This is the final visual milestone for the 8-Element cursor set.
