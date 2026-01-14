@@ -96,6 +96,53 @@ def check_p5_safety():
         print(f"⚠️ [HUB-FAIL]: Safety check error: {e}")
     return False
 
+def check_bft_interlock():
+    """
+    Check the blackboard for consecutive low BFT consensus scores.
+    If the last TWO turns have consensus_score < 0.35, block execution.
+    """
+    from versions.base import BLACKBOARD_PATH
+    if not os.path.exists(BLACKBOARD_PATH):
+        return False
+
+    LOW_SCORE_THRESHOLD = 0.35
+    low_score_count = 0
+
+    try:
+        with open(BLACKBOARD_PATH, "r") as f:
+            lines = f.readlines()
+            if not lines:
+                return False
+            
+            # Analyze last few H_COMPLETE and BFT_AUDIT entries
+            for line in reversed(lines):
+                try:
+                    entry = json.loads(line.strip())
+                    # Check both H_COMPLETE and BFT_AUDIT phases for scores
+                    score = None
+                    if entry.get("phase") == "BFT_AUDIT":
+                         score = entry.get("consensus_score")
+                    elif entry.get("phase") == "H_COMPLETE":
+                         score = entry.get("output", {}).get("bft_metrics", {}).get("consensus_score")
+                    
+                    if score is not None:
+                        if score < LOW_SCORE_THRESHOLD:
+                            low_score_count += 1
+                            if low_score_count >= 2:
+                                print(f"\n🛑 [HUB-INTERLOCK]: BFT INTERLOCK TRIGGERED!")
+                                print(f"🛑 [HUB-INTERLOCK]: Consecutive low consensus scores detected ({score:.2f} < {LOW_SCORE_THRESHOLD}).")
+                                print(f"🛑 [HUB-INTERLOCK]: System drift exceeds safety parameters. BLOCKING further H-PHASE turns.")
+                                print(f"🛑 [HUB-INTERLOCK]: Perform deep analysis/research before resetting the interlock.\n")
+                                return True
+                        else:
+                            # We found a high score, break the consecutive chain
+                            return False
+                except (json.JSONDecodeError, ValueError):
+                    continue
+    except Exception as e:
+        print(f"⚠️ [HUB-FAIL]: BFT check error: {e}")
+    return False
+
 # --- HFO HEXAGONAL ORCHESTRATION (T0-T7) ---
 def execute_hexagonal_orchestration(query: str):
     """Octree recursive cognitive sharding with version-aware dispatch."""
@@ -176,6 +223,10 @@ if __name__ == "__main__":
             # In interactive mode, we warn. In automated mode, we would exit.
             print("⚠️ WARNING: Proceeding despite P5 breach. Use at your own risk.")
             
+        if check_bft_interlock():
+            print("🚨 CRITICAL: BFT Interlock Blocking. System drift detected.")
+            sys.exit(1)
+
         query = sys.argv[2] if len(sys.argv) > 2 else "heartbeat"
         print(json.dumps(execute_hexagonal_orchestration(query)))
     elif cmd == "p0":
@@ -224,6 +275,10 @@ if __name__ == "__main__":
         print("🌀 [HFO HUB]: Initializing Stigmergy Daemon...")
         from hfo_stigmergy_daemon import watch_blackboard
         watch_blackboard()
+    elif cmd == "anchor":
+        print("🌀 [HFO HUB]: Initializing Stigmergy Anchor...")
+        from scripts.hfo_stigmergy_anchor import main_loop
+        main_loop()
     else:
         print(f"Command {cmd} not recognized.")
 

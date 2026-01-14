@@ -18,6 +18,22 @@
             }
         },
         {
+            "label": "Stigmergy Anchor Daemon",
+            "type": "shell",
+            "command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_stigmergy_anchor.py",
+            "isBackground": true,
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "hfo-defense",
+                "showReuseMessage": false
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
             "label": "Port 5: Forensic Audit (Manual)",
             "type": "shell",
             "command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5",
