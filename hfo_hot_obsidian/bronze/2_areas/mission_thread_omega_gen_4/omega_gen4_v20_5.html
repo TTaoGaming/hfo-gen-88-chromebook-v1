@@ -282,7 +282,7 @@
             gesture: z.string(),
             confidence: z.number(),
             isPalmFacing: z.boolean(),
-            normalZ: z.number(), 
+            normalZ: z.number(),
             palmConeAngle: z.number(), // V20.3: Anatomical Stability Factor
             palmNormal: z.object({
                 x: z.number(),
@@ -382,33 +382,33 @@
             constructor(parent) {
                 this.container = new PIXI.Container();
                 parent.addChild(this.container);
-                
+
                 this.fireball = new PIXI.Graphics();
                 this.container.addChild(this.fireball);
-                
+
                 this.bloom = new PIXI.Graphics();
                 this.container.addChild(this.bloom);
-                
+
                 this.timer = 0;
             }
 
             update(x, y, state) {
                 this.timer += 0.2;
                 this.container.position.set(x, y);
-                
+
                 const isReady = (state === 'READY' || state === 'COMMIT');
                 const isCommit = (state === 'COMMIT');
-                
+
                 this.fireball.visible = isReady;
                 this.bloom.visible = isCommit;
-                
+
                 if (isReady) {
                     this.fireball.clear();
                     // V20: Fireball Pulse & Core
                     const pulse = Math.sin(this.timer) * 4;
                     const baseRadius = isCommit ? 22 : 14;
                     const radius = baseRadius + pulse;
-                    
+
                     // Layered fire effect
                     this.fireball.beginFill(0xFF851B, 0.4); // Orange outer
                     this.fireball.drawCircle(0, 0, radius);
@@ -418,14 +418,14 @@
                     this.fireball.drawCircle(0, 0, radius * 0.3);
                     this.fireball.endFill();
                 }
-                
+
                 if (isCommit) {
                     this.bloom.clear();
                     // V20: COMMIT Bloom/Shockwave
                     const bloomPulse = (Math.sin(this.timer * 2) + 1) * 15;
                     this.bloom.lineStyle(2, 0xFFFFFF, 0.5);
                     this.bloom.drawCircle(0, 0, 30 + bloomPulse);
-                    
+
                     // Extra "Juice"
                     this.bloom.beginFill(0xFF4136, 0.2);
                     this.bloom.drawCircle(0, 0, 40 + bloomPulse * 0.5);
@@ -455,7 +455,7 @@
                         this.effects[i] = new JuiceEffect(this.app.stage);
                     }
                     this.effects[i].container.visible = true;
-                    
+
                     const px = c.normX * width;
                     const py = c.normY * height;
                     this.effects[i].update(px, py, c.fsmState);
@@ -495,7 +495,7 @@
                 super();
                 this.SCALE = 100.0; // 100px = 1m
                 this.world = planck.World({ gravity: planck.Vec2(0, 0) });
-                
+
                 // Cursor Body (Dynamic)
                 this.cursor = this.world.createBody({
                     type: 'dynamic',
@@ -525,13 +525,13 @@
             update(targetX, targetY, dt) {
                 const tx = targetX / this.SCALE;
                 const ty = targetY / this.SCALE;
-                
+
                 this.target.setPosition(planck.Vec2(tx, ty));
-                
+
                 // Step world (fixed timestep recommended for Planck, but we use adaptive for simplicity here)
                 // In production, we'd use a fixed accumulator.
                 this.world.step(Math.min(dt / 1000, 0.033));
-                
+
                 const pos = this.cursor.getPosition();
                 this.lastPos = { x: pos.x * this.SCALE, y: pos.y * this.SCALE };
                 return this.lastPos;
@@ -690,8 +690,8 @@
                                 systemState.p1.rodFilters[i] = new OneEuroFilter(systemState.parameters.physics.oneEuroRodMinCutoff, systemState.parameters.physics.oneEuroBeta);
                             }
                             // Adaptive cutoff: smoother if tilting away (noisy Z)
-                            systemState.p1.rodFilters[i].minCutoff = normalZ > 0.7 ? 
-                                systemState.parameters.physics.oneEuroRodMinCutoff : 
+                            systemState.p1.rodFilters[i].minCutoff = normalZ > 0.7 ?
+                                systemState.parameters.physics.oneEuroRodMinCutoff :
                                 systemState.parameters.physics.oneEuroRodMinCutoff * 0.5;
 
                             let baseRodLength;
@@ -699,7 +699,7 @@
                             if (theme === 'LI') {
                                 // V20.4: Option B (Fixed Standoff) for Fire (Li) stability
                                 // Eliminates anatomical oscillation by using a constant projection offset.
-                                baseRodLength = 0.04; 
+                                baseRodLength = 0.04;
                             } else {
                                 baseRodLength = observedPalmSpan * systemState.parameters.anatomy.rodExtensionMultiplier;
                             }
@@ -722,7 +722,7 @@
 
                             // V19.4: MIRROR AWARENESS (Global Port 1 Flip)
                             const isMirror = systemState.parameters.camera.mirror;
-                            
+
                             const finalProjX = isMirror ? (1.0 - projectedPoint.x) : projectedPoint.x;
                             const finalTipX = isMirror ? (1.0 - tipRaw.x) : tipRaw.x;
 
@@ -745,7 +745,7 @@
 
                             // V19.5: Mirror the normal X-component to match mirrored coordinate space
                             if (isMirror) {
-                                nx = -nx; 
+                                nx = -nx;
                             }
 
                             // Palm Facing Hysteresis (80 Enter, 64 Exit)
@@ -783,7 +783,7 @@
                                     );
                                     systemState.p1.physicsState[i].reset(smoothedX, smoothedY);
                                 }
-                                
+
                                 // Sync params in case they changed in GUI
                                 systemState.p1.physicsState[i].setParams({
                                     stiffness: systemState.parameters.physics.planckStiffness,
@@ -817,7 +817,7 @@
                                 const vx = physicsPos.x - anchorX;
                                 const vy = physicsPos.y - anchorY;
                                 const d_proj = vx * ux + vy * uy; // Project onto axis
-                                
+
                                 finalX = anchorX + ux * d_proj;
                                 finalY = anchorY + uy * d_proj;
                             }
@@ -922,10 +922,10 @@
                             const bucket = systemState.p1.buckets[i];
                             if (bucket > systemState.parameters.fsm.hysteresisLow) {
                                 // Continue Coasting using last known data (Fabric Parsed)
-                                cursorData = FusionSchema.parse({ 
-                                    ...last, 
-                                    fsmState: 'COAST', 
-                                    bucketLevel: bucket, 
+                                cursorData = FusionSchema.parse({
+                                    ...last,
+                                    fsmState: 'COAST',
+                                    bucketLevel: bucket,
                                     handIndex: i,
                                     normX: last.normX || (last.screenX / (systemState.p0.videoBounds?.width || 1280)),
                                     normY: last.normY || (last.screenY / (systemState.p0.videoBounds?.height || 720)),
@@ -998,7 +998,7 @@
 
             // P1 BRIDGE: Fusing sensing to coordinates under contract
             const cursors = P1Bridger.fuse(results, dt);
-            
+
             // V19.4: VALIDATED SHARED DATA FABRIC ENFORCEMENT
             try {
                 systemState.dataFabric = DataFabricSchema.parse({
@@ -1065,7 +1065,7 @@
             // Pressure logic: COMMIT = 1.0, COAST = 0.5 (Inertia), else 0.0
             const isDown = (cursor.fsmState === 'COMMIT' || cursor.fsmState === 'COAST');
             const pressure = isDown ? (cursor.fsmState === 'COMMIT' ? 1.0 : 0.5) : 0.0;
-            
+
             // Nematocyst Targeting [V20.1 Hardening]
             let target = systemState.fsm.nematocystTargetLock;
             let finalX = viewX;
@@ -1073,7 +1073,7 @@
 
             if (!target) {
                 target = document.elementFromPoint(viewX, viewY) || document.body;
-                
+
                 // Iframe Penetration (Same-Origin Drill)
                 if (target && target.tagName === 'IFRAME') {
                     try {
@@ -1127,7 +1127,7 @@
             if (isActive && !wasActive) {
                 systemState.fsm.nematocystTargetLock = target;
                 if (target.setPointerCapture) {
-                    try { target.setPointerCapture(1); } catch(e) {}
+                    try { target.setPointerCapture(1); } catch (e) { }
                 }
                 dispatchToHydraHydrant(target, new PointerEvent('pointerdown', { ...eventInit, pressure: pressure }));
             }
@@ -1138,7 +1138,7 @@
             if (!isActive && wasActive) {
                 dispatchToHydraHydrant(target, new PointerEvent('pointerup', { ...eventInit, pressure: 0.0, buttons: 0, button: 0 }));
                 if (target.releasePointerCapture) {
-                    try { target.releasePointerCapture(1); } catch(e) {}
+                    try { target.releasePointerCapture(1); } catch (e) { }
                 }
                 systemState.fsm.nematocystTargetLock = null; // Release Lock
             }
@@ -1152,7 +1152,7 @@
         function dispatchToHydraHydrant(t, e) {
             if (!t) return;
             t.dispatchEvent(e);
-            
+
             // Legacy Mouse Simulation for Primary Hand [V43 Hardening]
             if (e.type === 'pointerdown' || e.type === 'pointerup') {
                 const mouseType = e.type === 'pointerdown' ? 'mousedown' : 'mouseup';
@@ -1263,19 +1263,19 @@
                 ctx.lineCap = 'round';
                 ctx.beginPath();
                 ctx.moveTo(rawX, rawY);
-                
+
                 for (let i = 1; i <= steps; i++) {
                     const ratio = i / steps;
                     const px = rawX + (x - rawX) * ratio;
                     const py = rawY + (y - rawY) * ratio;
                     // Sine wave distortion for water feel
-                    const wave = Math.sin(time / 200 + ratio * 10) * 5 * ratio; 
+                    const wave = Math.sin(time / 200 + ratio * 10) * 5 * ratio;
                     const ux = -(y - rawY) / (dist || 1);
                     const uy = (x - rawX) / (dist || 1);
                     ctx.lineTo(px + ux * wave, py + uy * wave);
                 }
                 ctx.stroke();
-                
+
                 // Inner white fluid core
                 ctx.beginPath();
                 ctx.moveTo(rawX, rawY);
@@ -1286,7 +1286,7 @@
                     const ratio = i / steps;
                     const px = rawX + (x - rawX) * ratio;
                     const py = rawY + (y - rawY) * ratio;
-                    const wave = Math.sin(time / 200 + ratio * 10) * 2 * ratio; 
+                    const wave = Math.sin(time / 200 + ratio * 10) * 2 * ratio;
                     const ux = -(y - rawY) / (dist || 1);
                     const uy = (x - rawX) / (dist || 1);
                     ctx.lineTo(px + ux * wave, py + uy * wave);
@@ -1300,7 +1300,7 @@
             grad.addColorStop(0, c[0]);
             grad.addColorStop(0.5, c[1]);
             grad.addColorStop(1, 'rgba(0, 123, 255, 0)');
-            
+
             ctx.fillStyle = grad;
             ctx.beginPath();
             ctx.arc(x, y, rippleSize, 0, Math.PI * 2);
@@ -1348,7 +1348,7 @@
                 // Subtler Flicker Core (V20.5: Reduced magnitude to stop "perceived" oscillation)
                 ctx.beginPath();
                 ctx.moveTo(rawX, rawY);
-                ctx.lineTo(x + (Math.random()-0.5)*3, y + (Math.random()-0.5)*3);
+                ctx.lineTo(x + (Math.random() - 0.5) * 3, y + (Math.random() - 0.5) * 3);
                 ctx.strokeStyle = '#fff';
                 ctx.lineWidth = 2;
                 ctx.globalAlpha = 0.2;
@@ -1361,7 +1361,7 @@
             grad.addColorStop(0, c[0]);
             grad.addColorStop(0.4, c[1]);
             grad.addColorStop(1, 'rgba(255, 0, 0, 0)');
-            
+
             ctx.fillStyle = grad;
             ctx.beginPath();
             ctx.arc(x, y, fireSize, 0, Math.PI * 2);
@@ -1375,10 +1375,10 @@
                     const angle = (i * Math.PI * 2 / 5) + time / 1000;
                     const sx = x + Math.cos(angle) * 30 * sRatio;
                     // Rise up in screen space
-                    const sy = y + Math.sin(angle) * 10 * sRatio - 60 * sRatio; 
+                    const sy = y + Math.sin(angle) * 10 * sRatio - 60 * sRatio;
                     ctx.fillStyle = '#FFD700';
                     ctx.globalAlpha = 1 - sRatio;
-                    ctx.beginPath(); ctx.arc(sx, sy, 2 * (1-sRatio), 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(sx, sy, 2 * (1 - sRatio), 0, Math.PI * 2); ctx.fill();
                 }
             }
 
@@ -1433,7 +1433,7 @@
                         const score = cursor.confidence;
                         // Handedness still comes from raw results for now
                         const handedness = results.handedness?.[hIdx]?.[0]?.categoryName || 'Unknown';
-                        
+
                         const isCoasting = cursor.fsmState === 'COAST';
                         const stateColor = cursor.fsmState === 'COMMIT' ? 'var(--hfo-red)' : (isCoasting ? '#FFA500' : 'var(--md-sys-color-primary)');
 
@@ -1667,7 +1667,7 @@
                     systemState.p1.cursors.forEach((c) => {
                         const tx = (c.screenX / (systemState.p0.videoBounds?.width || 1)) * canvas.width;
                         const ty = (c.screenY / (systemState.p0.videoBounds?.height || 1)) * canvas.height;
-                        
+
                         // Origin Pointer (Raw Sensing)
                         const rx = (c.rawX / (systemState.p0.videoBounds?.width || 1)) * canvas.width;
                         const ry = (c.rawY / (systemState.p0.videoBounds?.height || 1)) * canvas.height;
@@ -1837,7 +1837,7 @@
                 if (fsmState === 'IDLE') return;
 
                 const theme = systemState.parameters.physics.cursorTheme;
-                
+
                 if (theme === 'LI') {
                     drawFireCursor(ctx, rawX, rawY, screenX, screenY, fsmState);
                 } else if (theme === 'DUI') {
@@ -1872,7 +1872,7 @@
                 } else {
                     // Placeholder for other 5 elements (ZHEN, XUN, KAN, GEN, KUN)
                     const themeColors = {
-                        'ZHEN': '#9400D3', 'XUN': '#00FF00', 'KAN': '#00008B', 
+                        'ZHEN': '#9400D3', 'XUN': '#00FF00', 'KAN': '#00008B',
                         'GEN': '#8B4513', 'KUN': '#A52A2A'
                     };
                     const color = themeColors[theme] || '#FFFFFF';
@@ -2069,7 +2069,7 @@
             systemState.p0.video = wrap.querySelector('#video-feed');
             systemState.p0.canvas = wrap.querySelector('#overlay-canvas');
             systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
-            
+
             // Reference for opacity control
             systemState.ui.excalidrawOverlay = wrap.querySelector('#excalidraw-hero-overlay');
             systemState.ui.excalidrawIframe = wrap.querySelector('#excalidraw-iframe');

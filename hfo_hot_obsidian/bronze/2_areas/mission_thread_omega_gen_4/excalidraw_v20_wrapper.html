@@ -36,6 +36,7 @@
             const App = () => {
                 return React.createElement(lib.Excalidraw, {
                     theme: "dark",
+                    autoFocus: true, // V21.3: Force autofocus on component mount
                     UIOptions: { canvasActions: { loadScene: false, export: false, saveAsScene: false } },
                     excalidrawAPI: (api) => {
                         window.excalidrawAPI = api;
@@ -47,7 +48,20 @@
                 });
             };
 
-            // 🌉 HFO Bridge: Listen for programmatic commands from parent
+            // � V21.3: Focus Interlock for Synthetic Interaction (HFO Shards)
+            // Ensures React state machines recognize the "Focus" event during pointer down
+            document.addEventListener("pointerdown", (e) => {
+                if (!e.isTrusted) {
+                    const canvas = document.querySelector("canvas.upper-canvas");
+                    if (canvas && canvas.focus) canvas.focus();
+
+                    // Also try focusing the container
+                    const container = document.querySelector(".excalidraw-container");
+                    if (container && container.focus) container.focus();
+                }
+            }, true);
+
+            // �🌉 HFO Bridge: Listen for programmatic commands from parent
             window.addEventListener("message", (event) => {
                 const { type, data } = event.data;
                 if (type === "SET_TOOL") {

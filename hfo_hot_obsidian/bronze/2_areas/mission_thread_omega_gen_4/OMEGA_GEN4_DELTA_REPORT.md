@@ -66,10 +66,11 @@
 **Current State (V20.7)**:
 
 * **The Problem**: Architectural purity in Port 3 (Direct Dispatch) was failing against complex targets like Excalidraw's nested Canvas/Button structures.
-* **The Solution**: Implementation of "V28 Heuristics" - a pragmatist layer that performs recursive ancestor scanning and uses a 10ms heartbeat delay to ensure React/State synchronization. 
+* **The Solution**: Implementation of "V28 Heuristics" - a pragmatist layer that performs recursive ancestor scanning and uses a 10ms heartbeat delay to ensure React/State synchronization.
 * **The Drift**: 22% Spec-Drift detected. Logic is currently monolithic within the adapter rather than swappable.
 
 **V20.7 Heuristic Implementation**:
+
 ```javascript
 // The V28 Recursive Search
 function findInteractiveParent(target, depth = 5) {

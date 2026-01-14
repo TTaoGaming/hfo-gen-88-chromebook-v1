@@ -364,33 +364,33 @@
             constructor(parent) {
                 this.container = new PIXI.Container();
                 parent.addChild(this.container);
-                
+
                 this.fireball = new PIXI.Graphics();
                 this.container.addChild(this.fireball);
-                
+
                 this.bloom = new PIXI.Graphics();
                 this.container.addChild(this.bloom);
-                
+
                 this.timer = 0;
             }
 
             update(x, y, state) {
                 this.timer += 0.2;
                 this.container.position.set(x, y);
-                
+
                 const isReady = (state === 'READY' || state === 'COMMIT');
                 const isCommit = (state === 'COMMIT');
-                
+
                 this.fireball.visible = isReady;
                 this.bloom.visible = isCommit;
-                
+
                 if (isReady) {
                     this.fireball.clear();
                     // V20: Fireball Pulse & Core
                     const pulse = Math.sin(this.timer) * 4;
                     const baseRadius = isCommit ? 22 : 14;
                     const radius = baseRadius + pulse;
-                    
+
                     // Layered fire effect
                     this.fireball.beginFill(0xFF851B, 0.4); // Orange outer
                     this.fireball.drawCircle(0, 0, radius);
@@ -400,14 +400,14 @@
                     this.fireball.drawCircle(0, 0, radius * 0.3);
                     this.fireball.endFill();
                 }
-                
+
                 if (isCommit) {
                     this.bloom.clear();
                     // V20: COMMIT Bloom/Shockwave
                     const bloomPulse = (Math.sin(this.timer * 2) + 1) * 15;
                     this.bloom.lineStyle(2, 0xFFFFFF, 0.5);
                     this.bloom.drawCircle(0, 0, 30 + bloomPulse);
-                    
+
                     // Extra "Juice"
                     this.bloom.beginFill(0xFF4136, 0.2);
                     this.bloom.drawCircle(0, 0, 40 + bloomPulse * 0.5);
@@ -439,7 +439,7 @@
                         this.effects[i] = new JuiceEffect(this.app.stage);
                     }
                     this.effects[i].container.visible = true;
-                    
+
                     const px = (c.screenX / videoW) * width;
                     const py = (c.screenY / videoH) * height;
                     this.effects[i].update(px, py, c.fsmState);
@@ -479,7 +479,7 @@
                 super();
                 this.SCALE = 100.0; // 100px = 1m
                 this.world = planck.World({ gravity: planck.Vec2(0, 0) });
-                
+
                 // Cursor Body (Dynamic)
                 this.cursor = this.world.createBody({
                     type: 'dynamic',
@@ -509,13 +509,13 @@
             update(targetX, targetY, dt) {
                 const tx = targetX / this.SCALE;
                 const ty = targetY / this.SCALE;
-                
+
                 this.target.setPosition(planck.Vec2(tx, ty));
-                
+
                 // Step world (fixed timestep recommended for Planck, but we use adaptive for simplicity here)
                 // In production, we'd use a fixed accumulator.
                 this.world.step(Math.min(dt / 1000, 0.033));
-                
+
                 const pos = this.cursor.getPosition();
                 this.lastPos = { x: pos.x * this.SCALE, y: pos.y * this.SCALE };
                 return this.lastPos;
@@ -648,7 +648,7 @@
                             // We use the anatomical constant (Palm Width ~8cm) to stabilize extension.
                             const p1_5 = lm[5];
                             const p1_17 = lm[17];
-                            
+
                             // Observed 3D Palm Width in normalized space
                             const observedPalmWidth = Math.sqrt(
                                 (p1_5.x - p1_17.x) ** 2 +
@@ -680,7 +680,7 @@
 
                             // V19.4: MIRROR AWARENESS (Global Port 1 Flip)
                             const isMirror = systemState.parameters.camera.mirror;
-                            
+
                             const finalProjX = isMirror ? (1.0 - projectedPoint.x) : projectedPoint.x;
                             const finalTipX = isMirror ? (1.0 - tipRaw.x) : tipRaw.x;
 
@@ -743,7 +743,7 @@
                                     );
                                     systemState.p1.physicsState[i].reset(smoothedX, smoothedY);
                                 }
-                                
+
                                 // Sync params in case they changed in GUI
                                 systemState.p1.physicsState[i].setParams({
                                     stiffness: systemState.parameters.physics.planckStiffness,
@@ -777,7 +777,7 @@
                                 const vx = physicsPos.x - anchorX;
                                 const vy = physicsPos.y - anchorY;
                                 const d_proj = vx * ux + vy * uy; // Project onto axis
-                                
+
                                 finalX = anchorX + ux * d_proj;
                                 finalY = anchorY + uy * d_proj;
                             }
@@ -945,7 +945,7 @@
 
             // P1 BRIDGE: Fusing sensing to coordinates under contract
             const cursors = P1Bridger.fuse(results, dt);
-            
+
             // V19.4: VALIDATED SHARED DATA FABRIC ENFORCEMENT
             try {
                 systemState.dataFabric = DataFabricSchema.parse({
@@ -1146,7 +1146,7 @@
                         const score = cursor.confidence;
                         // Handedness still comes from raw results for now
                         const handedness = results.handedness?.[hIdx]?.[0]?.categoryName || 'Unknown';
-                        
+
                         const isCoasting = cursor.fsmState === 'COAST';
                         const stateColor = cursor.fsmState === 'COMMIT' ? 'var(--hfo-red)' : (isCoasting ? '#FFA500' : 'var(--md-sys-color-primary)');
 
@@ -1388,7 +1388,7 @@
                     systemState.p1.cursors.forEach((c) => {
                         const tx = (c.screenX / (systemState.p0.videoBounds?.width || 1)) * canvas.width;
                         const ty = (c.screenY / (systemState.p0.videoBounds?.height || 1)) * canvas.height;
-                        
+
                         // Origin Pointer (Raw Sensing)
                         const rx = (c.rawX / (systemState.p0.videoBounds?.width || 1)) * canvas.width;
                         const ry = (c.rawY / (systemState.p0.videoBounds?.height || 1)) * canvas.height;
@@ -1544,11 +1544,11 @@
                 if (fsmState === 'IDLE') return;
 
                 const color = fsmState === 'COMMIT' ? '#FF4136' : (fsmState === 'READY' ? '#FFD700' : '#0074D9');
-                
+
                 // --- V19.2: CLAW VISUALS (Rigid Rod) ---
                 if (systemState.parameters.physics.showLaserBeam) {
                     ctx.save();
-                    
+
                     // Main Claw Body (Tapered feel)
                     ctx.beginPath();
                     ctx.moveTo(rawX, rawY);
@@ -1567,7 +1567,7 @@
                     ctx.lineWidth = fsmState === 'COMMIT' ? 3 : 2;
                     ctx.globalAlpha = 0.4;
                     ctx.stroke();
-                    
+
                     ctx.restore();
                 }
 
@@ -1789,7 +1789,7 @@
             const wrap = document.createElement('div');
             wrap.className = 'component-container';
             container.getElement().appendChild(wrap);
-            
+
             systemState.ui.juice = new JuiceSubstrate(wrap);
 
             const handleResize = () => {

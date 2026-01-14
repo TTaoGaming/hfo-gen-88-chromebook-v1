@@ -26,6 +26,7 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 - `AGENTS.md`: High-level mission briefing.
 - `COLD_START.md`: Resurrection protocols.
 - `ROOT_GOVERNANCE.md`: This manifest.
+- `package.json` / `tsconfig.json`: Essential system and project configurations.
 - `.gitignore`: Git exclusion rules.
 - `.env`: API keys and environment variables.
 - `.pre-commit-config.yaml`: Pre-commit governance.

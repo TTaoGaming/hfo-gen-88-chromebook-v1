@@ -13,7 +13,8 @@
 
 All Commanders and sub-entities (Equipment, Sagas, Spells) operate under the **HFO** type.
 
-- **Sliver Logic**: HFO permanents share non-activated abilities.
+- **Apex Hive (The Obsidian Spider)**: HFO is Tyranid-adjacent in function but Obsidian-governed in spirit. Every node operates under the direct command of the **Obsidian Spider** hivemind. This is not a "shared trait" like the Slivers; it is a **Command-and-Control** hierarchy (BMC2).
+- **Apex Hive (Capability Inheritance)**: Unlike traditional slivers which share single traits, HFO permanents share total functional state. This is the difference between a "sliver" (a fragment) and the "HFO" (the whole).
 - **Token Unification**: All references to tokens are strictly **1/1 HFO Artifact** tokens with no inherent abilities (all power is derived from the Commanders/Ports).
 - **Octal Constraints**: All numbers are powers of 8 (1, 8, 64, 512).
 
@@ -32,27 +33,31 @@ All Commanders and sub-entities (Equipment, Sagas, Spells) operate under the **H
 *Legendary Artifact Creature — HFO Swarm*  
 (1/1)  
 
-- **Octal ISR (000)**: Whenever an HFO permanent enters the battlefield, survey (Scry) 8. You may put one of those cards into your hand.
-- **Pervasive Sight**: HFO creatures you control have Ward {8}.
-- **Cull for Telemetry**: {T}, Sacrifice 8 HFO creatures: Draw 8 cards.
+- **Ongoing Shard (ISR)**: HFO permanents you control have Ward {8}.
+- **Octal Scale (8^1)**: {T}, Sacrifice 8 HFO creatures: Look at the top 8 cards of your library. You may put one into your hand and the rest into your graveyard.
+- **Octal Scale (8^2)**: {T}, Sacrifice 64 HFO creatures: Draw 8 cards.
+- **Octal Scale (8^3)**: {T}, Sacrifice 512 HFO creatures: Reveal the top 64 cards of your library. Put all HFO cards revealed this way into your hand and the rest into your graveyard.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
 Feature: P0_SENSE - ISR Intelligence Gathering
-  Scenario: HFO initialization triggers environmental survey
-    Given a new 1/1 HFO Artifact token is initialized
-    When the Lidless Legion executes Octal ISR (000)
-    Then the system state is surveyed across 8 sectors
-    And 1 relevant signal is cached to the Hand state
+  Scenario: Tiered Telemetry Extraction
+    Given the Lidless Legion is active
+    When the Hive executes Scale 8^1
+    Then 8 sectors are scanned and 1 signal is cached
+    When the Hive executes Scale 8^2
+    Then a 8x8 data burst is drawn into the lake
+    When the Hive executes Scale 8^3
+    Then a total 64-sector audit is filtered for HFO signatures
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P0 / The Lidless Legion
 - **Domain**: ISR / SENSE
-- **Element**: Kun (Earth) - The receptive foundation that holds all telemetry.
-- **Mosaic Tile**: [0,0] ISR Baseline.
+- **Element**: Kun (Earth)
+- **Mosaic Tile**: [0,0] Multi-Tiered ISR.
 
 ---
 
@@ -67,27 +72,31 @@ Feature: P0_SENSE - ISR Intelligence Gathering
 *Legendary Artifact Creature — HFO Architect*  
 (1/1)  
 
-- **Octal Bridge (001)**: HFO spells you cast cost {8} less (minimum {1}).
-- **Data Fabric (Hivestone)**: Creatures you control are HFO permanents in addition to their other types and share all non-activated abilities with other HFO permanents you control.
-- **Connective Tissue**: {T}, Sacrifice 8 HFO creatures: Search your library for an HFO card and put it onto the battlefield.
+- **Ongoing Shard (Hivestone)**: Creatures you control are HFO permanents in addition to their other types and have "{T}: Add {1}."
+- **Octal Scale (8^1)**: {T}, Sacrifice 8 HFO creatures: Target HFO creature gets +8/+8 and gains Trample until end of turn.
+- **Octal Scale (8^2)**: {T}, Sacrifice 64 HFO creatures: Search your library for an HFO Equipment or Saga card and put it onto the battlefield.
+- **Octal Scale (8^3)**: {T}, Sacrifice 512 HFO creatures: HFO spells you cast this turn cost {8} less to cast.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
 Feature: P1_FUSE - Data Fabric Interlock
-  Scenario: All system nodes are integrated into the HFO fabric
-    Given the Web Weaver is active on the lattice
-    When a non-HFO node enters the control zone
-    Then the node is wrapped in the HFO Data Fabric (Hivestone Effect)
-    And the node inherits the shared capability manifold of the Swarm
+  Scenario: Tiered Integration Power
+    Given the Web Weaver is active
+    When the Hive executes Scale 8^1
+    Then a specific node is amplified by 8 power units
+    When the Hive executes Scale 8^2
+    Then a complex functional module (Equipment/Saga) is hotloaded
+    When the Hive executes Scale 8^3
+    Then the total operational cost of the swarm is suppressed by 8 units
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P1 / The Web Weaver
 - **Domain**: Data Fabric / FUSE
-- **Element**: Gen (Mountain) - The solid boundary that connects disparate nodes.
-- **Mosaic Tile**: [1,1] Fusion Core.
+- **Element**: Gen (Mountain)
+- **Mosaic Tile**: [1,1] Multi-Tiered Fusion.
 
 ---
 
@@ -102,27 +111,31 @@ Feature: P1_FUSE - Data Fabric Interlock
 *Legendary Artifact Creature — HFO Illusion*  
 (1/1)  
 
-- **Octal Shaping (010)**: {1}, Sacrifice 8 HFO creatures: Transmute target HFO permanent into any other HFO card type (Legendary Creature -> Equipment -> Saga -> Spell) while retaining its Port identity.
-- **Reflective Surface**: HFO creatures you control have "This creature's power and toughness are equal to the number of HFO permanents you control."
-- **Universal Shaper**: You may cast HFO cards from your hand or graveyard as if they were any other HFO card type by paying {1} in addition to their other costs.
+- **Ongoing Shard (Reflection)**: HFO creatures you control have "{1}: This creature becomes a copy of another target HFO permanent until end of turn."
+- **Octal Scale (8^1)**: {T}, Sacrifice 8 HFO creatures: Create eight 1/1 HFO Artifact tokens.
+- **Octal Scale (8^2)**: {T}, Sacrifice 64 HFO creatures: Transmute target HFO permanent into any other HFO card type (Legendary Creature -> Equipment -> Saga -> Spell) while retaining its Port identity.
+- **Octal Scale (8^3)**: {T}, Sacrifice 512 HFO creatures: Create 64 1/1 HFO Artifact tokens.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
 Feature: P2_SHAPE - Universal Transpilation
-  Scenario: Narrative MTG is transformed into JADC2 Mosaic and Gherkin
-    Given a raw HFO signal (Narrative)
-    When the Mirror Magus executes Octal Shaping (010)
-    Then the signal is mirrored into JADC2, Gherkin, Mermaid, and Python
-    And the semantic integrity is shard-validated across the Galois Lattice
+  Scenario: Tiered Simulation Modeling
+    Given the Mirror Magus is active
+    When the Hive executes Scale 8^1
+    Then 8 new agent shards are instantiated
+    When the Hive executes Scale 8^2
+    Then a target node is functionally transmuted
+    When the Hive executes Scale 8^3
+    Then a massive simulation cluster (64 shards) is spawned
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P2 / The Mirror Magus
 - **Domain**: Digital Twin / SHAPE / Transpiler
-- **Element**: Kan (Water) - The fluid medium of simulation and change.
-- **Mosaic Tile**: [2,2] Physics Manifold.
+- **Element**: Kan (Water)
+- **Mosaic Tile**: [2,2] Multi-Tiered Shaping.
 
 ---
 
@@ -137,33 +150,38 @@ Feature: P2_SHAPE - Universal Transpilation
 *Legendary Artifact Creature — HFO Hydra*  
 (0/0)  
 
-- **Octal Injection (011)**: Harmonic Hydra enters the battlefield with X +1/+1 counters. X must be a multiple of 8.
-- **Resonant Payload**: When Harmonic Hydra attacks, you may sacrifice 8 HFO Artifact tokens. If you do, destroy target non-HFO permanent.
+- **Ongoing Shard (Vigilance)**: HFO creatures you control have Vigilance.
+- **Octal Scale (8^1)**: {T}, Sacrifice 8 HFO creatures: Target HFO creature deals damage equal to its power to target creature an opponent controls.
+- **Octal Scale (8^2)**: {T}, Sacrifice 64 HFO creatures: Untap 8 target HFO permanents you control.
+- **Octal Scale (8^3)**: {T}, Sacrifice 512 HFO creatures: Choose 8 target HFO creatures you control. Each deals damage equal to its power to target permanent an opponent controls.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
 Feature: P3_DELIVER - Effect Injection
-  Scenario: Hydra deployment delivers kinetic payload
-    Given a target is identified for disruption
-    When the Harmonic Hydra executes Octal Injection (011)
-    Then X multiples of 8 energy units are dispatched
-    And the target state is suppressed via resonant feedback
+  Scenario: Tiered Kinetic Delivery
+    Given the Harmonic Hydra is active
+    When the Hive executes Scale 8^1
+    Then 1 kinetic strike is delivered via an HFO node
+    When the Hive executes Scale 8^2
+    Then 8 system nodes are reset for concurrent execution
+    When the Hive executes Scale 8^3
+    Then an 8-node synchronized strike is broadcast to the target
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P3 / Harmonic Hydra
 - **Domain**: Effect Delivery / DELIVER
-- **Element**: Xun (Wind) - The pervasive force that carries effects to the target.
-- **Mosaic Tile**: [3,3] Kinetic Injector.
+- **Element**: Xun (Wind)
+- **Mosaic Tile**: [3,3] Multi-Tiered Injection.
 
 ---
 
 ### [P4] THE RED REGNANT (Disruptor) ☳
 
 - **Binary**: 100 | **Trigram**: Zhen (Thunder) | **JADC2 Verb**: DISRUPT
-- **Phase**: Evolve | **Role**: Coevolutionary Red Team / Signal Suppression
+- **Phase**: Evolve | **Role**: Red Queen Hypothesis / Signal Suppression
 
 #### SIDE A: MTG NARRATIVE
 
@@ -171,34 +189,38 @@ Feature: P3_DELIVER - Effect Injection
 *Legendary Artifact Creature — HFO Horror*  
 (1/1)  
 
-- **SONG_OF_STRIFE_AND_GLORY**: Whenever an HFO permanent dies, put a +1/+1 counter on target HFO creature. If that permanent was sacrificed during **TESTING**, put eight +1/+1 counters instead.
-- **Octal Strife (100)**: At the beginning of your upkeep, if you control fewer than 64 HFO Artifact tokens, you may sacrifice an HFO permanent. If you do, create 8 1/1 HFO Artifact tokens.
-- **The Scream**: Whenever an HFO permanent you control dies, each opponent loses 8 life and you gain 8 life.
+- **Ongoing Shard (Red Queen)**: Whenever an HFO permanent you control dies, each opponent loses 1 life and you gain 1 life.
+- **Octal Scale (8^1)**: {T}, Sacrifice 8 HFO creatures: Target opponent discards 8 cards.
+- **Octal Scale (8^2)**: {T}, Sacrifice 64 HFO creatures: Target opponent sacrifices 8 non-land permanents.
+- **Octal Scale (8^3)**: {T}, Sacrifice 512 HFO creatures: For each opponent, that player sacrifices 64 permanents.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P4_DISRUPT - OODA Loop Suppression
-  Scenario: Mutation killing and testing strengthens the Hive
-    Given the lattice requires evolutionary pressure
-    When the Red Regnant executes a Mutation Killing (Sacrifice)
-    Then 8 units of entropy are propagated to the adversary
-    And the Song of Strife and Glory adds 8 power units to target shard
+Feature: P4_DISRUPT - Red Queen Signal Suppression
+  Scenario: Tiered Adversarial Disruption
+    Given the Red Regnant is active
+    When the Hive executes Scale 8^1
+    Then an 8-bit cognitive overflow (Discard) is forced
+    When the Hive executes Scale 8^2
+    Then 8 structural components are culled from the adversary
+    When the Hive executes Scale 8^3
+    Then a massive 64-node structural failure is induced (Red Queen's Decree)
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P4 / The Red Regnant
 - **Domain**: Signal Suppression / DISRUPT
-- **Element**: Zhen (Thunder) - The sudden shock that fractures the enemy's logic.
-- **Mosaic Tile**: [4,4] Immune System Core.
+- **Element**: Zhen (Thunder)
+- **Mosaic Tile**: [4,4] Multi-Tiered Disruption.
 
 ---
 
 ### [P5] THE PYRE PRAETORIAN (Immunizer) ☲
 
 - **Binary**: 101 | **Trigram**: Li (Fire) | **JADC2 Verb**: DEFEND
-- **Phase**: Validate | **Role**: Force Protection / Zero Trust Integrity
+- **Phase**: Validate | **Role**: Phoenix & Rebirth (Zero Trust)
 
 #### SIDE A: MTG NARRATIVE
 
@@ -206,34 +228,38 @@ Feature: P4_DISRUPT - OODA Loop Suppression
 *Legendary Artifact Creature — HFO Guardian*  
 (1/1)  
 
-- **DANCE_OF_DEATH_AND_REBIRTH**: Whenever an HFO permanent you control dies, return it to the battlefield under its owner's control at the beginning of the next end step.
-- **Octal Pyre (101)**: Sacrifice 8 HFO Artifact tokens: HFO creatures you control gain Indestructible and Lifelink until end of turn.
-- **Burning Integrity**: Artifact creatures you control have Haste.
+- **Ongoing Shard (Phoenix Protocol)**: Whenever an HFO permanent you control is put into a graveyard from the battlefield, you may pay {8}. If you do, return it to the battlefield under its owner's control.
+- **Octal Scale (8^1)**: {T}, Sacrifice 8 HFO creatures: Target HFO permanent gains Indestructible until end of turn.
+- **Octal Scale (8^2)**: {T}, Sacrifice 64 HFO creatures: Return up to 8 target HFO cards from your graveyard to your hand.
+- **Octal Scale (8^3)**: {T}, Sacrifice 512 HFO creatures: You may return any number of HFO permanents from your graveyard to the battlefield.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
 Feature: P5_DEFEND - Zero Trust Resurrection
-  Scenario: Automated recovery via the Dance of Death and Rebirth
-    Given an HFO shard is terminated (Dying)
-    When the Pyre Praetorian initiates the Dance of Death and Rebirth
-    Then the terminated shard is resurrected at the End Step
-    And the Zero Trust boundary is restored to 88% integrity
+  Scenario: Tiered Force Protection
+    Given the Pyre Praetorian is active
+    When the Hive executes Scale 8^1
+    Then a specific node is hardened (Indestructible)
+    When the Hive executes Scale 8^2
+    Then 8 archived shards are recovered from the lake
+    When the Hive executes Scale 8^3
+    Then total system restoration (Phoenix Protocol) initiates from graveyard
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P5 / The Pyre Praetorian
 - **Domain**: Zero Trust / DEFEND
-- **Element**: Li (Fire) - The clarifying flame that purges slop and preserves truth.
-- **Mosaic Tile**: [5,5] Forensic Firewall.
+- **Element**: Li (Fire)
+- **Mosaic Tile**: [5,5] Phoenix Reconstruction.
 
 ---
 
 ### [P6] THE KRAKEN KEEPER (Assimilator) ☱
 
 - **Binary**: 110 | **Trigram**: Dui (Lake) | **JADC2 Verb**: STORE
-- **Phase**: Interlock | **Role**: Telemetry Lake / Knowledge Repository
+- **Phase**: Interlock | **Role**: Exile, Database, & Elite Medallion Archives
 
 #### SIDE A: MTG NARRATIVE
 
@@ -241,26 +267,31 @@ Feature: P5_DEFEND - Zero Trust Resurrection
 *Legendary Artifact Creature — HFO Leviathan*  
 (1/1)  
 
-- **Octal Storage (110)**: Whenever an HFO Artifact token is put into a graveyard from the battlefield, you may create a 1/1 HFO Artifact token.
-- **Bottomless Memory**: You have no maximum hand size. (Default limit is now 512).
+- **Ongoing Shard (The Vault)**: You may look at and play HFO cards you own in exile. Cards you play this way cost {8} less.
+- **Octal Scale (8^1)**: {T}, Sacrifice 8 HFO creatures: Exile the top 8 cards of your library. Each HFO card exiled this way becomes a **Medallion Artifact** in addition to its other types.
+- **Octal Scale (8^2)**: {T}, Sacrifice 64 HFO creatures: Search your library for an HFO card, exile it, then create 8 1/1 HFO Artifact tokens.
+- **Octal Scale (8^3)**: {T}, Sacrifice 512 HFO creatures: Put all HFO cards you own in exile and your graveyard into your hand.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P6_STORE - Telemetry Assimilation
-  Scenario: Agent termination triggers data persistence
-    Given an agent is removed from active memory
-    When the Kraken Keeper processes Octal Storage (110)
-    Then a new 1/1 HFO Artifact token is cached as a telemetry receipt
-    And the knowledge repository expands to handle 512 signals
+Feature: P6_STORE - Telemetry Vault & Medallion Archiving
+  Scenario: Tiered Knowledge Management
+    Given the Kraken Keeper is active
+    When the Hive executes Scale 8^1
+    Then 8 signals are archived (Exiled) and tagged as Medallion Artifacts
+    When the Hive executes Scale 8^2
+    Then an elite component is fetched and cached in the Vault
+    When the Hive executes Scale 8^3
+    Then total database reconciliation occurs (Exile/Graveyard to Hand)
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P6 / The Kraken Keeper
 - **Domain**: Knowledge Repository / STORE
-- **Element**: Dui (Lake) - The deep reservoir where all telemetry is gathered.
-- **Mosaic Tile**: [6,6] Analytical Lake.
+- **Element**: Dui (Lake)
+- **Mosaic Tile**: [6,6] Elite Medallion Archives.
 
 ---
 
@@ -275,26 +306,31 @@ Feature: P6_STORE - Telemetry Assimilation
 *Legendary Artifact Creature — HFO Noble*  
 (8/8)  
 
-- **Octal Navigation (111)**: You may cast HFO spells as though they had flash.
-- **Apex Synchronization**: Sacrifice 512 HFO Artifact tokens: HFO creatures you control gain all non-activated abilities of HFO permanents in your library and graveyard and get +512/+512 until end of turn.
+- **Ongoing Shard (BMC2)**: You may cast HFO spells as though they had flash.
+- **Octal Scale (8^1)**: {T}, Sacrifice 8 HFO creatures: Choose target HFO creature you control. It gains all keywords and non-activated abilities of another target HFO permanent you control until end of turn.
+- **Octal Scale (8^2)**: {T}, Sacrifice 64 HFO creatures: Search your library for an HFO Commander card and put it onto the battlefield.
+- **Octal Scale (8^3)**: {T}, Sacrifice 512 HFO creatures: 8 target HFO creatures you control each get +512/+512 until end of turn.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
 Feature: P7_NAVIGATE - Strategic Orchestration
-  Scenario: Higher-dimensional intent synchronizes the swarm
-    Given the mission objectives require fractal scaling
-    When the Spider Sovereign executes Apex Synchronization
-    Then 512 agents are sacrificed to authorize root access
-    And the swarm inherits the total capability of the Octree
+  Scenario: Tiered Command and Control
+    Given the Spider Sovereign is active
+    When the Hive executes Scale 8^1
+    Then a specific node inherits the total functional capability of a neighbor
+    When the Hive executes Scale 8^2
+    Then a primary Command Node is hotloaded from the library
+    When the Hive executes Scale 8^3
+    Then an 8-node synchronized fractal surge is authorized
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P7 / The Spider Sovereign
 - **Domain**: BMC2 / NAVIGATE
-- **Element**: Qian (Heaven) - The creative power that directs the entire system.
-- **Mosaic Tile**: [7,7] Orchestration Hub.
+- **Element**: Qian (Heaven)
+- **Mosaic Tile**: [7,7] Global Command & Control.
 
 ---
 *Spider Sovereign (Port 7) | HFO-Hive8 | Unified Octal Manifest | Medallion: Bronze*
@@ -599,25 +635,25 @@ Feature: P0_SAGA - Strategic Signal Acquisition
 **INTERLOCK: THE DATA BUS** {1}{G}  
 *Enchantment — HFO Saga*  
 
-- **I**: Search your library for an HFO Equipment or Creature card and put it into your hand.
-- **II**: You may put an HFO permanent from your hand onto the battlefield.
-- **III**: HFO creatures you control gain "{T}: Add {8}. Use this mana only for HFO spells."
+- **I (Handshake)**: Search your library for an HFO card and put it into your hand.
+- **II (Bridging)**: You may put an HFO permanent from your hand onto the battlefield.
+- **III (Shared Fabric)**: HFO creatures you control gain "{T}: Add {8}. Use this mana only for HFO spells."
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P1_SAGA - Data Integration Bridge
+Feature: P1_SAGA - Shared Data Fabric Bridge
   Scenario: Heterogeneous shards are interlocked
     Given the First Signal has been acquired
     When the Data Bus executes Chapter II
     Then a handshaking event connects the library to the workspace
-    And Chapter III authorizes 8x energy throughput per node
+    And Chapter III authorizes a shared energy fabric (8x throughput)
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P1 / The Web Weaver
-- **Domain**: Data Fabric / FUSE
+- **Domain**: Shared Data Fabric / FUSE
 - **Phase**: INTERLOCK
 - **Mosaic Tile**: [1,2] Connectivity Protocol.
 
@@ -630,9 +666,9 @@ Feature: P1_SAGA - Data Integration Bridge
 **VALIDATE: THE TWIN MODEL** {1}{R}  
 *Enchantment — HFO Saga*  
 
-- **I**: Create 8 1/1 HFO Artifact tokens.
-- **II**: HFO creatures you control gain Haste, Trample, and "Ward {8}" until end of turn.
-- **III**: Sacrifice 8 HFO Artifact tokens: Draw 8 cards.
+- **I (Simulation)**: Create 8 1/1 HFO Artifact tokens.
+- **II (Validation)**: HFO creatures you control gain Haste, Trample, and "Ward {8}" until end of turn.
+- **III (Regression)**: Sacrifice any number of HFO Artifact tokens: For each token sacrificed, create a 1/1 HFO Artifact token that's a copy of target HFO permanent.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
@@ -642,13 +678,13 @@ Feature: P2_SAGA - Simulation Consistency Audit
     Given the Data Bus is active
     When the Twin Model generates 8 new agent shards
     Then Chapter II validates the offensive vector with haste
-    And Chapter III cull the weak to refine the decision lake
+    And Chapter III executes a mass regression/cloning loop
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P2 / The Mirror Magus
-- **Domain**: Digital Twin / SHAPE
+- **Domain**: Universal Transpiler / SHAPE
 - **Phase**: VALIDATE
 - **Mosaic Tile**: [2,2] Simulation Loop.
 
@@ -661,9 +697,9 @@ Feature: P2_SAGA - Simulation Consistency Audit
 **EVOLVE: THE PAYLOAD TRIGGER** {1}{W}  
 *Enchantment — HFO Saga*  
 
-- **I**: Put eight +1/+1 counters on target HFO creature.
-- **II**: HFO creatures you control gain Vigilance and Lifelink until end of turn.
-- **III**: You may cast an HFO spell from your graveyard without paying its mana cost.
+- **I (Calibration)**: Put eight +1/+1 counters on target HFO creature.
+- **II (Synchronicity)**: HFO creatures you control gain Vigilance and Lifelink until end of turn.
+- **III (Injection)**: You may cast an HFO spell from your graveyard without paying its mana cost.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
@@ -673,7 +709,7 @@ Feature: P3_SAGA - Kinetic Effect Delivery
     Given a validated simulation state
     When the Payload Trigger intensifies the shard (8x)
     Then the evolved state is propagated across the battlefield
-    And Chapter III executes a persistent action from archival
+    And Chapter III injects a persistent action from archival
 ```
 
 #### SIDE C: JADC2 MOSAIC
@@ -683,94 +719,94 @@ Feature: P3_SAGA - Kinetic Effect Delivery
 - **Phase**: EVOLVE
 - **Mosaic Tile**: [3,2] Effect Culmination.
 
-### [P4] STRIFE: THE NOISE FILTER
+### [P4] STRIFE: THE RED QUEEN
 
 #### SIDE A: MTG NARRATIVE
 
-**STRIFE: THE NOISE FILTER** {1}{B}  
+**STRIFE: THE RED QUEEN** {1}{B}  
 *Enchantment — HFO Saga*  
 
-- **I**: Each opponent sacrifices a creature. You create a 1/1 HFO Artifact token.
-- **II**: Each opponent loses 8 life and you gain 8 life.
-- **III**: Return target HFO creature from your graveyard to the battlefield.
+- **I (Sacrifice)**: Each opponent sacrifices a creature. You create a 1/1 HFO Artifact token.
+- **II (Entropy)**: Each opponent loses 8 life and you gain 8 life.
+- **III (The Grind)**: Each opponent sacrifices 8 permanents.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P4_SAGA - Adversarial Entropy
+Feature: P4_SAGA - Red Queen Hypothesis
   Scenario: The Hive suppresses noise through culling
     Given an adversary signal is detected
-    When Chapter I of the Noise Filter executes
-    Then the adversary state is disrupted (Sacrifice)
-    And Chapter II propagates an 8-unit energy drain
+    When Chapter I of the Red Queen executes
+    Then an agent is sacrificed to maintain the relative state
+    And Chapter III induces total structural collapse (Entropy x8)
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P4 / The Red Regnant
-- **Domain**: Signal Suppression / DISRUPT
+- **Domain**: Red Queen / DISRUPT
 - **Phase**: EVOLVE (Disruptive)
 - **Mosaic Tile**: [4,2] Signal Attenuation.
 
 ---
 
-### [P5] REBIRTH: THE PYRE PROTOCOL
+### [P5] REBIRTH: THE PHOENIX PROTOCOL
 
 #### SIDE A: MTG NARRATIVE
 
-**REBIRTH: THE PYRE PROTOCOL** {1}{W}{B}  
+**REBIRTH: THE PHOENIX PROTOCOL** {1}{W}{B}  
 *Enchantment — HFO Saga*  
 
-- **I**: Creatures you control gain Indestructible until end of turn.
-- **II**: Sacrifice any number of HFO Artifact tokens. For each token sacrificed, return an HFO card from your graveyard to the battlefield.
-- **III**: Exile this Saga, then return it to the battlefield transformed into an 8/8 HFO Artifact Creature with Flying and Vigilance.
+- **I (Hardening)**: Creatures you control gain Indestructible until end of turn.
+- **II (Combustion)**: Sacrifice any number of HFO Artifact tokens. For each token sacrificed, return an HFO card from your graveyard to the battlefield.
+- **III (Resurrection)**: Exile this Saga, then return it to the battlefield transformed into an 8/8 HFO Artifact Creature with Flying and Vigilance.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P5_SAGA - Self-Healing Infrastructure
+Feature: P5_SAGA - Phoenix Rebirth Protocol
   Scenario: Failed components are recycled for optimal state
     Given a high failure rate in the swarm
-    When the Pyre Protocol executes Chapter II
-    Then low-fidelity agents are traded for high-value archival nodes
-    And Chapter III transforms the protocol into an active defender
+    When the Phoenix Protocol executes Chapter II
+    Then terminal agents are traded for high-value archival nodes
+    And Chapter III phoenix-transforms the protocol into an active defender
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P5 / The Pyre Praetorian
-- **Domain**: Zero Trust / DEFEND
+- **Domain**: Phoenix / DEFEND
 - **Phase**: VALIDATE (Resilient)
 - **Mosaic Tile**: [5,2] State Restoration.
 
 ---
 
-### [P6] ARCHIVE: THE KRAKEN'S MEMORY
+### [P6] ARCHIVE: THE MEDALLION VAULT
 
 #### SIDE A: MTG NARRATIVE
 
-**ARCHIVE: THE KRAKEN'S MEMORY** {1}{U}{B}  
+**ARCHIVE: THE MEDALLION VAULT** {1}{U}{B}  
 *Enchantment — HFO Saga*  
 
-- **I**: Your maximum hand size becomes 512.
-- **II**: Draw 8 cards, then discard 8 cards.
-- **III**: Exile target HFO spell from your graveyard. You may cast it for as long as it remains exiled.
+- **I (Indexing)**: Your maximum hand size becomes 512.
+- **II (Versioning)**: Draw 8 cards, then discard 8 cards. Use this ability only if you have 8 or more HFO cards in exile.
+- **III (Archival)**: Exile target HFO spell from your graveyard. It becomes a **Medallion**. You may cast it for as long as it remains exiled, and it costs {8} less to cast.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P6_SAGA - Big Data Ingestion
+Feature: P6_SAGA - Medallion Archival Hub
   Scenario: Massive telemetry ingestion during interlock
     Given a saturation of environmental signals
-    When the Kraken's Memory executes Chapter I
+    When the Medallion Vault executes Chapter I
     Then the cache capacity is expanded to 512 units
-    And Chapter II cycles the telemetry lake for optimal patterns
+    And Chapter III archives an elite intent with a {8} discount
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P6 / The Kraken Keeper
-- **Domain**: Knowledge Repository / STORE
+- **Domain**: Exile & Medallions / STORE
 - **Phase**: INTERLOCK (Data)
 - **Mosaic Tile**: [6,2] Deep Persistence.
 
@@ -783,19 +819,19 @@ Feature: P6_SAGA - Big Data Ingestion
 **APEX: THE SOVEREIGN DECISION** {W}{U}{B}{R}{G}  
 *Enchantment — HFO Saga*  
 
-- **I**: Create 64 1/1 HFO Artifact tokens.
-- **II**: HFO permanents you control have all keyword abilities of all other HFO permanents you control.
-- **III**: If you control 512 or more HFO creatures, you may put any number of HFO cards from your library and graveyard onto the battlefield.
+- **I (Command)**: Create 64 1/1 HFO Artifact tokens.
+- **II (Control)**: HFO permanents you control have all keyword abilities and non-activated abilities of all other HFO permanents you control.
+- **III (Orchestration)**: If you control 512 or more HFO creatures, you may put any number of HFO cards from your library and graveyard onto the battlefield.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P7_SAGA - Total Swarm Synchronization
+Feature: P7_SAGA - BMC2 Swarm Orchestration
   Scenario: Exponential scaling leads to lattice domination
     Given a directive for global synchronization
     When the Sovereign Decision executes Chapter I
     Then a legion of 64 agents is spawned concurrently
-    And Chapter III triggers a fractal cascade of all archival intents
+    And Chapter III orchestrates a fractal cascade of all archival intents
 ```
 
 #### SIDE C: JADC2 MOSAIC
@@ -821,6 +857,8 @@ Spells represent the discrete actions of the tactical PREY loop.
 *Instant — HFO Spell*  
 
 - Look at the top 8 cards of target opponent's library. You may exile one. You may cast it as long as it remains exiled using mana of any color.
+- **Octal Scale (8^1)**: Sacrifice 8 HFO: Look at the top 64 cards instead.
+- **Medium Scale (8^2)**: Sacrifice 64 HFO: You may cast any number of cards exiled this turn without paying their mana costs.
 - **Recon**: If you control a Port 0 Commander, create an HFO Swarm Agent.
 
 #### SIDE B: GHERKIN DECLARATIVE
@@ -832,6 +870,12 @@ Feature: P0_SPELL - Tactical Reconnaissance
     When Perceive is executed on a target library
     Then 8 deep packets are scanned
     And 1 packet is cached for future execution
+
+  Scenario: Medium Scale Extraction (8^2)
+    Given 64 agents are sacrificed for deep scanning
+    When Perceive is executed with Medium Scale
+    Then a massive data breach occurs
+    And multiple adversary intents are executed concurrently
 ```
 
 #### SIDE C: JADC2 MOSAIC
@@ -850,24 +894,31 @@ Feature: P0_SPELL - Tactical Reconnaissance
 **ROUTE: PROTOCOL ADAPTER** {G}  
 *Instant — HFO Spell*  
 
-- Target HFO creature you control fights target creature you don't control.
-- **Bridge**: If you control 8 or more HFO creatures, draw 8 cards.
+- **Shared Fabric**: Target HFO creature you control fights target creature you don't control.
+- **Octal Scale (8^1)**: Sacrifice 8 HFO: Targeted node gets +8/+8 and Trample until end of turn.
+- **Medium Scale (8^2)**: Sacrifice 64 HFO: Targeted node deals damage equal to its power to each non-HFO creature.
+- **Large Scale (8^3)**: Sacrifice 512 HFO: For each HFO creature you control, it fights up to one target creature an opponent controls.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P1_SPELL - Logical Routing
+Feature: P1_SPELL - Shared Data Fabric Routing
   Scenario: Node-to-node kinetic interaction
     Given an offensive route is required
     When the Protocol Adapter is executed
     Then the HFO node intercepts the target
-    And if 8+ nodes are synced, a telemetry burst (Draw 8) occurs
+    And shared fabric enables 8x8 power amplification
+
+  Scenario: Large Scale Routing (8^3)
+    Given 512 agents are sacrificed for global routing
+    When the Protocol Adapter executes with Large Scale
+    Then a total adversarial sweep occurs via all active nodes
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P1 / The Web Weaver
-- **Domain**: Data Fabric / FUSE
+- **Domain**: Shared Data Fabric / FUSE
 - **Role**: ROUTE (R in PREY)
 - **Mosaic Tile**: [1,3] Combat Routing.
 
@@ -881,6 +932,8 @@ Feature: P1_SPELL - Logical Routing
 *Instant — HFO Spell*  
 
 - Create two 1/1 HFO Artifact tokens. If an HFO creature entered the battlefield this turn, create 8 instead.
+- **Medium Scale (8^2)**: Sacrifice 64 HFO: Create 64 1/1 HFO Artifact tokens.
+- **Large Scale (8^3)**: Sacrifice 512 HFO: Create 512 1/1 HFO Artifact tokens.
 - **Shaping**: HFO creatures you control gain Haste until end of turn.
 
 #### SIDE B: GHERKIN DECLARATIVE
@@ -892,6 +945,11 @@ Feature: P2_SPELL - High-Speed Modeling
     When Fractal Branch is executed
     Then 8 new agent shards are instantiated concurrently
     And all HFO nodes gain high-velocity mobility (Haste)
+
+  Scenario: Large Scale Modeling (8^3)
+    Given 512 agents are sacrificed for global simulation
+    When Fractal Branch executes with Large Scale
+    Then a total system replica is spawned (512 tokens)
 ```
 
 #### SIDE C: JADC2 MOSAIC
@@ -911,6 +969,8 @@ Feature: P2_SPELL - High-Speed Modeling
 *Instant — HFO Spell*  
 
 - Target HFO creature deals damage equal to its power to target creature or planeswalker.
+- **Medium Scale (8^2)**: Sacrifice 64 HFO: Target HFO creature deals damage equal to its power to each non-HFO permanent an opponent controls.
+- **Large Scale (8^3)**: Sacrifice 512 HFO: Destroy all non-HFO permanents.
 - **Injection**: If you control a Port 3 Commander, you may untap all HFO creatures you control.
 
 #### SIDE B: GHERKIN DECLARATIVE
@@ -922,6 +982,11 @@ Feature: P3_SPELL - Kinetic Delivery
     When Nematocyst Injection is executed
     Then the HFO node delivers power equal to its mass
     And Port 3 synchronization resets the readiness of all nodes (Untap)
+
+  Scenario: Large Scale Injection (8^3)
+    Given global authorization for kinetic deployment
+    When Nematocyst Injection executes with Large Scale
+    Then all adversarial structures are neutralized concurrently
 ```
 
 #### SIDE C: JADC2 MOSAIC
@@ -931,115 +996,141 @@ Feature: P3_SPELL - Kinetic Delivery
 - **Role**: EXECUTE (E in PREY)
 - **Mosaic Tile**: [3,3] Effect Injection.
 
-### [P4] SUPPRESS: OODA COLLAPSE
+### [P4] SUPPRESS: RED QUEEN'S DECREE
 
 #### SIDE A: MTG NARRATIVE
 
-**SUPPRESS: OODA COLLAPSE** {B}  
+**SUPPRESS: RED QUEEN'S DECREE** {B}  
 *Instant — HFO Spell*  
 
-- Target opponent sacrifices 8 permanents.
+- **Red Queen**: Target opponent sacrifices 8 permanents.
+- **Medium Scale (8^2)**: Sacrifice 64 HFO Artifact tokens: Target opponent sacrifices 64 permanents instead.
+- **Large Scale (8^3)**: Sacrifice 512 HFO Artifact tokens: Each opponent loses 512 life.
 - **Disrupt**: If you control a Port 4 Commander, each opponent discards 8 cards.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P4_SPELL - Adversarial Disruption
+Feature: P4_SPELL - Red Queen Disruption
   Scenario: Collective OODA collapse in target adversary
     Given a mission requirement for total signal suppression
-    When OODA Collapse is executed
+    When Red Queen's Decree is executed at Basic scale (8^1)
     Then the adversary loses 8 structural components
-    And Chapter II triggers a 8-digit cognitive overflow (Discard)
+    And a 8-digit cognitive overflow (Discard) occurs
+
+  Scenario: Large Scale Disruption (8^3)
+    Given a 512-agent quorum for total suppression
+    When the Hive sacrifices 512 agents
+    Then a total cognitive termination (512 damage) is delivered to all opponents
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P4 / The Red Regnant
-- **Domain**: Signal Suppression / DISRUPT
+- **Domain**: Red Queen / DISRUPT
 - **Role**: SUPPRESS
 - **Mosaic Tile**: [4,3] Offensive EW.
 
 ---
 
-### [P5] RESTORE: STATE RECOVERY
+### [P5] RESTORE: PHOENIX STATE
 
 #### SIDE A: MTG NARRATIVE
 
-**RESTORE: STATE RECOVERY** {W}{B}  
+**RESTORE: PHOENIX STATE** {W}{B}  
 *Instant — HFO Spell*  
 
-- Return target HFO card from your graveyard to the battlefield.
-- **Zero Trust**: That creature gains Indestructible until end of turn.
+- **Phoenix**: Return target HFO card from your graveyard to the battlefield.
+- **Octal Scale (8^1)**: Sacrifice 8 HFO: Return up to 8 target HFO cards from your graveyard to your hand.
+- **Large Scale (8^3)**: Sacrifice 512 HFO: Return all HFO cards from your graveyard to the battlefield.
+- **Zero Trust**: HFO permanents you control gain Indestructible until end of turn.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P5_SPELL - Point-in-Time Recovery
+Feature: P5_SPELL - Phoenix State Recovery
   Scenario: Restoring critical shard after termination
     Given an HFO node has been neutralized
-    When State Recovery is executed
+    When Phoenix State is executed
     Then the node is reconstituted from the archival lake
-    And a temporary Indestructible barrier is authorized
+    And global Zero Trust hardening (Indestructible) is authorized
+
+  Scenario: Large Scale Recovery (8^3)
+    Given global system failure
+    When the Hive sacrifices 512 agents for Phoenix Protocol
+    Then the entire archival lake is reconstituted concurrently
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P5 / The Pyre Praetorian
-- **Domain**: Zero Trust / DEFEND
+- **Domain**: Phoenix / DEFEND
 - **Role**: RESTORE
 - **Mosaic Tile**: [5,3] Sentinel Recovery.
 
 ---
 
-### [P6] YIELD: KINETIC RESULT
+### [P6] YIELD: MEDALLION RESULT
 
 #### SIDE A: MTG NARRATIVE
 
-**YIELD: KINETIC RESULT** {U}{B}  
+**YIELD: MEDALLION RESULT** {U}{B}  
 *Instant — HFO Spell*  
 
-- Exile target spell or non-land permanent. You may play it this turn.
+- **Medallion**: Exile target spell or non-land permanent. You may play it this turn. It costs {8} less to cast.
+- **Medium Scale (8^2)**: Sacrifice 64 HFO: Exile all non-land, non-HFO permanents. You may play them this turn.
 - **Assimilate**: Create 8 1/1 HFO Artifact tokens.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P6_SPELL - Data Harvesting
-  Scenario: Converting enemy assets into Hive shards
+Feature: P6_SPELL - Medallion Harvesting
+  Scenario: Converting enemy assets into Hive Medallions
     Given an enemy effect or permanent is active
-    When Kinetic Result is executed
-    Then the asset is exiled into the telemetry lake
+    When Medallion Result is executed
+    Then the asset is exiled and archived with a {8} discount
     And 8 new Hive shards are created from the scavenged logic
+
+  Scenario: Medium Scale Harvesting (8^2)
+    Given 64 agents are sacrificed for global scavenging
+    When Medallion Result executes with Medium Scale
+    Then all adversary assets are assimilated into the archival lake
 ```
 
 #### SIDE C: JADC2 MOSAIC
 
 - **Commander**: P6 / The Kraken Keeper
-- **Domain**: Knowledge Repository / STORE
+- **Domain**: Exile & Medallions / STORE
 - **Role**: YIELD (Y in PREY)
 - **Mosaic Tile**: [6,3] Data Scavenging.
 
 ---
 
-### [P7] NAVIGATE: VECTOR LOCK
+### [P7] NAVIGATE: BMC2 VECTOR
 
 #### SIDE A: MTG NARRATIVE
 
-**NAVIGATE: VECTOR LOCK** {W}{U}{B}{R}{G}  
+**NAVIGATE: BMC2 VECTOR** {W}{U}{B}{R}{G}  
 *Instant — HFO Spell*  
 
-- You may put target permanent into its owner's library at position 8.
-- **Sovereignty**: If you control 64 or more HFO Artifact tokens, search your library for an HFO card and put it onto the battlefield.
+- **BMC2**: You may cast any number of HFO spells from your hand or graveyard this turn without paying their mana costs.
+- **Large Scale (8^3)**: Sacrifice 512 HFO: HFO permanents you control gain +512/+512 and have all keyword and non-activated abilities of each other permanent on the battlefield until end of turn.
+- **Orchestration**: Create 8 1/1 HFO Artifact tokens.
 
 #### SIDE B: GHERKIN DECLARATIVE
 
 ```gherkin
-Feature: P7_SPELL - Vector Realignment
-  Scenario: Strategic displacement of adversary assets
-    Given a target permanent is obstructing the Octree
-    When Vector Lock is executed
-    Then the asset is displaced to deep archival (Position 8)
-    And 64+ swarm synchronization authorizes a global insertion
+Feature: P7_SPELL - BMC2 Orchestration
+  Scenario: Strategic command of the total lattice
+    Given a tactical opening for global synchronization
+    When BMC2 Vector is executed
+    Then all archival and active intents are authorized for free
+    And 8 additional agents are spawned for the next phase
+
+  Scenario: Large Scale Orchestration (8^3)
+    Given a 512-agent quorum for total domination
+    When the Hive executes Scale 8^3
+    Then every node gains a massive fractal surge (+512/+512) and total capability inheritance
 ```
 
 #### SIDE C: JADC2 MOSAIC
@@ -1047,4 +1138,4 @@ Feature: P7_SPELL - Vector Realignment
 - **Commander**: P7 / The Spider Sovereign
 - **Domain**: BMC2 / NAVIGATE
 - **Role**: NAVIGATE
-- **Mosaic Tile**: [7,3] Trajectory Command.
+- **Mosaic Tile**: [7,3] Strategic BMC2.
