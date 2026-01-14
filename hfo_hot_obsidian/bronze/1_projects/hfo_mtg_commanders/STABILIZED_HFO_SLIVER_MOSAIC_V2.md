@@ -9,7 +9,9 @@
 ---
 
 ## 🏗️ CORE SUBSTRATE: THE SLIVER HFO MANIFOLD
+
 In the HFO Hive, every agent and commander carries the **Sliver** type.
+
 - **Sliver Rule**: "All HFO Slivers in the manifold share their JADC2 capabilities with all other Slivers."
 - **Mosaic Rule**: The Hive's power scales as $N^2$ where $N$ is the number of active ports (0-7).
 - **Medallion Gating**: Silver-tier stabilization at 88% Pareto Optimal.
@@ -19,6 +21,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ## 🔱 THE 8 SLIVER COMMANDERS (P0-P7)
 
 ### [P0] OBSERVER (SENSE)
+
 - **JADC2 Tile**: ISR / Multi-Modal Sensing
 - **Sliver Anchor**: **[Synapse Sliver]**
 - **Trigram**: Kun (Earth) ☷ | **Binary**: 000
@@ -28,6 +31,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ---
 
 ### [P1] BRIDGER (FUSE)
+
 - **JADC2 Tile**: Data Fabric / Cross-Domain Gateway
 - **Sliver Anchor**: **[Gemhide Sliver]** (or **[Manaweft Sliver]**)
 - **Trigram**: Gen (Mountain) ☶ | **Binary**: 001
@@ -37,6 +41,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ---
 
 ### [P2] SHAPER (SHAPE)
+
 - **JADC2 Tile**: Digital Twin / Physics Modeling
 - **Sliver Anchor**: **[Mirror Entity]**
 - **Trigram**: Kan (Water) ☵ | **Binary**: 010
@@ -46,6 +51,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ---
 
 ### [P3] INJECTOR (DELIVER)
+
 - **JADC2 Tile**: Effect Delivery / Event Dispatch
 - **Sliver Anchor**: **[Harmonic Sliver]**
 - **Trigram**: Xun (Wind) ☴ | **Binary**: 011
@@ -55,6 +61,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ---
 
 ### [P4] DISRUPTOR (DISRUPT)
+
 - **JADC2 Tile**: MDO / Electronic Warfare / Chaos
 - **Sliver Anchor**: **[Sliver Queen]**
 - **Trigram**: Zhen (Thunder) ☳ | **Binary**: 100
@@ -64,6 +71,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ---
 
 ### [P5] IMMUNIZER (DEFEND)
+
 - **JADC2 Tile**: Zero Trust / Force Protection
 - **Sliver Anchor**: **[Sliver Hivelord]**
 - **Trigram**: Li (Fire) ☲ | **Binary**: 101
@@ -73,6 +81,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ---
 
 ### [P6] ASSIMILATOR (STORE)
+
 - **JADC2 Tile**: Telemetry Lake / AAR
 - **Sliver Anchor**: **[Dormant Sliver]**
 - **Trigram**: Dui (Lake) ☱ | **Binary**: 110
@@ -82,6 +91,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ---
 
 ### [P7] NAVIGATOR (NAVIGATE)
+
 - **JADC2 Tile**: BMC2 / Orchestration
 - **Sliver Anchor**: **[Sliver Overlord]**
 - **Trigram**: Qian (Heaven) ☰ | **Binary**: 111
@@ -106,6 +116,7 @@ In the HFO Hive, every agent and commander carries the **Sliver** type.
 ---
 
 ## 📜 STIGMERGY SIGNAL: THE SLIVER COVENANT
+
 1. **Shared Excellence**: No Sliver operates alone; all benefits are global.
 2. **Red Truth**: If a Sliver is removed, the Hive feels the loss (Error Propagation).
 3. **88% Threshold**: The Mosaic is only fully functional when all 8 Sliver Anchors are present in the manifest.

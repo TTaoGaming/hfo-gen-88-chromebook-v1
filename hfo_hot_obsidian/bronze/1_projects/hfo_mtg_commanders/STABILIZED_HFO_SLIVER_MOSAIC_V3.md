@@ -9,6 +9,7 @@
 ---
 
 ## 🏗️ THE GENERIC HFO SWARM AGENT (TONE SETTER)
+
 **Name**: HFO Swarm Agent (Token)
 **Type**: Creature — HFO Sliver
 **Stats**: 1/1
@@ -18,9 +19,11 @@
 ---
 
 ## 🔱 THE 8 HFO COMMANDER TRIADS (P0-P7)
+
 *Each port is anchored by 1 Commander + 2 Specialized Slivers.*
 
 ### [P0] THE LIDLESS LEGION (SENSE)
+
 - **JADC2 Tile**: ISR / Multi-Modal Sensing
 - **Commander**: **[Urza, Lord High Artificer]** (The Observer)
 - **Sliver A**: **[Synapse Sliver]** (Telemetry on Hit)
@@ -30,6 +33,7 @@
 ---
 
 ### [P1] THE WEB WEAVER (FUSE)
+
 - **JADC2 Tile**: Data Fabric / Cross-Domain Gateway
 - **Commander**: **[Breya, Etherium Shaper]** (The Bridger)
 - **Sliver A**: **[Gemhide Sliver]** (Resource Fusion)
@@ -39,6 +43,7 @@
 ---
 
 ### [P2] THE MIRROR MAGUS (SHAPE)
+
 - **JADC2 Tile**: Digital Twin / Physics Prototyping
 - **Commander**: **[Sakashima of a Thousand Faces]** (The Shaper)
 - **Sliver A**: **[Mirror Entity]** (Physics Morphing)
@@ -48,6 +53,7 @@
 ---
 
 ### [P3] HARMONIC HYDRA (INJECT/CASCADE)
+
 - **JADC2 Tile**: Effect Delivery / Event Dispatch
 - **Commander**: **[First Sliver]** (The Injector of Cascades)
 - **Sliver A**: **[Harmonic Sliver]** (Destructive Injection)
@@ -57,6 +63,7 @@
 ---
 
 ### [P4] THE RED REGNANT (DISRUPT/CULL)
+
 - **JADC2 Tile**: MDO / Electronic Warfare / Chaos
 - **Commander**: **[Sliver Queen]** (The Queen of Disruption)
 - **Sliver A**: **[Basal Sliver]** (Sacrifice for Power)
@@ -67,6 +74,7 @@
 ---
 
 ### [P5] THE PYRE PRAETORIAN (DEFEND/REBIRTH)
+
 - **JADC2 Tile**: Force Protection / Zero Trust Boundary
 - **Commander**: **[Syrix, Carrier of the Flame]** (The Phoenix)
 - **Sliver A**: **[Sliver Hivelord]** (Indestructible Core)
@@ -76,6 +84,7 @@
 ---
 
 ### [P6] THE KRAKEN KEEPER (STORE/EXILE)
+
 - **JADC2 Tile**: Telemetry Lake / Analytical Database
 - **Commander**: **[Arixmethes, Slumbering Isle]** (The Depths)
 - **Sliver A**: **[Dormant Sliver]** (Memory Ingestion/Defender)
@@ -86,6 +95,7 @@
 ---
 
 ### [P7] THE SPIDER SOVEREIGN (NAVIGATE/BMC2)
+
 - **JADC2 Tile**: BMC2 / Strategic Orchestration
 - **Commander**: **[Sliver Overlord]** (The Sovereign)
 - **Sliver A**: **[Sliver Legion]** (Massive Scale-up)

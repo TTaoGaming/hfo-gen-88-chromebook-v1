@@ -14,6 +14,7 @@
 ## 🔱 THE 8 CONCEPTUAL INCARNATIONS
 
 ### [P0] THE LIDLESS LEGION (Observer)
+>
 > "The Legion does not look; it witnesses every vibration in the lattice."
 
 ```mermaid
@@ -31,6 +32,7 @@ graph TD
 ---
 
 ### [P1] THE WEB WEAVER (Bridger)
+>
 > "Constraining the chaos into webs of strict schema."
 
 ```mermaid
@@ -48,6 +50,7 @@ graph TD
 ---
 
 ### [P2] THE MIRROR MAGUS (Shaper)
+>
 > "Transmutation through polymorphic transformation."
 
 ```mermaid
@@ -65,6 +68,7 @@ graph TD
 ---
 
 ### [P3] HARMONIC HYDRA (Injector)
+>
 > "Effects that cascade through the stack with relentless velocity."
 
 ```mermaid
@@ -82,6 +86,7 @@ graph TD
 ---
 
 ### [P4] THE RED REGNANT (Disruptor)
+>
 > "The meat-grinder: Mutation and the culling of the weak."
 
 ```mermaid
@@ -99,6 +104,7 @@ graph TD
 ---
 
 ### [P5] THE PYRE PRAETORIAN (Immunizer)
+>
 > "The Dance of Death and Rebirth. From Bronze to Gold."
 
 ```mermaid
@@ -116,6 +122,7 @@ graph TD
 ---
 
 ### [P6] THE KRAKEN KEEPER (Assimilator)
+>
 > "Storing the collective experience in the Medallion Data Lake."
 
 ```mermaid
@@ -133,6 +140,7 @@ graph TD
 ---
 
 ### [P7] THE SPIDER SOVEREIGN (Navigator)
+>
 > "Orchestrating the swarm through the state-action space."
 
 ```mermaid
@@ -150,7 +158,9 @@ graph TD
 ---
 
 ## 🐚 THE SWARM SUBSTRATE
+
 ### **HFO Swarm Agent (The Token)**
+
 *Generic no-ability 1/1 Token.*
 
 ```mermaid
@@ -167,6 +177,7 @@ graph TD
 ---
 
 ## 📊 THE APEX HEURISTIC
+
 - **Singleton**: Only one of each Legendary Commander is permitted in the 64-card deck.
 - **Scaling**: Benefits plateau at **512 (8^3)** agents, representing the full saturation of the 8-port manifold.
 - **Medallion Flow**: A P5 "Death" (Demotion to Bronze) is required for some cards to trigger their "Rebirth" (Promotion to Silver/Gold) abilities.

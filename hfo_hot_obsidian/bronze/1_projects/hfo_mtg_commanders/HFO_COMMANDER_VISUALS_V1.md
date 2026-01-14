@@ -1,4 +1,4 @@
-# Medallion: Bronze | Mutation: 0% | HIVE: I
+# Medallion: Bronze | Mutation: $8^1-8^0$% | HIVE: I
 
 # 🎨 HFO COMMANDER VISUALS: THE HYDRA ASCENDANT
 
@@ -6,103 +6,103 @@
 
 ---
 
-## 🌀 1. THE OBSIDIAN HEXAGONAL ARCHITECTURE
+## 🌀 $8^0$. THE OBSIDIAN HEXAGONAL ARCHITECTURE
 
-The 8 Ports of the **Hyper-Fractal Obsidian** manifold, spanning JADC2 domains and cognitive phases.
+The $8^1$ Ports of the **Hyper-Fractal Obsidian** manifold, spanning JADC2 domains and cognitive phases.
 
 ```mermaid
 graph LR
-    subgraph P0_Port [P0: OBSERVE]
+    subgraph P$8^0-8^0$_Port [P$8^0-8^0$: OBSERVE]
         direction TB
-        P0_S[Lidless Legion]
-        P0_D[ISR / Sensing]
+        P$8^0-8^0$_S[Lidless Legion]
+        P$8^0-8^0$_D[ISR / Sensing]
     end
 
-    subgraph P1_Port [P1: BRIDGE]
+    subgraph P$8^0$_Port [P$8^0$: BRIDGE]
         direction TB
-        P1_S[Web Weaver]
-        P1_D[Data Fabric / Fuse]
+        P$8^0$_S[Web Weaver]
+        P$8^0$_D[Data Fabric / Fuse]
     end
 
-    subgraph P2_Port [P2: SHAPE]
+    subgraph P$8^0+8^0$_Port [P$8^0+8^0$: SHAPE]
         direction TB
-        P2_S[Mirror Magus]
-        P2_D[Digital Twin / EW]
+        P$8^0+8^0$_S[Mirror Magus]
+        P$8^0+8^0$_D[Digital Twin / EW]
     end
 
-    subgraph P3_Port [P3: INJECT]
+    subgraph P$8^0+8^0+8^0$_Port [P$8^0+8^0+8^0$: INJECT]
         direction TB
-        P3_S[Harmonic Hydra]
-        P3_D[Effect Dispatch]
+        P$8^0+8^0+8^0$_S[Harmonic Hydra]
+        P$8^0+8^0+8^0$_D[Effect Dispatch]
     end
 
-    subgraph P4_Port [P4: DISRUPT]
+    subgraph P$8^0+8^0+8^0+8^0$_Port [P$8^0+8^0+8^0+8^0$: DISRUPT]
         direction TB
-        P4_S[Red Regnant]
-        P4_D[Electronic Warfare]
+        P$8^0+8^0+8^0+8^0$_S[Red Regnant]
+        P$8^0+8^0+8^0+8^0$_D[Electronic Warfare]
     end
 
-    subgraph P5_Port [P5: IMMUNIZE]
+    subgraph P$8^1-(8^0+8^0+8^0)$_Port [P$8^1-(8^0+8^0+8^0)$: IMMUNIZE]
         direction TB
-        P5_S[Pyre Praetorian]
-        P5_D[Defense / Audit]
+        P$8^1-(8^0+8^0+8^0)$_S[Pyre Praetorian]
+        P$8^1-(8^0+8^0+8^0)$_D[Defense / Audit]
     end
 
-    subgraph P6_Port [P6: ASSIMILATE]
+    subgraph P$8^1-(8^0+8^0)$_Port [P$8^1-(8^0+8^0)$: ASSIMILATE]
         direction TB
-        P6_S[Kraken Keeper]
-        P6_D[Store / Telemetry]
+        P$8^1-(8^0+8^0)$_S[Kraken Keeper]
+        P$8^1-(8^0+8^0)$_D[Store / Telemetry]
     end
 
-    subgraph P7_Port [P7: NAVIGATE]
+    subgraph P$8^1-8^0$_Port [P$8^1-8^0$: NAVIGATE]
         direction TB
-        P7_S[Spider Sovereign]
-        P7_D[BMC2 / Command]
+        P$8^1-8^0$_S[Spider Sovereign]
+        P$8^1-8^0$_D[BMC$8^0+8^0$ / Command]
     end
 
-    P7_Port --> P0_Port
-    P0_Port --> P1_Port
-    P1_Port --> P2_Port
-    P2_Port --> P3_Port
-    P3_Port --> P4_Port
-    P4_Port --> P5_Port
-    P5_Port --> P6_Port
-    P6_Port --> P7_Port
+    P$8^1-8^0$_Port --> P$8^0-8^0$_Port
+    P$8^0-8^0$_Port --> P$8^0$_Port
+    P$8^0$_Port --> P$8^0+8^0$_Port
+    P$8^0+8^0$_Port --> P$8^0+8^0+8^0$_Port
+    P$8^0+8^0+8^0$_Port --> P$8^0+8^0+8^0+8^0$_Port
+    P$8^0+8^0+8^0+8^0$_Port --> P$8^1-(8^0+8^0+8^0)$_Port
+    P$8^1-(8^0+8^0+8^0)$_Port --> P$8^1-(8^0+8^0)$_Port
+    P$8^1-(8^0+8^0)$_Port --> P$8^1-8^0$_Port
 
-    style P3_Port fill:#ff4d4d,stroke:#fff,stroke-width:4px
-    style P7_Port fill:#000,stroke:#888,stroke-width:2px,color:#fff
+    style P$8^0+8^0+8^0$_Port fill:#ff4d4d,stroke:#fff,stroke-width:4px
+    style P$8^1-8^0$_Port fill:#000,stroke:#888,stroke-width:2px,color:#fff
 ```
 
 ---
 
-## 🐉 2. HARMONIC HYDRA: BUDDING RECURSION
+## 🐉 $8^0+8^0$. HARMONIC HYDRA: BUDDING RECURSION
 
-Visualizing the $8^0 \rightarrow 8^{n+1}$ budding logic of the **Harmonic Hydra (P3)**. One severed head triggers an exponential expansion of the execution manifold.
+Visualizing the $8^0 \rightarrow 8^{n+8^0}$ budding logic of the **Harmonic Hydra (P$8^0+8^0+8^0$)**. One severed head triggers an exponential expansion of the execution manifold.
 
 ```mermaid
 graph TD
     Root[Harmonic Hydra Core]
     
-    subgraph Head_Phase_1 [Initial Head]
-        H1G[Gherkin Trigger: 1 Head Cut]
+    subgraph Head_Phase_$8^0$ [Initial Head]
+        H1G[Gherkin Trigger: $8^0$ Head Cut]
     end
     
     Root --> H1G
     
-    subgraph Head_Phase_2 [Budding: Power of 8]
-        B1[Active Node 1]
-        B2[Active Node 2]
-        B3[Active Node 3]
-        B4[Active Node 4]
-        B5[Active Node 5]
-        B6[Active Node 6]
-        B7[Active Node 7]
-        B8[Active Node 8]
+    subgraph Head_Phase_$8^0+8^0$ [Budding: Power of $8^1$]
+        B1[Active Node $8^0$]
+        B2[Active Node $8^0+8^0$]
+        B3[Active Node $8^0+8^0+8^0$]
+        B4[Active Node $8^0+8^0+8^0+8^0$]
+        B5[Active Node $8^1-(8^0+8^0+8^0)$]
+        B6[Active Node $8^1-(8^0+8^0)$]
+        B7[Active Node $8^1-8^0$]
+        B8[Active Node $8^1$]
     end
     
-    H1G -- "Regen 8^1" --> Head_Phase_2
+    H1G -- "Regen $8^1$" --> Head_Phase_$8^0+8^0$
     
-    subgraph Head_Phase_3 [Payload Delivery]
+    subgraph Head_Phase_$8^0+8^0+8^0$ [Payload Delivery]
         P1[W3C Event]
         P2[SoundFont]
         P3[Physics Step]
@@ -123,45 +123,45 @@ graph TD
     B8 --> P8
 
     style H1G fill:#f9f,stroke:#333,stroke-width:2px
-    style Head_Phase_2 fill:#00ff0033
-    style Head_Phase_3 fill:#ff000033
+    style Head_Phase_$8^0+8^0$ fill:#00ff0033
+    style Head_Phase_$8^0+8^0+8^0$ fill:#ff000033
 ```
 
 ---
 
-## 🐝 3. THE HIVE WORKFLOW LOOP
+## 🐝 $8^0+8^0+8^0+8^0$. THE HIVE WORKFLOW LOOP
 
-The 4-phase symbiotic cycle (Hunt, Interlock, Validate, Evolve).
+The $8^0+8^0+8^0+8^0$-phase symbiotic cycle (Hunt, Interlock, Validate, Evolve).
 
 ```mermaid
 stateDiagram-v2
     [*] --> HUNT
-    HUNT --> INTERLOCK : P0 Sensing
-    INTERLOCK --> VALIDATE : P1 Fusion
-    VALIDATE --> EVOLVE : P2 Shaping
-    EVOLVE --> HUNT : P3 Injection / P4 Disruption
+    HUNT --> INTERLOCK : P$8^0-8^0$ Sensing
+    INTERLOCK --> VALIDATE : P$8^0$ Fusion
+    VALIDATE --> EVOLVE : P$8^0+8^0$ Shaping
+    EVOLVE --> HUNT : P$8^0+8^0+8^0$ Injection / P$8^0+8^0+8^0+8^0$ Disruption
     
     state HUNT {
-        P7_Navigate
-        P0_Observe
+        P$8^1-8^0$_Navigate
+        P$8^0-8^0$_Observe
     }
     
     state INTERLOCK {
-        P1_Bridge
-        P6_Assimilate
+        P$8^0$_Bridge
+        P$8^1-(8^0+8^0)$_Assimilate
     }
     
     state VALIDATE {
-        P2_Shape
-        P5_Immunize
+        P$8^0+8^0$_Shape
+        P$8^1-(8^0+8^0+8^0)$_Immunize
     }
     
     state EVOLVE {
-        P3_Inject
-        P4_Disrupt
+        P$8^0+8^0+8^0$_Inject
+        P$8^0+8^0+8^0+8^0$_Disrupt
     }
 ```
 
 ---
 
-*Spider Sovereign (Port 7) | HFO-Hive8 | Visualized Manifest V1.0*
+*Spider Sovereign (Port $8^1-8^0$) | HFO-Hive$8^1$ | Visualized Manifest v$8^0.0$*

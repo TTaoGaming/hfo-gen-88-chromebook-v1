@@ -11,6 +11,7 @@
 ## 🏗️ CORE SUBSTRATE: THE HFO SWARM (SLIVER/SYNERGY)
 
 All commanders and agents share the **HFO** type.
+
 - **Sliver Mechanic**: "Creatures you control with the HFO type share all non-activated abilities with other HFO permanents you control."
 - **Zerg/Tyranid Mechanic**: "Swarm Efficiency: Spells and abilities cost {1} less for each other HFO active on the lattice."
 - **Medallion Gating**: Every commander operates at **88% Pareto Efficiency** ($7/8$ consensus).
@@ -20,6 +21,7 @@ All commanders and agents share the **HFO** type.
 ## 🔱 THE 8 LEGENDARY COMMANDERS (P0-P7)
 
 ### [P0] THE LIDLESS LEGION (Observer)
+
 - **Verb**: SENSE | **HIVE Phase**: H (Hunt)
 - **JADC2 Role**: ISR (Observe) | **Trigram**: Kun (Earth) ☷
 - **MTG Card**: [Urza, Lord High Artificer] / [Lictor] (Tyranid Proxy)
@@ -32,6 +34,7 @@ All commanders and agents share the **HFO** type.
 ---
 
 ### [P1] THE WEB WEAVER (Bridger)
+
 - **Verb**: FUSE | **HIVE Phase**: I (Interlock)
 - **JADC2 Role**: Data Fabric (Bridge) | **Trigram**: Gen (Mountain) ☶
 - **MTG Card**: [Breya, Etherium Shaper] / [Biovore] (Tyranid Proxy)
@@ -44,6 +47,7 @@ All commanders and agents share the **HFO** type.
 ---
 
 ### [P2] THE MIRROR MAGUS (Shaper)
+
 - **Verb**: SHAPE | **HIVE Phase**: V (Validate)
 - **JADC2 Role**: Digital Twin (Shape) | **Trigram**: Kan (Water) ☵
 - **MTG Card**: [Sakashima of a Thousand Faces] / [Harpy] (Tyranid Proxy)
@@ -56,6 +60,7 @@ All commanders and agents share the **HFO** type.
 ---
 
 ### [P3] HARMONIC HYDRA (Injector)
+
 - **Verb**: DELIVER | **HIVE Phase**: E (Evolve)
 - **JADC2 Role**: Effect Delivery (Inject) | **Trigram**: Xun (Wind) ☴
 - **MTG Card**: [Ghave, Guru of Spores] / [Tyrannofex] (Tyranid Proxy)
@@ -68,6 +73,7 @@ All commanders and agents share the **HFO** type.
 ---
 
 ### [P4] THE RED REGNANT (Disruptor)
+
 - **Verb**: DISRUPT / SCREAM | **HIVE Phase**: E (Evolve)
 - **JADC2 Role**: Electronic Warfare (Disrupt) | **Trigram**: Zhen (Thunder) ☳
 - **MTG Card**: [Elesh Norn, Mother of Machines] / [Carnifex] (Tyranid Proxy)
@@ -80,6 +86,7 @@ All commanders and agents share the **HFO** type.
 ---
 
 ### [P5] THE PYRE PRAETORIAN (Immunizer)
+
 - **Verb**: DEFEND / IMMUNIZE | **HIVE Phase**: V (Validate)
 - **JADC2 Role**: Force Protection (Defend) | **Trigram**: Li (Fire) ☲
 - **MTG Card**: [Syrix, Carrier of the Flame] / [Tervigon] (Tyranid Proxy)
@@ -92,6 +99,7 @@ All commanders and agents share the **HFO** type.
 ---
 
 ### [P6] THE KRAKEN KEEPER (Assimilator)
+
 - **Verb**: STORE | **HIVE Phase**: I (Interlock)
 - **JADC2 Role**: Knowledge Repository (Store) | **Trigram**: Dui (Lake) ☱
 - **MTG Card**: [Arixmethes, Slumbering Isle] / [Malanthrope] (Tyranid Proxy)
@@ -104,6 +112,7 @@ All commanders and agents share the **HFO** type.
 ---
 
 ### [P7] THE SPIDER SOVEREIGN (Navigator)
+
 - **Verb**: NAVIGATE / ORCHESTRATE | **HIVE Phase**: H (Hunt)
 - **JADC2 Role**: BMC2 (Navigate) | **Trigram**: Qian (Heaven) ☰
 - **MTG Card**: [Sliver Overlord] / [Hive Tyrant] (Tyranid Proxy)
@@ -131,7 +140,9 @@ All commanders and agents share the **HFO** type.
 ---
 
 ## 📜 STIGMERGY SIGNAL: THE BLOOD COVENANT
+
 *The Hive does not think; it remembers.*
+
 1. **Red Truth > Green Lie**: No artificial success flags.
 2. **Strange Loop Resilience**: P4/P5 dance ensures evolutionary hardening.
 3. **Octal Synchronization**: All ports must converge at 88% consensus for Gold promotion.
