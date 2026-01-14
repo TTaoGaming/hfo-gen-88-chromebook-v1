@@ -1,0 +1,224 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- OMEGA GEN 4 V21.1 - BEAUTIFUL CURSOR LAB -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO OMEGA | BEAUTIFUL CURSOR LAB</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #ffae00;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        #lab-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .quadrant {
+            position: relative;
+            border: 1px solid #221100;
+            overflow: hidden;
+            background: #020100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border: 1px solid #553300;
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #ffae00;
+            font-weight: bold;
+        }
+
+        .tag {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            z-index: 100;
+            font-size: 10px;
+            color: #664400;
+            text-transform: uppercase;
+        }
+
+        #global-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+
+        .instructions {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            color: #221100;
+            font-size: 4vw;
+            opacity: 0.3;
+            pointer-events: none;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="instructions">MOVE TO PREVIEW</div>
+    <div id="lab-container">
+        <div class="quadrant" id="q1">
+            <div class="label">01. GHOST FLAME</div>
+            <div class="tag">ETHEREAL / HARMONIC</div>
+        </div>
+        <div class="quadrant" id="q2">
+            <div class="label">02. VULCANIC PULSE</div>
+            <div class="tag">AGGRESSIVE / PERCUSSIVE</div>
+        </div>
+        <div class="quadrant" id="q3">
+            <div class="label">03. SOLAR CORONA</div>
+            <div class="tag">STEADY / RADIANT</div>
+        </div>
+        <div class="quadrant" id="q4">
+            <div class="label">04. NEON PLASMA</div>
+            <div class="tag">SHARP / CYBERNETIC</div>
+        </div>
+    </div>
+    <div id="global-cursor"></div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "pixi": "https://cdn.jsdelivr.net/npm/pixi.js@7.3.2/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as PIXI from 'pixi';
+
+        const container = document.getElementById('global-cursor');
+        const app = new PIXI.Application({ resizeTo: container, backgroundAlpha: 0, antialias: true });
+        container.appendChild(app.view);
+
+        function createGlowTexture(size, color, alphaScale = 1) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size; canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            const center = size / 2;
+            const grad = ctx.createRadialGradient(center, center, 0, center, center, size / 2);
+            const r = (color >> 16) & 0xFF; const g = (color >> 8) & 0xFF; const b = color & 0xFF;
+            grad.addColorStop(0, `rgba(${r},${g},${b}, ${1 * alphaScale})`);
+            grad.addColorStop(0.3, `rgba(${r},${g},${b}, ${0.5 * alphaScale})`);
+            grad.addColorStop(1, `rgba(${r},${g},${b}, 0)`);
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, size, size);
+            return PIXI.Texture.from(canvas);
+        }
+
+        // --- STYLES DEFINITION ---
+        const STYLES = {
+            GHOST: {
+                color: 0x00FFFF, core: 0xFFFFFF, count: 8,
+                update: (s, i, t) => {
+                    const phase = t + i * 0.4;
+                    s.scale.set(1.0 + Math.sin(phase) * 0.4);
+                    s.y -= 2 * (i + 1);
+                    s.alpha = (1 - (i / 8)) * 0.5 * (0.8 + Math.sin(t * 2) * 0.2);
+                    s.skew.x = Math.sin(t + i) * 0.2;
+                }
+            },
+            VULCANIC: {
+                color: 0xFF3300, core: 0xFFEE00, count: 12,
+                update: (s, i, t) => {
+                    const phase = t * 4 + i * 0.2;
+                    s.scale.x = 0.5 + Math.random() * 0.5;
+                    s.scale.y = 1.5 + Math.sin(phase) * 1.0;
+                    s.y -= i * 4;
+                    s.alpha = (1 - (i / 12)) * (Math.random() > 0.1 ? 1 : 0.2);
+                }
+            },
+            SOLAR: {
+                color: 0xFFAE00, core: 0xFFFFFF, count: 5,
+                update: (s, i, t) => {
+                    s.rotation = t * (1 + i * 0.2) * (i % 2 === 0 ? 1 : -1);
+                    s.scale.set(1.5 + Math.sin(t + i) * 0.5);
+                    s.alpha = 0.3 + Math.sin(t * 2) * 0.1;
+                }
+            },
+            NEON: {
+                color: 0xFF00FF, core: 0x00FFFF, count: 6,
+                update: (s, i, t) => {
+                    s.scale.set(0.8 + Math.tan(t * 0.5 + i) * 0.1); // Sharp jumps
+                    s.rotation = Math.floor(t * 10) * 0.1; // Stepped rotation
+                    s.alpha = 0.5 + Math.sin(t * 10) * 0.3;
+                    s.skew.set(Math.sin(t * 5) * 0.2);
+                }
+            }
+        };
+
+        const activeLayers = new PIXI.Container();
+        app.stage.addChild(activeLayers);
+
+        let currentStyle = 'GHOST';
+        let mouse = { x: 0, y: 0 };
+        let time = 0;
+
+        function switchStyle(styleName) {
+            activeLayers.removeChildren();
+            const cfg = STYLES[styleName];
+            const tex = createGlowTexture(96, cfg.color);
+            const coreTex = createGlowTexture(48, cfg.core, 0.8);
+
+            for (let i = 0; i < cfg.count; i++) {
+                const s = new PIXI.Sprite(i > cfg.count - 3 ? coreTex : tex);
+                s.anchor.set(0.5);
+                s.blendMode = PIXI.BLEND_MODES.ADD;
+                activeLayers.addChild(s);
+            }
+            currentStyle = styleName;
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+
+            // Determine quadrant
+            const qX = e.clientX < window.innerWidth / 2 ? 0 : 1;
+            const qY = e.clientY < window.innerHeight / 2 ? 0 : 1;
+            const newStyle = qY === 0 ? (qX === 0 ? 'GHOST' : 'VULCANIC') : (qX === 0 ? 'SOLAR' : 'NEON');
+
+            if (newStyle !== currentStyle) switchStyle(newStyle);
+        });
+
+        app.ticker.add((delta) => {
+            time += 0.05 * delta;
+            activeLayers.children.forEach((s, i) => {
+                s.position.set(mouse.x, mouse.y); // Anchored to mouse
+                STYLES[currentStyle].update(s, i, time);
+            });
+        });
+
+        switchStyle('GHOST');
+    </script>
+</body>
+
+</html>
