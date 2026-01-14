@@ -1,0 +1,43 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+# Omega Gen 4 Version 20.8 Specification: The Pulse Injector
+# Date: 2026-01-14
+# Mission: Phoenix Project (HFO Gen 88)
+# Thread: Omega (Total Tool Virtualization)
+
+version: "20.8"
+codename: "Hydra-Pulse-Adapter"
+objective: "Eliminate 'Release-to-Click' friction by implementing a Pulse-Click strategy and Dwell-based interaction."
+
+architecture:
+  pattern: "Swappable Injector Adapter"
+  reasoning: "Decouples the gesture state from the event sequence, allowing for immediate interaction feedback without breaking the FSM COMMIT state."
+
+ports:
+  P3_INJECTOR:
+    adapters:
+      pulse_click:
+        description: "Fires a click sequence immediately upon COMMIT activation or after a short dwell."
+        logic: |
+          Enter COMMIT -> 
+            dispatch(pointerover) ->
+            wait(10ms) ->
+            dispatch(pointerdown) ->
+            dispatch(click) [Immediate feedback]
+          Exit COMMIT ->
+            dispatch(pointerup)
+      dwell_trigger:
+        description: "Monitors velocity and Z-depth to trigger clicks without gesture change."
+        thresholds:
+          velocity: < 0.05
+          z_delta: > 0.1 (Push into screen)
+          dwell_time: 200ms
+
+requirements:
+  zero_friction: "Users should not have to release a gesture to trigger a button click."
+  state_settling: "Mandatory 10ms delay between pointerover and click for React state settlement."
+  depth_awareness: "Incorporate 'Push' (Z-axis) into the click trigger logic."
+
+verification_plan:
+  audit: "p5_forensic_harness"
+  test: "scripts/test_pulse_injector.spec.ts"
+  manual: "Verify Excalidraw 'Help' dialog triggers on COMMIT entry in v20.8."
