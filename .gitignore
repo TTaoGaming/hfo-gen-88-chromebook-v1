@@ -56,7 +56,6 @@ package-lock.json
 hfo_hot_obsidian/bronze/6_persist/
 hfo_cold_obsidian/bronze/6_persist/
 **/test-results/
-ttao-notes-*
 *.swp
 .DS_Store
 
