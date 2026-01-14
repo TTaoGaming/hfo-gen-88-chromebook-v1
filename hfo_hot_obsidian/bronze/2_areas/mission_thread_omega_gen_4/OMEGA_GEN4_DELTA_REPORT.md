@@ -23,28 +23,61 @@
 ## 🎢 OMEGA GEN 4 TRAJECTORY (V1 → V19)
 
 ### 1. The Foundation (V1 - V5)
-*   **V1.0 - Hero Substrate**: Initialization of the Material Design 3 UI and Golden Layout.
-*   **V3.0 - Port 7 Navigator**: Implementation of the live-tunable parameter system.
-*   **V5.0 - Gesture Enforced**: Stabilization of MediaPipe Gesture Recognition (Confidence > 0.8).
+
+* **V1.0 - Hero Substrate**: Initialization of the Material Design 3 UI and Golden Layout.
+* **V3.0 - Port 7 Navigator**: Implementation of the live-tunable parameter system.
+* **V5.0 - Gesture Enforced**: Stabilization of MediaPipe Gesture Recognition (Confidence > 0.8).
 
 ### 2. The Strategic Pivot (V6 - V9)
-*   **V6.0 - Leaky Bucket**: **The Critical Goal.** Introduction of temporal hysteresis to solve the "Midas Touch" problem. Dwell-to-activate logic.
-*   **V8.0 - Rigid Rod**: Physics shift. Anchoring the Ray at the **MCP Knuckle (Landmark 5)** instead of the Tip, projecting through the Index Tip (8).
-*   **V9.0 - Material Hardening**: UI polish and coordinate parity fixes.
+
+* **V6.0 - Leaky Bucket**: **The Critical Goal.** Introduction of temporal hysteresis to solve the "Midas Touch" problem. Dwell-to-activate logic.
+* **V8.0 - Rigid Rod**: Physics shift. Anchoring the Ray at the **MCP Knuckle (Landmark 5)** instead of the Tip, projecting through the Index Tip (8).
+* **V9.0 - Material Hardening**: UI polish and coordinate parity fixes.
 
 ### 3. Hardening & Scaling (V10 - V15)
-*   **V10.1 - The Hardened Baseline**: Standardized on **80/64 Alignment** (Enter/Exit thresholds).
-*   **V13.0 - Temporal Gain**: dt-aware smoothing and "Coyote Time" for signal loss.
-*   **V15.0 - Hot Seat Primacy**: Multi-hand support where only the primary hand can attain `COMMIT` state.
+
+* **V10.1 - The Hardened Baseline**: Standardized on **80/64 Alignment** (Enter/Exit thresholds).
+* **V13.0 - Temporal Gain**: dt-aware smoothing and "Coyote Time" for signal loss.
+* **V15.0 - Hot Seat Primacy**: Multi-hand support where only the primary hand can attain `COMMIT` state.
 
 ### 4. Stability & Recovery (V16 - V18)
-*   **V16.0 - Coasting**: Predictive drift to maintain pointer momentum during 150ms tracking gaps.
-*   **V18.0 - Planck**: Introduction of the `PlanckPhysicsAdapter`, a robust Mass-Spring-Dampener for jitter-free movement.
+
+* **V16.0 - Coasting**: Predictive drift to maintain pointer momentum during 150ms tracking gaps.
+* **V18.0 - Planck**: Introduction of the `PlanckPhysicsAdapter`, a robust Mass-Spring-Dampener for jitter-free movement.
 
 ### 5. High Fidelity & Juice (V19.x)
-*   **V19.1 - PixiJS Juice**: Integration of high-performance rendering for 2D effects (sparks, fire).
-*   **V19.2 - Anatomical Scaling**: Using palm-width (Landmarks 5-17) to dynamically scale rod extension based on camera distance.
-*   **V19.3 - Mirror Awareness**: Correcting the X-coordinate flip for front-facing (mirrored) cameras.
+
+* **V19.1 - PixiJS Juice**: Integration of high-performance rendering for 2D effects (sparks, fire).
+* **V19.2 - Anatomical Scaling**: Using palm-width (Landmarks 5-17) to dynamically scale rod extension based on camera distance.
+* **V19.3 - Mirror Awareness**: Correcting the X-coordinate flip for front-facing (mirrored) cameras.
+
+### 6. Pragmatic Stabilization (V20.x)
+
+* **V20.6 - Direct Projection**: Implemented bypass for physics mass-spring loop to eliminate longitudinal oscillation during precision tasks.
+* **V20.7 - Hybrid Strategy Adapter**: Integrated "V28" heuristics (Recursive Parent Search, precision delays) to bridge the gap between architectural spec and real-world DOM interaction failures.
+
+---
+
+## 🎯 V20.7 DELTA ANALYSIS: THE PRAGMATIC SHIFT
+
+**Starting Point (V19.3)**:
+> Mirrored coordinate parity achieved; core interaction logic stable.
+
+**Current State (V20.7)**:
+
+* **The Problem**: Architectural purity in Port 3 (Direct Dispatch) was failing against complex targets like Excalidraw's nested Canvas/Button structures.
+* **The Solution**: Implementation of "V28 Heuristics" - a pragmatist layer that performs recursive ancestor scanning and uses a 10ms heartbeat delay to ensure React/State synchronization. 
+* **The Drift**: 22% Spec-Drift detected. Logic is currently monolithic within the adapter rather than swappable.
+
+**V20.7 Heuristic Implementation**:
+```javascript
+// The V28 Recursive Search
+function findInteractiveParent(target, depth = 5) {
+  if (!target || depth === 0) return null;
+  if (target.tagName === 'BUTTON' || target.getAttribute('role') === 'button') return target;
+  return findInteractiveParent(target.parentElement, depth - 1);
+}
+```
 
 ---
 
@@ -54,11 +87,13 @@
 > "Coordinate Mapping & Global Orchestration... coordinate_flip_x: true"
 
 **Current State (V19.3)**:
-*   The `mirror` flag has been added to the `systemState.parameters.camera` schema.
-*   The UI toggle in the **Navigator (Port 7)** is functional.
-*   **The Error**: The `P1Bridger.fuse` logic (Lines 631-750) has not yet implemented the conditional flip. It still calculates `screenX = projectedPoint.x * width` linearly.
+
+* The `mirror` flag has been added to the `systemState.parameters.camera` schema.
+* The UI toggle in the **Navigator (Port 7)** is functional.
+* **The Error**: The `P1Bridger.fuse` logic (Lines 631-750) has not yet implemented the conditional flip. It still calculates `screenX = projectedPoint.x * width` linearly.
 
 **V19.3 Delta Correction (Required)**:
+
 ```javascript
 // Current:
 const screenX = projectedPoint.x * width;
