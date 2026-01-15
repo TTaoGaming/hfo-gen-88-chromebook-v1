@@ -92,3 +92,33 @@ overall I like the direction but I don't like the new trail mesh ribbon visual. 
 
 wait what are you doing focus on omega gen 4, fix anything you breakoverall I like the direction but I don't like the new trail mesh ribbon visual. can we make that ribbon toggleable and off by default. so I really just see the flames as the visual focus. i think we need to port over the other parts of the data fabric with babylon visuals like 21 landmarks skeleton and the pointer index finger claw. please clone and evolve. all states except coast should have landmark, wire skeleton, pointer claw index fingertip extension, READY has amber flame trail, COMMIT FSM should have cyan
 ---
+
+i need your help finding my most recent work on my hfo leganry commanders I was creating a grimoire for gen 88 i think it's called the octal. what I need is to compile the information, I believe I already did so before but now i've worked on it more. i was stabilizing on 3 sides, MTG narative, declarative gherkin, jadc2 mosaic warfare tile description. and the mtg I was stabilizing on 1/1 hfo hive agent tokens with no abilities. and sacrifice power of 8 hfo creatures for effects. 1 creature for free like effects, 8 sacrifice for regular abilities, 64 for medium abilities and 512 sacrifice for major abilities. please tell me what you can find
+---
+
+overall the effects are good, the main problem is that the visuals do not match, the previous canvas didn't do this, there seems to be a coordinate mismatch, what I get on the webcame for mediaopipeline should be exactly what I see. you should be able to draw the 21 langmarks to canvas and compare it to the babylon and see the x,y coordinate mismatches, this should be solved with the shared data fabric, I wonder if the langmarks 21 dots are not being enforced to the data fabric, check and tell me audit. no code yet, we will clone and evolve v24.19 later
+---
+
+wait now the cursor and visual flames are mismatched, I think this is an issue with the wecam to excalidraw, we should fit excalidraw inside the video frame, not the video frame inside excalidraw since I can't reliably interact with things above/below the video camera with my gesture system. this is a simple UX problem, we should follow apple HIG principles and google M3 design
+---
+
+i think the port 3 needs to focus on cascading effects and fighting, like sacrifice to fight. port 4 red regnant is about sacrificing for both sides, it's like cull the weak on a mass scale so only the strong survive. port 5 is about fire and rebirth. port 6 is about exile and assimilating exemplars so it's the idea of a medallion datalake. port 7 is BMC2 and tutoring
+---
+
+we need to formalize the legendary commanders. let's create a template, they each should have a main archetype, an ONGOING abilities that gets shared across the HFO data fabric so each legendary commander synergies the whole swarm like HYPER-SLIVERS. then they have 4 abilities - 1, 8, 64, 512 sacrifice, and they should have an appropriate power level. they should not be the same ability at 4 scales, it should be a cheap abilitily, a small one, a medium one, and a large one. so in total 1 ongoing and 4 sacrifice abilities. I don't think they all need to tap, maybe they pay X mana for some. depends on the appropriate archetype
+---
+
+we need to remove all cheap and unblockable abilities this is an exercise in JADC2 MOSAIC and enemies will not let me just "take another extra turn" the idea is that this is a framework to imagine my llm ai swarm legendary commander nodes. we need to align it with acctual ai swarm orchestration, the idea is the cost is what I would pay for llm, I sacrifice money for llm ai
+---
+
+emit to hfo orchestration hub, lots of magic numbers and the fixes are triggering rate limiting with gemini 3 flash on github co pilot. we just hit 3x rate limiting within 10 minutes so we are maxing out on this platform, the main reason we are staying is the github copilot credit usage is so much cheaper than paying for direct tokens. I need an immediate report. don't fix any more magic numbers that is going to rate limit us almost immediately
+---
+
+the leaky bucket dwell should be a responsibility of port 1. it's a shared data fabric resource, it's my abstraction for user readiness to commit. let's clone and evolve
+---
+
+need to add a note that we will need predictive timing on event triggers like leaky bucket and like commit events can all be kalman 1d filtered for lookahead.
+---
+
+you don't remenber my geometry. the obsidian hourglass is a probabalistic prescience spike factory evolutionary engine with exemplar composition and genetic programming. do you remember what i am building?
+---

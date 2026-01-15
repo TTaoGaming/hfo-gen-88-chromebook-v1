@@ -29,8 +29,10 @@ def get_config():
 def get_active_workspace():
     cfg = get_config()
     version = str(cfg.get("activeVersion", "38"))
-    if version.startswith("3"):
+    if version.startswith("3_"):
         return f"/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_2/omega_gen3_v{version.replace('3_', '')}.html"
+    if version.startswith("4_v"):
+        return f"/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen{version}.html"
     return f"/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/omega_workspace_v{version}.html"
 
 def get_hub_version():
@@ -576,10 +578,17 @@ class Port5Immunize:
         if not os.path.exists(active_ws):
             return {"status": "PASS", "message": "File context does not exist on disk yet."}
 
-        # 1. Syntax Check
-        if active_ws.endswith(".py"):
+        # 1. Syntax Check (Python + JS Script Blocks)
+        if active_ws.endswith(".py") or active_ws.endswith(".html"):
             if subprocess.run(["python3", "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/p5_syntax_gate.py", active_ws]).returncode != 0:
                 return {"status": "FAIL", "message": "Syntax Gate Failed"}
+            
+        # 2. Logic Check (Schema Parity for HTML/JS)
+        if active_ws.endswith(".html"):
+             eval_gate_path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/p5_eval_gate.py"
+             if os.path.exists(eval_gate_path):
+                 if subprocess.run(["python3", eval_gate_path, active_ws]).returncode != 0:
+                     return {"status": "FAIL", "message": "Logic Gate (Schema Parity) Failed"}
             
         # 2. Resource Reachability (Anti-Hallucination)
         try:
