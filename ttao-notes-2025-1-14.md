@@ -89,3 +89,6 @@ overall I like the direction but I don't like the new trail mesh ribbon visual. 
 
 overall I like the direction but I don't like the new trail mesh ribbon visual. can we make that ribbon toggleable and off by default. so I really just see the flames as the visual focus. i think we need to port over the other parts of the data fabric with babylon visuals like 21 landmarks skeleton and the pointer index finger claw. please clone and evolve. all states except coast should have landmark, wire skeleton, pointer claw index fingertip extension, READY has amber flame trail, COMMIT FSM should have cyan
 ---
+
+wait what are you doing focus on omega gen 4, fix anything you breakoverall I like the direction but I don't like the new trail mesh ribbon visual. can we make that ribbon toggleable and off by default. so I really just see the flames as the visual focus. i think we need to port over the other parts of the data fabric with babylon visuals like 21 landmarks skeleton and the pointer index finger claw. please clone and evolve. all states except coast should have landmark, wire skeleton, pointer claw index fingertip extension, READY has amber flame trail, COMMIT FSM should have cyan
+---
