@@ -1,13 +1,13 @@
-<!-- Medallion: Bronze | Mutation: 16% | HIVE: E -->
-<!-- OMEGA GEN 4 V24.16 (Exemplar Hybrid Trail: Geometric Core + Swept Veil) -->
-<!-- Evolution of v24.15: 30FPS Mobile Target + TrailMesh Backbone -->
+<!-- Medallion: Bronze | Mutation: 16% | HIVE: I -->
+<!-- OMEGA GEN 4 V24.18 (Skeletal Visibility Hardening | IDLE-Gate Removal | Perspective Parity) -->
+<!-- Evolution of v24.17: Coordinate Parity and IDLE skeleton visibility -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO OMEGA GEN 4 | V24.16</title>
+    <title>HFO OMEGA GEN 4 | V24.18</title>
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet"
@@ -669,6 +669,51 @@
                     const skeleton = this.skeletons[i];
 
                     const isActive = (c.fsmState !== 'IDLE');
+                    const isCoast = (c.fsmState === 'COAST');
+                    const showSkeleton = systemState.parameters.landmarks.showSkeleton;
+                    const hasLandmarks = !!(c.landmarks && c.landmarks.length > 0);
+
+                    // V24.18: Sovereign Skeleton Visibility (IDLE, READY, COMMIT)
+                    // If we have landmarks and not coasting, show it regardless of FSM state.
+                    if (skeleton) {
+                        const shouldShowSkeleton = !isCoast && showSkeleton && hasLandmarks;
+                        skeleton.root.setEnabled(shouldShowSkeleton);
+
+                        if (shouldShowSkeleton) {
+                            // Update 21 landmark spheres
+                            c.landmarks.forEach((lm, lIndex) => {
+                                // V24.18 Perspective Alignment: 
+                                // projectToWorld correctly handles the perspective shift for depth.
+                                const targetZ = lm.z * 1.5;
+                                const lmPos = this.projectToWorld(lm.x, lm.y, width, height, targetZ);
+                                skeleton.spheres[lIndex].position.copyFrom(lmPos);
+                            });
+
+                            // Update Index Claw (Link from Tip 8 to pointer root)
+                            const showClaw = systemState.parameters.physics.showHFOClaw || false;
+                            skeleton.claw.setEnabled(showClaw && isActive); // Only show claw if in an active pointing state
+
+                            if (showClaw && isActive) {
+                                const targetPos = this.projectToWorld(c.normX, c.normY, width, height);
+                                const tipPos = skeleton.spheres[8].position;
+                                const clawPoints = [tipPos, targetPos];
+                                skeleton.claw = BABYLON.MeshBuilder.CreateLines("claw" + i, { points: clawPoints, instance: skeleton.claw }, this.scene);
+
+                                // Set Claw Color based on state
+                                const isCommit = (c.fsmState === 'COMMIT');
+                                skeleton.claw.color = isCommit ? new BABYLON.Color3(0, 1, 1) : new BABYLON.Color3(1, 0.4, 0);
+                            }
+
+                            // Update wire skeleton bones
+                            HAND_CONNECTIONS.forEach((conn, bIndex) => {
+                                const p1 = skeleton.spheres[conn[0]].position;
+                                const p2 = skeleton.spheres[conn[1]].position;
+                                const bonePoints = [p1, p2];
+                                skeleton.bones[bIndex] = BABYLON.MeshBuilder.CreateLines("bone" + i + "_" + bIndex, { points: bonePoints, instance: skeleton.bones[bIndex] }, this.scene);
+                            });
+                        }
+                    }
+
                     if (isActive) {
                         systems.forEach(s => { if (!s.isStarted()) s.start(); });
 
@@ -686,44 +731,6 @@
                         }
                         this.lastPositions[i] = targetPos.clone();
                         root.position.copyFrom(targetPos);
-
-                        // V24.17: Skeletal Data Fabric Update
-                        const isCoast = (c.fsmState === 'COAST');
-                        const showSkeleton = systemState.parameters.landmarks.showSkeleton;
-                        if (skeleton) {
-                            skeleton.root.setEnabled(!isCoast && showSkeleton);
-                            if (!isCoast && showSkeleton && c.landmarks) {
-                                // Update 21 landmark spheres
-                                c.landmarks.forEach((lm, lIndex) => {
-                                    // V24.18: Align 3D project with original screen (x, y) at MediaPipe depth
-                                    const targetZ = lm.z * 1.5; // Scaled hand depth
-                                    const lmPos = this.projectToWorld(lm.x, lm.y, width, height, targetZ);
-                                    skeleton.spheres[lIndex].position.copyFrom(lmPos);
-                                });
-
-                                // Update Index Claw (Link from Tip 8 to pointer root)
-                                const showClaw = systemState.parameters.physics.showHFOClaw || false;
-                                skeleton.claw.setEnabled(showClaw);
-
-                                if (showClaw) {
-                                    const tipPos = skeleton.spheres[8].position;
-                                    const clawPoints = [tipPos, targetPos];
-                                    skeleton.claw = BABYLON.MeshBuilder.CreateLines("claw" + i, { points: clawPoints, instance: skeleton.claw }, this.scene);
-
-                                    // Set Claw Color based on state
-                                    const isCommit = (c.fsmState === 'COMMIT');
-                                    skeleton.claw.color = isCommit ? new BABYLON.Color3(0, 1, 1) : new BABYLON.Color3(1, 0.4, 0);
-                                }
-
-                                // Update wire skeleton bones
-                                HAND_CONNECTIONS.forEach((conn, bIndex) => {
-                                    const p1 = skeleton.spheres[conn[0]].position;
-                                    const p2 = skeleton.spheres[conn[1]].position;
-                                    const bonePoints = [p1, p2];
-                                    skeleton.bones[bIndex] = BABYLON.MeshBuilder.CreateLines("bone" + i + "_" + bIndex, { points: bonePoints, instance: skeleton.bones[bIndex] }, this.scene);
-                                });
-                            }
-                        }
 
                         // V24.10: Plasma Needle Scion (Fire Lab V3 Aesthetics)
                         const scale = systemState.parameters.physics.fireScale || 1.0;
@@ -764,7 +771,6 @@
                     } else {
                         systems.forEach(s => s.stop());
                         if (trail) trail.isVisible = false;
-                        if (skeleton) skeleton.root.setEnabled(false);
                         this.lastPositions[i] = null;
                     }
                 });
@@ -837,12 +843,13 @@
                 const bones = [];
 
                 const mat = new BABYLON.StandardMaterial("skeletonMat" + index, this.scene);
-                mat.emissiveColor = new BABYLON.Color3(0.5, 1.0, 0.5); // Default Greenish
-                mat.alpha = 0.2; // V24.18: Transparency Hardening (Faded skeleton)
+                mat.emissiveColor = new BABYLON.Color3(0.8, 0.8, 0.8); // Bone White
+                mat.diffuseColor = new BABYLON.Color3(0.9, 0.9, 0.9);
+                mat.alpha = 0.12; // V24.18: Transparent Bone
                 mat.disableLighting = true;
 
                 for (let i = 0; i < 21; i++) {
-                    const sphere = BABYLON.MeshBuilder.CreateSphere("tm_" + index + "_" + i, { diameter: 0.1 }, this.scene);
+                    const sphere = BABYLON.MeshBuilder.CreateSphere("tm_" + index + "_" + i, { diameter: 0.12 }, this.scene);
                     sphere.material = mat;
                     sphere.parent = root;
                     spheres.push(sphere);
@@ -850,14 +857,15 @@
 
                 // Initial claw line
                 const claw = BABYLON.MeshBuilder.CreateLines("claw" + index, { points: [BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero()], updatable: true }, this.scene);
-                claw.color = new BABYLON.Color3(0, 1, 1); // Cyan Claw
+                claw.color = new BABYLON.Color3(0.9, 0.9, 1.0); // Bright Bone Claw
                 claw.parent = root;
+                claw.alpha = 0.2;
 
                 // Wire skeleton bones
                 HAND_CONNECTIONS.forEach((_, bIndex) => {
                     const bone = BABYLON.MeshBuilder.CreateLines("bone" + index + "_" + bIndex, { points: [BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero()], updatable: true }, this.scene);
-                    bone.color = new BABYLON.Color3(0.2, 0.3, 0.2); // Faint Green Bones
-                    bone.alpha = 0.15; // More transparent
+                    bone.color = new BABYLON.Color3(0.8, 0.8, 0.8);
+                    bone.alpha = 0.08; // Delicate Bone Structure
                     bone.parent = root;
                     bones.push(bone);
                 });
@@ -1568,6 +1576,7 @@
                                     fsmState: 'COAST',
                                     bucketLevel: bucket,
                                     handIndex: i,
+                                    landmarks: [], // V24.18: Clear landmarks during COAST to hide skeleton
                                     timestamp: now
                                 });
                                 systemState.p1.fsmStates[i] = 'COAST';
@@ -2582,19 +2591,21 @@
             ctx.restore();
 
             // --- P0 ISR SKELETON (Restricted Bypass) ---
-            if (rawResults.landmarks && systemState.parameters.landmarks.showSkeleton) {
-                const utils = new DrawingUtils(ctx);
-                rawResults.landmarks.forEach((landmarks, i) => {
-                    // V19.5: Flip skeleton landmarks for drawing if mirrored
-                    const drawLms = isMirror ? landmarks.map(l => ({ ...l, x: 1.0 - l.x })) : landmarks;
-                    utils.drawConnectors(drawLms, GestureRecognizer.HAND_CONNECTIONS, { color: 'rgba(255, 255, 255, 0.3)', lineWidth: 1 });
-                    utils.drawLandmarks(drawLms, { color: 'rgba(0, 255, 65, 0.5)', radius: 1 });
-                });
-            }
+            // V24.18: Consolidated skeleton drawing to Port 1 Fabric loop below for state-awareness.
 
             // --- PORT 1 FABRIC VISUALS (Enforced) ---
             cursors.forEach((c, i) => {
-                const { screenX, screenY, fsmState, rawX, rawY } = c;
+                const { screenX, screenY, fsmState, rawX, rawY, landmarks } = c;
+
+                // V24.18: Draw ghost skeleton (Bone White style)
+                if ((fsmState === 'IDLE' || fsmState === 'READY' || fsmState === 'COMMIT') && landmarks && landmarks.length > 0 && systemState.parameters.landmarks.showSkeleton) {
+                    const utils = new DrawingUtils(ctx);
+                    const drawLms = isMirror ? landmarks.map(l => ({ ...l, x: 1.0 - l.x })) : landmarks;
+                    // Bone style: White, low alpha
+                    utils.drawConnectors(drawLms, GestureRecognizer.HAND_CONNECTIONS, { color: 'rgba(255, 255, 255, 0.15)', lineWidth: 1.2 });
+                    utils.drawLandmarks(drawLms, { color: 'rgba(255, 255, 255, 0.2)', radius: 1 });
+                }
+
                 if (fsmState === 'IDLE') return;
 
                 const theme = systemState.parameters.physics.cursorTheme;

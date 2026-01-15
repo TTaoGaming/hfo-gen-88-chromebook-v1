@@ -1,13 +1,13 @@
-<!-- Medallion: Bronze | Mutation: 16% | HIVE: E -->
-<!-- OMEGA GEN 4 V24.16 (Exemplar Hybrid Trail: Geometric Core + Swept Veil) -->
-<!-- Evolution of v24.15: 30FPS Mobile Target + TrailMesh Backbone -->
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- OMEGA GEN 4 V24.22 (Skeletal Fading | Dwell-Based Persistence | Tracking Loss UX) -->
+<!-- Evolution of v24.21: Implemented skeletal alpha tied to Leaky Bucket for graceful degradation -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO OMEGA GEN 4 | V24.16</title>
+    <title>HFO OMEGA GEN 4 | V24.22</title>
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet"
@@ -441,7 +441,20 @@
             anatomy: z.object({
                 palmWidthCm: z.number().min(3).max(15),
                 rodExtensionMultiplier: z.number().min(0.1).max(10)
-            })
+            }),
+            visuals: z.object({
+                engine: z.enum(['BABYLON', 'PIXI']),
+                variant: z.string(),
+                pixi: z.object({
+                    sparklineSteps: z.number().default(64)
+                }).optional()
+            }).optional(),
+            canvasCursors: z.object({
+                radiusBase: z.number().default(40).optional(),
+                gageHeight: z.number().default(80).optional(),
+                bucketHeight: z.number().default(80).optional(),
+                gageOffset: z.number().default(20).optional()
+            }).optional()
         });
 
         const LandmarkSchema = z.object({
@@ -456,6 +469,7 @@
             screenY: z.number(),
             normX: z.number(),
             normY: z.number(),
+            normZ: z.number(), // V24.21: Depth Parity
             rawX: z.number(), // V18: Required for laser origin
             rawY: z.number(), // V18: Required for laser origin
             fsmState: z.enum(['IDLE', 'READY', 'COMMIT', 'COAST']),
@@ -470,6 +484,7 @@
                 z: z.number()
             }),
             bucketLevel: z.number(),
+            skeletonAlpha: z.number().default(1.0), // V24.22: Fading on tracking loss
             handIndex: z.number(),
             pointerId: z.number(), // V24.4: Stable ABI ID
             curls: z.object({
@@ -536,7 +551,16 @@
                 },
                 visuals: {
                     engine: 'BABYLON',
-                    variant: 'PHOENIX_CORE'
+                    variant: 'PHOENIX_CORE',
+                    pixi: {
+                        sparklineSteps: 64
+                    }
+                },
+                canvasCursors: {
+                    radiusBase: 40,
+                    gageHeight: 80,
+                    bucketHeight: 80,
+                    gageOffset: 20
                 },
                 p0Active: false,
                 devMode: false
@@ -566,7 +590,15 @@
                 directionFilters: [null, null, null, null], // V19.2: Stabilize rod direction
                 physicsState: [null, null, null, null] // Mass-Spring state
             },
-            ui: { gestures: null, palm: null, palmCtx: null, fsm: null, fsmCtx: null, juiceLayers: [] },
+            ui: {
+                gestures: null,
+                palm: null,
+                palmCtx: null,
+                fsm: null,
+                fsmCtx: null,
+                juiceLayers: [],
+                viewBounds: { width: 0, height: 0, offsetX: 0, offsetY: 0 }
+            },
             dataFabric: { cursors: [], systemTime: 0, frameId: 0 }
         };
 
@@ -669,6 +701,57 @@
                     const skeleton = this.skeletons[i];
 
                     const isActive = (c.fsmState !== 'IDLE');
+                    const isCoast = (c.fsmState === 'COAST');
+                    const showSkeleton = systemState.parameters.landmarks.showSkeleton;
+                    const hasLandmarks = !!(c.landmarks && c.landmarks.length > 0);
+
+                    // V24.18: Sovereign Skeleton Visibility (IDLE, READY, COMMIT)
+                    // V24.22: Fading logic for Tracking Loss / COAST
+                    if (skeleton) {
+                        const shouldShowSkeleton = showSkeleton && hasLandmarks;
+                        skeleton.root.setEnabled(shouldShowSkeleton);
+
+                        if (shouldShowSkeleton) {
+                            const fadeAlpha = c.skeletonAlpha !== undefined ? c.skeletonAlpha : 1.0;
+                            // Apply fading to children
+                            skeleton.root.getChildMeshes().forEach(m => {
+                                m.visibility = fadeAlpha;
+                            });
+
+                            // Update 21 landmark spheres
+                            c.landmarks.forEach((lm, lIndex) => {
+                                // V24.18 Perspective Alignment: 
+                                // projectToWorld correctly handles the perspective shift for depth.
+                                const targetZ = lm.z * 1.5;
+                                const lmPos = this.projectToWorld(lm.x, lm.y, width, height, targetZ);
+                                skeleton.spheres[lIndex].position.copyFrom(lmPos);
+                            });
+
+                            // Update Index Claw (Link from Tip 8 to pointer root)
+                            const showClaw = systemState.parameters.physics.showHFOClaw || false;
+                            skeleton.claw.setEnabled(showClaw && isActive); // Only show claw if in an active pointing state
+
+                            if (showClaw && isActive) {
+                                const targetPos = this.projectToWorld(c.normX, c.normY, width, height);
+                                const tipPos = skeleton.spheres[8].position;
+                                const clawPoints = [tipPos, targetPos];
+                                skeleton.claw = BABYLON.MeshBuilder.CreateLines("claw" + i, { points: clawPoints, instance: skeleton.claw }, this.scene);
+
+                                // Set Claw Color based on state
+                                const isCommit = (c.fsmState === 'COMMIT');
+                                skeleton.claw.color = isCommit ? new BABYLON.Color3(0, 1, 1) : new BABYLON.Color3(1, 0.4, 0);
+                            }
+
+                            // Update wire skeleton bones
+                            HAND_CONNECTIONS.forEach((conn, bIndex) => {
+                                const p1 = skeleton.spheres[conn[0]].position;
+                                const p2 = skeleton.spheres[conn[1]].position;
+                                const bonePoints = [p1, p2];
+                                skeleton.bones[bIndex] = BABYLON.MeshBuilder.CreateLines("bone" + i + "_" + bIndex, { points: bonePoints, instance: skeleton.bones[bIndex] }, this.scene);
+                            });
+                        }
+                    }
+
                     if (isActive) {
                         systems.forEach(s => { if (!s.isStarted()) s.start(); });
 
@@ -678,7 +761,7 @@
                         }
 
                         // Pixel to World Projection for the pointer root
-                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height);
+                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height, (c.normZ || 0) * 1.5);
 
                         let motionVector = BABYLON.Vector3.Zero();
                         if (this.lastPositions[i]) {
@@ -686,44 +769,6 @@
                         }
                         this.lastPositions[i] = targetPos.clone();
                         root.position.copyFrom(targetPos);
-
-                        // V24.17: Skeletal Data Fabric Update
-                        const isCoast = (c.fsmState === 'COAST');
-                        const showSkeleton = systemState.parameters.landmarks.showSkeleton;
-                        if (skeleton) {
-                            skeleton.root.setEnabled(!isCoast && showSkeleton);
-                            if (!isCoast && showSkeleton && c.landmarks) {
-                                // Update 21 landmark spheres
-                                c.landmarks.forEach((lm, lIndex) => {
-                                    // V24.18: Align 3D project with original screen (x, y) at MediaPipe depth
-                                    const targetZ = lm.z * 1.5; // Scaled hand depth
-                                    const lmPos = this.projectToWorld(lm.x, lm.y, width, height, targetZ);
-                                    skeleton.spheres[lIndex].position.copyFrom(lmPos);
-                                });
-
-                                // Update Index Claw (Link from Tip 8 to pointer root)
-                                const showClaw = systemState.parameters.physics.showHFOClaw || false;
-                                skeleton.claw.setEnabled(showClaw);
-
-                                if (showClaw) {
-                                    const tipPos = skeleton.spheres[8].position;
-                                    const clawPoints = [tipPos, targetPos];
-                                    skeleton.claw = BABYLON.MeshBuilder.CreateLines("claw" + i, { points: clawPoints, instance: skeleton.claw }, this.scene);
-
-                                    // Set Claw Color based on state
-                                    const isCommit = (c.fsmState === 'COMMIT');
-                                    skeleton.claw.color = isCommit ? new BABYLON.Color3(0, 1, 1) : new BABYLON.Color3(1, 0.4, 0);
-                                }
-
-                                // Update wire skeleton bones
-                                HAND_CONNECTIONS.forEach((conn, bIndex) => {
-                                    const p1 = skeleton.spheres[conn[0]].position;
-                                    const p2 = skeleton.spheres[conn[1]].position;
-                                    const bonePoints = [p1, p2];
-                                    skeleton.bones[bIndex] = BABYLON.MeshBuilder.CreateLines("bone" + i + "_" + bIndex, { points: bonePoints, instance: skeleton.bones[bIndex] }, this.scene);
-                                });
-                            }
-                        }
 
                         // V24.10: Plasma Needle Scion (Fire Lab V3 Aesthetics)
                         const scale = systemState.parameters.physics.fireScale || 1.0;
@@ -764,7 +809,6 @@
                     } else {
                         systems.forEach(s => s.stop());
                         if (trail) trail.isVisible = false;
-                        if (skeleton) skeleton.root.setEnabled(false);
                         this.lastPositions[i] = null;
                     }
                 });
@@ -837,12 +881,13 @@
                 const bones = [];
 
                 const mat = new BABYLON.StandardMaterial("skeletonMat" + index, this.scene);
-                mat.emissiveColor = new BABYLON.Color3(0.5, 1.0, 0.5); // Default Greenish
-                mat.alpha = 0.2; // V24.18: Transparency Hardening (Faded skeleton)
+                mat.emissiveColor = new BABYLON.Color3(0.8, 0.8, 0.8); // Bone White
+                mat.diffuseColor = new BABYLON.Color3(0.9, 0.9, 0.9);
+                mat.alpha = 0.12; // V24.18: Transparent Bone
                 mat.disableLighting = true;
 
                 for (let i = 0; i < 21; i++) {
-                    const sphere = BABYLON.MeshBuilder.CreateSphere("tm_" + index + "_" + i, { diameter: 0.1 }, this.scene);
+                    const sphere = BABYLON.MeshBuilder.CreateSphere("tm_" + index + "_" + i, { diameter: 0.12 }, this.scene);
                     sphere.material = mat;
                     sphere.parent = root;
                     spheres.push(sphere);
@@ -850,14 +895,15 @@
 
                 // Initial claw line
                 const claw = BABYLON.MeshBuilder.CreateLines("claw" + index, { points: [BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero()], updatable: true }, this.scene);
-                claw.color = new BABYLON.Color3(0, 1, 1); // Cyan Claw
+                claw.color = new BABYLON.Color3(0.9, 0.9, 1.0); // Bright Bone Claw
                 claw.parent = root;
+                claw.alpha = 0.2;
 
                 // Wire skeleton bones
                 HAND_CONNECTIONS.forEach((_, bIndex) => {
                     const bone = BABYLON.MeshBuilder.CreateLines("bone" + index + "_" + bIndex, { points: [BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero()], updatable: true }, this.scene);
-                    bone.color = new BABYLON.Color3(0.2, 0.3, 0.2); // Faint Green Bones
-                    bone.alpha = 0.15; // More transparent
+                    bone.color = new BABYLON.Color3(0.8, 0.8, 0.8);
+                    bone.alpha = 0.08; // Delicate Bone Structure
                     bone.parent = root;
                     bones.push(bone);
                 });
@@ -1522,9 +1568,11 @@
 
                             const rawCursorData = {
                                 screenX: finalX, screenY: finalY,
-                                normX: finalProjX, normY: projectedPoint.y,
+                                normX: finalX / width, normY: finalY / height,
+                                normZ: projectedPoint.z,
                                 fsmState: fsmStateNew, gesture: category,
                                 confidence, isPalmFacing, bucketLevel: bucket,
+                                skeletonAlpha: 1.0, // Tracking Present
                                 handIndex: i, pointerId: 10 + i, // V24.4: Stable Hand ID
                                 curls,
                                 landmarks: mirroredLandmarks, // Fixed: Mirrored landmarks
@@ -1567,7 +1615,9 @@
                                     screenY: coastPos.y,
                                     fsmState: 'COAST',
                                     bucketLevel: bucket,
+                                    skeletonAlpha: bucket / 100, // V24.22: Dwell-based fading
                                     handIndex: i,
+                                    landmarks: last.landmarks || [], // V24.22: Keep landmarks for fading
                                     timestamp: now
                                 });
                                 systemState.p1.fsmStates[i] = 'COAST';
@@ -1618,6 +1668,7 @@
         window.systemState = systemState;
         window.PlanckPhysicsAdapter = PlanckPhysicsAdapter;
         window.P1Bridger = P1Bridger;
+        window.drawResults = drawResults;
 
         // --- P0: SENSE ---
         async function initP0() {
@@ -1757,8 +1808,12 @@
 
                 const nx = cursor.screenX / (systemState.p0.videoBounds?.width || videoWidth);
                 const ny = cursor.screenY / (systemState.p0.videoBounds?.height || videoHeight);
-                const viewX = rectLeft + nx * rectWidth;
-                const viewY = rectTop + ny * rectHeight;
+
+                // V24.20: Interaction Parity Fix
+                // Use the centered visual bounds instead of raw container rect
+                const bounds = systemState.ui.viewBounds || { width: rectWidth, height: rectHeight, offsetX: 0, offsetY: 0 };
+                const viewX = rectLeft + bounds.offsetX + (nx * bounds.width);
+                const viewY = rectTop + bounds.offsetY + (ny * bounds.height);
 
                 const isDown = (cursor.fsmState === 'COMMIT' || cursor.fsmState === 'COAST');
                 const pressure = isDown ? (cursor.fsmState === 'COMMIT' ? 1.0 : 0.5) : 0.0;
@@ -2582,19 +2637,21 @@
             ctx.restore();
 
             // --- P0 ISR SKELETON (Restricted Bypass) ---
-            if (rawResults.landmarks && systemState.parameters.landmarks.showSkeleton) {
-                const utils = new DrawingUtils(ctx);
-                rawResults.landmarks.forEach((landmarks, i) => {
-                    // V19.5: Flip skeleton landmarks for drawing if mirrored
-                    const drawLms = isMirror ? landmarks.map(l => ({ ...l, x: 1.0 - l.x })) : landmarks;
-                    utils.drawConnectors(drawLms, GestureRecognizer.HAND_CONNECTIONS, { color: 'rgba(255, 255, 255, 0.3)', lineWidth: 1 });
-                    utils.drawLandmarks(drawLms, { color: 'rgba(0, 255, 65, 0.5)', radius: 1 });
-                });
-            }
+            // V24.18: Consolidated skeleton drawing to Port 1 Fabric loop below for state-awareness.
 
             // --- PORT 1 FABRIC VISUALS (Enforced) ---
             cursors.forEach((c, i) => {
-                const { screenX, screenY, fsmState, rawX, rawY } = c;
+                const { screenX, screenY, fsmState, rawX, rawY, landmarks } = c;
+
+                // V24.19 Parity Fix: landmarks are already mirrored/processed by P1Bridger.
+                // Do NOT re-mirror them here.
+                if ((fsmState === 'IDLE' || fsmState === 'READY' || fsmState === 'COMMIT') && landmarks && landmarks.length > 0 && systemState.parameters.landmarks.showSkeleton) {
+                    const utils = new DrawingUtils(ctx);
+                    // Use landmarks directly from DataFabric
+                    utils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: 'rgba(255, 255, 255, 0.15)', lineWidth: 1.2 });
+                    utils.drawLandmarks(landmarks, { color: 'rgba(255, 255, 255, 0.2)', radius: 1 });
+                }
+
                 if (fsmState === 'IDLE') return;
 
                 const theme = systemState.parameters.physics.cursorTheme;
@@ -2827,13 +2884,45 @@
             let drawW = parentWidth, drawH = parentWidth / vRatio;
             if (drawH > parentHeight) { drawH = parentHeight; drawW = drawH * vRatio; }
 
-            // Set buffer size to match video source
+            // Set buffer size to match video source (High-fidelity sensing baseline)
             canvas.width = vw;
             canvas.height = vh;
 
-            // Set CSS display size to fit layout
-            canvas.style.width = `${drawW}px`;
-            canvas.style.height = `${drawH}px`;
+            // V24.19: Substrate Parity Alignment
+            // Center overlays to match object-fit: contain video centering
+            const offsetX = (parentWidth - drawW) / 2;
+            const offsetY = (parentHeight - drawH) / 2;
+
+            // V24.20: Store view bounds for coordinate transformation parity
+            systemState.ui.viewBounds = {
+                width: drawW,
+                height: drawH,
+                offsetX: offsetX,
+                offsetY: offsetY
+            };
+
+            // Sync all canvas elements (Overlay, Babylon, Pixi)
+            // V24.20: Including Excalidraw UI in the parity box
+            const substrates = [
+                canvas,
+                ...systemState.ui.juiceLayers.map(l => l.canvas || l.app?.view),
+                systemState.ui.excalidrawOverlay
+            ];
+
+            substrates.forEach(el => {
+                if (el) {
+                    el.style.position = 'absolute';
+                    el.style.left = `${offsetX}px`;
+                    el.style.top = `${offsetY}px`;
+                    el.style.width = `${drawW}px`;
+                    el.style.height = `${drawH}px`;
+                }
+            });
+
+            // Trigger engine resizes to match the new CSS bounds
+            systemState.ui.juiceLayers.forEach(l => {
+                if (l.resize) l.resize(drawW, drawH);
+            });
         }
 
         function logMission(msg, color = '#00ff41') {

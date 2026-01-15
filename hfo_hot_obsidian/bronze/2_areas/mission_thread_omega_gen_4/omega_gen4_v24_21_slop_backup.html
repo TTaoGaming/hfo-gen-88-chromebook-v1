@@ -1,13 +1,13 @@
-<!-- Medallion: Bronze | Mutation: 16% | HIVE: E -->
-<!-- OMEGA GEN 4 V24.16 (Exemplar Hybrid Trail: Geometric Core + Swept Veil) -->
-<!-- Evolution of v24.15: 30FPS Mobile Target + TrailMesh Backbone -->
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- OMEGA GEN 4 V24.21 (UX/HIG Alignment | Skeleton Lifecycle | Fade-on-Lost) -->
+<!-- Evolution of v24.20: Implementing skeleton fade-out when hand tracking is lost -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO OMEGA GEN 4 | V24.16</title>
+    <title>HFO OMEGA GEN 4 | V24.21</title>
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet"
@@ -269,6 +269,18 @@
 
         const isFlagEnabled = (key) => featureClient.getBooleanValue(key, false);
 
+        // --- HFO BASE CONSTANTS: Shared Registry [V24.21] ---
+        const HFO_CONSTANTS = {
+            msPerSec: 1000,
+            byteMaskCC00: 0xFFCC00,
+            byteMask4500: 0xFF4500,
+            byteMaskFFFF: 0xFFFFFF,
+            byteMaskD700: 0xFFD700,
+            redShift: 16,
+            greenShift: 8,
+            byteMask: 0xFF
+        };
+
         // --- MEDALLION LIFECYCLE: Resource Zero-Trust [V24.5] ---
         class LifecycleManager {
             constructor() {
@@ -312,7 +324,7 @@
             constructor() {
                 this.buffer = [];
                 this.isRecording = false;
-                this.maxEntries = 10000;
+                this.maxEntries = systemState.parameters.telemetry.maxEntries;
             }
             start() {
                 this.buffer = [];
@@ -343,7 +355,6 @@
                 URL.revokeObjectURL(url);
             }
         }
-        window.hfoTelemetry = new TelemetryRecorder();
 
         // --- TELEMETRY PLAYER: Golden Master Replay [V24.6] ---
         class TelemetryPlayer {
@@ -385,12 +396,13 @@
                 return frame;
             }
         }
-        window.hfoPlayer = new TelemetryPlayer();
 
         // --- P1: FUSE CONTRACTS (The Bridger) ---
         const ConfigSchema = z.object({
             camera: z.object({
                 resolution: z.enum(['640x480', '1280x720', '1920x1080']),
+                resolutionWidth: z.number().default(1280),
+                resolutionHeight: z.number().default(720),
                 fpsTarget: z.number().min(1).max(120),
                 mirror: z.boolean()
             }),
@@ -400,6 +412,13 @@
                 minPresenceConfidence: z.number().min(0).max(1),
                 numHands: z.number().min(1).max(4),
                 showSkeleton: z.boolean()
+            }),
+            constants: z.object({
+                msPerSec: z.number().default(1000)
+            }),
+            interaction: z.object({
+                domDepthLimit: z.number().default(5),
+                pulseSettleMs: z.number().default(10)
             }),
             gestures: z.object({
                 minGestureConfidence: z.number().min(0).max(1),
@@ -414,9 +433,11 @@
                 hysteresisLow: z.number().min(0).max(100),
                 chargeTimeMs: z.number().min(1),
                 releaseTimeMs: z.number().min(1),
-                coastDrainTimeMs: z.number().min(1), // Added for V16
+                coastDrainTimeMs: z.number().min(1),
                 tensionMs: z.number().min(0),
-                commitExitDelayMs: z.number().min(0)
+                commitExitDelayMs: z.number().min(0),
+                maxBucketLevel: z.number().default(100),
+                pointerIdOffset: z.number().default(10)
             }),
             coasting: z.object({
                 timeoutMs: z.number().min(0),
@@ -436,11 +457,273 @@
                 fireIntensity: z.number().min(0.1).default(1.0),
                 palmRodMultiplier: z.number().min(0.5).max(10), // V18: Palm-width based scaling
                 showLaserBeam: z.boolean(),
-                predictiveLookahead: z.number().min(0)
+                predictiveLookahead: z.number().min(0),
+                scalePxToM: z.number().min(10).max(1000).default(100.0),
+                planckLinearDamping: z.number().default(2.0),
+                planckAngularDamping: z.number().default(5.0),
+                planckFixtureRadius: z.number().default(0.1),
+                planckFixtureDensity: z.number().default(1.0),
+                planckFixtureFriction: z.number().default(0.3),
+                planckMaxStepDt: z.number().default(0.033),
+                planckDefaultStiffness: z.number().default(5.0),
+                planckDefaultDamping: z.number().default(0.7),
+                oneEuroDefaultMinCutoff: z.number().default(1.0),
+                oneEuroDefaultBeta: z.number().default(0.0),
+                oneEuroDerivCutoff: z.number().default(1.0),
+                oneEuroRateFallback: z.number().default(30),
+                massSpringDefaultStiffness: z.number().default(0.15),
+                massSpringDefaultDamping: z.number().default(0.05),
+                worldProjectionPrecision: z.number().default(0.0001),
+                normalZThreshold: z.number().default(0.7),
+                normalZMultiplier: z.number().default(0.5)
             }),
             anatomy: z.object({
                 palmWidthCm: z.number().min(3).max(15),
-                rodExtensionMultiplier: z.number().min(0.1).max(10)
+                rodExtensionMultiplier: z.number().min(0.1).max(10),
+                skeletonDepthMultiplier: z.number().min(1).max(5).default(1.5),
+                mathEpsilon: z.number().default(1e-6),
+                landmarkZScale: z.number().default(0.1),
+                handSkeletonMap: z.array(z.array(z.number())).default([
+                    [0, 1], [1, 2], [2, 3], [3, 4], // thumb
+                    [0, 5], [5, 6], [6, 7], [7, 8], // index
+                    [0, 9], [9, 10], [10, 11], [11, 12], // middle
+                    [0, 13], [13, 14], [14, 15], [15, 16], // ring
+                    [0, 17], [17, 18], [18, 19], [19, 20], // pinky
+                    [5, 9], [9, 13], [13, 17] // palm
+                ]),
+                indices: z.object({
+                    WRIST: z.number().default(0),
+                    INDEX_MCP: z.number().default(5),
+                    INDEX_TIP: z.number().default(8),
+                    MIDDLE_MCP: z.number().default(9),
+                    RING_MCP: z.number().default(13),
+                    PINKY_MCP: z.number().default(17),
+                    THUMB_TIP: z.number().default(4)
+                }).default({
+                    WRIST: 0,
+                    INDEX_MCP: 5,
+                    INDEX_TIP: 8,
+                    MIDDLE_MCP: 9,
+                    RING_MCP: 13,
+                    PINKY_MCP: 17,
+                    THUMB_TIP: 4
+                }),
+                curlGroups: z.object({
+                    index: z.array(z.number()).default([5, 6, 7, 8]),
+                    middle: z.array(z.number()).default([9, 10, 11, 12]),
+                    ring: z.array(z.number()).default([13, 14, 15, 16]),
+                    pinky: z.array(z.number()).default([17, 18, 19, 20])
+                }).default({
+                    index: [5, 6, 7, 8],
+                    middle: [9, 10, 11, 12],
+                    ring: [13, 14, 15, 16],
+                    pinky: [17, 18, 19, 20]
+                })
+            }),
+            visuals: z.object({
+                engine: z.enum(['BABYLON', 'PIXI']),
+                variant: z.string(),
+                skeletonAlphaSphere: z.number().min(0).max(1).default(0.12),
+                skeletonAlphaBone: z.number().min(0).max(1).default(0.08),
+                skeletonAlphaClaw: z.number().min(0).max(1).default(0.2),
+                skeletonFadeSpeed: z.number().min(0.01).max(1.0).default(0.18),
+                cameraPosition: z.object({ x: z.number(), y: z.number(), z: z.number() }).default({ x: 0, y: 0, z: -10 }),
+                lightPosition: z.object({ x: z.number(), y: z.number(), z: z.number() }).default({ x: 0, y: 0, z: -5 }),
+                lightIntensity: z.number().default(0.8),
+                perfLerpFactor: z.number().default(0.95),
+                perfMin: z.number().default(0.2),
+                perfMax: z.number().default(1.5),
+                trailAlpha: z.number().default(0.2),
+                trailCommitAlpha: z.number().default(0.3),
+                trailCommitColor: z.object({ r: z.number(), g: z.number(), b: z.number() }).default({ r: 0, g: 0.7, b: 1 }),
+                trailReadyColor: z.object({ r: z.number(), g: z.number(), b: z.number() }).default({ r: 1, g: 0.4, b: 0 }),
+                boneColor: z.object({ r: z.number(), g: z.number(), b: z.number() }).default({ r: 0.8, g: 0.8, b: 0.8 }),
+                clawColor: z.object({ r: z.number(), g: z.number(), b: z.number() }).default({ r: 0.9, g: 0.9, b: 1.0 }),
+                fire: z.object({
+                    highSpeedMultiplier: z.number().default(20),
+                    lowSpeedMultiplier: z.number().default(10),
+                    highDensityMax: z.number().default(2.5),
+                    lowDensityMax: z.number().default(2.0),
+                    highBaseRate: z.number().default(600),
+                    lowBaseRate: z.number().default(250),
+                    highJitter: z.number().default(0.03),
+                    lowJitter: z.number().default(0.06),
+                    highMinSize: z.number().default(0.06),
+                    lowMinSize: z.number().default(0.1),
+                    highMaxSize: z.number().default(0.24),
+                    lowMaxSize: z.number().default(0.3),
+                    highMinLife: z.number().default(0.25),
+                    lowMinLife: z.number().default(0.4),
+                    highMaxLife: z.number().default(0.5),
+                    lowMaxLife: z.number().default(0.8),
+                    highGravityY: z.number().default(4),
+                    lowGravityY: z.number().default(2),
+                    alpha1: z.number().default(0.4),
+                    alpha2: z.number().default(0.2),
+                    colorMultiplier: z.number().default(0.5)
+                }).default({}),
+                skeleton: z.object({
+                    sphereDiameter: z.number().default(0.12),
+                    sphereCount: z.number().default(21),
+                    trailDiameter: z.number().default(0.08),
+                    trailLength: z.number().default(30),
+                    emitterDiameter: z.number().default(0.05),
+                    alphaThreshold: z.number().default(0.01),
+                    lifecycleAlphaThreshold: z.number().default(0.01),
+                    fireMinEmitBoxScale: z.number().default(-0.8),
+                    fireMaxEmitBoxScale: z.number().default(-1.0),
+                    fireJitterY: z.number().default(-0.02),
+                    fireBoxY: z.number().default(0.02)
+                }).default({}),
+                particles: z.object({
+                    minEmitBox: z.object({ x: z.number(), y: z.number(), z: z.number() }).default({ x: -0.05, y: 0, z: -0.05 }),
+                    maxEmitBox: z.object({ x: z.number(), y: z.number(), z: z.number() }).default({ x: 0.05, y: 0, z: 0.05 }),
+                    minLifeTime: z.number().default(0.1),
+                    maxLifeTime: z.number().default(0.3),
+                    gravity: z.object({ x: z.number(), y: z.number(), z: z.number() }).default({ x: 0, y: 2, z: 0 }),
+                    minBloomSize: z.number().default(0.1)
+                }).default({}),
+                canvasCursors: z.object({
+                    fireSizeBase: z.number().default(15),
+                    fireSizeCommit: z.number().default(25),
+                    pulseRate: z.number().default(250),
+                    pulseMagnitude: z.number().default(3),
+                    sparkCountCommit: z.number().default(5),
+                    sparkCountReady: z.number().default(2),
+                    sparkDuration: z.number().default(1000),
+                    sparkSpreadX: z.number().default(30),
+                    sparkSpreadY: z.number().default(10),
+                    sparkRise: z.number().default(60),
+                    shadowBlur: z.number().default(10),
+                    arcSizeCommit: z.number().default(8),
+                    arcSizeReady: z.number().default(5),
+                    ghostSize: z.number().default(12),
+                    crosshairSize: z.number().default(10),
+                    rippleSizeBase: z.number().default(15),
+                    rippleSizeCommit: z.number().default(25),
+                    ripplePulseRate: z.number().default(150),
+                    waterWaveSteps: z.number().default(20),
+                    waterWaveFrequency: z.number().default(150),
+                    waterWaveScale: z.number().default(5),
+                    waterWaveMagnitude: z.number().default(10),
+                    fireballBloomScale: z.number().default(4),
+                    fireballPulseRate: z.number().default(150),
+                    fireballPulseMagnitude: z.number().default(0.5),
+                    fireballSpikeCount: z.number().default(8),
+                    fireballSpikeRate: z.number().default(200),
+                    fireballSpikeLengthScale: z.number().default(2.5),
+                    fireballSpikeFrequency: z.number().default(50),
+                    fireballSpikeMagnitude: z.number().default(0.8),
+                    juiceThreshold: z.number().default(5),
+                    // HFO Expansion Pack
+                    gridSteps: z.number().default(8),
+                    gridAlpha: z.number().default(0.2),
+                    skeletonConnectorAlpha: z.number().default(0.15),
+                    skeletonLandmarkAlpha: z.number().default(0.2),
+                    skeletonLineWidth: z.number().default(1.2),
+                    skeletonRadius: z.number().default(5),
+                    skeletonRadiusMultiplier: z.number().default(1.5),
+                    skeletonAlphaReady: z.number().default(0.4),
+                    skeletonAlphaCommit: z.number().default(0.9),
+                    skeletonAlphaCoast: z.number().default(0.1),
+                    whiteCoreAlpha: z.number().default(0.4),
+                    whiteCoreWidth: z.number().default(1),
+                    ripplePulseMagnitude: z.number().default(5),
+                    bubbleOrbitSpeed: z.number().default(500),
+                    bubbleCount: z.number().default(8),
+                    facingDotSize: z.number().default(4),
+                    normalLineAlpha: z.number().default(0.3),
+                    depthRingAlpha: z.number().default(0.4),
+                    gradStopA: z.number().default(0),
+                    gradStopB: z.number().default(0.4),
+                    gradStopC: z.number().default(1),
+                    glowTimeDivisor: z.number().default(1000),
+                    glowColorOffset: z.number().default(100),
+                    panelAlpha: z.number().default(0.05),
+                    anchorX: z.number().default(0.5),
+                    anchorY: z.number().default(0.85),
+                    randomThreshold: z.number().default(0.8),
+                    arcSizeCommitFactor: z.number().default(2.5),
+                    arcSizeReadyFactor: z.number().default(1.5),
+                    historyLimit: z.number().default(88),
+                    goldilocksThreshold: z.number().default(0.88),
+                    dashLength: z.number().default(2),
+                    dashGap: z.number().default(2),
+                    radiusBase: z.number().default(40),
+                    gageWidth: z.number().default(12),
+                    gageHeight: z.number().default(80),
+                    gageOffset: z.number().default(20),
+                    sparklinePadding: z.number().default(10),
+                    shadowBlurPalm: z.number().default(15),
+                    bucketWidth: z.number().default(12),
+                    bucketHeight: z.number().default(80),
+                    bucketOffset: z.number().default(20),
+                    uiLineOffset: z.number().default(2),
+                    uiIndicatorOffset: z.number().default(5)
+                }).default({}),
+                pixi: z.object({
+                    glowSizeLarge: z.number().default(128),
+                    glowSizeSmall: z.number().default(64),
+                    colorGold: z.number().default(HFO_CONSTANTS.byteMaskCC00),
+                    colorRed: z.number().default(HFO_CONSTANTS.byteMask4500),
+                    colorWhite: z.number().default(HFO_CONSTANTS.byteMaskFFFF),
+                    readyLayerCount: z.number().default(4),
+                    sparklineSteps: z.number().default(64),
+                    commitLayerCount: z.number().default(6),
+                    timerIncrement: z.number().default(0.05),
+                    readyPulseScaleBase: z.number().default(1.2),
+                    readyPulseScaleMagnitude: z.number().default(0.3),
+                    readyPhaseOffset: z.number().default(0.8),
+                    readyPulseRate: z.number().default(0.8),
+                    readyRotationBase: z.number().default(0.5),
+                    readyRotationStep: z.number().default(0.1),
+                    readyAlphaBase: z.number().default(0.4),
+                    readyAlphaFreq: z.number().default(1.5),
+                    readyAlphaMag: z.number().default(0.2),
+                    commitPhaseRate: z.number().default(2.0),
+                    commitPhaseStep: z.number().default(0.5),
+                    commitFreq: z.number().default(0.7),
+                    commitXStep: z.number().default(3),
+                    commitScaleXBase: z.number().default(0.6),
+                    commitScaleXMag: z.number().default(0.2),
+                    commitScaleYBase: z.number().default(1.8),
+                    commitScaleYFreq: z.number().default(1.3),
+                    commitScaleYMag: z.number().default(0.6),
+                    commitAlphaBase: z.number().default(0.8),
+                    commitAlphaStep: z.number().default(10),
+                    sparkProb: z.number().default(0.8),
+                    sparkSize: z.number().default(2),
+                    sparkVxMag: z.number().default(4),
+                    sparkVyBase: z.number().default(-4),
+                    sparkVyMag: z.number().default(6),
+                    sparkDecayBase: z.number().default(0.02),
+                    sparkDecayMag: z.number().default(0.03),
+                    sparkGravity: z.number().default(0.08),
+                    sparkFriction: z.number().default(0.95)
+                }).default({}),
+                colors: z.object({
+                    commit: z.array(z.string()).default(['rgba(255, 255, 255, 1.0)', 'rgba(255, 69, 0, 0.8)', 'rgba(255, 140, 0, 0.6)']),
+                    ready: z.array(z.string()).default(['rgba(255, 255, 255, 0.6)', 'rgba(255, 195, 0, 0.5)', 'rgba(255, 69, 0, 0.3)']),
+                    coast: z.array(z.string()).default(['rgba(255, 255, 255, 0.2)', 'rgba(255, 140, 0, 0.2)', 'rgba(128, 0, 0, 0.1)']),
+                    waterCommit: z.array(z.string()).default(['rgba(255, 255, 255, 1.0)', 'rgba(0, 191, 255, 0.8)', 'rgba(0, 123, 255, 0.6)']),
+                    waterReady: z.array(z.string()).default(['rgba(255, 255, 255, 0.6)', 'rgba(173, 216, 230, 0.5)', 'rgba(0, 191, 255, 0.3)']),
+                    waterCoast: z.array(z.string()).default(['rgba(255, 255, 255, 0.2)', 'rgba(224, 247, 250, 0.2)', 'rgba(178, 235, 242, 0.1)']),
+                    fireballCommit: z.array(z.string()).default(['rgba(255, 255, 255, 1.0)', 'rgba(255, 236, 61, 0.9)', 'rgba(255, 77, 79, 0.8)', 'rgba(255, 30, 0, 0)']),
+                    fireballReady: z.array(z.string()).default(['rgba(255, 255, 255, 0.8)', 'rgba(255, 251, 143, 0.7)', 'rgba(255, 169, 64, 0.6)', 'rgba(255, 169, 64, 0)']),
+                    fireballCoast: z.array(z.string()).default(['rgba(255, 255, 255, 0.4)', 'rgba(145, 213, 255, 0.3)', 'rgba(9, 109, 217, 0.2)', 'rgba(9, 109, 217, 0)']),
+                    spark: z.string().default('#FFD700'),
+                    qCommit: z.string().default('#FF4136'),
+                    qReady: z.string().default('#FFD700'),
+                    qIdle: z.string().default('#0074D9'),
+                    white: z.string().default('#fff'),
+                    bLight: z.object({ r: z.number(), g: z.number(), b: z.number() }).default({ r: 1, g: 0.4, b: 0.1 }),
+                    bFire1: z.object({ r: z.number(), g: z.number(), b: z.number(), a: z.number() }).default({ r: 1.0, g: 0.6, b: 0.1, a: 1.0 }),
+                    bFire2: z.object({ r: z.number(), g: z.number(), b: z.number(), a: z.number() }).default({ r: 1, g: 0.2, b: 0, a: 0.5 }),
+                    bFireDead: z.object({ r: z.number(), g: z.number(), b: z.number(), a: z.number() }).default({ r: 0, g: 0, b: 0, a: 0 })
+                }).default({})
+            }),
+            telemetry: z.object({
+                maxEntries: z.number().default(10000)
             })
         });
 
@@ -456,6 +739,7 @@
             screenY: z.number(),
             normX: z.number(),
             normY: z.number(),
+            normZ: z.number(), // V24.21: Depth Parity
             rawX: z.number(), // V18: Required for laser origin
             rawY: z.number(), // V18: Required for laser origin
             fsmState: z.enum(['IDLE', 'READY', 'COMMIT', 'COAST']),
@@ -495,6 +779,8 @@
             parameters: {
                 camera: { resolution: '1280x720', fpsTarget: 30, mirror: true },
                 landmarks: { minConfidence: 0.5, minTrackingConfidence: 0.5, minPresenceConfidence: 0.5, numHands: 2, showSkeleton: true },
+                constants: HFO_CONSTANTS,
+                interaction: { domDepthLimit: 5, pulseSettleMs: 10 },
                 gestures: { minGestureConfidence: 0.7, preferredHand: 'Any' },
                 palm: { enterThreshold: 0.80, exitThreshold: 0.64 },
                 fsm: {
@@ -504,7 +790,9 @@
                     releaseTimeMs: 200,
                     coastDrainTimeMs: 1200, // Slower drain for Inertia [V16]
                     tensionMs: 100,
-                    commitExitDelayMs: 250
+                    commitExitDelayMs: 250,
+                    maxBucketLevel: 100,
+                    pointerIdOffset: 10
                 },
                 coasting: { timeoutMs: 150, confidenceThreshold: 0.4 },
                 physics: {
@@ -522,12 +810,53 @@
                     showTrailMesh: false, // V24.17: Off by default
                     showHFOClaw: false, // V24.18: Off by default
                     predictiveLookahead: 0.5,
+                    scalePxToM: 100.0,
+                    planckLinearDamping: 2.0,
+                    planckAngularDamping: 5.0,
+                    planckFixtureRadius: 0.1,
+                    planckFixtureDensity: 1.0,
+                    planckFixtureFriction: 0.3,
+                    planckMaxStepDt: 0.033,
+                    planckDefaultStiffness: 5.0,
+                    planckDefaultDamping: 0.7,
+                    oneEuroDefaultMinCutoff: 1.0,
+                    oneEuroDefaultBeta: 0.0,
+                    oneEuroRateFallback: 30,
+                    massSpringDefaultStiffness: 0.15,
+                    massSpringDefaultDamping: 0.05,
+                    worldProjectionPrecision: 0.0001,
                     fireScale: 2.0, // V24.11 Default
                     fireIntensity: 2.0 // V24.11 Default
                 },
                 anatomy: {
                     palmWidthCm: 8,
-                    rodExtensionMultiplier: 0.125
+                    rodExtensionMultiplier: 0.125,
+                    skeletonDepthMultiplier: 1.5,
+                    mathEpsilon: 1e-6,
+                    landmarkZScale: 0.1,
+                    handSkeletonMap: [
+                        [0, 1], [1, 2], [2, 3], [3, 4], // thumb
+                        [0, 5], [5, 6], [6, 7], [7, 8], // index
+                        [0, 9], [9, 10], [10, 11], [11, 12], // middle
+                        [0, 13], [13, 14], [14, 15], [15, 16], // ring
+                        [0, 17], [17, 18], [18, 19], [19, 20], // pinky
+                        [5, 9], [9, 13], [13, 17] // palm
+                    ],
+                    indices: {
+                        WRIST: 0,
+                        INDEX_MCP: 5,
+                        INDEX_TIP: 8,
+                        MIDDLE_MCP: 9,
+                        RING_MCP: 13,
+                        PINKY_MCP: 17,
+                        THUMB_TIP: 4
+                    },
+                    curlGroups: {
+                        index: [5, 6, 7, 8],
+                        middle: [9, 10, 11, 12],
+                        ring: [13, 14, 15, 16],
+                        pinky: [17, 18, 19, 20]
+                    }
                 },
                 excalidraw: {
                     opacity: 0.8,
@@ -536,7 +865,182 @@
                 },
                 visuals: {
                     engine: 'BABYLON',
-                    variant: 'PHOENIX_CORE'
+                    variant: 'PHOENIX_CORE',
+                    skeletonAlphaSphere: 0.12,
+                    skeletonAlphaBone: 0.08,
+                    skeletonAlphaClaw: 0.2,
+                    skeletonFadeSpeed: 0.18,
+                    cameraPosition: { x: 0, y: 0, z: -10 },
+                    lightPosition: { x: 0, y: 0, z: -5 },
+                    lightIntensity: 0.8,
+                    perfLerpFactor: 0.95,
+                    perfMin: 0.2,
+                    perfMax: 1.5,
+                    trailAlpha: 0.2,
+                    trailCommitAlpha: 0.3,
+                    trailCommitColor: { r: 0, g: 0.7, b: 1 },
+                    trailReadyColor: { r: 1, g: 0.4, b: 0 },
+                    boneColor: { r: 0.8, g: 0.8, b: 0.8 },
+                    clawColor: { r: 0.9, g: 0.9, b: 1.0 },
+                    fire: {
+                        highSpeedMultiplier: 20,
+                        lowSpeedMultiplier: 10,
+                        highDensityMax: 2.5,
+                        lowDensityMax: 2.0,
+                        highBaseRate: 600,
+                        lowBaseRate: 250,
+                        highJitter: 0.03,
+                        lowJitter: 0.06,
+                        highMinSize: 0.06,
+                        lowMinSize: 0.1,
+                        highMaxSize: 0.24,
+                        lowMaxSize: 0.3,
+                        highMinLife: 0.25,
+                        lowMinLife: 0.4,
+                        highMaxLife: 0.5,
+                        lowMaxLife: 0.8,
+                        highGravityY: 4,
+                        lowGravityY: 2
+                    },
+                    skeleton: {
+                        sphereDiameter: 0.12,
+                        sphereCount: 21,
+                        trailDiameter: 0.08,
+                        trailLength: 30,
+                        emitterDiameter: 0.05,
+                        alphaThreshold: 0.01,
+                        lifecycleAlphaThreshold: 0.01,
+                        fireMinEmitBoxScale: -0.8,
+                        fireMaxEmitBoxScale: -1.0,
+                        fireJitterY: -0.02,
+                        fireBoxY: 0.02
+                    },
+                    particles: {
+                        minEmitBox: { x: -0.05, y: 0, z: -0.05 },
+                        maxEmitBox: { x: 0.05, y: 0, z: 0.05 },
+                        minLifeTime: 0.1,
+                        maxLifeTime: 0.3,
+                        gravity: { x: 0, y: 2, z: 0 }
+                    },
+                    canvasCursors: {
+                        fireSizeBase: 15,
+                        fireSizeCommit: 25,
+                        pulseRate: 250,
+                        pulseMagnitude: 3,
+                        sparkCountCommit: 5,
+                        sparkCountReady: 2,
+                        sparkDuration: 1000,
+                        sparkSpreadX: 30,
+                        sparkSpreadY: 10,
+                        sparkRise: 60,
+                        shadowBlur: 10,
+                        arcSizeCommit: 8,
+                        arcSizeReady: 5,
+                        ghostSize: 12,
+                        crosshairSize: 10,
+                        juiceThreshold: 5,
+                        // UX Parameterization [V24.21]
+                        waterWaveSteps: 20,
+                        waterWaveFrequency: 150,
+                        waterWaveScale: 5,
+                        waterWaveMagnitude: 10,
+                        whiteCoreAlpha: 0.4,
+                        whiteCoreWidth: 1,
+                        rippleSizeBase: 15,
+                        rippleSizeCommit: 25,
+                        ripplePulseRate: 150,
+                        ripplePulseMagnitude: 5,
+                        bubbleCount: 8,
+                        glowTimeDivisor: 1000,
+                        skeletonRadiusMultiplier: 1.5,
+                        skeletonAlphaReady: 0.4,
+                        skeletonAlphaCoast: 0.1,
+                        skeletonRadius: 5,
+                        panelAlpha: 0.05,
+                        gridAlpha: 0.2,
+                        dashLength: 2,
+                        dashGap: 2,
+                        radiusBase: 40,
+                        depthRingAlpha: 0.4,
+                        normalLineAlpha: 0.3,
+                        facingDotSize: 4,
+                        shadowBlurPalm: 15,
+                        goldilocksThreshold: 0.88,
+                        gageWidth: 12,
+                        gageOffset: 20,
+                        sparklinePadding: 10,
+                        uiLineOffset: 2,
+                        uiIndicatorOffset: 5,
+                        bucketWidth: 12,
+                        bucketHeight: 80,
+                        bucketOffset: 20,
+                        historyLimit: 88,
+                        gridSteps: 8,
+                        glowColorOffset: 100,
+                        arcSizeCommitFactor: 2.5,
+                        arcSizeReadyFactor: 1.5,
+                        gradStopA: 0,
+                        gradStopB: 0.4,
+                        gradStopC: 1
+                    },
+                    pixi: {
+                        glowSizeLarge: 128,
+                        glowSizeSmall: 64,
+                        colorGold: HFO_CONSTANTS.byteMaskCC00,
+                        colorRed: HFO_CONSTANTS.byteMask4500,
+                        colorWhite: HFO_CONSTANTS.byteMaskFFFF,
+                        readyLayerCount: 4,
+                        commitLayerCount: 6,
+                        timerIncrement: 0.05,
+                        readyPulseScaleBase: 1.2,
+                        readyPulseScaleMagnitude: 0.3,
+                        readyPhaseOffset: 0.8,
+                        readyPulseRate: 0.8,
+                        readyRotationBase: 0.5,
+                        readyRotationStep: 0.1,
+                        readyAlphaBase: 0.4,
+                        readyAlphaFreq: 1.5,
+                        readyAlphaMag: 0.2,
+                        commitPhaseRate: 2.0,
+                        commitPhaseStep: 0.5,
+                        commitFreq: 0.7,
+                        commitXStep: 3,
+                        commitScaleXBase: 0.6,
+                        commitScaleXMag: 0.2,
+                        commitScaleYBase: 1.8,
+                        commitScaleYFreq: 1.3,
+                        commitScaleYMag: 0.6,
+                        commitAlphaBase: 0.8,
+                        commitAlphaStep: 10,
+                        sparkProb: 0.8,
+                        sparkSize: 2,
+                        sparkVxMag: 4,
+                        sparkVyBase: -4,
+                        sparkVyMag: 6,
+                        sparkDecayBase: 0.02,
+                        sparkDecayMag: 0.03,
+                        sparkGravity: 0.08
+                    },
+                    colors: {
+                        commit: ['rgba(255, 255, 255, 1.0)', 'rgba(255, 69, 0, 0.8)', 'rgba(255, 140, 0, 0.6)'],
+                        ready: ['rgba(255, 255, 255, 0.6)', 'rgba(255, 195, 0, 0.5)', 'rgba(255, 69, 0, 0.3)'],
+                        coast: ['rgba(255, 255, 255, 0.2)', 'rgba(255, 140, 0, 0.2)', 'rgba(128, 0, 0, 0.1)'],
+                        spark: '#FFD700',
+                        qCommit: '#FF4136',
+                        qReady: '#FFD700',
+                        qIdle: '#0074D9',
+                        white: '#fff',
+                        bLight: { r: 1, g: 0.4, b: 0.1 },
+                        bFire1: { r: 1.0, g: 0.6, b: 0.1, a: 1.0 },
+                        bFire2: { r: 1, g: 0.2, b: 0, a: 0.5 },
+                        bFireDead: { r: 0, g: 0, b: 0, a: 0 }
+                    },
+                    particleMaxCount: 2000,
+                    particleEmitRate: 400,
+                    particleTexture: "https://playground.babylonjs.com/textures/flare.png"
+                },
+                telemetry: {
+                    maxEntries: 10000
                 },
                 p0Active: false,
                 devMode: false
@@ -566,20 +1070,22 @@
                 directionFilters: [null, null, null, null], // V19.2: Stabilize rod direction
                 physicsState: [null, null, null, null] // Mass-Spring state
             },
-            ui: { gestures: null, palm: null, palmCtx: null, fsm: null, fsmCtx: null, juiceLayers: [] },
+            ui: {
+                gestures: null,
+                palm: null,
+                palmCtx: null,
+                fsm: null,
+                fsmCtx: null,
+                juiceLayers: [],
+                viewBounds: { width: 0, height: 0, offsetX: 0, offsetY: 0 }
+            },
             dataFabric: { cursors: [], systemTime: 0, frameId: 0 }
         };
 
-        // --- P4: VISUAL JUICE (BabylonJS Substrate) ---
-        const HAND_CONNECTIONS = [
-            [0, 1], [1, 2], [2, 3], [3, 4], // thumb
-            [0, 5], [5, 6], [6, 7], [7, 8], // index
-            [0, 9], [9, 10], [10, 11], [11, 12], // middle
-            [0, 13], [13, 14], [14, 15], [15, 16], // ring
-            [0, 17], [17, 18], [18, 19], [19, 20], // pinky
-            [5, 9], [9, 13], [13, 17] // palm
-        ];
+        window.hfoTelemetry = new TelemetryRecorder();
+        window.hfoPlayer = new TelemetryPlayer();
 
+        // --- P4: VISUAL JUICE (BabylonJS Substrate) ---
         class BabylonJuiceSubstrate {
             constructor(container) {
                 // V24.4: Hard Enforcement of Single-Engine Invariant
@@ -601,17 +1107,19 @@
                 this.scene = new BABYLON.Scene(this.engine);
                 this.scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
 
-                this.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0, -10), this.scene);
+                const v = systemState.parameters.visuals;
+                this.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(v.cameraPosition.x, v.cameraPosition.y, v.cameraPosition.z), this.scene);
                 this.camera.setTarget(BABYLON.Vector3.Zero());
 
-                this.light = new BABYLON.PointLight("light1", new BABYLON.Vector3(0, 0, -5), this.scene);
-                this.light.intensity = 0.8;
-                this.light.diffuse = new BABYLON.Color3(1, 0.4, 0.1);
+                this.light = new BABYLON.PointLight("light1", new BABYLON.Vector3(v.lightPosition.x, v.lightPosition.y, v.lightPosition.z), this.scene);
+                this.light.intensity = v.lightIntensity;
+                this.light.diffuse = new BABYLON.Color3(v.colors.bLight.r, v.colors.bLight.g, v.colors.bLight.b);
 
                 this.emitterRoots = [];
                 this.particleSystems = [];
                 this.trails = []; // V24.16: Hybrid Geometric Core
                 this.skeletons = []; // V24.17: Skeletal Data Fabric
+                this.skeletonAlphas = []; // V24.21: Skeleton Fade Lifecycle
                 this.lastPositions = [];
                 this.perfMultiplier = 1.0; // V24.14: Adaptive Performance Scaling
 
@@ -619,13 +1127,14 @@
                     if (this.canvas && this.canvas.style.display !== 'none') {
                         this.scene.render();
 
-                        // V24.15: 30FPS Mobile Optimization Target
+                        // V24.15: Mobile Optimization Target
                         const fps = this.engine.getFps();
                         if (fps > 0) {
-                            const target = 30; // 30Hz Baseline for Midrange Mobile
-                            const factor = fps / target;
-                            this.perfMultiplier = this.perfMultiplier * 0.95 + factor * 0.05;
-                            this.perfMultiplier = Math.max(0.2, Math.min(this.perfMultiplier, 1.5));
+                            const params = systemState.parameters;
+                            const target = params.camera.fpsTarget || params.physics.oneEuroRateFallback;
+                            const v = params.visuals;
+                            this.perfMultiplier = this.perfMultiplier * v.perfLerpFactor + (fps / target) * (1.0 - v.perfLerpFactor);
+                            this.perfMultiplier = Math.max(v.perfMin, Math.min(this.perfMultiplier, v.perfMax));
                         }
                     }
                 });
@@ -669,6 +1178,42 @@
                     const skeleton = this.skeletons[i];
 
                     const isActive = (c.fsmState !== 'IDLE');
+                    const isCoast = (c.fsmState === 'COAST');
+                    const showSkeleton = systemState.parameters.landmarks.showSkeleton;
+                    const hasLandmarks = !!(c.landmarks && c.landmarks.length > 0);
+
+                    // V24.18: Sovereign Skeleton Visibility (IDLE, READY, COMMIT)
+                    if (skeleton && hasLandmarks) {
+                        // Always update positions if we have landmarks
+                        c.landmarks.forEach((lm, lIndex) => {
+                            const targetZ = lm.z * systemState.parameters.anatomy.skeletonDepthMultiplier;
+                            const lmPos = this.projectToWorld(lm.x, lm.y, width, height, targetZ);
+                            skeleton.spheres[lIndex].position.copyFrom(lmPos);
+                        });
+
+                        const showClaw = systemState.parameters.physics.showHFOClaw || false;
+                        if (showClaw && isActive) {
+                            const targetPos = this.projectToWorld(c.normX, c.normY, width, height, (c.normZ || 0) * systemState.parameters.anatomy.skeletonDepthMultiplier);
+                            const tipPos = skeleton.spheres[8].position;
+                            const clawPoints = [tipPos, targetPos];
+                            skeleton.claw = BABYLON.MeshBuilder.CreateLines("claw" + i, { points: clawPoints, instance: skeleton.claw }, this.scene);
+                            const isCommit = (c.fsmState === 'COMMIT');
+                            const v = systemState.parameters.visuals;
+                            const cCol = v.trailCommitColor;
+                            const rCol = v.clawColor;
+                            skeleton.claw.color = isCommit ? new BABYLON.Color3(cCol.r, cCol.g, cCol.b) : new BABYLON.Color3(rCol.r, rCol.g, rCol.b);
+                        } else {
+                            skeleton.claw.setEnabled(false);
+                        }
+
+                        systemState.parameters.anatomy.handSkeletonMap.forEach((conn, bIndex) => {
+                            const p1 = skeleton.spheres[conn[0]].position;
+                            const p2 = skeleton.spheres[conn[1]].position;
+                            const bonePoints = [p1, p2];
+                            skeleton.bones[bIndex] = BABYLON.MeshBuilder.CreateLines("bone" + i + "_" + bIndex, { points: bonePoints, instance: skeleton.bones[bIndex] }, this.scene);
+                        });
+                    }
+
                     if (isActive) {
                         systems.forEach(s => { if (!s.isStarted()) s.start(); });
 
@@ -678,7 +1223,7 @@
                         }
 
                         // Pixel to World Projection for the pointer root
-                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height);
+                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height, (c.normZ || 0) * systemState.parameters.anatomy.skeletonDepthMultiplier);
 
                         let motionVector = BABYLON.Vector3.Zero();
                         if (this.lastPositions[i]) {
@@ -687,56 +1232,22 @@
                         this.lastPositions[i] = targetPos.clone();
                         root.position.copyFrom(targetPos);
 
-                        // V24.17: Skeletal Data Fabric Update
-                        const isCoast = (c.fsmState === 'COAST');
-                        const showSkeleton = systemState.parameters.landmarks.showSkeleton;
-                        if (skeleton) {
-                            skeleton.root.setEnabled(!isCoast && showSkeleton);
-                            if (!isCoast && showSkeleton && c.landmarks) {
-                                // Update 21 landmark spheres
-                                c.landmarks.forEach((lm, lIndex) => {
-                                    // V24.18: Align 3D project with original screen (x, y) at MediaPipe depth
-                                    const targetZ = lm.z * 1.5; // Scaled hand depth
-                                    const lmPos = this.projectToWorld(lm.x, lm.y, width, height, targetZ);
-                                    skeleton.spheres[lIndex].position.copyFrom(lmPos);
-                                });
-
-                                // Update Index Claw (Link from Tip 8 to pointer root)
-                                const showClaw = systemState.parameters.physics.showHFOClaw || false;
-                                skeleton.claw.setEnabled(showClaw);
-
-                                if (showClaw) {
-                                    const tipPos = skeleton.spheres[8].position;
-                                    const clawPoints = [tipPos, targetPos];
-                                    skeleton.claw = BABYLON.MeshBuilder.CreateLines("claw" + i, { points: clawPoints, instance: skeleton.claw }, this.scene);
-
-                                    // Set Claw Color based on state
-                                    const isCommit = (c.fsmState === 'COMMIT');
-                                    skeleton.claw.color = isCommit ? new BABYLON.Color3(0, 1, 1) : new BABYLON.Color3(1, 0.4, 0);
-                                }
-
-                                // Update wire skeleton bones
-                                HAND_CONNECTIONS.forEach((conn, bIndex) => {
-                                    const p1 = skeleton.spheres[conn[0]].position;
-                                    const p2 = skeleton.spheres[conn[1]].position;
-                                    const bonePoints = [p1, p2];
-                                    skeleton.bones[bIndex] = BABYLON.MeshBuilder.CreateLines("bone" + i + "_" + bIndex, { points: bonePoints, instance: skeleton.bones[bIndex] }, this.scene);
-                                });
-                            }
-                        }
-
                         // V24.10: Plasma Needle Scion (Fire Lab V3 Aesthetics)
                         const scale = systemState.parameters.physics.fireScale || 1.0;
                         const intensity = systemState.parameters.physics.fireIntensity || 1.0;
 
+                        const v = systemState.parameters.visuals;
+                        const cCol = v.trailCommitColor;
+                        const rCol = v.trailReadyColor;
+
                         if (c.fsmState === 'COMMIT') {
                             if (trail) {
-                                trail.material.emissiveColor = new BABYLON.Color3(0, 0.7, 1);
-                                trail.material.alpha = 0.3;
+                                trail.material.emissiveColor = new BABYLON.Color3(cCol.r, cCol.g, cCol.b);
+                                trail.material.alpha = v.trailCommitAlpha;
                             }
                             systems.forEach(s => {
-                                s.color1 = new BABYLON.Color4(0.0, 0.8, 1.0, 0.4);
-                                s.color2 = new BABYLON.Color4(0, 0.4, 1, 0.2);
+                                s.color1 = new BABYLON.Color4(cCol.r, cCol.g, cCol.b, systemState.parameters.visuals.fire.alpha1);
+                                s.color2 = new BABYLON.Color4(cCol.r * systemState.parameters.visuals.fire.colorMultiplier, cCol.g * systemState.parameters.visuals.fire.colorMultiplier, cCol.b, systemState.parameters.visuals.fire.alpha2);
                                 this.tuneFireSystem(s, motionVector, scale, intensity, true);
                             });
                         } else {
@@ -744,19 +1255,19 @@
                             const isCyan = (c.fsmState === 'COAST'); // Coast maintains visual of last state (often COMMIT)
                             if (isCyan) {
                                 // COAST keeps Cyan if it was COMMIT-ing
-                                if (trail) { trail.material.emissiveColor = new BABYLON.Color3(0, 0.7, 1); }
+                                if (trail) { trail.material.emissiveColor = new BABYLON.Color3(cCol.r, cCol.g, cCol.b); }
                                 systems.forEach(s => {
-                                    s.color1 = new BABYLON.Color4(0.0, 0.8, 1.0, 0.4);
-                                    s.color2 = new BABYLON.Color4(0, 0.4, 1, 0.2);
+                                    s.color1 = new BABYLON.Color4(cCol.r, cCol.g, cCol.b, systemState.parameters.visuals.fire.alpha1);
+                                    s.color2 = new BABYLON.Color4(cCol.r * systemState.parameters.visuals.fire.colorMultiplier, cCol.g * systemState.parameters.visuals.fire.colorMultiplier, cCol.b, systemState.parameters.visuals.fire.alpha2);
                                 });
                             } else {
                                 if (trail) {
-                                    trail.material.emissiveColor = new BABYLON.Color3(1, 0.4, 0);
-                                    trail.material.alpha = 0.2;
+                                    trail.material.emissiveColor = new BABYLON.Color3(rCol.r, rCol.g, rCol.b);
+                                    trail.material.alpha = v.trailAlpha;
                                 }
                                 systems.forEach(s => {
-                                    s.color1 = new BABYLON.Color4(1.0, 0.6, 0.1, 0.5);
-                                    s.color2 = new BABYLON.Color4(1, 0.2, 0, 0.2);
+                                    s.color1 = new BABYLON.Color4(rCol.r, rCol.g, rCol.b, 0.5);
+                                    s.color2 = new BABYLON.Color4(rCol.r, rCol.g * systemState.parameters.visuals.fire.colorMultiplier, 0, systemState.parameters.visuals.fire.alpha2);
                                     this.tuneFireSystem(s, motionVector, scale, intensity, false);
                                 });
                             }
@@ -764,8 +1275,31 @@
                     } else {
                         systems.forEach(s => s.stop());
                         if (trail) trail.isVisible = false;
-                        if (skeleton) skeleton.root.setEnabled(false);
                         this.lastPositions[i] = null;
+                    }
+                });
+
+                // V24.21: Skeleton Lifecycle Guard (Fade & Lifecycle)
+                this.skeletons.forEach((skeleton, i) => {
+                    if (!skeleton) return;
+
+                    const c = cursors.find(cur => cur.handIndex === i);
+                    const isCoast = c ? (c.fsmState === 'COAST') : true;
+                    const hasLandmarks = c ? (c.landmarks && c.landmarks.length > 0) : false;
+                    const showSkeleton = systemState.parameters.landmarks.showSkeleton;
+
+                    const targetAlpha = (!isCoast && showSkeleton && hasLandmarks && activeIndices.has(i)) ? 1.0 : 0.0;
+                    const speed = systemState.parameters.visuals.skeletonFadeSpeed;
+                    this.skeletonAlphas[i] = (this.skeletonAlphas[i] || 0) * (1.0 - speed) + targetAlpha * speed;
+
+                    if (this.skeletonAlphas[i] < systemState.parameters.visuals.skeleton.lifecycleAlphaThreshold) {
+                        skeleton.root.setEnabled(false);
+                    } else {
+                        skeleton.root.setEnabled(true);
+                        const v = systemState.parameters.visuals;
+                        if (skeleton.mat) skeleton.mat.alpha = v.skeletonAlphaSphere * this.skeletonAlphas[i];
+                        if (skeleton.claw) skeleton.claw.alpha = v.skeletonAlphaClaw * this.skeletonAlphas[i];
+                        skeleton.bones.forEach(b => { b.alpha = v.skeletonAlphaBone * this.skeletonAlphas[i]; });
                     }
                 });
 
@@ -778,7 +1312,7 @@
 
                         // If tracking is lost entirely (no bucket level), dispose of resources
                         const bucket = systemState.p1.buckets[i] || 0;
-                        if (bucket <= 0 && this.emitterRoots[i]) {
+                        if (bucket <= 0 && this.emitterRoots[i] && (this.skeletonAlphas[i] || 0) < systemState.parameters.visuals.skeleton.lifecycleAlphaThreshold) {
                             console.log(`[BABYLON] Pruning stale emitter for Hand ${i}`);
                             this.particleSystems[i]?.forEach(s => s.dispose());
                             this.trails[i]?.dispose();
@@ -807,7 +1341,7 @@
                     this.scene.getViewMatrix(), this.scene.getProjectionMatrix()
                 );
                 const direction = worldCoordFar.subtract(worldCoordNear).normalize();
-                if (Math.abs(direction.z) > 0.0001) {
+                if (Math.abs(direction.z) > systemState.parameters.physics.worldProjectionPrecision) {
                     const distance = (targetZ - worldCoordNear.z) / direction.z;
                     return worldCoordNear.add(direction.scale(distance));
                 }
@@ -816,33 +1350,38 @@
 
             tuneFireSystem(s, motionVector, scale, intensity, isHigh) {
                 const speed = motionVector.length();
-                const densityMultiplier = 1.0 + Math.min(speed * (isHigh ? 20 : 10), isHigh ? 2.5 : 2.0);
-                const baseRate = (isHigh ? 600 : 250) * scale;
+                const f = systemState.parameters.visuals.fire;
+                const sk = systemState.parameters.visuals.skeleton;
+                const densityMultiplier = 1.0 + Math.min(speed * (isHigh ? f.highSpeedMultiplier : f.lowSpeedMultiplier), isHigh ? f.highDensityMax : f.lowDensityMax);
+                const baseRate = (isHigh ? f.highBaseRate : f.lowBaseRate) * scale;
                 s.emitRate = baseRate * densityMultiplier * this.perfMultiplier;
 
-                const jitter = (isHigh ? 0.03 * (1.0 + speed) : 0.06);
-                s.minEmitBox = motionVector.scale(isHigh ? -1.0 : -0.8).add(new BABYLON.Vector3(-jitter, isHigh ? -0.02 : -jitter, -jitter));
-                s.maxEmitBox = new BABYLON.Vector3(jitter, isHigh ? 0.02 : jitter, jitter);
+                const jitter = (isHigh ? f.highJitter * (1.0 + speed) : f.lowJitter);
+                s.minEmitBox = motionVector.scale(isHigh ? sk.fireMaxEmitBoxScale : sk.fireMinEmitBoxScale).add(new BABYLON.Vector3(-jitter, isHigh ? sk.fireJitterY : -jitter, -jitter));
+                s.maxEmitBox = new BABYLON.Vector3(jitter, isHigh ? sk.fireBoxY : jitter, jitter);
 
-                s.minSize = (isHigh ? 0.06 : 0.1) * scale;
-                s.maxSize = (isHigh ? 0.24 : 0.3) * scale;
-                s.minLifeTime = isHigh ? 0.25 : 0.4;
-                s.maxLifeTime = isHigh ? 0.5 : 0.8;
-                s.gravity = new BABYLON.Vector3(0, (isHigh ? 4 : 2) * intensity, 0);
+                s.minSize = (isHigh ? f.highMinSize : f.lowMinSize) * scale;
+                s.maxSize = (isHigh ? f.highMaxSize : f.lowMaxSize) * scale;
+                s.minLifeTime = isHigh ? f.highMinLife : f.lowMinLife;
+                s.maxLifeTime = isHigh ? f.highMaxLife : f.lowMaxLife;
+                s.gravity = new BABYLON.Vector3(0, (isHigh ? f.highGravityY : f.lowGravityY) * intensity, 0);
             }
 
             createSkeleton(index) {
                 const root = new BABYLON.TransformNode("skeleton" + index, this.scene);
                 const spheres = [];
                 const bones = [];
+                const v = systemState.parameters.visuals;
+                const sk = v.skeleton;
 
                 const mat = new BABYLON.StandardMaterial("skeletonMat" + index, this.scene);
-                mat.emissiveColor = new BABYLON.Color3(0.5, 1.0, 0.5); // Default Greenish
-                mat.alpha = 0.2; // V24.18: Transparency Hardening (Faded skeleton)
+                mat.emissiveColor = new BABYLON.Color3(v.boneColor.r, v.boneColor.g, v.boneColor.b); // Bone White
+                mat.diffuseColor = new BABYLON.Color3(v.boneColor.r, v.boneColor.g, v.boneColor.b);
+                mat.alpha = v.skeletonAlphaSphere; // V24.18: Transparent Bone
                 mat.disableLighting = true;
 
-                for (let i = 0; i < 21; i++) {
-                    const sphere = BABYLON.MeshBuilder.CreateSphere("tm_" + index + "_" + i, { diameter: 0.1 }, this.scene);
+                for (let i = 0; i < sk.sphereCount; i++) {
+                    const sphere = BABYLON.MeshBuilder.CreateSphere("tm_" + index + "_" + i, { diameter: sk.sphereDiameter }, this.scene);
                     sphere.material = mat;
                     sphere.parent = root;
                     spheres.push(sphere);
@@ -850,55 +1389,61 @@
 
                 // Initial claw line
                 const claw = BABYLON.MeshBuilder.CreateLines("claw" + index, { points: [BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero()], updatable: true }, this.scene);
-                claw.color = new BABYLON.Color3(0, 1, 1); // Cyan Claw
+                claw.color = new BABYLON.Color3(v.clawColor.r, v.clawColor.g, v.clawColor.b); // Bright Bone Claw
                 claw.parent = root;
+                claw.alpha = v.skeletonAlphaClaw;
 
                 // Wire skeleton bones
-                HAND_CONNECTIONS.forEach((_, bIndex) => {
+                systemState.parameters.anatomy.handSkeletonMap.forEach((_, bIndex) => {
                     const bone = BABYLON.MeshBuilder.CreateLines("bone" + index + "_" + bIndex, { points: [BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero()], updatable: true }, this.scene);
-                    bone.color = new BABYLON.Color3(0.2, 0.3, 0.2); // Faint Green Bones
-                    bone.alpha = 0.15; // More transparent
+                    bone.color = new BABYLON.Color3(v.boneColor.r, v.boneColor.g, v.boneColor.b);
+                    bone.alpha = v.skeletonAlphaBone; // Delicate Bone Structure
                     bone.parent = root;
                     bones.push(bone);
                 });
 
-                return { root, spheres, bones, claw };
+                return { root, spheres, bones, claw, mat };
             }
 
             createEffect(index) {
-                const root = BABYLON.MeshBuilder.CreateSphere("emitter" + index, { diameter: 0.05 }, this.scene);
+                const v = systemState.parameters.visuals;
+                const p = v.particles;
+                const sk = v.skeleton;
+                const c = v.colors;
+
+                const root = BABYLON.MeshBuilder.CreateSphere("emitter" + index, { diameter: sk.emitterDiameter }, this.scene);
                 root.isVisible = false;
                 this.emitterRoots[index] = root;
 
                 // Initialize Skeleton
                 this.skeletons[index] = this.createSkeleton(index);
+                this.skeletonAlphas[index] = 0; // Start hidden
 
                 // V24.16: Hybrid Geometric Core (Exemplar TrailMesh)
-                // Diameter 0.08, Length 30, Auto-shrink enabled.
-                const trail = new BABYLON.TrailMesh("trail" + index, root, this.scene, 0.08, 30, true);
+                const trail = new BABYLON.TrailMesh("trail" + index, root, this.scene, sk.trailDiameter, sk.trailLength, true);
                 const trailMat = new BABYLON.StandardMaterial("trailMat" + index, this.scene);
-                trailMat.emissiveColor = new BABYLON.Color3(1, 0.6, 0.1);
-                trailMat.alpha = 0.4;
+                trailMat.emissiveColor = new BABYLON.Color3(v.trailReadyColor.r, v.trailReadyColor.g, v.trailReadyColor.b);
+                trailMat.alpha = v.trailAlpha;
                 trailMat.disableLighting = true;
                 trail.material = trailMat;
                 trail.isVisible = false;
                 this.trails[index] = trail;
 
-                const defaultTexture = "https://playground.babylonjs.com/textures/flare.png";
+                const defaultTexture = v.particleTexture;
 
                 // PHOENIX CORE EFFECT
-                const fire = new BABYLON.ParticleSystem("fire", 2000, this.scene);
+                const fire = new BABYLON.ParticleSystem("fire", v.particleMaxCount, this.scene);
                 fire.particleTexture = new BABYLON.Texture(defaultTexture, this.scene);
                 fire.emitter = root;
-                fire.minEmitBox = new BABYLON.Vector3(-0.05, 0, -0.05);
-                fire.maxEmitBox = new BABYLON.Vector3(0.05, 0, 0.05);
-                fire.color1 = new BABYLON.Color4(1.0, 0.6, 0.1, 1.0);
-                fire.color2 = new BABYLON.Color4(1, 0.2, 0, 0.5);
-                fire.colorDead = new BABYLON.Color4(0, 0, 0, 0);
-                fire.minLifeTime = 0.1; fire.maxLifeTime = 0.3;
-                fire.emitRate = 400;
+                fire.minEmitBox = new BABYLON.Vector3(p.minEmitBox.x, p.minEmitBox.y, p.minEmitBox.z);
+                fire.maxEmitBox = new BABYLON.Vector3(p.maxEmitBox.x, p.maxEmitBox.y, p.maxEmitBox.z);
+                fire.color1 = new BABYLON.Color4(c.bFire1.r, c.bFire1.g, c.bFire1.b, c.bFire1.a);
+                fire.color2 = new BABYLON.Color4(c.bFire2.r, c.bFire2.g, c.bFire2.b, c.bFire2.a);
+                fire.colorDead = new BABYLON.Color4(c.bFireDead.r, c.bFireDead.g, c.bFireDead.b, c.bFireDead.a);
+                fire.minLifeTime = p.minLifeTime; fire.maxLifeTime = p.maxLifeTime;
+                fire.emitRate = v.particleEmitRate;
                 fire.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
-                fire.gravity = new BABYLON.Vector3(0, 2, 0);
+                fire.gravity = new BABYLON.Vector3(p.gravity.x, p.gravity.y, p.gravity.z);
                 this.particleSystems[index] = [fire];
             }
 
@@ -917,12 +1462,12 @@
             const ctx = canvas.getContext('2d');
             const center = size / 2;
             const grad = ctx.createRadialGradient(center, center, 0, center, center, size / 2);
-            const r = (color >> 16) & 0xFF;
-            const g = (color >> 8) & 0xFF;
-            const b = color & 0xFF;
-            grad.addColorStop(0, `rgba(${r},${g},${b}, 1)`);
-            grad.addColorStop(0.3, `rgba(${r},${g},${b}, 0.5)`);
-            grad.addColorStop(1, `rgba(${r},${g},${b}, 0)`);
+            const r = (color >> HFO_CONSTANTS.redShift) & HFO_CONSTANTS.byteMask;
+            const g = (color >> HFO_CONSTANTS.greenShift) & HFO_CONSTANTS.byteMask;
+            const b = color & HFO_CONSTANTS.byteMask;
+            grad.addColorStop(cur.gradStopA, `rgba(${r},${g},${b}, 1)`);
+            grad.addColorStop(cur.gradStopMid, `rgba(${r},${g},${b}, 0.5)`);
+            grad.addColorStop(cur.gradStopC, `rgba(${r},${g},${b}, 0)`);
             ctx.fillStyle = grad; ctx.fillRect(0, 0, size, size);
             return PIXI.Texture.from(canvas);
         }
@@ -932,14 +1477,17 @@
                 this.container = new PIXI.Container();
                 parent.addChild(this.container);
 
+                const v = systemState.parameters.visuals;
+                const px = v.pixi;
+
                 // Texture Cache (Procedural/Non-Shader dependent)
-                this.texGold = createGlowTexture(128, 0xFFCC00);
-                this.texRed = createGlowTexture(128, 0xFF4500);
-                this.texCore = createGlowTexture(64, 0xFFFFFF);
+                this.texGold = createGlowTexture(px.glowSizeLarge, px.colorGold);
+                this.texRed = createGlowTexture(px.glowSizeLarge, px.colorRed);
+                this.texCore = createGlowTexture(px.glowSizeSmall, px.colorWhite);
 
                 // 1. READY LAYERS (Gilded Shimmer)
                 this.readyLayers = new PIXI.Container();
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < px.readyLayerCount; i++) {
                     const s = new PIXI.Sprite(this.texGold);
                     s.anchor.set(0.5);
                     s.blendMode = PIXI.BLEND_MODES.ADD;
@@ -949,9 +1497,10 @@
 
                 // 2. COMMIT LAYERS (Plasma Tongues)
                 this.commitLayers = new PIXI.Container();
-                for (let i = 0; i < 6; i++) {
-                    const s = new PIXI.Sprite(i < 4 ? this.texRed : this.texCore);
-                    s.anchor.set(0.5, 0.85);
+                const halfCommit = Math.floor(px.commitLayerCount / 2);
+                for (let i = 0; i < px.commitLayerCount; i++) {
+                    const s = new PIXI.Sprite(i < halfCommit ? this.texRed : this.texCore);
+                    s.anchor.set(cur.anchorX, cur.anchorY);
                     s.blendMode = PIXI.BLEND_MODES.ADD;
                     this.commitLayers.addChild(s);
                 }
@@ -966,7 +1515,8 @@
             }
 
             update(x, y, state) {
-                this.timer += 0.05;
+                const px = systemState.parameters.visuals.pixi;
+                this.timer += px.timerIncrement;
                 this.container.position.set(x, y);
 
                 const isReady = (state === 'READY' || state === 'COMMIT' || state === 'COAST');
@@ -978,48 +1528,50 @@
 
                 if (isReady && !isCommit) {
                     this.readyLayers.children.forEach((s, i) => {
-                        const phase = this.timer + i * 0.8;
-                        s.scale.set(1.2 + Math.sin(phase * 0.8) * 0.3);
-                        s.rotation = this.timer * (0.5 + i * 0.1) * (i % 2 === 0 ? 1 : -1);
-                        s.alpha = 0.4 + Math.sin(phase * 1.5) * 0.2;
+                        const phase = this.timer + i * px.readyPhaseOffset;
+                        s.scale.set(px.readyPulseScaleBase + Math.sin(phase * px.readyPulseRate) * px.readyPulseScaleMagnitude);
+                        s.rotation = this.timer * (px.readyRotationBase + i * px.readyRotationStep) * (i % 2 === 0 ? 1 : -1);
+                        s.alpha = px.readyAlphaBase + Math.sin(phase * px.readyAlphaFreq) * px.readyAlphaMag;
                     });
                 }
 
                 if (isCommit) {
                     this.commitLayers.children.forEach((s, i) => {
-                        const phase = this.timer * 2.0 + i * 0.5;
-                        s.x = Math.sin(phase * 0.7) * (i * 3);
-                        s.scale.x = 0.6 + Math.sin(phase) * 0.2;
-                        s.scale.y = 1.8 + Math.cos(phase * 1.3) * 0.6;
-                        s.alpha = (1.0 - (i / 10)) * 0.8;
+                        const phase = this.timer * px.commitPhaseRate + i * px.commitPhaseStep;
+                        s.x = Math.sin(phase * px.commitFreq) * (i * px.commitXStep);
+                        s.scale.x = px.commitScaleXBase + Math.sin(phase) * px.commitScaleXMag;
+                        s.scale.y = px.commitScaleYBase + Math.cos(phase * px.commitScaleYFreq) * px.commitScaleYMag;
+                        s.alpha = (1.0 - (i / px.commitAlphaStep)) * px.commitAlphaBase;
                     });
                 }
 
                 // Spark Emission
-                if (isReady && Math.random() > 0.8) {
+                if (isReady && Math.random() > px.sparkProb) {
                     this.emitSpark(isCommit);
                 }
                 this.updateSparks();
             }
 
             emitSpark(isCommit) {
+                const px = systemState.parameters.visuals.pixi;
                 const s = new PIXI.Sprite(PIXI.Texture.WHITE);
-                s.width = s.height = 2;
-                s.tint = isCommit ? 0xFF4500 : 0xFFD700;
+                s.width = s.height = px.sparkSize;
+                s.tint = isCommit ? HFO_CONSTANTS.byteMask4500 : HFO_CONSTANTS.byteMaskD700;
                 s.anchor.set(0.5);
-                s.vx = (Math.random() - 0.5) * 4;
-                s.vy = -4 - Math.random() * 6;
+                s.vx = (Math.random() - 0.5) * px.sparkVxMag;
+                s.vy = px.sparkVyBase - Math.random() * px.sparkVyMag;
                 s.life = 1.0;
-                s.decay = 0.02 + Math.random() * 0.03;
+                s.decay = px.sparkDecayBase + Math.random() * px.sparkDecayMag;
                 this.sparks.addChild(s);
             }
 
             updateSparks() {
+                const px = systemState.parameters.visuals.pixi;
                 for (let i = this.sparks.children.length - 1; i >= 0; i--) {
                     const s = this.sparks.children[i];
                     s.x += s.vx;
                     s.y += s.vy;
-                    s.vy += 0.08;
+                    s.vy += px.sparkGravity;
                     s.life -= s.decay;
                     s.alpha = s.life;
                     s.scale.set(s.life);
@@ -1106,22 +1658,23 @@
          * Uses MKS scaling (1 meter = 100 pixels) for numerical stability.
          */
         class PlanckPhysicsAdapter extends IPhysicsAdapter {
-            constructor(stiffness = 5.0, damping = 0.7) {
+            constructor(stiffness, damping, scale) {
                 super();
-                this.SCALE = 100.0; // 100px = 1m
+                const p = systemState.parameters.physics;
+                this.SCALE = scale || p.scalePxToM; // Scalable Physics [V24.21]
                 this.world = planck.World({ gravity: planck.Vec2(0, 0) });
-                this.stiffness = stiffness;
-                this.damping = damping;
+                this.stiffness = (stiffness !== undefined) ? stiffness : p.planckDefaultStiffness;
+                this.damping = (damping !== undefined) ? damping : p.planckDefaultDamping;
                 this.isBallistic = false;
 
                 // Cursor Body (Dynamic)
                 this.cursor = this.world.createBody({
                     type: 'dynamic',
                     position: planck.Vec2(0, 0),
-                    linearDamping: 2.0, // Reduced for smoother glide
-                    angularDamping: 5.0
+                    linearDamping: p.planckLinearDamping,
+                    angularDamping: p.planckAngularDamping
                 });
-                this.cursor.createFixture(planck.Circle(0.1), { density: 1.0, friction: 0.3 });
+                this.cursor.createFixture(planck.Circle(p.planckFixtureRadius), { density: p.planckFixtureDensity, friction: p.planckFixtureFriction });
 
                 // Target Body (Kinematic)
                 this.target = this.world.createBody({ type: 'kinematic', position: planck.Vec2(0, 0) });
@@ -1132,8 +1685,8 @@
                     bodyB: this.cursor,
                     anchorA: planck.Vec2(0, 0),
                     anchorB: planck.Vec2(0, 0),
-                    frequencyHz: stiffness, // Stiffness as frequency
-                    dampingRatio: damping,    // Damping
+                    frequencyHz: this.stiffness, // Stiffness as frequency
+                    dampingRatio: this.damping,    // Damping
                     length: 0
                 }));
 
@@ -1157,7 +1710,7 @@
                 }
 
                 // Step world
-                this.world.step(Math.min(dt / 1000, 0.033));
+                this.world.step(Math.min(dt / HFO_CONSTANTS.msPerSec, systemState.parameters.physics.planckMaxStepDt));
 
                 const pos = this.cursor.getPosition();
                 this.lastPos = { x: pos.x * this.SCALE, y: pos.y * this.SCALE };
@@ -1165,8 +1718,9 @@
             }
 
             setParams(params) {
-                this.stiffness = params.stiffness || 5.0;
-                this.damping = params.dampingRatio || 0.7;
+                const phys = systemState.parameters.physics;
+                this.stiffness = params.stiffness || phys.planckDefaultStiffness;
+                this.damping = params.dampingRatio || phys.planckDefaultDamping;
                 if (!this.isBallistic) {
                     this.joint.setFrequency(this.stiffness);
                 }
@@ -1193,23 +1747,26 @@
 
         // --- COORDINATE SUBSTRATE: 1EURO ---
         class OneEuroFilter {
-            constructor(minCutoff = 1.0, beta = 0.0) {
-                this.minCutoff = minCutoff;
-                this.beta = beta;
+            constructor(minCutoff, beta) {
+                const p = systemState.parameters.physics;
+                this.minCutoff = (minCutoff !== undefined) ? minCutoff : p.oneEuroDefaultMinCutoff;
+                this.beta = (beta !== undefined) ? beta : p.oneEuroDefaultBeta;
                 this.xPrev = null;
                 this.dxPrev = 0;
             }
 
-            filter(x, rate = 30) {
+            filter(x, rate) {
+                const p = systemState.parameters.physics;
+                const r = rate || p.oneEuroRateFallback;
                 if (this.xPrev === null) {
                     this.xPrev = x;
                     return x;
                 }
-                const dx = (x - this.xPrev) * rate;
-                const edx = this.alpha(rate, 1.0); // Simple smoothing for derivative
+                const dx = (x - this.xPrev) * r;
+                const edx = this.alpha(r, p.oneEuroDerivCutoff); // Simple smoothing for derivative
                 const dxHat = edx * dx + (1 - edx) * this.dxPrev;
                 const cutoff = this.minCutoff + this.beta * Math.abs(dxHat);
-                const a = this.alpha(rate, cutoff);
+                const a = this.alpha(r, cutoff);
                 const xHat = a * x + (1 - a) * this.xPrev;
                 this.xPrev = xHat;
                 this.dxPrev = dxHat;
@@ -1224,11 +1781,12 @@
         }
 
         class MassSpringDampener {
-            constructor(stiffness = 0.15, damping = 0.05) {
+            constructor(stiffness, damping) {
+                const p = systemState.parameters.physics;
                 this.pos = null;
                 this.vel = { x: 0, y: 0 };
-                this.stiffness = stiffness;
-                this.damping = damping;
+                this.stiffness = (stiffness !== undefined) ? stiffness : p.massSpringDefaultStiffness;
+                this.damping = (damping !== undefined) ? damping : p.massSpringDefaultDamping;
             }
 
             update(targetX, targetY) {
@@ -1252,14 +1810,16 @@
         class P1Bridger {
             static calculateCurl(landmarks, indices) {
                 let totalAngle = 0;
+                const eps = systemState.parameters.anatomy.mathEpsilon;
+                const zScale = systemState.parameters.anatomy.landmarkZScale;
                 for (let i = 0; i < indices.length - 2; i++) {
                     const a = landmarks[indices[i]];
                     const b = landmarks[indices[i + 1]];
                     const c = landmarks[indices[i + 2]];
-                    const v1 = { x: a.x - b.x, y: a.y - b.y, z: (a.z - b.z) * 0.1 };
-                    const v2 = { x: c.x - b.x, y: c.y - b.y, z: (c.z - b.z) * 0.1 };
-                    const mag1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z) || 1e-6;
-                    const mag2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y + v2.z * v2.z) || 1e-6;
+                    const v1 = { x: a.x - b.x, y: a.y - b.y, z: (a.z - b.z) * zScale };
+                    const v2 = { x: c.x - b.x, y: c.y - b.y, z: (c.z - b.z) * zScale };
+                    const mag1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z) || eps;
+                    const mag2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y + v2.z * v2.z) || eps;
                     const dot = (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z) / (mag1 * mag2);
                     totalAngle += Math.acos(Math.max(-1, Math.min(1, dot)));
                 }
@@ -1290,18 +1850,20 @@
                             const validatedLandmarks = landmarks.map(l => LandmarkSchema.parse(l));
                             const { width, height } = systemState.p0.videoBounds || { width: 0, height: 0 };
                             const lm = validatedLandmarks;
+                            const idx = systemState.parameters.anatomy.indices;
+                            const eps = systemState.parameters.anatomy.mathEpsilon;
 
                             // V20.3: ANATOMICAL STABILITY (Hardened Rod)
-                            const p5 = lm[5];
-                            const p17 = lm[17];
-                            const p0_palm = lm[0];
+                            const p5 = lm[idx.INDEX_MCP];
+                            const p17 = lm[idx.PINKY_MCP];
+                            const p0_palm = lm[idx.WRIST];
 
                             // Observed 3D Palm Span (Index MCP to Pinky MCP) - Absolute Measure
                             const observedPalmSpan = Math.sqrt(
                                 (p5.x - p17.x) ** 2 +
                                 (p5.y - p17.y) ** 2 +
                                 (p5.z - p17.z) ** 2
-                            ) || 1e-6;
+                            ) || eps;
 
                             // V20.3: Calculate Palm Orientation / normalZ Early for stabilization
                             const v1_palm = { x: p5.x - p0_palm.x, y: p5.y - p0_palm.y, z: p5.z - p0_palm.z };
@@ -1321,9 +1883,9 @@
                                 systemState.p1.rodFilters[i] = new OneEuroFilter(systemState.parameters.physics.oneEuroRodMinCutoff, systemState.parameters.physics.oneEuroBeta);
                             }
                             // Adaptive cutoff: smoother if tilting away (noisy Z)
-                            systemState.p1.rodFilters[i].minCutoff = normalZ > 0.7 ?
+                            systemState.p1.rodFilters[i].minCutoff = normalZ > systemState.parameters.physics.normalZThreshold ?
                                 systemState.parameters.physics.oneEuroRodMinCutoff :
-                                systemState.parameters.physics.oneEuroRodMinCutoff * 0.5;
+                                systemState.parameters.physics.oneEuroRodMinCutoff * systemState.parameters.physics.normalZMultiplier;
 
                             let baseRodLength;
                             const theme = systemState.parameters.physics.cursorTheme;
@@ -1336,12 +1898,12 @@
                             const rodLength = systemState.p1.rodFilters[i].filter(baseRodLength);
 
                             // V19.1: Anchor at Index Tip (8), Project further based on Palm Span
-                            const mcp = lm[5];
-                            const tipRaw = lm[8];
+                            const mcp = lm[idx.INDEX_MCP];
+                            const tipRaw = lm[idx.INDEX_TIP];
                             const dx_dir = tipRaw.x - mcp.x;
                             const dy_dir = tipRaw.y - mcp.y;
                             const dz_dir = tipRaw.z - mcp.z;
-                            const mag_dir = Math.sqrt(dx_dir ** 2 + dy_dir ** 2 + dz_dir ** 2) || 1e-6;
+                            const mag_dir = Math.sqrt(dx_dir ** 2 + dy_dir ** 2 + dz_dir ** 2) || eps;
 
                             // Projected point starts at Tip (8) and extends rodLength
                             const projectedPoint = {
@@ -1422,13 +1984,14 @@
                             if (isPalmFacing) systemState.p1.lastPalmFacingTimes[i] = now;
                             const isCharging = isPalmFacing || (now - systemState.p1.lastPalmFacingTimes[i] < systemState.parameters.fsm.tensionMs);
                             const isCoasting = (fsmState === 'COAST');
+                            const maxBucket = systemState.parameters.fsm.maxBucketLevel;
 
                             if (isCharging) {
-                                const fillAmount = (100 / systemState.parameters.fsm.chargeTimeMs) * dt;
-                                systemState.p1.buckets[i] = Math.min(100, systemState.p1.buckets[i] + fillAmount);
+                                const fillAmount = (maxBucket / systemState.parameters.fsm.chargeTimeMs) * dt;
+                                systemState.p1.buckets[i] = Math.min(maxBucket, systemState.p1.buckets[i] + fillAmount);
                             } else {
                                 const drainTime = isCoasting ? systemState.parameters.fsm.coastDrainTimeMs : systemState.parameters.fsm.releaseTimeMs;
-                                const drainAmount = (100 / drainTime) * dt;
+                                const drainAmount = (maxBucket / drainTime) * dt;
                                 systemState.p1.buckets[i] = Math.max(0, systemState.p1.buckets[i] - drainAmount);
                             }
 
@@ -1472,7 +2035,8 @@
                                 if (isFlagEnabled('physics-planck') && !(systemState.p1.physicsState[i] instanceof PlanckPhysicsAdapter)) {
                                     systemState.p1.physicsState[i] = new PlanckPhysicsAdapter(
                                         systemState.parameters.physics.planckStiffness,
-                                        systemState.parameters.physics.planckDamping
+                                        systemState.parameters.physics.planckDamping,
+                                        systemState.parameters.physics.scalePxToM
                                     );
                                     systemState.p1.physicsState[i].reset(smoothedX, smoothedY);
                                 }
@@ -1490,7 +2054,7 @@
                                 // V19.2: CLAW RIGID PROJECTION
                                 const dx = smoothedX - anchorX;
                                 const dy = smoothedY - anchorY;
-                                const mag = Math.sqrt(dx * dx + dy * dy) || 1e-6;
+                                const mag = Math.sqrt(dx * dx + dy * dy) || systemState.parameters.anatomy.mathEpsilon;
                                 let ux = dx / mag;
                                 let uy = dy / mag;
 
@@ -1502,7 +2066,7 @@
                                 }
                                 ux = systemState.p1.directionFilters[i].x.filter(ux);
                                 uy = systemState.p1.directionFilters[i].y.filter(uy);
-                                const mag_filtered = Math.sqrt(ux * ux + uy * uy) || 1e-6;
+                                const mag_filtered = Math.sqrt(ux * ux + uy * uy) || systemState.parameters.anatomy.mathEpsilon;
                                 ux /= mag_filtered; uy /= mag_filtered;
 
                                 const vx = physicsPos.x - anchorX;
@@ -1513,19 +2077,21 @@
                                 finalY = anchorY + uy * d_proj;
                             }
 
+                            const cG = systemState.parameters.anatomy.curlGroups;
                             const curls = {
-                                index: this.calculateCurl(lm, [5, 6, 7, 8]),
-                                middle: this.calculateCurl(lm, [9, 10, 11, 12]),
-                                ring: this.calculateCurl(lm, [13, 14, 15, 16]),
-                                pinky: this.calculateCurl(lm, [17, 18, 19, 20])
+                                index: this.calculateCurl(lm, cG.index),
+                                middle: this.calculateCurl(lm, cG.middle),
+                                ring: this.calculateCurl(lm, cG.ring),
+                                pinky: this.calculateCurl(lm, cG.pinky)
                             };
 
                             const rawCursorData = {
                                 screenX: finalX, screenY: finalY,
-                                normX: finalProjX, normY: projectedPoint.y,
+                                normX: finalX / width, normY: finalY / height,
+                                normZ: projectedPoint.z,
                                 fsmState: fsmStateNew, gesture: category,
                                 confidence, isPalmFacing, bucketLevel: bucket,
-                                handIndex: i, pointerId: 10 + i, // V24.4: Stable Hand ID
+                                handIndex: i, pointerId: systemState.parameters.fsm.pointerIdOffset + i, // V24.4: Stable Hand ID
                                 curls,
                                 landmarks: mirroredLandmarks, // Fixed: Mirrored landmarks
                                 rawX: anchorX, rawY: anchorY,
@@ -1568,6 +2134,7 @@
                                     fsmState: 'COAST',
                                     bucketLevel: bucket,
                                     handIndex: i,
+                                    landmarks: [], // V24.18: Clear landmarks during COAST to hide skeleton
                                     timestamp: now
                                 });
                                 systemState.p1.fsmStates[i] = 'COAST';
@@ -1618,6 +2185,7 @@
         window.systemState = systemState;
         window.PlanckPhysicsAdapter = PlanckPhysicsAdapter;
         window.P1Bridger = P1Bridger;
+        window.drawResults = drawResults;
 
         // --- P0: SENSE ---
         async function initP0() {
@@ -1731,8 +2299,8 @@
             const video = systemState.p0.video;
             if (!video) return;
 
-            const videoWidth = video.videoWidth || parseInt(systemState.parameters.camera.resolution.split('x')[0]) || 1280;
-            const videoHeight = video.videoHeight || parseInt(systemState.parameters.camera.resolution.split('x')[1]) || 720;
+            const videoWidth = video.videoWidth || parseInt(systemState.parameters.camera.resolution.split('x')[0]) || systemState.parameters.camera.resolutionWidth;
+            const videoHeight = video.videoHeight || parseInt(systemState.parameters.camera.resolution.split('x')[1]) || systemState.parameters.camera.resolutionHeight;
             const rect = video.getBoundingClientRect();
             const rectWidth = rect.width || videoWidth;
             const rectHeight = rect.height || videoHeight;
@@ -1757,8 +2325,12 @@
 
                 const nx = cursor.screenX / (systemState.p0.videoBounds?.width || videoWidth);
                 const ny = cursor.screenY / (systemState.p0.videoBounds?.height || videoHeight);
-                const viewX = rectLeft + nx * rectWidth;
-                const viewY = rectTop + ny * rectHeight;
+
+                // V24.20: Interaction Parity Fix
+                // Use the centered visual bounds instead of raw container rect
+                const bounds = systemState.ui.viewBounds || { width: rectWidth, height: rectHeight, offsetX: 0, offsetY: 0 };
+                const viewX = rectLeft + bounds.offsetX + (nx * bounds.width);
+                const viewY = rectTop + bounds.offsetY + (ny * bounds.height);
 
                 const isDown = (cursor.fsmState === 'COMMIT' || cursor.fsmState === 'COAST');
                 const pressure = isDown ? (cursor.fsmState === 'COMMIT' ? 1.0 : 0.5) : 0.0;
@@ -1864,7 +2436,7 @@
             const findControl = (el) => {
                 let curr = el;
                 // Traverse up to 5 levels or until a known interactive tag/role is found
-                for (let i = 0; i < 5 && curr && curr !== document.body; i++) {
+                for (let i = 0; i < systemState.parameters.interaction.domDepthLimit && curr && curr !== document.body; i++) {
                     const tag = curr.tagName ? curr.tagName.toLowerCase() : '';
                     const role = curr.getAttribute ? curr.getAttribute('role') : null;
                     if (tag === 'button' || tag === 'a' || tag === 'input' || tag === 'select' ||
@@ -1916,24 +2488,25 @@
                             control.dispatchEvent(clickEv);
                         }
                         if (systemState.parameters.devMode) console.log(`[P3] PULSE CLICK triggered on ${control.tagName}`);
-                    }, 10);
+                    }, systemState.parameters.interaction.pulseSettleMs);
                 }
 
                 // Legacy Release Click (Fallback/Safety)
                 if (e.type === 'pointerup' && !isPulse) {
                     setTimeout(() => {
                         if (control.click) control.click();
-                    }, 10);
+                    }, systemState.parameters.interaction.pulseSettleMs);
                 }
             }
         }
 
         // --- SPARKLINE HELPER ---
         function drawSparkline(ctx, x, y, w, h, data, color, markers = []) {
+            const pixi = systemState.parameters.visuals.pixi;
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.beginPath();
-            const step = w / 64;
+            const step = w / pixi.sparklineSteps;
             data.forEach((val, i) => {
                 const px = x + i * step;
                 const py = y + h - (val * h);
@@ -1955,30 +2528,35 @@
         // --- 🌠 ELEMENTAL JUICE HELPERS ---
         function drawFireball(ctx, x, y, size, intensity, state) {
             const time = Date.now();
-            const colors = {
-                'COMMIT': ['rgba(255, 255, 255, 1.0)', 'rgba(255, 236, 61, 0.9)', 'rgba(255, 77, 79, 0.8)', 'rgba(255, 30, 0, 0)'],
-                'READY': ['rgba(255, 255, 255, 0.8)', 'rgba(255, 251, 143, 0.7)', 'rgba(255, 169, 64, 0.6)', 'rgba(255, 169, 64, 0)'],
-                'COAST': ['rgba(255, 255, 255, 0.4)', 'rgba(145, 213, 255, 0.3)', 'rgba(9, 109, 217, 0.2)', 'rgba(9, 109, 217, 0)']
+            const v = systemState.parameters.visuals;
+            const c = v.colors;
+            const cur = v.canvasCursors;
+
+            const themeColors = {
+                'COMMIT': c.fireballCommit,
+                'READY': c.fireballReady,
+                'COAST': c.fireballCoast
             };
-            const c = colors[state] || colors['READY'];
+            const activeColors = themeColors[state] || c.fireballReady;
 
             ctx.save();
             ctx.globalCompositeOperation = 'screen';
 
             // Outer Gloom/Heat Distortion
-            const bloomSize = size * (4 + Math.sin(time / 150) * 0.5);
-            const bloomGrad = ctx.createRadialGradient(x, y, 0, x, y, bloomSize);
-            bloomGrad.addColorStop(0, c[2]);
-            bloomGrad.addColorStop(0.4, c[3]);
+            const bloomSize = size * (cur.fireballBloomScale + Math.sin(time / cur.fireballPulseRate) * cur.fireballPulseMagnitude);
+            const bloomSizeCapped = Math.max(systemState.parameters.visuals.particles.minBloomSize, bloomSize);
+            const bloomGrad = ctx.createRadialGradient(x, y, 0, x, y, bloomSizeCapped);
+            bloomGrad.addColorStop(0, activeColors[2]);
+            bloomGrad.addColorStop(cur.gradStopB, activeColors[3]);
             ctx.fillStyle = bloomGrad;
-            ctx.beginPath(); ctx.arc(x, y, bloomSize, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(x, y, bloomSizeCapped, 0, Math.PI * 2); ctx.fill();
 
             // Core Plasma
             const coreGrad = ctx.createRadialGradient(x, y, 0, x, y, size * 2);
-            coreGrad.addColorStop(0, c[0]);
-            coreGrad.addColorStop(0.3, c[1]);
-            coreGrad.addColorStop(0.7, c[2]);
-            coreGrad.addColorStop(1, c[3]);
+            coreGrad.addColorStop(0, activeColors[0]);
+            coreGrad.addColorStop(cur.gradStopMid, activeColors[1]);
+            coreGrad.addColorStop(cur.gradStopC, activeColors[2]);
+            coreGrad.addColorStop(1, activeColors[3]);
 
             ctx.fillStyle = coreGrad;
             ctx.beginPath();
@@ -1987,11 +2565,11 @@
 
             // Pulsing spikes/tendrils
             if (state === 'COMMIT') {
-                ctx.strokeStyle = c[1];
+                ctx.strokeStyle = activeColors[1];
                 ctx.lineWidth = 2;
-                for (let i = 0; i < 8; i++) {
-                    const angle = (time / 200) + (i * Math.PI / 4);
-                    const length = size * (2.5 + Math.sin(time / 50 + i) * 0.8);
+                for (let i = 0; i < cur.fireballSpikeCount; i++) {
+                    const angle = (time / cur.fireballSpikeRate) + (i * Math.PI / (cur.fireballSpikeCount / 2));
+                    const length = size * (cur.fireballSpikeLengthScale + Math.sin(time / cur.fireballSpikeFrequency + i) * cur.fireballSpikeMagnitude);
                     ctx.beginPath();
                     ctx.moveTo(x, y);
                     ctx.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length);
@@ -2005,12 +2583,16 @@
         // --- 🌊 WATER ELEMENT CURSOR (V20.4) ---
         function drawWaterCursor(ctx, rawX, rawY, x, y, state) {
             const time = Date.now();
-            const colors = {
-                'COMMIT': ['rgba(255, 255, 255, 1.0)', 'rgba(0, 191, 255, 0.8)', 'rgba(0, 123, 255, 0.6)'],
-                'READY': ['rgba(255, 255, 255, 0.6)', 'rgba(173, 216, 230, 0.5)', 'rgba(0, 191, 255, 0.3)'],
-                'COAST': ['rgba(255, 255, 255, 0.2)', 'rgba(224, 247, 250, 0.2)', 'rgba(178, 235, 242, 0.1)']
+            const v = systemState.parameters.visuals;
+            const c = v.colors;
+            const cur = v.canvasCursors;
+
+            const themeColors = {
+                'COMMIT': c.waterCommit,
+                'READY': c.waterReady,
+                'COAST': c.waterCoast
             };
-            const c = colors[state] || colors['READY'];
+            const activeColors = themeColors[state] || c.waterReady;
 
             ctx.save();
             ctx.globalCompositeOperation = 'screen';
@@ -2018,9 +2600,9 @@
             // 1. Fluid Laser / Beam Path
             if (systemState.parameters.physics.showLaserBeam) {
                 const dist = Math.sqrt((x - rawX) ** 2 + (y - rawY) ** 2);
-                const steps = 10;
-                ctx.lineWidth = state === 'COMMIT' ? 8 : 4;
-                ctx.strokeStyle = c[1];
+                const steps = cur.waterWaveSteps;
+                ctx.lineWidth = state === 'COMMIT' ? cur.arcSizeCommit : cur.arcSizeReady;
+                ctx.strokeStyle = activeColors[1];
                 ctx.lineCap = 'round';
                 ctx.beginPath();
                 ctx.moveTo(rawX, rawY);
@@ -2030,7 +2612,7 @@
                     const px = rawX + (x - rawX) * ratio;
                     const py = rawY + (y - rawY) * ratio;
                     // Sine wave distortion for water feel
-                    const wave = Math.sin(time / 200 + ratio * 10) * 5 * ratio;
+                    const wave = Math.sin(time / cur.waterWaveFrequency + ratio * cur.waterWaveScale) * cur.waterWaveMagnitude * ratio;
                     const ux = -(y - rawY) / (dist || 1);
                     const uy = (x - rawX) / (dist || 1);
                     ctx.lineTo(px + ux * wave, py + uy * wave);
@@ -2040,14 +2622,14 @@
                 // Inner white fluid core
                 ctx.beginPath();
                 ctx.moveTo(rawX, rawY);
-                ctx.strokeStyle = '#fff';
+                ctx.strokeStyle = c.white;
                 ctx.lineWidth = 1;
-                ctx.globalAlpha = 0.4;
+                ctx.globalAlpha = cur.whiteCoreAlpha;
                 for (let i = 1; i <= steps; i++) {
                     const ratio = i / steps;
                     const px = rawX + (x - rawX) * ratio;
                     const py = rawY + (y - rawY) * ratio;
-                    const wave = Math.sin(time / 200 + ratio * 10) * 2 * ratio;
+                    const wave = Math.sin(time / cur.waterWaveFrequency + ratio * cur.waterWaveScale) * 2 * ratio;
                     const ux = -(y - rawY) / (dist || 1);
                     const uy = (x - rawX) / (dist || 1);
                     ctx.lineTo(px + ux * wave, py + uy * wave);
@@ -2056,11 +2638,11 @@
             }
 
             // 2. Ripple Effect at Tip
-            const rippleSize = (state === 'COMMIT' ? 20 : 12) + Math.sin(time / 300) * 3;
+            const rippleSize = (state === 'COMMIT' ? cur.rippleSizeCommit : cur.rippleSizeBase) + Math.sin(time / cur.ripplePulseRate) * cur.ripplePulseMagnitude;
             const grad = ctx.createRadialGradient(x, y, 0, x, y, rippleSize);
-            grad.addColorStop(0, c[0]);
-            grad.addColorStop(0.5, c[1]);
-            grad.addColorStop(1, 'rgba(0, 123, 255, 0)');
+            grad.addColorStop(cur.gradStopA, activeColors[0]);
+            grad.addColorStop(cur.gradStopB, activeColors[1]);
+            grad.addColorStop(cur.gradStopC, `rgba(0, ${cur.glowColorOffset + 23}, 255, 0)`);
 
             ctx.fillStyle = grad;
             ctx.beginPath();
@@ -2069,13 +2651,13 @@
 
             // 3. Bubbles/Droplets if committed
             if (state === 'COMMIT') {
-                for (let i = 0; i < 3; i++) {
-                    const bTime = (time + i * 1000) % 2000;
-                    const bScale = bTime / 2000;
-                    const bx = x + Math.cos(i * 2 + time / 500) * 20 * bScale;
-                    const by = y - 30 * bScale; // Rise up
+                for (let i = 0; i < cur.bubbleCount; i++) {
+                    const bTime = (time + i * cur.sparkDuration) % (cur.sparkDuration * 2);
+                    const bScale = bTime / (cur.sparkDuration * 2);
+                    const bx = x + Math.cos(i * 2 + time / cur.glowTimeDivisor) * cur.sparkSpreadX * bScale;
+                    const by = y - cur.sparkRise * 0.5 * bScale; // Rise up
                     ctx.fillStyle = 'rgba(255, 255, 255, ' + (1 - bScale) + ')';
-                    ctx.beginPath(); ctx.arc(bx, by, 2 * (1 - bScale), 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(bx, by, cur.skeletonRadiusMultiplier * (1 - bScale), 0, Math.PI * 2); ctx.fill();
                 }
             }
 
@@ -2085,12 +2667,16 @@
         // --- 🔥 FIRE ELEMENT CURSOR (V20.4) ---
         function drawFireCursor(ctx, rawX, rawY, x, y, state) {
             const time = Date.now();
-            const colors = {
-                'COMMIT': ['rgba(255, 255, 255, 1.0)', 'rgba(255, 69, 0, 0.8)', 'rgba(255, 140, 0, 0.6)'],
-                'READY': ['rgba(255, 255, 255, 0.6)', 'rgba(255, 195, 0, 0.5)', 'rgba(255, 69, 0, 0.3)'],
-                'COAST': ['rgba(255, 255, 255, 0.2)', 'rgba(255, 140, 0, 0.2)', 'rgba(128, 0, 0, 0.1)']
+            const v = systemState.parameters.visuals;
+            const c = v.colors;
+            const cur = v.canvasCursors;
+
+            const themeColors = {
+                'COMMIT': c.commit,
+                'READY': c.ready,
+                'COAST': c.coast
             };
-            const c = colors[state] || colors['READY'];
+            const activeColors = themeColors[state] || c.ready;
 
             ctx.save();
             ctx.globalCompositeOperation = 'screen';
@@ -2100,28 +2686,28 @@
                 ctx.beginPath();
                 ctx.moveTo(rawX, rawY);
                 ctx.lineTo(x, y);
-                ctx.strokeStyle = c[1];
-                ctx.lineWidth = state === 'COMMIT' ? 12 : 6;
+                ctx.strokeStyle = activeColors[1];
+                ctx.lineWidth = state === 'COMMIT' ? cur.arcSizeCommit * cur.arcSizeCommitFactor : cur.arcSizeReady * cur.arcSizeReadyFactor;
                 ctx.lineCap = 'round';
-                ctx.globalAlpha = 0.6;
+                ctx.globalAlpha = cur.skeletonAlphaReady;
                 ctx.stroke();
 
-                // Subtler Flicker Core (V20.5: Reduced magnitude to stop "perceived" oscillation)
+                // Subtler Flicker Core (V20.5)
                 ctx.beginPath();
                 ctx.moveTo(rawX, rawY);
-                ctx.lineTo(x + (Math.random() - 0.5) * 3, y + (Math.random() - 0.5) * 3);
-                ctx.strokeStyle = '#fff';
+                ctx.lineTo(x + (Math.random() - 0.5) * cur.skeletonRadius * cur.skeletonRadiusMultiplier, y + (Math.random() - 0.5) * cur.skeletonRadius * cur.skeletonRadiusMultiplier);
+                ctx.strokeStyle = c.white;
                 ctx.lineWidth = 2;
-                ctx.globalAlpha = 0.2;
+                ctx.globalAlpha = cur.gridAlpha;
                 ctx.stroke();
             }
 
-            // 2. Rising Fireball at Tip (V20.5: Slower pulse)
-            const fireSize = (state === 'COMMIT' ? 25 : 15) + Math.sin(time / 250) * 3;
+            // 2. Rising Fireball at Tip
+            const fireSize = (state === 'COMMIT' ? cur.fireSizeCommit : cur.fireSizeBase) + Math.sin(time / cur.pulseRate) * cur.pulseMagnitude;
             const grad = ctx.createRadialGradient(x, y, 0, x, y, fireSize);
-            grad.addColorStop(0, c[0]);
-            grad.addColorStop(0.4, c[1]);
-            grad.addColorStop(1, 'rgba(255, 0, 0, 0)');
+            grad.addColorStop(cur.gradStopA, activeColors[0]);
+            grad.addColorStop(cur.gradStopB, activeColors[1]);
+            grad.addColorStop(cur.gradStopC, 'rgba(255, 0, 0, 0)');
 
             ctx.fillStyle = grad;
             ctx.beginPath();
@@ -2130,14 +2716,14 @@
 
             // 3. Emitted Sparks
             if (state === 'COMMIT' || state === 'READY') {
-                for (let i = 0; i < (state === 'COMMIT' ? 5 : 2); i++) {
-                    const sparkTime = (time + i * 500) % 1000;
-                    const sRatio = sparkTime / 1000;
-                    const angle = (i * Math.PI * 2 / 5) + time / 1000;
-                    const sx = x + Math.cos(angle) * 30 * sRatio;
-                    // Rise up in screen space
-                    const sy = y + Math.sin(angle) * 10 * sRatio - 60 * sRatio;
-                    ctx.fillStyle = '#FFD700';
+                const sparkCount = state === 'COMMIT' ? cur.sparkCountCommit : cur.sparkCountReady;
+                for (let i = 0; i < sparkCount; i++) {
+                    const sparkTime = (time + i * (cur.sparkDuration / 2)) % cur.sparkDuration;
+                    const sRatio = sparkTime / cur.sparkDuration;
+                    const angle = (i * Math.PI * 2 / sparkCount) + time / cur.sparkDuration;
+                    const sx = x + Math.cos(angle) * cur.sparkSpreadX * sRatio;
+                    const sy = y + Math.sin(angle) * cur.sparkSpreadY * sRatio - cur.sparkRise * sRatio;
+                    ctx.fillStyle = c.spark;
                     ctx.globalAlpha = 1 - sRatio;
                     ctx.beginPath(); ctx.arc(sx, sy, 2 * (1 - sRatio), 0, Math.PI * 2); ctx.fill();
                 }
@@ -2147,43 +2733,54 @@
         }
 
         function drawElementalJuice(ctx, landmarks, bucketLevel, canvasWidth, canvasHeight) {
-            if (bucketLevel <= 5) return;
-            const intensity = bucketLevel / 100;
+            const v = systemState.parameters.visuals;
+            const f = systemState.parameters.fsm;
+            const cur = v.canvasCursors;
+            const c = v.colors;
+
+            if (bucketLevel <= cur.juiceThreshold) return;
+            const intensity = bucketLevel / f.maxBucketLevel;
             const time = Date.now();
 
             ctx.save();
             ctx.globalCompositeOperation = 'screen';
 
-            // Scale points based on intensity (0=wrist, 20=tips)
-            const targetPoints = [0, 1, 2, 3, 4, 5, 8, 9, 12, 13, 16, 17, 20];
-            const activeCount = Math.floor(targetPoints.length * intensity);
+            // Scale points based on intensity
+            const targetPoints = systemState.parameters.anatomy.handSkeletonMap.flat();
+            // Use unique points
+            const uniquePoints = Array.from(new Set(targetPoints));
+            const activeCount = Math.floor(uniquePoints.length * intensity);
 
             for (let i = 0; i < activeCount; i++) {
-                const lm = landmarks[targetPoints[i]];
+                const lm = landmarks[uniquePoints[i]];
                 const x = lm.x * canvasWidth;
                 const y = lm.y * canvasHeight;
 
-                const size = (15 + Math.sin(time / 100 + i) * 5) * intensity;
+                const size = (cur.fireSizeBase + Math.sin(time / cur.pulseRate + i) * cur.pulseMagnitude) * intensity;
                 const grad = ctx.createRadialGradient(x, y, 0, x, y, size);
-                grad.addColorStop(0, `rgba(255, ${100 + Math.random() * 50}, 50, ${0.6 * intensity})`);
-                grad.addColorStop(1, 'rgba(255, 50, 0, 0)');
+                grad.addColorStop(cur.gradStopA, `rgba(255, ${cur.glowColorOffset + Math.random() * cur.glowColorOffset}, 50, ${cur.whiteCoreAlpha * 1.5 * intensity})`);
+                grad.addColorStop(cur.gradStopC, `rgba(255, ${cur.sparkSpreadY * 5}, 0, 0)`);
 
                 ctx.fillStyle = grad;
                 ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
 
                 // Upward Ash/Sparks
-                if (Math.random() > 0.7) {
-                    const sx = x + (Math.random() - 0.5) * 20;
-                    const sy = y - (time % 1000 / 1000) * 40 * intensity;
-                    ctx.fillStyle = '#FFD700';
+                if (Math.random() > cur.randomThreshold) {
+                    const sx = x + (Math.random() - 0.5) * cur.sparkSpreadX;
+                    const sy = y - (time % cur.sparkDuration / cur.sparkDuration) * cur.sparkRise * 0.5 * intensity;
+                    ctx.fillStyle = c.spark;
                     ctx.globalAlpha = Math.random() * intensity;
-                    ctx.beginPath(); ctx.arc(sx, sy, 1.5, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(sx, sy, cur.skeletonRadius * cur.skeletonRadiusMultiplier, 0, Math.PI * 2); ctx.fill();
                 }
             }
             ctx.restore();
         }
 
         function updateVisualPanels(results) {
+            const v = systemState.parameters.visuals;
+            const cur = v.canvasCursors;
+            const vColors = v.colors;
+            
             // Update Gestures Panel
             if (systemState.ui.gestures) {
                 let html = '<div class="scrollable-panel">';
@@ -2252,7 +2849,7 @@
                     systemState.dataFabric.cursors.forEach((c, i) => {
                         const x = (i === 0 ? canvas.width * 0.25 : canvas.width * 0.75);
                         const y = canvas.height * 0.5;
-                        const radius = 40;
+                        const radius = cur.radiusBase;
 
                         // 🟢 Palm Orientation Sphere (Enhanced V14)
                         const enterT = systemState.parameters.palm.enterThreshold;
@@ -2261,17 +2858,17 @@
                         // Background Sphere
                         ctx.beginPath();
                         ctx.arc(x, y, radius, 0, Math.PI * 2);
-                        ctx.fillStyle = c.isPalmFacing ? 'rgba(0, 255, 65, 0.05)' : 'rgba(255, 65, 54, 0.05)';
+                        ctx.fillStyle = c.isPalmFacing ? `rgba(0, 255, ${cur.glowColorOffset - 35}, ${cur.panelAlpha})` : `rgba(255, ${cur.glowColorOffset - 35}, 54, ${cur.panelAlpha})`;
                         ctx.fill();
                         ctx.strokeStyle = '#333';
                         ctx.lineWidth = 1;
                         ctx.stroke();
 
                         // Hysteresis Rings (Target Zones)
-                        ctx.setLineDash([2, 4]);
-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                        ctx.setLineDash([cur.dashLength, cur.dashGap]);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${cur.skeletonAlphaCoast})`;
                         ctx.beginPath(); ctx.arc(x, y, radius * enterT, 0, Math.PI * 2); ctx.stroke(); // Enter Ring
-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${cur.gridAlpha})`;
                         ctx.beginPath(); ctx.arc(x, y, radius * exitT, 0, Math.PI * 2); ctx.stroke();  // Exit Ring
                         ctx.setLineDash([]);
 
@@ -2287,7 +2884,7 @@
 
                             systemState.ui.history[i].zNorm.push(nz);
                             systemState.ui.history[i].bucket.push(c.bucketLevel / 100);
-                            if (systemState.ui.history[i].zNorm.length > 88) { // Pareto-length history
+                            if (systemState.ui.history[i].zNorm.length > cur.historyLimit) { // Pareto-length history
                                 systemState.ui.history[i].zNorm.shift();
                                 systemState.ui.history[i].bucket.shift();
                             }
@@ -2300,7 +2897,7 @@
                             ctx.arc(x, y, radius * nz, 0, Math.PI * 2);
                             ctx.strokeStyle = stateColor;
                             ctx.lineWidth = 2;
-                            ctx.globalAlpha = 0.3;
+                            ctx.globalAlpha = cur.depthRingAlpha;
                             ctx.stroke();
                             ctx.globalAlpha = 1.0;
 
@@ -2310,29 +2907,29 @@
                             ctx.beginPath();
                             ctx.moveTo(x, y);
                             ctx.lineTo(dotX, dotY);
-                            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${cur.normalLineAlpha})`;
                             ctx.stroke();
 
                             // Facing Dot (Orientation Feedback)
                             ctx.beginPath();
-                            ctx.arc(dotX, dotY, 6, 0, Math.PI * 2);
+                            ctx.arc(dotX, dotY, cur.facingDotSize, 0, Math.PI * 2);
                             ctx.fillStyle = stateColor;
-                            ctx.shadowBlur = c.isPalmFacing ? 15 : 0;
+                            ctx.shadowBlur = c.isPalmFacing ? cur.shadowBlurPalm : 0;
                             ctx.shadowColor = stateColor;
                             ctx.fill();
                             ctx.shadowBlur = 0;
 
                             // Crosshair if inside "Goldilocks" area (approx)
-                            if (nz > 0.88) {
+                            if (nz > cur.goldilocksThreshold) {
                                 ctx.strokeStyle = '#FFD700';
                                 ctx.lineWidth = 1;
-                                ctx.beginPath(); ctx.moveTo(dotX - 10, dotY); ctx.lineTo(dotX + 10, dotY); ctx.stroke();
-                                ctx.beginPath(); ctx.moveTo(dotX, dotY - 10); ctx.lineTo(dotX, dotY + 10); ctx.stroke();
+                                ctx.beginPath(); ctx.moveTo(dotX - cur.crosshairSize, dotY); ctx.lineTo(dotX + cur.crosshairSize, dotY); ctx.stroke();
+                                ctx.beginPath(); ctx.moveTo(dotX, dotY - cur.crosshairSize); ctx.lineTo(dotX, dotY + cur.crosshairSize); ctx.stroke();
                             }
 
                             // 📊 Z-NORM Hysteresis Gauge
-                            const gageW = 8, gageH = 80;
-                            const gageX = x + radius + 15, gageY = y - gageH / 2;
+                            const gageW = cur.gageWidth, gageH = cur.gageHeight;
+                            const gageX = x + radius + cur.gageOffset, gageY = y - gageH / 2;
 
                             // Track
                             ctx.fillStyle = '#111';
@@ -2340,22 +2937,22 @@
 
                             // 📊 SPARKLINE: Z-NORM HISTORY
                             const zHistory = systemState.ui.history[i].zNorm;
-                            drawSparkline(ctx, gageX - 5, gageY, gageW + 10, gageH, zHistory, '#00FF4144');
+                            drawSparkline(ctx, gageX - cur.sparklinePadding / 2, gageY, gageW + cur.sparklinePadding, gageH, zHistory, '#00FF4144');
 
                             // Thresholds (0.80 & 0.64) & Goldilocks (0.88)
                             const enterY = gageY + gageH * (1 - systemState.parameters.palm.enterThreshold);
                             const exitY = gageY + gageH * (1 - systemState.parameters.palm.exitThreshold);
-                            const goldY = gageY + gageH * (1 - 0.88); // 88% Pareto Target
+                            const goldY = gageY + gageH * (1 - cur.goldilocksThreshold); // 88% Pareto Target
 
                             ctx.strokeStyle = '#555';
                             ctx.setLineDash([2, 2]);
-                            ctx.beginPath(); ctx.moveTo(gageX - 5, enterY); ctx.lineTo(gageX + gageW + 5, enterY); ctx.stroke();
-                            ctx.beginPath(); ctx.moveTo(gageX - 5, exitY); ctx.lineTo(gageX + gageW + 5, exitY); ctx.stroke();
+                            ctx.beginPath(); ctx.moveTo(gageX - cur.sparklinePadding / 2, enterY); ctx.lineTo(gageX + gageW + cur.uiLineOffset, enterY); ctx.stroke();
+                            ctx.beginPath(); ctx.moveTo(gageX - cur.sparklinePadding / 2, exitY); ctx.lineTo(gageX + gageW + cur.uiLineOffset, exitY); ctx.stroke();
 
                             // 88% Goldilocks Marker
                             ctx.strokeStyle = '#FFD700'; // Gold
                             ctx.setLineDash([1, 1]);
-                            ctx.beginPath(); ctx.moveTo(gageX - 8, goldY); ctx.lineTo(gageX + gageW + 8, goldY); ctx.stroke();
+                            ctx.beginPath(); ctx.moveTo(gageX - cur.uiIndicatorOffset, goldY); ctx.lineTo(gageX + gageW + cur.uiIndicatorOffset, goldY); ctx.stroke();
                             ctx.setLineDash([]);
 
                             // Fill
@@ -2364,8 +2961,8 @@
                             ctx.fillRect(gageX, gageY + gageH - normFill, gageW, normFill);
 
                             // ⚖️ Leaky Bucket Hysteresis Visualizer
-                            const buckW = 12, buckH = 80;
-                            const buckX = x - radius - 27, buckY = y - buckH / 2;
+                            const buckW = cur.bucketWidth, buckH = cur.bucketHeight;
+                            const buckX = x - radius - cur.bucketOffset, buckY = y - buckH / 2;
                             const bucketLevel = systemState.p1.buckets[i] || 0;
 
                             ctx.fillStyle = '#111';
@@ -2373,11 +2970,11 @@
 
                             // 📊 SPARKLINE: BUCKET HISTORY
                             const bHistory = systemState.ui.history[i].bucket;
-                            drawSparkline(ctx, buckX - 5, buckY, buckW + 10, buckH, bHistory, '#D0BCFF44');
+                            drawSparkline(ctx, buckX - cur.sparklinePadding / 2, buckY, buckW + cur.sparklinePadding, buckH, bHistory, '#D0BCFF44');
 
                             const highY = buckY + buckH * (1 - systemState.parameters.fsm.hysteresisHigh / 100);
                             const lowY = buckY + buckH * (1 - systemState.parameters.fsm.hysteresisLow / 100);
-                            const targetY = buckY + buckH * (1 - 0.88); // 88% HIVE target
+                            const targetY = buckY + buckH * (1 - cur.goldilocksThreshold); // 88% HIVE target
 
                             ctx.strokeStyle = '#555';
                             ctx.setLineDash([2, 2]);
@@ -2387,7 +2984,7 @@
                             // 88% Target Marker
                             ctx.strokeStyle = '#D0BCFF';
                             ctx.setLineDash([1, 1]);
-                            ctx.beginPath(); ctx.moveTo(buckX - 5, targetY); ctx.lineTo(buckX + buckW + 5, targetY); ctx.stroke();
+                            ctx.beginPath(); ctx.moveTo(buckX - cur.sparklinePadding / 2, targetY); ctx.lineTo(buckX + buckW + cur.sparklinePadding / 2, targetY); ctx.stroke();
                             ctx.setLineDash([]);
 
                             const fillH = buckH * (bucketLevel / 100);
@@ -2398,11 +2995,11 @@
                             ctx.fillStyle = '#AAA';
                             ctx.font = '9px Roboto';
                             ctx.textAlign = 'center';
-                            ctx.fillText(`80/64 Z`, gageX + gageW / 2, gageY - 5);
-                            ctx.fillText(`88% HFO`, buckX + buckW / 2, buckY - 5);
-                            ctx.fillText(`Z: ${nz.toFixed(2)}`, gageX + gageW / 2, gageY + gageH + 12);
-                            ctx.fillText(`BUCKET: ${bucketLevel.toFixed(0)}%`, buckX + buckW / 2, buckY + buckH + 12);
-                            ctx.fillText(`FSM: ${c.fsmState}`, x, y + radius + 35);
+                            ctx.fillText(`${(systemState.parameters.palm.enterThreshold * 100).toFixed(0)}/${(systemState.parameters.palm.exitThreshold * 100).toFixed(0)} Z`, gageX + gageW / 2, gageY - cur.uiIndicatorOffset);
+                            ctx.fillText(`${(cur.goldilocksThreshold * 100).toFixed(0)}% HFO`, buckX + buckW / 2, buckY - cur.uiIndicatorOffset);
+                            ctx.fillText(`Z: ${nz.toFixed(2)}`, gageX + gageW / 2, gageY + gageH + cur.sparklinePadding + 2);
+                            ctx.fillText(`BUCKET: ${bucketLevel.toFixed(0)}%`, buckX + buckW / 2, buckY + buckH + cur.sparklinePadding + 2);
+                            ctx.fillText(`FSM: ${c.fsmState}`, x, y + radius + cur.sparklinePadding * 3.5);
                         }
                     });
                 }
@@ -2417,9 +3014,9 @@
                 // Grid lines for tactical feel
                 ctx.strokeStyle = '#222';
                 ctx.lineWidth = 1;
-                for (let i = 0; i <= 10; i++) {
-                    const gx = (i / 10) * canvas.width;
-                    const gy = (i / 10) * canvas.height;
+                for (let i = 0; i <= cur.gridSteps; i++) {
+                    const gx = (i / cur.gridSteps) * canvas.width;
+                    const gy = (i / cur.gridSteps) * canvas.height;
                     ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, canvas.height); ctx.stroke();
                     ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(canvas.width, gy); ctx.stroke();
                 }
@@ -2442,7 +3039,7 @@
 
                         // Ghost Cursor (Tactical UI)
                         ctx.beginPath();
-                        ctx.arc(tx, ty, 6, 0, Math.PI * 2);
+                        ctx.arc(tx, ty, cur.facingDotSize + 2, 0, Math.PI * 2);
                         ctx.strokeStyle = c.fsmState === 'COMMIT' ? '#FF4136' : '#FFD700';
                         ctx.setLineDash([]);
                         ctx.stroke();
@@ -2451,7 +3048,7 @@
                         if (c.fsmState === 'COMMIT') {
                             ctx.beginPath();
                             ctx.arc(tx, ty, 10 + Math.sin(Date.now() / 100) * 2, 0, Math.PI * 2);
-                            ctx.fillStyle = 'rgba(255, 65, 54, 0.2)';
+                            ctx.fillStyle = `rgba(255, ${cur.glowColorOffset - 35}, 54, 0.2)`;
                             ctx.fill();
                         }
 
@@ -2562,42 +3159,50 @@
         }
 
         function drawResults(rawResults, fabric) {
+            window.drawResults = drawResults;
+            window.lastDrawResults = Date.now();
             const { ctx, canvas } = systemState.p0;
             if (!ctx) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const cursors = fabric.cursors;
             const isMirror = systemState.parameters.camera.mirror;
+            const cur = systemState.parameters.visuals.canvasCursors;
 
             // --- V19.6: INTEGRATED TACTICAL GRID ---
             ctx.save();
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.strokeStyle = `rgba(255, 255, 255, ${cur.gridAlpha})`;
             ctx.lineWidth = 1;
-            for (let i = 0; i <= 10; i++) {
-                const gx = (i / 10) * canvas.width;
-                const gy = (i / 10) * canvas.height;
+            for (let i = 0; i <= cur.gridSteps; i++) {
+                const gx = (i / cur.gridSteps) * canvas.width;
+                const gy = (i / cur.gridSteps) * canvas.height;
                 ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, canvas.height); ctx.stroke();
                 ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(canvas.width, gy); ctx.stroke();
             }
             ctx.restore();
 
             // --- P0 ISR SKELETON (Restricted Bypass) ---
-            if (rawResults.landmarks && systemState.parameters.landmarks.showSkeleton) {
-                const utils = new DrawingUtils(ctx);
-                rawResults.landmarks.forEach((landmarks, i) => {
-                    // V19.5: Flip skeleton landmarks for drawing if mirrored
-                    const drawLms = isMirror ? landmarks.map(l => ({ ...l, x: 1.0 - l.x })) : landmarks;
-                    utils.drawConnectors(drawLms, GestureRecognizer.HAND_CONNECTIONS, { color: 'rgba(255, 255, 255, 0.3)', lineWidth: 1 });
-                    utils.drawLandmarks(drawLms, { color: 'rgba(0, 255, 65, 0.5)', radius: 1 });
-                });
-            }
+            // V24.18: Consolidated skeleton drawing to Port 1 Fabric loop below for state-awareness.
 
             // --- PORT 1 FABRIC VISUALS (Enforced) ---
             cursors.forEach((c, i) => {
-                const { screenX, screenY, fsmState, rawX, rawY } = c;
+                const { screenX, screenY, fsmState, rawX, rawY, landmarks } = c;
+
+                // V24.19 Parity Fix: landmarks are already mirrored/processed by P1Bridger.
+                // Do NOT re-mirror them here.
+                if ((fsmState === 'IDLE' || fsmState === 'READY' || fsmState === 'COMMIT') && landmarks && landmarks.length > 0 && systemState.parameters.landmarks.showSkeleton) {
+                    const utils = new DrawingUtils(ctx);
+                    // Use landmarks directly from DataFabric
+                    utils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: `rgba(255, 255, 255, ${cur.skeletonConnectorAlpha})`, lineWidth: cur.skeletonLineWidth });
+                    utils.drawLandmarks(landmarks, { color: `rgba(255, 255, 255, ${cur.skeletonLandmarkAlpha})`, radius: cur.skeletonRadius });
+                }
+
                 if (fsmState === 'IDLE') return;
 
                 const theme = systemState.parameters.physics.cursorTheme;
+                const v = systemState.parameters.visuals;
+                const palette = v.colors;
+                const cur = v.canvasCursors;
 
                 if (theme === 'LI') {
                     drawFireCursor(ctx, rawX, rawY, screenX, screenY, fsmState);
@@ -2605,28 +3210,28 @@
                     drawWaterCursor(ctx, rawX, rawY, screenX, screenY, fsmState);
                 } else if (theme === 'QIAN') {
                     // Legacy Rigid Rod Logic (Metal/Heaven)
-                    const color = fsmState === 'COMMIT' ? '#FF4136' : (fsmState === 'READY' ? '#FFD700' : '#0074D9');
+                    const color = fsmState === 'COMMIT' ? palette.qCommit : (fsmState === 'READY' ? palette.qReady : palette.qIdle);
                     if (systemState.parameters.physics.showLaserBeam) {
                         ctx.save();
                         ctx.beginPath();
                         ctx.moveTo(rawX, rawY); ctx.lineTo(screenX, screenY);
                         ctx.strokeStyle = color;
-                        ctx.lineWidth = fsmState === 'COMMIT' ? 10 : 6;
+                        ctx.lineWidth = fsmState === 'COMMIT' ? cur.arcSizeCommit : cur.arcSizeReady;
                         ctx.lineCap = 'round';
-                        ctx.globalAlpha = fsmState === 'COMMIT' ? 0.9 : 0.6;
+                        ctx.globalAlpha = fsmState === 'COMMIT' ? cur.skeletonAlphaCommit : cur.skeletonAlphaReady;
                         ctx.stroke();
                         ctx.beginPath();
                         ctx.moveTo(rawX, rawY); ctx.lineTo(screenX, screenY);
-                        ctx.strokeStyle = '#fff';
+                        ctx.strokeStyle = palette.white;
                         ctx.lineWidth = fsmState === 'COMMIT' ? 3 : 2;
-                        ctx.globalAlpha = 0.4;
+                        ctx.globalAlpha = cur.whiteCoreAlpha;
                         ctx.stroke();
                         ctx.restore();
                     }
                     ctx.beginPath();
-                    ctx.arc(screenX, screenY, fsmState === 'COMMIT' ? 8 : 5, 0, Math.PI * 2);
+                    ctx.arc(screenX, screenY, fsmState === 'COMMIT' ? cur.arcSizeCommit : cur.arcSizeReady, 0, Math.PI * 2);
                     ctx.fillStyle = color;
-                    ctx.shadowBlur = 10;
+                    ctx.shadowBlur = cur.shadowBlur;
                     ctx.shadowColor = color;
                     ctx.fill();
                     ctx.shadowBlur = 0;
@@ -2636,20 +3241,20 @@
                         'ZHEN': '#9400D3', 'XUN': '#00FF00', 'KAN': '#00008B',
                         'GEN': '#8B4513', 'KUN': '#A52A2A'
                     };
-                    const color = themeColors[theme] || '#FFFFFF';
+                    const color = themeColors[theme] || palette.white;
                     ctx.beginPath();
                     ctx.arc(screenX, screenY, fsmState === 'COMMIT' ? 10 : 6, 0, Math.PI * 2);
                     ctx.fillStyle = color;
                     ctx.fill();
-                    ctx.strokeStyle = '#fff';
+                    ctx.strokeStyle = palette.white;
                     ctx.stroke();
                 }
 
                 // --- V19.6: INTEGRATED GHOST CURSOR (Tactical Layer) ---
-                const ghostColor = fsmState === 'COMMIT' ? '#FF4136' : (fsmState === 'READY' ? '#FFD700' : '#0074D9');
+                const ghostColor = fsmState === 'COMMIT' ? palette.qCommit : (fsmState === 'READY' ? palette.qReady : palette.qIdle);
                 ctx.save();
                 ctx.beginPath();
-                ctx.arc(screenX, screenY, 12, 0, Math.PI * 2);
+                ctx.arc(screenX, screenY, cur.ghostSize, 0, Math.PI * 2);
                 ctx.strokeStyle = ghostColor;
                 ctx.lineWidth = 1;
                 ctx.setLineDash([2, 2]);
@@ -2658,11 +3263,11 @@
 
                 // Focal Crosshair (Goldilocks Zone)
                 if (fsmState === 'COMMIT') {
-                    ctx.strokeStyle = '#fff';
+                    ctx.strokeStyle = palette.white;
                     ctx.lineWidth = 1;
                     ctx.beginPath();
-                    ctx.moveTo(screenX - 10, screenY); ctx.lineTo(screenX + 10, screenY);
-                    ctx.moveTo(screenX, screenY - 10); ctx.lineTo(screenX, screenY + 10);
+                    ctx.moveTo(screenX - cur.crosshairSize, screenY); ctx.lineTo(screenX + cur.crosshairSize, screenY);
+                    ctx.moveTo(screenX, screenY - cur.crosshairSize); ctx.lineTo(screenX, screenY + cur.crosshairSize);
                     ctx.stroke();
                 }
             });
@@ -2809,8 +3414,8 @@
 
             // V28: Fallback resolution for headless/mock testing
             const [w_param, h_param] = systemState.parameters.camera.resolution.split('x').map(Number);
-            const vw = video.videoWidth || w_param || 1280;
-            const vh = video.videoHeight || h_param || 720;
+            const vw = video.videoWidth || w_param || systemState.parameters.camera.resolutionWidth;
+            const vh = video.videoHeight || h_param || systemState.parameters.camera.resolutionHeight;
 
             systemState.p0.videoBounds = { width: vw, height: vh };
 
@@ -2827,13 +3432,45 @@
             let drawW = parentWidth, drawH = parentWidth / vRatio;
             if (drawH > parentHeight) { drawH = parentHeight; drawW = drawH * vRatio; }
 
-            // Set buffer size to match video source
+            // Set buffer size to match video source (High-fidelity sensing baseline)
             canvas.width = vw;
             canvas.height = vh;
 
-            // Set CSS display size to fit layout
-            canvas.style.width = `${drawW}px`;
-            canvas.style.height = `${drawH}px`;
+            // V24.19: Substrate Parity Alignment
+            // Center overlays to match object-fit: contain video centering
+            const offsetX = (parentWidth - drawW) / 2;
+            const offsetY = (parentHeight - drawH) / 2;
+
+            // V24.20: Store view bounds for coordinate transformation parity
+            systemState.ui.viewBounds = {
+                width: drawW,
+                height: drawH,
+                offsetX: offsetX,
+                offsetY: offsetY
+            };
+
+            // Sync all canvas elements (Overlay, Babylon, Pixi)
+            // V24.20: Including Excalidraw UI in the parity box
+            const substrates = [
+                canvas,
+                ...systemState.ui.juiceLayers.map(l => l.canvas || l.app?.view),
+                systemState.ui.excalidrawOverlay
+            ];
+
+            substrates.forEach(el => {
+                if (el) {
+                    el.style.position = 'absolute';
+                    el.style.left = `${offsetX}px`;
+                    el.style.top = `${offsetY}px`;
+                    el.style.width = `${drawW}px`;
+                    el.style.height = `${drawH}px`;
+                }
+            });
+
+            // Trigger engine resizes to match the new CSS bounds
+            systemState.ui.juiceLayers.forEach(l => {
+                if (l.resize) l.resize(drawW, drawH);
+            });
         }
 
         function logMission(msg, color = '#00ff41') {
@@ -2863,7 +3500,7 @@
                             id="excalidraw-iframe"
                             src="excalidraw_v20_wrapper.html" 
                             style="width:100%; height:100%; border:none; filter: contrast(1.1) brightness(0.9); background: transparent;"
-                            allow="clipboard-read; clipboard-write; focus-without-user-activation; pointer-lock">
+                            allow="clipboard-read; clipboard-write; unload">
                         </iframe>
                     </div>
                     ` : ''}
