@@ -50,27 +50,10 @@ if __name__ == "__main__":
     hot_dir = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/"
     cold_dir = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/"
     
-    # Omega Gen 4 Files (V18 to V24)
-    versions = [
-        "omega_gen4_v18.html", "omega_gen4_v18_spec.yaml",
-        "omega_gen4_v19.html", "omega_gen4_v19_1.html", "omega_gen4_v19_2.html", 
-        "omega_gen4_v19_3.html", "omega_gen4_v19_4.html", "omega_gen4_v19_4_spec.yaml",
-        "omega_gen4_v19_5.html", "omega_gen4_v19_6.html",
-        "omega_gen4_v20.html", "omega_gen4_v20_1.html", "omega_gen4_v20_2.html",
-        "omega_gen4_v20_3.html", "omega_gen4_v20_4.html", "omega_gen4_v20_5.html",
-        "omega_gen4_v20_6.html", "omega_gen4_v20_7.html", "omega_gen4_v20_8.html",
-        "omega_gen4_v20_8_spec.yaml",
-        "omega_gen4_v21.html", "omega_gen4_v21_1.html", "omega_gen4_v21_1_cursor_lab.html",
-        "omega_gen4_v21_2_lab.html", "omega_gen4_v21_3.html", "omega_gen4_v21_fire_review.html",
-        "omega_gen4_v22_1_lab.html", "omega_gen4_v22_babylon_lab.html",
-        "omega_gen4_v23.html", "omega_gen4_v23_1.html",
-        "omega_gen4_v24.html",
-        "OMEGA_EVOLUTION_HISTORY.md", "OMEGA_GEN4_DELTA_REPORT.md", "SUCCESSFUL_PATTERNS_OMEGA.md",
-        "omega_gen4_manifest.yaml"
-    ]
-    
-    for v in versions:
-        freeze_file(hot_dir, cold_dir, v)
+    # Auto-discover all omega files in the hot directory
+    for f in os.listdir(hot_dir):
+        if f.startswith("omega_gen4_v") or f in ["OMEGA_EVOLUTION_HISTORY.md", "OMEGA_GEN4_DELTA_REPORT.md", "SUCCESSFUL_PATTERNS_OMEGA.md", "omega_gen4_manifest.yaml"]:
+            freeze_file(hot_dir, cold_dir, f)
 
     # Freeze the freshly tracked user notes as well?
     notes_hot = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/sprawl_cleanup_2026_01_14/"

@@ -1,13 +1,13 @@
 <!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
-<!-- OMEGA GEN 4 V24.22 (Skeletal Fading | Dwell-Based Persistence | Tracking Loss UX) -->
-<!-- Evolution of v24.21: Implemented skeletal alpha tied to Leaky Bucket for graceful degradation -->
+<!-- OMEGA GEN 4 V24.20 (UX/HIG Alignment | Excalidraw-to-Video Fit | M3 Parity) -->
+<!-- Evolution of v24.19: Locking the interaction layer (Excalidraw) inside the video viewport -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO OMEGA GEN 4 | V24.22</title>
+    <title>HFO OMEGA GEN 4 | V24.20</title>
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet"
@@ -441,20 +441,7 @@
             anatomy: z.object({
                 palmWidthCm: z.number().min(3).max(15),
                 rodExtensionMultiplier: z.number().min(0.1).max(10)
-            }),
-            visuals: z.object({
-                engine: z.enum(['BABYLON', 'PIXI']),
-                variant: z.string(),
-                pixi: z.object({
-                    sparklineSteps: z.number().default(64)
-                }).optional()
-            }).optional(),
-            canvasCursors: z.object({
-                radiusBase: z.number().default(40).optional(),
-                gageHeight: z.number().default(80).optional(),
-                bucketHeight: z.number().default(80).optional(),
-                gageOffset: z.number().default(20).optional()
-            }).optional()
+            })
         });
 
         const LandmarkSchema = z.object({
@@ -469,7 +456,6 @@
             screenY: z.number(),
             normX: z.number(),
             normY: z.number(),
-            normZ: z.number(), // V24.21: Depth Parity
             rawX: z.number(), // V18: Required for laser origin
             rawY: z.number(), // V18: Required for laser origin
             fsmState: z.enum(['IDLE', 'READY', 'COMMIT', 'COAST']),
@@ -484,7 +470,6 @@
                 z: z.number()
             }),
             bucketLevel: z.number(),
-            skeletonAlpha: z.number().default(1.0), // V24.22: Fading on tracking loss
             handIndex: z.number(),
             pointerId: z.number(), // V24.4: Stable ABI ID
             curls: z.object({
@@ -551,16 +536,7 @@
                 },
                 visuals: {
                     engine: 'BABYLON',
-                    variant: 'PHOENIX_CORE',
-                    pixi: {
-                        sparklineSteps: 64
-                    }
-                },
-                canvasCursors: {
-                    radiusBase: 40,
-                    gageHeight: 80,
-                    bucketHeight: 80,
-                    gageOffset: 20
+                    variant: 'PHOENIX_CORE'
                 },
                 p0Active: false,
                 devMode: false
@@ -706,18 +682,12 @@
                     const hasLandmarks = !!(c.landmarks && c.landmarks.length > 0);
 
                     // V24.18: Sovereign Skeleton Visibility (IDLE, READY, COMMIT)
-                    // V24.22: Fading logic for Tracking Loss / COAST
+                    // If we have landmarks and not coasting, show it regardless of FSM state.
                     if (skeleton) {
-                        const shouldShowSkeleton = showSkeleton && hasLandmarks;
+                        const shouldShowSkeleton = !isCoast && showSkeleton && hasLandmarks;
                         skeleton.root.setEnabled(shouldShowSkeleton);
 
                         if (shouldShowSkeleton) {
-                            const fadeAlpha = c.skeletonAlpha !== undefined ? c.skeletonAlpha : 1.0;
-                            // Apply fading to children
-                            skeleton.root.getChildMeshes().forEach(m => {
-                                m.visibility = fadeAlpha;
-                            });
-
                             // Update 21 landmark spheres
                             c.landmarks.forEach((lm, lIndex) => {
                                 // V24.18 Perspective Alignment: 
@@ -761,7 +731,7 @@
                         }
 
                         // Pixel to World Projection for the pointer root
-                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height, (c.normZ || 0) * 1.5);
+                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height);
 
                         let motionVector = BABYLON.Vector3.Zero();
                         if (this.lastPositions[i]) {
@@ -1568,11 +1538,9 @@
 
                             const rawCursorData = {
                                 screenX: finalX, screenY: finalY,
-                                normX: finalX / width, normY: finalY / height,
-                                normZ: projectedPoint.z,
+                                normX: finalProjX, normY: projectedPoint.y,
                                 fsmState: fsmStateNew, gesture: category,
                                 confidence, isPalmFacing, bucketLevel: bucket,
-                                skeletonAlpha: 1.0, // Tracking Present
                                 handIndex: i, pointerId: 10 + i, // V24.4: Stable Hand ID
                                 curls,
                                 landmarks: mirroredLandmarks, // Fixed: Mirrored landmarks
@@ -1615,9 +1583,8 @@
                                     screenY: coastPos.y,
                                     fsmState: 'COAST',
                                     bucketLevel: bucket,
-                                    skeletonAlpha: bucket / 100, // V24.22: Dwell-based fading
                                     handIndex: i,
-                                    landmarks: last.landmarks || [], // V24.22: Keep landmarks for fading
+                                    landmarks: [], // V24.18: Clear landmarks during COAST to hide skeleton
                                     timestamp: now
                                 });
                                 systemState.p1.fsmStates[i] = 'COAST';
@@ -1668,7 +1635,6 @@
         window.systemState = systemState;
         window.PlanckPhysicsAdapter = PlanckPhysicsAdapter;
         window.P1Bridger = P1Bridger;
-        window.drawResults = drawResults;
 
         // --- P0: SENSE ---
         async function initP0() {
@@ -1780,15 +1746,16 @@
         function w3cPointerNematocystInjector() {
             const cursors = systemState.dataFabric.cursors;
             const video = systemState.p0.video;
-            if (!video) return;
+            if (!video || !systemState.ui.viewBounds) return;
 
             const videoWidth = video.videoWidth || parseInt(systemState.parameters.camera.resolution.split('x')[0]) || 1280;
             const videoHeight = video.videoHeight || parseInt(systemState.parameters.camera.resolution.split('x')[1]) || 720;
             const rect = video.getBoundingClientRect();
-            const rectWidth = rect.width || videoWidth;
-            const rectHeight = rect.height || videoHeight;
-            const rectLeft = rect.left || 0;
-            const rectTop = rect.top || 0;
+            // Use viewBounds set by resizeCanvas for exact visual scaling
+            const rectWidth = systemState.ui.viewBounds.width;
+            const rectHeight = systemState.ui.viewBounds.height;
+            const rectLeft = rect.left + systemState.ui.viewBounds.offsetX;
+            const rectTop = rect.top + systemState.ui.viewBounds.offsetY;
 
             const currentIds = new Set();
 
@@ -1797,23 +1764,19 @@
 
                 // V24.7: Hot Seat V2 Interaction Gating
                 // Ensures only ONE hand can interact with the system at a time.
-                // READY hands provide multiple visual fireballs, but only the primary hand injects events.
                 const isPrimary = (systemState.fsm.primaryHandIndex === cursor.handIndex);
                 let pState = systemState.fsm.activePointers[pid];
 
-                // If not primary, only allow processing if it was previously active (to cleanup)
                 if (!isPrimary && (!pState || !pState.wasDown)) return;
 
                 currentIds.add(pid);
 
-                const nx = cursor.screenX / (systemState.p0.videoBounds?.width || videoWidth);
-                const ny = cursor.screenY / (systemState.p0.videoBounds?.height || videoHeight);
+                // Normalized coordinates from the P1 DataFabric (already 0.0-1.0)
+                const nx = cursor.normX || (cursor.screenX / (systemState.p0.videoBounds?.width || videoWidth));
+                const ny = cursor.normY || (cursor.screenY / (systemState.p0.videoBounds?.height || videoHeight));
 
-                // V24.20: Interaction Parity Fix
-                // Use the centered visual bounds instead of raw container rect
-                const bounds = systemState.ui.viewBounds || { width: rectWidth, height: rectHeight, offsetX: 0, offsetY: 0 };
-                const viewX = rectLeft + bounds.offsetX + (nx * bounds.width);
-                const viewY = rectTop + bounds.offsetY + (ny * bounds.height);
+                const viewX = rectLeft + (nx * rectWidth);
+                const viewY = rectTop + (ny * rectHeight);
 
                 const isDown = (cursor.fsmState === 'COMMIT' || cursor.fsmState === 'COAST');
                 const pressure = isDown ? (cursor.fsmState === 'COMMIT' ? 1.0 : 0.5) : 0.0;

@@ -19,10 +19,10 @@ test.describe('Omega Characterization: v24.20 vs v24.21', () => {
     test('Phase 1: Record Golden Telemetry from v24.20', async ({ page }) => {
         console.log('⏺️ Navigating to v24.20 for Recording...');
         await page.goto(V20_URL);
-        
+
         // Wait for MediaPipe to load
         await page.waitForFunction(() => window.GestureRecognizer !== undefined, { timeout: 30000 });
-        
+
         console.log('⏺️ Starting Telemetry Recording...');
         // Simulate a "synthetic" landmark stream if real camera isn't available in CI
         // For this characterization, we inject known coordinates into P1Bridger
@@ -38,17 +38,17 @@ test.describe('Omega Characterization: v24.20 vs v24.21', () => {
                 // Simulated circle movement
                 const x = 0.5 + Math.sin(frame * 0.1) * 0.2;
                 const y = 0.5 + Math.cos(frame * 0.1) * 0.2;
-                
+
                 // Mock MediaPipe result for P1Bridger
                 const mockResults = {
                     landmarks: [[
-                        {x: x, y: y, z: 0}, // Index Tip
-                        {x: x, y: y+0.1, z: 0}, // MCP
+                        { x: x, y: y, z: 0 }, // Index Tip
+                        { x: x, y: y + 0.1, z: 0 }, // MCP
                     ]],
-                    gestures: [[{categoryName: 'POINTING_UP', score: 0.99}]],
-                    handedness: [[{categoryName: 'Right'}]]
+                    gestures: [[{ categoryName: 'POINTING_UP', score: 0.99 }]],
+                    handedness: [[{ categoryName: 'Right' }]]
                 };
-                
+
                 // Directly call Bridger.fuse (we need to reach into the page context)
                 // In v24.20/21 P1Bridger is global
                 // @ts-ignore
@@ -61,7 +61,7 @@ test.describe('Omega Characterization: v24.20 vs v24.21', () => {
                 });
                 // @ts-ignore
                 window.hfoTelemetry.record('P1_FUSE', systemState.dataFabric);
-                
+
                 frame++;
                 requestAnimationFrame(recordStep);
             };
@@ -70,7 +70,7 @@ test.describe('Omega Characterization: v24.20 vs v24.21', () => {
 
         // Wait for recording to finish (200 frames @ 60fps ~ 3.3s)
         await page.waitForTimeout(5000);
-        
+
         const telemetry = await page.evaluate(() => {
             // @ts-ignore
             return window.hfoTelemetry.buffer.map(e => JSON.stringify(e)).join('\n');
@@ -88,32 +88,32 @@ test.describe('Omega Characterization: v24.20 vs v24.21', () => {
 
         console.log('▶️ Navigating to v24.21 for Replay...');
         await page.goto(V21_URL);
-        
+
         await page.waitForFunction(() => window.DrawingUtils !== undefined, { timeout: 30000 });
 
         const telemetryData = fs.readFileSync(TELEMETRY_PATH, 'utf-8');
-        
+
         console.log('▶️ Injecting Telemetry into v24.21 and Monitoring for Regressions...');
         const regressions = await page.evaluate(async (data) => {
             const frames = data.split('\n').filter(l => l.trim()).map(l => JSON.parse(l));
             const diffs = [];
-            
+
             for (let i = 0; i < frames.length; i++) {
                 const goldenFrame = frames[i];
                 // Deep clone state before processing
                 // @ts-ignore
                 systemState.dataFabric = DataFabricSchema.parse(goldenFrame.data);
-                
+
                 // Trigger one render cycle
                 // @ts-ignore
-                drawResults({landmarks: [], gestures: [], handedness: []}, systemState.dataFabric);
-                
+                drawResults({ landmarks: [], gestures: [], handedness: [] }, systemState.dataFabric);
+
                 // Check for critical runtime variables that tend to regression
                 // @ts-ignore
                 const v = systemState.parameters.visuals;
                 // @ts-ignore
                 if (!v.canvasCursors.radiusBase) diffs.push(`Frame ${i}: radiusBase is missing from canvasCursors`);
-                
+
                 // Verify screen coordinate projections
                 // @ts-ignore
                 const cur = systemState.dataFabric.cursors[0];

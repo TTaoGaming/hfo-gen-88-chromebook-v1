@@ -53,6 +53,8 @@ package-lock.json
 # Large Binary Persistance (HFO Shards)
 *.zim
 *.parquet
+*.duckdb
+*.duckdb.wal
 hfo_hot_obsidian/bronze/6_persist/
 hfo_cold_obsidian/bronze/6_persist/
 **/test-results/

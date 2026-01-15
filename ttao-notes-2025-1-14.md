@@ -117,8 +117,33 @@ emit to hfo orchestration hub, lots of magic numbers and the fixes are triggerin
 the leaky bucket dwell should be a responsibility of port 1. it's a shared data fabric resource, it's my abstraction for user readiness to commit. let's clone and evolve
 ---
 
-need to add a note that we will need predictive timing on event triggers like leaky bucket and like commit events can all be kalman 1d filtered for lookahead.
+need to add a note that we will need predictive timing on event triggers like leaky bucket and like commit events can all be kalman 1d filtered for lookahead
 ---
 
 you don't remenber my geometry. the obsidian hourglass is a probabalistic prescience spike factory evolutionary engine with exemplar composition and genetic programming. do you remember what i am building?
 ---
+
+---
+
+the HIVE/8 loop is the OBSIDIAN_HOURGLASS it is the same thing, it's hindsight - insight - validated-foresight - evolution - n+1 strange loop. and it should nest PREY/8 loops for swarm orchestration, the obsidian hourglass is never designed for 1 user, it's a swarm orchestration based on PDCA and research+TDD RED-GREEN-REFACTOR and double diamond. the basic configuration is HIVE/8:1010 (power of 8 so 8-1-8-1) double diamond. but in the ideal situation a real HFO loop would look something like this, mission engineering intent and constraints set, HIVE/8:8787 + (new hive loop) 7676 + 6565 + 5454 + 4343 + 3232+ 2121 + 1010 = 1. it's meant for a concurrency in factors of 8 since we recursively chunk and compress in an octree. there shouldn't be a max concurrency limit if the fractal octree is designed right, but we'll hit some kind of physical limit so there will have to be some kind of phase shift in the swarm during those limits and then size alone will have diminishing results, likely topography optimizations and my best guess is better semantic vector space optimization since if it's a vector I should be able to drill fractally deep into my architecture hard to explain this with words. the best analogy is imagine 3d state action space, I am on center point in the middle and the ring around me is transverse plane is my present capability, that grows with the concurrency I have, and I case a cone of swarms of ai with threads connected to me into the past and then I have them crawl back and report to me in my MOSAIC WARFARE TILE system and then we coordinate in the present and then cast out a spike factory for POC into the future and chunking the decision space with threads and my swarmlings expanding out as far as I have time for in a receding horizon H-POMDP process, and then we take all that and use genetic programming and mutation testing to evolve the strange loop and start the cycle englessly. it should look like a hourglass with the grains of sands as my swarmlings and it should expand and contract in rythm of the hive with powers of 8 on a stigmergy substrate like jsonl/NATS/kafka
+!!!
+important idea
+---
+
+we need to make sure that READINESS palm cone dwell leaky bucket hysteresis is user adjustable for FILL and DRAIN rates and those 2 numbers should propogate throughout the system, like timing and other things. we need to make a note that if the readiness score is constant in the future we will use 1d kalman filters and tone js quantization for timing lookahead for predictive latency triggering of events. clone and evolve, these concepts are getting pretty high abstraction so we need to focus on the UX and UI and get it production ready TODAY with my ai swarm helping me. it's so CLOSE. we need to mutation test it, add excalidraw custom user sizing borders due to screen space needing a buffer, and removing online dependencies we can download and assimilate. what we need is fo ryou to create a v25 spec. we need to evolve and be production ready, we have all the pieces this is already state of the art, let's GO
+---
+
+you need to pull my progress on mission thread alpha and omega i think mission thread omega 1st vertical slice is 90% ready, just some ux polish look at omega gen4 v24.23
+---
+
+for gen4 v25 we need to have progressive disclosure for the settings panel. toggle Essentials/Dev and we just seperate the tags to show or hide things. we need to add 1 line of tool tip below each slider or toggle to make everything very user friendly. large touch targets the idea is to use our HFO mission thread omega w3c pointer gesture system to control the settings as well so it's a total gesture interface with 1 pointer for now but gesture vocabulary will be incoming
+need to add circle rune on index fingertip as charging, it should circle and when circle is full it'll phase change and visuals change with it, it's the FSM + dwell progress timer it's a visual feedback mechanism and if it's going to be a circle it might as well be a beautiful shifting geometric rune
+---
+
+i want you to clone and evolve to gen4 v26 from v24.23. one major thing we need is skelon lifecycle management, it should fade on no tracking detected or long periods of inactivity. we can right now on hand tracking loss the skeleton stays on screen and that is a huge UX issue. we need to focus v26 on incremental safe changes we clone and mutate the big changes are breaking the mission thread
+---
+
+omega gen 4 v 27. need to focus on unified readiness timer with user adjustable fill/drain raite that everything else uses as an abstraction
+v28 focus on screen sizing because excalidraw has bezels that we need to account for in the camera, we can't do gestures with our hand half off the screen.
+v29 need to be focused on user onboarding
+v30 can be offline dependencies.

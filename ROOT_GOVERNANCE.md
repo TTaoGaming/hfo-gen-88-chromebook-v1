@@ -16,6 +16,7 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 
 - `hfo_cold_obsidian/`: Hardened source of truth (Read-Only context).
 - `hfo_hot_obsidian/`: Active integration and development layer.
+- `hfo_gen_88_cb_v2/`: Port 6 (Kraken Keeper) Storage Hub & SSOT Infrastructure.
 - `.github/`: Agent personas, steering instructions, and automation.
 - `.vscode/`: Workspace configuration.
 - `.venv/`: Local Python environment.

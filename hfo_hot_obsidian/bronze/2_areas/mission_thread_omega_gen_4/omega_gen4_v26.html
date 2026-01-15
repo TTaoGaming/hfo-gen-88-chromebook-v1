@@ -2808,6 +2808,8 @@
                 fLand.add(systemState.parameters.landmarks, 'minConfidence', 0.1, 1).onChange(syncConfig);
                 fLand.add(systemState.parameters.landmarks, 'numHands', 1, 4, 1).onChange(syncConfig);
                 fLand.add(systemState.parameters.landmarks, 'showSkeleton');
+                fLand.add(systemState.parameters.landmarks, 'skeletonFadeTimeMs', 100, 2000, 10).name('Skeleton Fade (ms)');
+                fLand.add(systemState.parameters.landmarks, 'skeletonInactivityTimeoutMs', 500, 5000, 10).name('Dormancy Timeout (ms)');
 
                 const fGest = gui.addFolder('P1: Gesture Confidence');
                 fGest.add(systemState.parameters.gestures, 'minGestureConfidence', 0, 1).name('Confidence Threshold');

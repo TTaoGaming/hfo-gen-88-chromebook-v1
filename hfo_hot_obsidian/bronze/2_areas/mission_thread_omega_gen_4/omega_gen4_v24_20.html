@@ -456,7 +456,6 @@
             screenY: z.number(),
             normX: z.number(),
             normY: z.number(),
-            normZ: z.number(), // V24.21: Depth Parity
             rawX: z.number(), // V18: Required for laser origin
             rawY: z.number(), // V18: Required for laser origin
             fsmState: z.enum(['IDLE', 'READY', 'COMMIT', 'COAST']),
@@ -732,7 +731,7 @@
                         }
 
                         // Pixel to World Projection for the pointer root
-                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height, (c.normZ || 0) * 1.5);
+                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height);
 
                         let motionVector = BABYLON.Vector3.Zero();
                         if (this.lastPositions[i]) {
@@ -1539,8 +1538,7 @@
 
                             const rawCursorData = {
                                 screenX: finalX, screenY: finalY,
-                                normX: finalX / width, normY: finalY / height,
-                                normZ: projectedPoint.z,
+                                normX: finalProjX, normY: projectedPoint.y,
                                 fsmState: fsmStateNew, gesture: category,
                                 confidence, isPalmFacing, bucketLevel: bucket,
                                 handIndex: i, pointerId: 10 + i, // V24.4: Stable Hand ID
