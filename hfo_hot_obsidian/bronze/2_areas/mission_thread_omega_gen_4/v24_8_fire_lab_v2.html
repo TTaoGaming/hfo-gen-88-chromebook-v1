@@ -1,0 +1,337 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- OMEGA GEN 4 V24.8 - FIRE VISUALIZATION LAB V2 (NEEDLE FOCUS) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | V24.8 FIRE LAB V2</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <style>
+        :root {
+            --hfo-red: #FF4136;
+            --hfo-cyan: #00FFFF;
+            --hfo-amber: #FFB000;
+            --hfo-black: #050505;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--hfo-black);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: white;
+            user-select: none;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            display: block;
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 24px;
+            border-left: 4px solid var(--hfo-cyan);
+            border-radius: 4px;
+            pointer-events: auto;
+            width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--hfo-cyan);
+            font-weight: 900;
+            margin-bottom: 20px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .section-label {
+            font-size: 11px;
+            color: #888;
+            margin: 15px 0 8px 0;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        button {
+            background: #1a1a1a;
+            color: #ccc;
+            border: 1px solid #333;
+            padding: 10px 14px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            border-color: #555;
+            background: #222;
+        }
+
+        button.active {
+            background: var(--hfo-cyan);
+            color: black;
+            font-weight: bold;
+            border-color: white;
+        }
+
+        #status-indicator {
+            padding: 10px;
+            margin-top: 10px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .status-ready {
+            color: var(--hfo-amber);
+        }
+
+        .status-commit {
+            color: var(--hfo-cyan);
+            font-weight: bold;
+        }
+
+        #ux-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border: 2px solid white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 50;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: absolute;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .instruction {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #aaa;
+            line-height: 1.4;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ux-dot"></div>
+
+    <div id="ui">
+        <span class="header">OMEGA FIRE LAB V2 // NEEDLES</span>
+
+        <div id="status-indicator">
+            STATE: <span id="state-text" class="status-ready">READY</span>
+        </div>
+
+        <span class="section-label">SELECT VARIANT</span>
+        <div class="btn-group">
+            <button class="variant-btn active" onclick="switchVariant(0)">01: SHARP PLASMA NEEDLE</button>
+            <button class="variant-btn" onclick="switchVariant(1)">02: HALO CORE POINT</button>
+            <button class="variant-btn" onclick="switchVariant(2)">03: SPARKLING JET</button>
+            <button class="variant-btn" onclick="switchVariant(3)">04: DENSITY BLOOM</button>
+        </div>
+
+        <div class="instruction">
+            <b>INTERACTION TEST:</b> Click, touch, or hold your trackpad/screen to simulate the <b>COMMIT</b>
+            transition.
+        </div>
+    </div>
+
+    <canvas id="renderCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        const uxDot = document.getElementById("ux-dot");
+        const stateText = document.getElementById("state-text");
+        const engine = new BABYLON.Engine(canvas, true);
+
+        let currentState = 'READY';
+        let currentVariant = 0;
+        let activeSystems = [];
+        let emitterRoot;
+
+        const colors = {
+            ready: new BABYLON.Color4(1, 0.7, 0.1, 0.8),
+            commit: new BABYLON.Color4(0, 0.9, 1, 1.0),
+            core: new BABYLON.Color4(1, 1, 1, 1.0),
+            dead: new BABYLON.Color4(0, 0, 0, 0)
+        };
+
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color4(0.01, 0.01, 0.01, 1);
+
+            const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0, -10), scene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            emitterRoot = BABYLON.MeshBuilder.CreateSphere("emitter", { diameter: 0.02 }, scene);
+            emitterRoot.isVisible = false;
+
+            updateVisuals(scene);
+
+            // Interaction Handling
+            const handleInteractStart = () => {
+                currentState = 'COMMIT';
+                stateText.textContent = 'COMMIT';
+                stateText.className = 'status-commit';
+                updateVisuals(scene);
+            };
+            const handleInteractEnd = () => {
+                currentState = 'READY';
+                stateText.textContent = 'READY';
+                stateText.className = 'status-ready';
+                updateVisuals(scene);
+            };
+
+            window.addEventListener("mousedown", handleInteractStart);
+            window.addEventListener("mouseup", handleInteractEnd);
+            window.addEventListener("touchstart", (e) => { e.preventDefault(); handleInteractStart(); }, { passive: false });
+            window.addEventListener("touchend", handleInteractEnd);
+
+            window.addEventListener("pointermove", (e) => {
+                uxDot.style.left = e.clientX + "px";
+                uxDot.style.top = e.clientY + "px";
+
+                const width = engine.getRenderWidth();
+                const height = engine.getRenderHeight();
+                const vector = new BABYLON.Vector3(e.clientX, e.clientY, 0);
+                const worldCoordNear = BABYLON.Vector3.Unproject(vector, width, height, BABYLON.Matrix.Identity(), scene.getViewMatrix(), scene.getProjectionMatrix());
+                const vectorFar = new BABYLON.Vector3(e.clientX, e.clientY, 1);
+                const worldCoordFar = BABYLON.Vector3.Unproject(vectorFar, width, height, BABYLON.Matrix.Identity(), scene.getViewMatrix(), scene.getProjectionMatrix());
+                const direction = worldCoordFar.subtract(worldCoordNear).normalize();
+                if (Math.abs(direction.z) > 0.0001) {
+                    const distance = -worldCoordNear.z / direction.z;
+                    emitterRoot.position.copyFrom(worldCoordNear.add(direction.scale(distance)));
+                }
+            });
+
+            return scene;
+        };
+
+        const scene = createScene();
+        engine.runRenderLoop(() => scene.render());
+        window.addEventListener("resize", () => engine.resize());
+
+        function switchVariant(idx) {
+            currentVariant = idx;
+            const btns = document.querySelectorAll('.variant-btn');
+            btns.forEach((b, i) => b.classList.toggle('active', i === idx));
+            updateVisuals(scene);
+        }
+
+        function clearSystems() {
+            activeSystems.forEach(s => { s.stop(); s.dispose(); });
+            activeSystems = [];
+        }
+
+        function createBaseSystem(scene) {
+            const system = new BABYLON.ParticleSystem("sys", 2000, scene);
+            system.particleTexture = new BABYLON.Texture("https://playground.babylonjs.com/textures/flare.png", scene);
+            system.emitter = emitterRoot;
+            system.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+            activeSystems.push(system);
+            return system;
+        }
+
+        function updateVisuals(scene) {
+            clearSystems();
+            const isCommit = (currentState === 'COMMIT');
+
+            if (currentVariant === 0) { // 01: SHARP PLASMA NEEDLE
+                const sys = createBaseSystem(scene);
+                sys.color1 = isCommit ? colors.commit : colors.ready;
+                sys.emitRate = isCommit ? 1500 : 300;
+                sys.minSize = isCommit ? 0.05 : 0.02;
+                sys.maxSize = isCommit ? 0.3 : 0.15;
+                sys.minLifeTime = 0.1; sys.maxLifeTime = 0.2; // Short trail
+                sys.gravity = new BABYLON.Vector3(0, isCommit ? 20 : 5, 0);
+                sys.minEmitBox = new BABYLON.Vector3(-0.01, 0, -0.01);
+                sys.maxEmitBox = new BABYLON.Vector3(0.01, 0, 0.01);
+                sys.start();
+            }
+            else if (currentVariant === 1) { // 02: HALO CORE POINT
+                const needle = createBaseSystem(scene);
+                needle.color1 = isCommit ? colors.commit : colors.ready;
+                needle.emitRate = 800;
+                needle.minSize = 0.05; needle.maxSize = 0.2;
+                needle.minLifeTime = 0.1; needle.maxLifeTime = 0.2;
+                needle.gravity = new BABYLON.Vector3(0, 10, 0);
+                needle.start();
+
+                const halo = createBaseSystem(scene);
+                halo.color1 = isCommit ? colors.commit : colors.ready;
+                halo.color1.a = 0.2;
+                halo.emitRate = isCommit ? 200 : 50;
+                halo.minSize = isCommit ? 0.8 : 0.4;
+                halo.maxSize = isCommit ? 1.2 : 0.6;
+                halo.minLifeTime = 0.3; halo.maxLifeTime = 0.5;
+                halo.start();
+            }
+            else if (currentVariant === 2) { // 03: SPARKLING JET
+                const core = createBaseSystem(scene);
+                core.color1 = isCommit ? colors.commit : colors.ready;
+                core.emitRate = isCommit ? 2000 : 400;
+                core.minSize = 0.05; core.maxSize = 0.15;
+                core.minLifeTime = 0.05; core.maxLifeTime = 0.15;
+                core.gravity = new BABYLON.Vector3(0, 25, 0);
+                core.start();
+
+                if (isCommit) {
+                    const sparks = createBaseSystem(scene);
+                    sparks.color1 = colors.core;
+                    sparks.emitRate = 100;
+                    sparks.minSize = 0.01; sparks.maxSize = 0.05;
+                    sparks.minLifeTime = 0.5; sparks.maxLifeTime = 1.0;
+                    sparks.gravity = new BABYLON.Vector3(0, -5, 0); // Falling sparks
+                    sparks.direction1 = new BABYLON.Vector3(-2, 5, -2);
+                    sparks.direction2 = new BABYLON.Vector3(2, 8, 2);
+                    sparks.start();
+                }
+            }
+            else if (currentVariant === 3) { // 04: DENSITY BLOOM
+                const sys = createBaseSystem(scene);
+                sys.color1 = isCommit ? colors.commit : colors.ready;
+                sys.emitRate = isCommit ? 4000 : 500; // Ultra high density bloom
+                sys.minSize = isCommit ? 0.3 : 0.1;
+                sys.maxSize = isCommit ? 0.5 : 0.2;
+                sys.minLifeTime = 0.05; sys.maxLifeTime = 0.1;
+                sys.minEmitBox = new BABYLON.Vector3(-0.02, 0, -0.02);
+                sys.maxEmitBox = new BABYLON.Vector3(0.02, 0, 0.02);
+                sys.start();
+            }
+        }
+    </script>
+</body>
+
+</html>

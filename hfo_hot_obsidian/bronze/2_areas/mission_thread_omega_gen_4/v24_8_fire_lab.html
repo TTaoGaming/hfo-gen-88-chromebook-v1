@@ -1,0 +1,313 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- OMEGA GEN 4 V24.8 - FIRE VISUALIZATION LAB (UX-FOCUSED) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | V24.8 FIRE LAB</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <style>
+        :root {
+            --hfo-red: #FF4136;
+            --hfo-cyan: #00FFFF;
+            --hfo-amber: #FFB000;
+            --hfo-black: #050505;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--hfo-black);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: white;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            display: block;
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 24px;
+            border-left: 4px solid var(--hfo-red);
+            border-radius: 4px;
+            pointer-events: auto;
+            width: 280px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--hfo-red);
+            font-weight: 900;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .section-label {
+            font-size: 11px;
+            color: #888;
+            margin: 15px 0 8px 0;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        button {
+            background: #1a1a1a;
+            color: #ccc;
+            border: 1px solid #333;
+            padding: 10px 14px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            border-color: #555;
+            background: #222;
+        }
+
+        button.active {
+            background: var(--hfo-red);
+            color: black;
+            font-weight: bold;
+            border-color: white;
+        }
+
+        .state-toggle {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .state-toggle button {
+            flex: 1;
+            text-align: center;
+        }
+
+        #ux-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 50;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        .info {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ux-dot"></div>
+
+    <div id="ui">
+        <span class="header">PHOENIX CORE // V24.8 LAB</span>
+
+        <span class="section-label">FSM STATE</span>
+        <div class="state-toggle">
+            <button id="btn-ready" class="active" onclick="switchState('READY')">READY</button>
+            <button id="btn-commit" onclick="switchState('COMMIT')">COMMIT</button>
+        </div>
+
+        <span class="section-label">VISUAL STRATEGEM</span>
+        <div class="btn-group">
+            <button class="variant-btn active" onclick="switchVariant(0)">OPTION A: PLASMA JET</button>
+            <button class="variant-btn" onclick="switchVariant(1)">OPTION B: WHITE CORE</button>
+            <button class="variant-btn" onclick="switchVariant(2)">OPTION C: KINETIC TORCH</button>
+            <button class="variant-btn" onclick="switchVariant(3)">OPTION D: HYDROGEN NEEDLE</button>
+        </div>
+
+        <div class="info">
+            <b>UX PRIORITY:</b> The white dot represents the functional interaction point. The fire is visual feedback
+            (Juice).
+        </div>
+    </div>
+
+    <canvas id="renderCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        const uxDot = document.getElementById("ux-dot");
+        const engine = new BABYLON.Engine(canvas, true);
+
+        let currentState = 'READY';
+        let currentVariant = 0;
+        let activeSystems = [];
+        let emitterRoot;
+
+        const colors = {
+            amber: new BABYLON.Color4(1, 0.7, 0.1, 1.0),
+            red: new BABYLON.Color4(1, 0.2, 0, 1.0),
+            cyan: new BABYLON.Color4(0, 0.8, 1, 1.0),
+            blue: new BABYLON.Color4(0, 0.2, 1, 1.0),
+            white: new BABYLON.Color4(1, 1, 1, 1.0),
+            dead: new BABYLON.Color4(0, 0, 0, 0)
+        };
+
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color4(0.01, 0.01, 0.01, 1);
+
+            const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0, -10), scene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            const light = new BABYLON.PointLight("light1", new BABYLON.Vector3(0, 0, -5), scene);
+            light.intensity = 0.5;
+
+            emitterRoot = BABYLON.MeshBuilder.CreateSphere("emitter", { diameter: 0.05 }, scene);
+            emitterRoot.isVisible = false;
+
+            updateVisuals(scene);
+
+            window.addEventListener("pointermove", (e) => {
+                uxDot.style.left = e.clientX + "px";
+                uxDot.style.top = e.clientY + "px";
+
+                const width = engine.getRenderWidth();
+                const height = engine.getRenderHeight();
+                const vector = new BABYLON.Vector3(e.clientX, e.clientY, 0);
+                const worldCoordNear = BABYLON.Vector3.Unproject(vector, width, height, BABYLON.Matrix.Identity(), scene.getViewMatrix(), scene.getProjectionMatrix());
+                const vectorFar = new BABYLON.Vector3(e.clientX, e.clientY, 1);
+                const worldCoordFar = BABYLON.Vector3.Unproject(vectorFar, width, height, BABYLON.Matrix.Identity(), scene.getViewMatrix(), scene.getProjectionMatrix());
+                const direction = worldCoordFar.subtract(worldCoordNear).normalize();
+                if (Math.abs(direction.z) > 0.0001) {
+                    const distance = -worldCoordNear.z / direction.z;
+                    emitterRoot.position.copyFrom(worldCoordNear.add(direction.scale(distance)));
+                }
+            });
+
+            return scene;
+        };
+
+        const scene = createScene();
+        engine.runRenderLoop(() => scene.render());
+        window.addEventListener("resize", () => engine.resize());
+
+        function switchState(state) {
+            currentState = state;
+            document.getElementById('btn-ready').classList.toggle('active', state === 'READY');
+            document.getElementById('btn-commit').classList.toggle('active', state === 'COMMIT');
+            updateVisuals(scene);
+        }
+
+        function switchVariant(idx) {
+            currentVariant = idx;
+            const btns = document.querySelectorAll('.variant-btn');
+            btns.forEach((b, i) => b.classList.toggle('active', i === idx));
+            updateVisuals(scene);
+        }
+
+        function clearSystems() {
+            activeSystems.forEach(s => { s.stop(); s.dispose(); });
+            activeSystems = [];
+        }
+
+        function updateVisuals(scene) {
+            clearSystems();
+            const tex = "https://playground.babylonjs.com/textures/flare.png";
+
+            const fire = new BABYLON.ParticleSystem("fire", 2000, scene);
+            fire.particleTexture = new BABYLON.Texture(tex, scene);
+            fire.emitter = emitterRoot;
+            fire.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+            fire.minLifeTime = 0.2; fire.maxLifeTime = 0.5;
+
+            const isCommit = (currentState === 'COMMIT');
+
+            // --- DEFINE VARIANTS ---
+            if (currentVariant === 0) { // OPTION A: PLASMA JET (CYAN)
+                if (isCommit) {
+                    fire.color1 = colors.cyan;
+                    fire.color2 = colors.blue;
+                    fire.emitRate = 1800;
+                    fire.minSize = 0.3; fire.maxSize = 0.8;
+                    fire.gravity = new BABYLON.Vector3(0, 20, 0);
+                } else {
+                    fire.color1 = colors.amber;
+                    fire.emitRate = 400;
+                    fire.minSize = 0.1; fire.maxSize = 0.3;
+                    fire.gravity = new BABYLON.Vector3(0, 10, 0);
+                }
+            }
+            else if (currentVariant === 1) { // OPTION B: WHITE CORE
+                fire.color1 = isCommit ? colors.blue : colors.amber;
+                fire.emitRate = isCommit ? 1200 : 400;
+                fire.minSize = isCommit ? 0.3 : 0.1;
+                fire.maxSize = isCommit ? 0.6 : 0.3;
+                fire.gravity = new BABYLON.Vector3(0, 15, 0);
+
+                if (isCommit) {
+                    const core = new BABYLON.ParticleSystem("core", 500, scene);
+                    core.particleTexture = new BABYLON.Texture(tex, scene);
+                    core.emitter = emitterRoot;
+                    core.color1 = colors.white;
+                    core.emitRate = 300;
+                    core.minSize = 0.05; core.maxSize = 0.15;
+                    core.start();
+                    activeSystems.push(core);
+                }
+            }
+            else if (currentVariant === 2) { // OPTION C: KINETIC TORCH
+                fire.color1 = isCommit ? colors.red : colors.amber;
+                fire.emitRate = isCommit ? 2500 : 300;
+                fire.minSize = isCommit ? 0.4 : 0.1;
+                fire.maxSize = isCommit ? 1.0 : 0.2;
+                fire.minAngularSpeed = isCommit ? -Math.PI : 0;
+                fire.maxAngularSpeed = isCommit ? Math.PI : 0;
+                fire.gravity = new BABYLON.Vector3(0, isCommit ? 40 : 5, 0);
+            }
+            else if (currentVariant === 3) { // OPTION D: HYDROGEN NEEDLE
+                fire.color1 = isCommit ? colors.cyan : colors.amber;
+                fire.emitRate = isCommit ? 1500 : 400;
+                if (isCommit) {
+                    fire.minSize = 0.1; fire.maxSize = 0.6;
+                    fire.minEmitBox = new BABYLON.Vector3(-0.01, 0, -0.01);
+                    fire.maxEmitBox = new BABYLON.Vector3(0.01, 0, 0.01);
+                    fire.gravity = new BABYLON.Vector3(0, 30, 0);
+                } else {
+                    fire.minSize = 0.1; fire.maxSize = 0.3;
+                    fire.minEmitBox = new BABYLON.Vector3(-0.05, 0, -0.05);
+                    fire.maxEmitBox = new BABYLON.Vector3(0.05, 0, 0.05);
+                    fire.gravity = new BABYLON.Vector3(0, 10, 0);
+                }
+            }
+
+            fire.start();
+            activeSystems.push(fire);
+        }
+    </script>
+</body>
+
+</html>

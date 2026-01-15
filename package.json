@@ -6,7 +6,7 @@
     "start": "python3 -m http.server 8889 --directory hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/",
     "launch": "xdg-open http://localhost:8889/omega_workspace_v52.html",
     "clean:chrome": "sudo apt purge google-chrome-stable -y && sudo apt autoremove -y",
-    "hfo:setup": "npm install && npx playwright install --with-deps chromium",
+    "hfo:setup": "npm install && echo 'SKIPPING LINUX-CHROME INSTALL (Use Native Chromebook Browser)'",
     "hfo:probe": "node scripts/hfo_host_probe.js",
     "hfo:shot:headless": "node scripts/hfo_screenshot.js headless",
     "hfo:shot:host": "node scripts/hfo_screenshot.js host",

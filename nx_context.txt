@@ -1,0 +1,187 @@
+989-                            // V19.2: Apply Smoothing to Anchor Point (Tip) to stop jitter
+990-                            if (!systemState.p1.anchorFilters[i]) {
+991-                                systemState.p1.anchorFilters[i] = {
+992-                                    x: new OneEuroFilter(systemState.parameters.physics.oneEuroMinCutoff, systemState.parameters.physics.oneEuroBeta),
+993-                                    y: new OneEuroFilter(systemState.parameters.physics.oneEuroMinCutoff, systemState.parameters.physics.oneEuroBeta)
+994-                                };
+995-                            }
+996-                            const anchorX = systemState.p1.anchorFilters[i].x.filter(finalTipX * width);
+997-                            const anchorY = systemState.p1.anchorFilters[i].y.filter(tipRaw.y * height);
+998-
+999:                            // Palm Orientation (Calculated bridger_nx, bridger_ny for telemetry/mirroring)
+1000:                            let bridger_nx = cross_palm.x / mag_palm;
+1001-                            let bridger_ny = cross_palm.y / mag_palm;
+1002-
+1003-                            // V19.5: Mirror the normal X-component to match mirrored coordinate space
+1004-                            if (isMirror) {
+1005:                                bridger_nx = -bridger_nx;
+1006-                            }
+1007-
+1008-                            // Palm Facing Hysteresis (80 Enter, 64 Exit)
+1009-                            let isPalmFacing = systemState.p1.palmFacingStates[i];
+1010-                            if (!isPalmFacing) {
+1011-                                if (normalZ > systemState.parameters.palm.enterThreshold) isPalmFacing = true;
+1012-                            } else {
+1013-                                if (normalZ < systemState.parameters.palm.exitThreshold) isPalmFacing = false;
+1014-                            }
+1015-                            systemState.p1.palmFacingStates[i] = isPalmFacing;
+--
+1134-                            };
+1135-
+1136-                            const rawCursorData = {
+1137-                                screenX: finalX, screenY: finalY,
+1138-                                normX: finalProjX, normY: projectedPoint.y,
+1139-                                fsmState: fsmStateNew, gesture: category,
+1140-                                confidence, isPalmFacing, bucketLevel: bucket, handIndex: i, curls,
+1141-                                rawX: anchorX, rawY: anchorY,
+1142-                                normalZ: normalZ,
+1143-                                palmConeAngle: palmConeAngle,
+1144:                                palmNormal: { x: bridger_nx, y: bridger_ny, z: nz },
+1145-                                timestamp: now
+1146-                            };
+1147-
+1148-                            cursorData = FusionSchema.parse(rawCursorData);
+1149-                            systemState.p1.lastData[i] = cursorData;
+1150-                        } catch (e) {
+1151-                            console.error("🚨 P1_FUSE_CONTRACT_BREACH:", e);
+1152-                        }
+1153-                    } else {
+1154-                        // Coasting Logic for missing landmarks (V24.3: Ballistic Inertia)
+--
+1327-            // Hot Seat Primacy
+1328-            const primary = systemState.fsm.primaryHandIndex;
+1329-            let cursor;
+1330-            if (primary !== null) cursor = systemState.dataFabric.cursors.find(c => c.handIndex === primary);
+1331-            if (!cursor) cursor = systemState.dataFabric.cursors.find(c => c.fsmState === 'COMMIT');
+1332-            if (!cursor) cursor = systemState.dataFabric.cursors[0];
+1333-            if (!cursor) return;
+1334-
+1335-            // Coordinate mapping (Internal Buffer -> Viewport)
+1336-            // Use derived videoWidth/Height instead of videoBounds.width/height hook for portability
+1337:            const nx = cursor.screenX / (systemState.p0.videoBounds?.width || videoWidth);
+1338-            const ny = cursor.screenY / (systemState.p0.videoBounds?.height || videoHeight);
+1339:            const viewX = rectLeft + nx * rectWidth;
+1340-            const viewY = rectTop + ny * rectHeight;
+1341-
+1342-            const isDown = (cursor.fsmState === 'COMMIT' || cursor.fsmState === 'COAST');
+1343-            const pressure = isDown ? (cursor.fsmState === 'COMMIT' ? 1.0 : 0.5) : 0.0;
+1344-
+1345-            // TARGETING STRATEGY [V27 Hybrid]
+1346-            let target = systemState.fsm.nematocystTargetLock;
+1347-            let finalX = viewX;
+1348-            let finalY = viewY;
+1349-
+--
+1850-
+1851-                        // Hysteresis Rings (Target Zones)
+1852-                        ctx.setLineDash([2, 4]);
+1853-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+1854-                        ctx.beginPath(); ctx.arc(x, y, radius * enterT, 0, Math.PI * 2); ctx.stroke(); // Enter Ring
+1855-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+1856-                        ctx.beginPath(); ctx.arc(x, y, radius * exitT, 0, Math.PI * 2); ctx.stroke();  // Exit Ring
+1857-                        ctx.setLineDash([]);
+1858-
+1859-                        // Face Dot & Normal (Fabric Driven)
+1860:                        const nx = c.palmNormal.x;
+1861-                        const ny = c.palmNormal.y;
+1862-                        const nz = c.normalZ;
+1863-
+1864-                        if (true) { // Fabric always has normal data if cursor exists
+1865-                            // 📊 UPDATE SPARKLINE BUFFERS
+1866-                            if (!systemState.ui.history) systemState.ui.history = [];
+1867-                            if (!systemState.ui.history[i]) systemState.ui.history[i] = { zNorm: [], bucket: [] };
+1868-
+1869-                            systemState.ui.history[i].zNorm.push(nz);
+1870-                            systemState.ui.history[i].bucket.push(c.bucketLevel / 100);
+--
+1879-                            // Depth Progress Ring (Fidelity Visualization)
+1880-                            ctx.beginPath();
+1881-                            ctx.arc(x, y, radius * nz, 0, Math.PI * 2);
+1882-                            ctx.strokeStyle = stateColor;
+1883-                            ctx.lineWidth = 2;
+1884-                            ctx.globalAlpha = 0.3;
+1885-                            ctx.stroke();
+1886-                            ctx.globalAlpha = 1.0;
+1887-
+1888-                            // Draw Normal Vector Shadow/Pointer
+1889:                            const dotX = x + nx * radius;
+1890-                            const dotY = y + ny * radius;
+1891-                            ctx.beginPath();
+1892-                            ctx.moveTo(x, y);
+1893-                            ctx.lineTo(dotX, dotY);
+1894-                            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+1895-                            ctx.stroke();
+1896-
+1897-                            // Facing Dot (Orientation Feedback)
+1898-                            ctx.beginPath();
+1899-                            ctx.arc(dotX, dotY, 6, 0, Math.PI * 2);
+--
+2072-                ctx.moveTo(canvas.width * 0.4 + nodeWidth / 2, canvas.height * 0.5);
+2073-                ctx.lineTo(canvas.width * 0.65 - nodeWidth / 2, canvas.height * 0.5);
+2074-                // COMMIT -> COAST
+2075-                ctx.moveTo(canvas.width * 0.65 + nodeWidth / 2, canvas.height * 0.5);
+2076-                ctx.lineTo(canvas.width * 0.9 - nodeWidth / 2, canvas.height * 0.5);
+2077-                // Transitions back and to IDLE omitted for clarity in simple viz
+2078-                ctx.stroke();
+2079-                ctx.setLineDash([]);
+2080-
+2081-                nodes.forEach(node => {
+2082:                    const nx = canvas.width * node.x;
+2083-                    const ny = canvas.height * node.y;
+2084-                    const isActive = node.id === current;
+2085-
+2086-                    // Glow for active node
+2087-                    if (isActive) {
+2088-                        ctx.shadowBlur = 15;
+2089-                        ctx.shadowColor = (node.id === 'COMMIT' ? '#FF4136' : (node.id === 'READY' ? '#FFD700' : (node.id === 'COAST' ? '#FFA500' : '#D0BCFF')));
+2090-                    }
+2091-
+2092-                    ctx.fillStyle = isActive ? '#000' : '#111';
+2093-                    ctx.strokeStyle = isActive ? (node.id === 'COMMIT' ? '#FF4136' : (node.id === 'READY' ? '#FFD700' : (node.id === 'COAST' ? '#FFA500' : '#D0BCFF'))) : '#444';
+2094-                    ctx.beginPath();
+2095:                    ctx.roundRect(nx - nodeWidth / 2, ny - nodeHeight / 2, nodeWidth, nodeHeight, 8);
+2096-                    ctx.fill();
+2097-                    ctx.stroke();
+2098-
+2099-                    ctx.shadowBlur = 0;
+2100-                    ctx.fillStyle = isActive ? '#FFF' : '#888';
+2101-                    ctx.font = 'bold 11px monospace';
+2102-                    ctx.textAlign = 'center';
+2103:                    ctx.fillText(node.id, nx, ny + 5);
+2104-
+2105-                    // Draw Leaky Bucket Gauge for active state
+2106-                    if (isActive && node.id !== 'IDLE') {
+2107-                        const pIdx = systemState.fsm.primaryHandIndex !== null ? systemState.fsm.primaryHandIndex : 0;
+2108-                        const charge = systemState.p1.buckets[pIdx] || 0;
+2109-                        const high = systemState.parameters.fsm.hysteresisHigh;
+2110-                        const low = systemState.parameters.fsm.hysteresisLow;
+2111-
+2112-                        ctx.fillStyle = '#222';
+2113:                        ctx.fillRect(nx - nodeWidth / 2, ny + 22, nodeWidth, 6);
+2114-
+2115-                        // Fill
+2116-                        ctx.fillStyle = (node.id === 'COAST' ? '#FFA500' : '#FFD700');
+2117:                        ctx.fillRect(nx - nodeWidth / 2, ny + 22, nodeWidth * (charge / 100), 6);
+2118-
+2119-                        // HFO Threshold Markers (80/64)
+2120-                        ctx.strokeStyle = '#fff';
+2121-                        ctx.lineWidth = 1;
+2122-                        ctx.beginPath();
+2123:                        ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * (high / 100), ny + 20);
+2124:                        ctx.lineTo(nx - nodeWidth / 2 + nodeWidth * (high / 100), ny + 30);
+2125-                        ctx.stroke();
+2126-
+2127-                        ctx.strokeStyle = '#444';
+2128-                        ctx.beginPath();
+2129:                        ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * (low / 100), ny + 20);
+2130:                        ctx.lineTo(nx - nodeWidth / 2 + nodeWidth * (low / 100), ny + 30);
+2131-                        ctx.stroke();
+2132-                    }
+2133-                });
+2134-            }
+2135-        }
+2136-
+2137-        function updateFSM(state) {
+2138-            if (systemState.fsm.currentState !== state) {
+2139-                systemState.fsm.currentState = state;
+2140-                const status = document.getElementById('state-indicator');
