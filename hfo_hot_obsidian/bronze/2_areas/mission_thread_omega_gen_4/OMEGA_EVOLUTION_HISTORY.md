@@ -48,11 +48,13 @@
 ---
 
 ### 🧬 KEY ARCHITECTURAL PIVOTS
+
 1. **Anti-Midas Touch (V6)**: Moving from static thresholds to temporal dwell-activation (Leaky Bucket).
 2. **MCP Anchoring (V8)**: Moving the ray origin from the finger tip to the knuckle for better leverage and perspective stability.
 3. **80/64 Alignment (V10)**: Standardizing hysteresis gap (16%) to eliminate signal chatter.
 4. **Coasting (V16)**: Handling consumer-grade camera tracking dropouts without cursor "snapping".
 5. **Hybrid Adaptation (V20.7)**: Introducing spec-drifting heuristics to solve real-world interaction failures in headless or complex DOM environments.
+6. **Skeleton Lifecycle (V24.21)**: Implementing Alpha-Lerp fading for skeletons to eliminate ghosting during tracking loss or off-screen transitions.
 
 ---
 *Spider Sovereign (Port 7) | HFO Shards Archives*
