@@ -1,14 +1,13 @@
-<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
-<!-- OMEGA GEN 4 V26 (Phoenix Rebirth | Re-anchored to V24.23 Baseline) -->
-<!-- Mission: Implement Skeleton Lifecycle Management (Fade on tracking loss) -->
-<!-- Skip Note: Version 25 skipped due to recursive AI loops and silent regressions. -->
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: 🌊 -->
+<!-- OMEGA GEN 4 V28.1 (Reach Guardian | Decoupled Overscan) -->
+<!-- Mission: Implement Reach Extension by decoupling UI scale from Sensing scale -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO OMEGA GEN 4 | V26</title>
+    <title>HFO OMEGA GEN 4 | V28.1</title>
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet"
@@ -470,6 +469,8 @@
             screenY: z.number(),
             normX: z.number(),
             normY: z.number(),
+            uiNormX: z.number().optional(), // V28.1: Reach Guardian Parity
+            uiNormY: z.number().optional(),
             normZ: z.number(), // V24.21: Depth Parity
             rawX: z.number(), // V18: Required for laser origin
             rawY: z.number(), // V18: Required for laser origin
@@ -507,6 +508,74 @@
         const CoordinateSchema = FusionSchema;
 
         // --- PRODUCTION STATE ---
+        // 🎯 V28.1 UNIVERSAL PROJECTION ENGINE (UPE)
+        // Centralized parity logic for all coordinate substrates
+        class UniversalProjectionEngine {
+            constructor() {
+                this.bounds = {
+                    drawW: 1280, drawH: 720, offsetX: 0, offsetY: 0,
+                    uiW: 1280, uiH: 720, uiOffsetX: 0, uiOffsetY: 0,
+                    zoom: 1.15
+                };
+            }
+
+            update(parentWidth, parentHeight, vRatio, zoom) {
+                let drawW_base = parentWidth, drawH_base = parentWidth / vRatio;
+                if (drawH_base > parentHeight) { drawH_base = parentHeight; drawW_base = drawH_base * vRatio; }
+
+                this.bounds.uiW = drawW_base;
+                this.bounds.uiH = drawH_base;
+                this.bounds.uiOffsetX = (parentWidth - drawW_base) / 2;
+                this.bounds.uiOffsetY = (parentHeight - drawH_base) / 2;
+
+                this.bounds.drawW = drawW_base * zoom;
+                this.bounds.drawH = drawH_base * zoom;
+                this.bounds.offsetX = (parentWidth - this.bounds.drawW) / 2;
+                this.bounds.offsetY = (parentHeight - this.bounds.drawH) / 2;
+                this.bounds.zoom = zoom;
+            }
+
+            toUiNormX(nx) {
+                const margin = (1.0 - (1.0 / this.bounds.zoom)) / 2;
+                return (nx - margin) / (1.0 - 2 * margin);
+            }
+
+            toUiNormY(ny) {
+                const margin = (1.0 - (1.0 / this.bounds.zoom)) / 2;
+                return (ny - margin) / (1.0 - 2 * margin);
+            }
+
+            // Map UI Normalized (0-1) to Substrate Pixel Space (relative to substrate top-left)
+            // Works for Babylon, Pixi, and any layer that matches the zoomed bounds
+            toSubstratePixelX(uiNx) {
+                const uiPixelX = uiNx * this.bounds.uiW;
+                const globalX = this.bounds.uiOffsetX + uiPixelX;
+                return globalX - this.bounds.offsetX;
+            }
+
+            toSubstratePixelY(uiNy) {
+                const uiPixelY = uiNy * this.bounds.uiH;
+                const globalY = this.bounds.uiOffsetY + uiPixelY;
+                return globalY - this.bounds.offsetY;
+            }
+
+            // Map sensing nx to screen viewport ClientX/Y (absolute)
+            toViewportX(nx) {
+                const r = systemState?.p0?.video?.parentElement?.getBoundingClientRect() || { left: 0 };
+                const uiNx = this.toUiNormX(nx);
+                return r.left + this.bounds.uiOffsetX + (uiNx * this.bounds.uiW);
+            }
+
+            toViewportY(ny) {
+                const r = systemState?.p0?.video?.parentElement?.getBoundingClientRect() || { top: 0 };
+                const uiNy = this.toUiNormY(ny);
+                return r.top + this.bounds.uiOffsetY + (uiNy * this.bounds.uiH);
+            }
+
+            toBufferX(nx) { return nx * (systemState?.p0?.canvas?.width || 1280); }
+            toBufferY(ny) { return ny * (systemState?.p0?.canvas?.height || 720); }
+        }
+
         const systemState = {
             parameters: {
                 camera: { resolution: '1280x720', fpsTarget: 30, mirror: true },
@@ -556,7 +625,8 @@
                 excalidraw: {
                     opacity: 0.8,
                     enabled: true,
-                    activeTool: 'draw'
+                    activeTool: 'freedraw',
+                    zoomFactor: 1.15 // V28: Digital zoom to eliminate gutters (1/0.85 approx)
                 },
                 visuals: {
                     engine: 'BABYLON',
@@ -600,7 +670,18 @@
                 rodFilters: [null, null, null, null], // V19.2: Stabilize rod length
                 anchorFilters: [null, null, null, null], // V19.2: Stabilize anchor point
                 directionFilters: [null, null, null, null], // V19.2: Stabilize rod direction
-                physicsState: [null, null, null, null] // Mass-Spring state
+                physicsState: [null, null, null, null], // Mass-Spring state
+
+                // 🎯 V28.1 UNIVERSAL PROJECTION ENGINE (UPE)
+                upe: new UniversalProjectionEngine(),
+
+                // Back-compat stubs
+                toUiNormX: (nx) => systemState.p1.upe.toUiNormX(nx),
+                toUiNormY: (ny) => systemState.p1.upe.toUiNormY(ny),
+                toViewportX: (nx) => systemState.p1.upe.toViewportX(nx),
+                toViewportY: (ny) => systemState.p1.upe.toViewportY(ny),
+                toBufferX: (nx) => systemState.p1.upe.toBufferX(nx),
+                toBufferY: (ny) => systemState.p1.upe.toBufferY(ny)
             },
             ui: {
                 gestures: null,
@@ -730,12 +811,12 @@
                                 m.visibility = fadeAlpha;
                             });
 
-                            // Update 21 landmark spheres
+                            // V28.1 OVERSCAN PARITY: Project landmarks through UI transition
                             c.landmarks.forEach((lm, lIndex) => {
-                                // V24.18 Perspective Alignment: 
-                                // projectToWorld correctly handles the perspective shift for depth.
+                                const ux = systemState.p1.toUiNormX(lm.x);
+                                const uy = systemState.p1.toUiNormY(lm.y);
                                 const targetZ = lm.z * 1.5;
-                                const lmPos = this.projectToWorld(lm.x, lm.y, width, height, targetZ);
+                                const lmPos = this.projectToWorld(ux, uy, width, height, targetZ);
                                 skeleton.spheres[lIndex].position.copyFrom(lmPos);
                             });
 
@@ -744,7 +825,8 @@
                             skeleton.claw.setEnabled(showClaw && isActive); // Only show claw if in an active pointing state
 
                             if (showClaw && isActive) {
-                                const targetPos = this.projectToWorld(c.normX, c.normY, width, height);
+                                // V28.1: Use UI Normalized coordinates for interaction visual alignment
+                                const targetPos = this.projectToWorld(c.uiNormX, c.uiNormY, width, height);
                                 const tipPos = skeleton.spheres[8].position;
                                 const clawPoints = [tipPos, targetPos];
                                 skeleton.claw = BABYLON.MeshBuilder.CreateLines("claw" + i, { points: clawPoints, instance: skeleton.claw }, this.scene);
@@ -772,8 +854,9 @@
                             trail.isVisible = systemState.parameters.physics.showTrailMesh || false;
                         }
 
+                        // V28.1: Use UI Normalized coordinates for interaction visual alignment
                         // Pixel to World Projection for the pointer root
-                        const targetPos = this.projectToWorld(c.normX, c.normY, width, height, (c.normZ || 0) * 1.5);
+                        const targetPos = this.projectToWorld(c.uiNormX, c.uiNormY, width, height, (c.normZ || 0) * 1.5);
 
                         let motionVector = BABYLON.Vector3.Zero();
                         if (this.lastPositions[i]) {
@@ -852,13 +935,17 @@
                 });
             }
 
-            projectToWorld(nx, ny, width, height, targetZ = 0) {
-                const vectorNear = new BABYLON.Vector3(nx * width, ny * height, 0);
+            projectToWorld(uiNx, uiNy, width, height, targetZ = 0) {
+                // V28.1: Map UI Normalized coordinates to local substrate pixels through UPE
+                const px = systemState.p1.upe.toSubstratePixelX(uiNx);
+                const py = systemState.p1.upe.toSubstratePixelY(uiNy);
+
+                const vectorNear = new BABYLON.Vector3(px, py, 0);
                 const worldCoordNear = BABYLON.Vector3.Unproject(
                     vectorNear, width, height, BABYLON.Matrix.Identity(),
                     this.scene.getViewMatrix(), this.scene.getProjectionMatrix()
                 );
-                const vectorFar = new BABYLON.Vector3(nx * width, ny * height, 1);
+                const vectorFar = new BABYLON.Vector3(px, py, 1);
                 const worldCoordFar = BABYLON.Vector3.Unproject(
                     vectorFar, width, height, BABYLON.Matrix.Identity(),
                     this.scene.getViewMatrix(), this.scene.getProjectionMatrix()
@@ -1088,7 +1175,8 @@
         }
 
         class JuiceSubstrate {
-            constructor(container) {
+            constructor(container, useUpe = false) {
+                this.useUpe = useUpe;
                 // V24.4: Hard Enforcement of Single-Engine Invariant
                 window.hfoLifecycle.dispose('PIXI_ENGINE');
 
@@ -1127,8 +1215,10 @@
                     }
                     this.effects[i].container.visible = true;
 
-                    const px = c.normX * width;
-                    const py = c.normY * height;
+                    // V28.1: Use UI Normalized coordinates for interaction visual alignment
+                    // If useUpe is active (Hero panel), we use the specialized substrate mapping
+                    const px = this.useUpe ? systemState.p1.upe.toSubstratePixelX(c.uiNormX) : (c.uiNormX * width);
+                    const py = this.useUpe ? systemState.p1.upe.toSubstratePixelY(c.uiNormY) : (c.uiNormY * height);
                     this.effects[i].update(px, py, c.fsmState);
                 });
 
@@ -1338,6 +1428,7 @@
                 const cursors = [];
                 const now = performance.now();
                 const { numHands } = systemState.parameters.landmarks;
+                const { width, height } = systemState.p0.videoBounds || { width: 1280, height: 720 };
 
                 for (let i = 0; i < numHands; i++) {
                     const landmarks = results.landmarks?.[i];
@@ -1352,7 +1443,6 @@
                     if (landmarks) {
                         try {
                             const validatedLandmarks = landmarks.map(l => LandmarkSchema.parse(l));
-                            const { width, height } = systemState.p0.videoBounds || { width: 0, height: 0 };
                             const lm = validatedLandmarks;
 
                             // V26: Inactivity Detection (Skeleton Dormancy)
@@ -1439,8 +1529,13 @@
                             const finalProjX = isMirror ? (1.0 - projectedPoint.x) : projectedPoint.x;
                             const finalTipX = isMirror ? (1.0 - tipRaw.x) : tipRaw.x;
 
-                            const screenX = finalProjX * width;
-                            const screenY = projectedPoint.y * height;
+                            // V28: OVERSCAN PROJECTION (UPE Enforced - ALL DRAWING IS BUFFER-RELATIVE)
+                            const screenX = systemState.p1.toBufferX(finalProjX);
+                            const screenY = systemState.p1.toBufferY(projectedPoint.y);
+
+                            // V18: Standardized cursor raw origin for laser beam/firebase
+                            const rawX = systemState.p1.toBufferX(finalTipX);
+                            const rawY = systemState.p1.toBufferY(tipRaw.y);
 
                             // V24.17 Fix: Also mirror the raw anchor point and projected point in 3D
                             const mirroredProjected3D = {
@@ -1456,8 +1551,8 @@
                                     y: new OneEuroFilter(systemState.parameters.physics.oneEuroMinCutoff, systemState.parameters.physics.oneEuroBeta)
                                 };
                             }
-                            const anchorX = systemState.p1.anchorFilters[i].x.filter(finalTipX * width);
-                            const anchorY = systemState.p1.anchorFilters[i].y.filter(tipRaw.y * height);
+                            const anchorX = systemState.p1.anchorFilters[i].x.filter(systemState.p1.toBufferX(finalTipX));
+                            const anchorY = systemState.p1.anchorFilters[i].y.filter(systemState.p1.toBufferY(tipRaw.y));
 
                             // Palm Orientation (Calculated bridger_nx, bridger_ny for telemetry/mirroring)
                             let bridger_nx = cross_palm.x / mag_palm;
@@ -1599,6 +1694,8 @@
                             const rawCursorData = {
                                 screenX: finalX, screenY: finalY,
                                 normX: finalX / width, normY: finalY / height,
+                                uiNormX: systemState.p1.toUiNormX(finalX / width), // V28.1: Shared for cross-substrate UI
+                                uiNormY: systemState.p1.toUiNormY(finalY / height),
                                 normZ: projectedPoint.z,
                                 fsmState: fsmStateNew, gesture: category,
                                 confidence, isPalmFacing, readinessScore: readiness,
@@ -1646,6 +1743,10 @@
                                     ...last,
                                     screenX: coastPos.x,
                                     screenY: coastPos.y,
+                                    normX: coastPos.x / width,
+                                    normY: coastPos.y / height,
+                                    uiNormX: systemState.p1.toUiNormX(coastPos.x / width),
+                                    uiNormY: systemState.p1.toUiNormY(coastPos.y / height),
                                     fsmState: 'COAST',
                                     readinessScore: readiness,
                                     skeletonAlpha: Math.max(0, 1.0 - (tTrackingLost / fadeTime)), // V26: Dedicated tracking loss fade
@@ -1839,14 +1940,12 @@
 
                 currentIds.add(pid);
 
-                const nx = cursor.screenX / (systemState.p0.videoBounds?.width || videoWidth);
-                const ny = cursor.screenY / (systemState.p0.videoBounds?.height || videoHeight);
+                // V28.0: UNIVERSAL PROJECTION ENGINE (UPE) ENFORCEMENT
+                const viewX = systemState.p1.toViewportX(cursor.normX);
+                const viewY = systemState.p1.toViewportY(cursor.normY);
 
-                // V24.20: Interaction Parity Fix
-                // Use the centered visual bounds instead of raw container rect
-                const bounds = systemState.ui.viewBounds || { width: rectWidth, height: rectHeight, offsetX: 0, offsetY: 0 };
-                const viewX = rectLeft + bounds.offsetX + (nx * bounds.width);
-                const viewY = rectTop + bounds.offsetY + (ny * bounds.height);
+                const uiNormX = cursor.uiNormX;
+                const uiNormY = cursor.uiNormY;
 
                 const isDown = (cursor.fsmState === 'COMMIT' || cursor.fsmState === 'COAST');
                 const pressure = isDown ? (cursor.fsmState === 'COMMIT' ? 1.0 : 0.5) : 0.0;
@@ -2680,9 +2779,17 @@
                 // Do NOT re-mirror them here.
                 if ((fsmState === 'IDLE' || fsmState === 'READY' || fsmState === 'COMMIT') && landmarks && landmarks.length > 0 && systemState.parameters.landmarks.showSkeleton) {
                     const utils = new DrawingUtils(ctx);
-                    // Use landmarks directly from DataFabric
-                    utils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: 'rgba(255, 255, 255, 0.15)', lineWidth: 1.2 });
-                    utils.drawLandmarks(landmarks, { color: 'rgba(255, 255, 255, 0.2)', radius: 1 });
+
+                    // V28.0: UPE-AWARE SKELETON
+                    // We must project landmarks into buffer space using UPE to maintain parity
+                    const bufferLandmarks = landmarks.map(l => ({
+                        x: systemState.p1.toBufferX(l.x) / canvas.width,
+                        y: systemState.p1.toBufferY(l.y) / canvas.height,
+                        z: l.z
+                    }));
+
+                    utils.drawConnectors(bufferLandmarks, GestureRecognizer.HAND_CONNECTIONS, { color: 'rgba(255, 255, 255, 0.15)', lineWidth: 1.2 });
+                    utils.drawLandmarks(bufferLandmarks, { color: 'rgba(255, 255, 255, 0.2)', radius: 1 });
                 }
 
                 if (fsmState === 'IDLE') return;
@@ -2857,10 +2964,11 @@
                         systemState.ui.excalidrawOverlay.style.opacity = val;
                     }
                 });
+                fExcal.add(systemState.parameters.excalidraw, 'zoomFactor', 1.0, 2.0, 0.01).name('Overscan Zoom').onChange(resizeCanvas);
 
                 const fTools = gui.addFolder('P3: Excalidraw Tools');
                 fTools.add(systemState.parameters.excalidraw, 'activeTool', [
-                    'selection', 'rectangle', 'diamond', 'ellipse', 'arrow', 'line', 'draw', 'text', 'eraser'
+                    'selection', 'rectangle', 'diamond', 'ellipse', 'arrow', 'line', 'freedraw', 'text', 'eraser'
                 ]).name('Active Tool').onChange(val => {
                     if (systemState.ui.excalidrawIframe) {
                         systemState.ui.excalidrawIframe.contentWindow.postMessage({
@@ -2916,35 +3024,29 @@
 
             const vRatio = vw / vh;
 
-            let drawW = parentWidth, drawH = parentWidth / vRatio;
-            if (drawH > parentHeight) { drawH = parentHeight; drawW = drawH * vRatio; }
+            let drawW_base = parentWidth, drawH_base = parentWidth / vRatio;
+            if (drawH_base > parentHeight) { drawH_base = parentHeight; drawW_base = drawH_base * vRatio; }
+
+            // V28.1: DECOUPLED OVERSCAN PATTERN
+            const zoom = systemState.parameters.excalidraw.zoomFactor || 1.15;
+            systemState.p1.upe.update(parentWidth, parentHeight, vRatio, zoom);
+
+            const { drawW, drawH, offsetX, offsetY, uiW, uiH, uiOffsetX, uiOffsetY } = systemState.p1.upe.bounds;
 
             // Set buffer size to match video source (High-fidelity sensing baseline)
             canvas.width = vw;
             canvas.height = vh;
 
-            // V24.19: Substrate Parity Alignment
-            // Center overlays to match object-fit: contain video centering
-            const offsetX = (parentWidth - drawW) / 2;
-            const offsetY = (parentHeight - drawH) / 2;
+            // V28.1: ViewBounds now contains separate tracks for Sensing and UI
+            systemState.ui.viewBounds = systemState.p1.upe.bounds;
 
-            // V24.20: Store view bounds for coordinate transformation parity
-            systemState.ui.viewBounds = {
-                width: drawW,
-                height: drawH,
-                offsetX: offsetX,
-                offsetY: offsetY
-            };
-
-            // Sync all canvas elements (Overlay, Babylon, Pixi)
-            // V24.20: Including Excalidraw UI in the parity box
-            const substrates = [
+            // Sync zoomed substrates (Video, Overlay-Canvas, Babylon, Pixi)
+            const zoomedSubstrates = [
                 canvas,
-                ...systemState.ui.juiceLayers.map(l => l.canvas || l.app?.view),
-                systemState.ui.excalidrawOverlay
+                ...systemState.ui.juiceLayers.map(l => l.canvas || l.app?.view)
             ];
 
-            substrates.forEach(el => {
+            zoomedSubstrates.forEach(el => {
                 if (el) {
                     el.style.position = 'absolute';
                     el.style.left = `${offsetX}px`;
@@ -2953,6 +3055,16 @@
                     el.style.height = `${drawH}px`;
                 }
             });
+
+            // Sync unzoomed substrates (Excalidraw UI)
+            if (systemState.ui.excalidrawOverlay) {
+                const el = systemState.ui.excalidrawOverlay;
+                el.style.position = 'absolute';
+                el.style.left = `${uiOffsetX}px`;
+                el.style.top = `${uiOffsetY}px`;
+                el.style.width = `${uiW}px`;
+                el.style.height = `${uiH}px`;
+            }
 
             // Trigger engine resizes to match the new CSS bounds
             systemState.ui.juiceLayers.forEach(l => {
@@ -2982,7 +3094,7 @@
                     
                     <!-- EXCALIDRAW OVERLAY LAYER [V20.1: Dark Mode Hardening] -->
                     ${isFlagEnabled('ui-excalidraw') ? `
-                    <div id="excalidraw-hero-overlay" style="position:absolute; width:100%; height:100%; z-index:4; opacity: 0.8;">
+                    <div id="excalidraw-hero-overlay" style="position:absolute; width:100%; height:100%; z-index:4; opacity: 0.8; display:none;">
                         <iframe 
                             id="excalidraw-iframe"
                             src="excalidraw_v20_wrapper.html" 
@@ -3017,7 +3129,7 @@
                 babylonJuice = new BabylonJuiceSubstrate(babylonWrap);
             }
             if (isFlagEnabled('engine-pixi') && pixiWrap) {
-                pixiJuice = new JuiceSubstrate(pixiWrap);
+                pixiJuice = new JuiceSubstrate(pixiWrap, true); // V28.1: Enable UPE Parity for Hero
             }
 
             systemState.ui.juiceLayers = [babylonJuice, pixiJuice].filter(l => l !== null);
@@ -3028,6 +3140,11 @@
                 // V24.1: Ensure only enabled engines are displayed
                 if (babylonJuice) babylonJuice.canvas.style.display = 'block';
                 if (pixiJuice) pixiJuice.app.view.style.display = 'block';
+
+                // 🎨 V26.1: Show Excalidraw overlay on Ignite if enabled
+                if (systemState.ui.excalidrawOverlay && systemState.parameters.excalidraw.enabled) {
+                    systemState.ui.excalidrawOverlay.style.display = 'block';
+                }
 
                 await initP0();
                 const [w, h] = systemState.parameters.camera.resolution.split('x');
@@ -3050,11 +3167,6 @@
             // Responsiveness: Hub Listener
             container.on('resize', () => {
                 resizeCanvas();
-                const rect = (pixiWrap || wrap).getBoundingClientRect();
-                if (rect.width > 0 && rect.height > 0) {
-                    if (babylonJuice) babylonJuice.resize();
-                    if (pixiJuice) pixiJuice.resize(rect.width, rect.height);
-                }
             });
 
             // V24.5: Component Teardown Integration
@@ -3230,6 +3342,20 @@
         window.addEventListener('beforeunload', () => {
             console.log("🌀 [HFO LIFECYCLE]: Initiating global disposal sequence...");
             window.hfoLifecycle.disposeAll();
+        });
+
+        // 🌉 HFO BRIDGE: Sync initial state with Excalidraw on Ready
+        window.addEventListener('message', (event) => {
+            const { type } = event.data;
+            if (type === 'EXCALIDRAW_READY') {
+                console.log("🎨 [P3] Excalidraw Ready. Syncing initial tool:", systemState.parameters.excalidraw.activeTool);
+                if (systemState.ui.excalidrawIframe) {
+                    systemState.ui.excalidrawIframe.contentWindow.postMessage({
+                        type: 'SET_TOOL',
+                        data: { tool: systemState.parameters.excalidraw.activeTool }
+                    }, '*');
+                }
+            }
         });
     </script>
 </body>

@@ -1,14 +1,13 @@
 <!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
-<!-- OMEGA GEN 4 V26 (Phoenix Rebirth | Re-anchored to V24.23 Baseline) -->
-<!-- Mission: Implement Skeleton Lifecycle Management (Fade on tracking loss) -->
-<!-- Skip Note: Version 25 skipped due to recursive AI loops and silent regressions. -->
+<!-- OMEGA GEN 4 V26.3 (Phoenix Rebirth | Safe Harbor) -->
+<!-- Mission: Implement visual subsectioning for Excalidraw to prevent edge tracking loss -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO OMEGA GEN 4 | V26</title>
+    <title>HFO OMEGA GEN 4 | V26.3</title>
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet"
@@ -114,7 +113,21 @@
             height: 100%;
             object-fit: contain;
             transform: scaleX(-1);
-            filter: grayscale(0.5) contrast(1.1);
+            filter: grayscale(var(--cam-gray, 0.8)) contrast(var(--cam-contrast, 1.1)) brightness(var(--cam-bright, 0.7));
+            /* Lightened Obsidian Reflection [V26.3.2] */
+            background: #000;
+        }
+
+        /* V26.3: Gutter Dimmer Styles */
+        .gutter-dimmer {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.2);
+            /* Matching lightened intent: Dimmed 20% [V26.3.3] */
+            z-index: 13;
+            /* Above Excalidraw (12), Below Pointers (14+) */
+            pointer-events: none;
+            backdrop-filter: blur(1px);
+            /* Reduced blur for clarity */
         }
 
         #overlay-canvas {
@@ -509,7 +522,15 @@
         // --- PRODUCTION STATE ---
         const systemState = {
             parameters: {
-                camera: { resolution: '1280x720', fpsTarget: 30, mirror: true },
+                camera: {
+                    resolution: '1280x720',
+                    fpsTarget: 30,
+                    mirror: true,
+                    scale: 0.8,      // V26.3 Tunable Scale
+                    brightness: 0.9, // V26.3.3: Lightened for visibility (Dimmed ~10% baseline)
+                    contrast: 1.1,   // V26.3 Tunable Contrast (Subtle)
+                    grayscale: 0.4   // V26.3.3: Reduced grayscale for more video clarity
+                },
                 landmarks: {
                     minConfidence: 0.5,
                     minTrackingConfidence: 0.5,
@@ -556,7 +577,8 @@
                 excalidraw: {
                     opacity: 0.8,
                     enabled: true,
-                    activeTool: 'draw'
+                    activeTool: 'freedraw',
+                    harborFactor: 0.85 // V26.3: Visual inset factor to prevent edge fighting
                 },
                 visuals: {
                     engine: 'BABYLON',
@@ -1439,8 +1461,13 @@
                             const finalProjX = isMirror ? (1.0 - projectedPoint.x) : projectedPoint.x;
                             const finalTipX = isMirror ? (1.0 - tipRaw.x) : tipRaw.x;
 
-                            const screenX = finalProjX * width;
-                            const screenY = projectedPoint.y * height;
+                            // V26.3: Safe Harbor (Exact Mapping)
+                            // We use exact 1:1 mapping. The "Safe Harbor" is achieved via visual inset.
+                            const vW = width || 1280;
+                            const vH = height || 720;
+
+                            const screenX = finalProjX * vW;
+                            const screenY = projectedPoint.y * vH;
 
                             // V24.17 Fix: Also mirror the raw anchor point and projected point in 3D
                             const mirroredProjected3D = {
@@ -1861,7 +1888,21 @@
                 let finalY = viewY;
 
                 if (!target) {
+                    // Ensure elementFromPoint actually finds something in the harbor
+                    // V26.3.1: Depth-First Target Discovery
                     let probe = document.elementFromPoint(viewX, viewY) || document.body;
+
+                    // If target is one of our Gutter Dimmers, force probe "behind" it at UI layer
+                    if (probe && (probe.classList.contains('gutter-dimmer') || probe === document.body)) {
+                        // Probe specifically for Excalidraw overlay if it's there
+                        if (systemState.ui.excalidrawOverlay) {
+                            const exRect = systemState.ui.excalidrawOverlay.getBoundingClientRect();
+                            if (viewX >= exRect.left && viewX <= exRect.right && viewY >= exRect.top && viewY <= exRect.bottom) {
+                                probe = systemState.ui.excalidrawIframe;
+                            }
+                        }
+                    }
+
                     if (probe && probe.tagName === 'IFRAME') {
                         try {
                             const iframeRect = probe.getBoundingClientRect();
@@ -1909,6 +1950,9 @@
                 if (isDown && !pState.wasDown) {
                     pState.lock = target;
                     if (target.setPointerCapture) try { target.setPointerCapture(pid); } catch (e) { }
+
+                    // V26.3.1: Force re-probe on pointerdown to ensure we didn't miss a button switch
+                    // (Some React UIs only update hover state correctly on actual touch/click)
                     dispatchToHydraHydrant(target, new PointerEvent('pointerdown', eventInit), true);
                 }
 
@@ -2040,11 +2084,41 @@
             });
         }
 
+        function drawFireCursor(ctx, rawX, rawY, screenX, screenY, state) {
+            const time = performance.now();
+            const beamColor = state === 'COMMIT' ? 'rgba(0, 230, 255, 0.8)' : 'rgba(255, 170, 0, 0.6)';
+            const coreColor = '#fff';
+
+            // 1. Beam Path (MCP to Tip)
+            if (systemState.parameters.physics.showLaserBeam) {
+                ctx.save();
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = beamColor;
+                ctx.strokeStyle = beamColor;
+                ctx.lineWidth = state === 'COMMIT' ? 12 : 8;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(rawX, rawY);
+                ctx.lineTo(screenX, screenY);
+                ctx.stroke();
+
+                // Inner White Core
+                ctx.strokeStyle = coreColor;
+                ctx.lineWidth = state === 'COMMIT' ? 4 : 2;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // 2. Fireball Bloom at Tip
+            const size = state === 'COMMIT' ? 15 : 8;
+            drawFireball(ctx, screenX, screenY, size, 1.0, state);
+        }
+
         // --- 🌠 ELEMENTAL JUICE HELPERS ---
         function drawFireball(ctx, x, y, size, intensity, state) {
             const time = Date.now();
             const colors = {
-                'COMMIT': ['rgba(255, 255, 255, 1.0)', 'rgba(255, 236, 61, 0.9)', 'rgba(255, 77, 79, 0.8)', 'rgba(255, 30, 0, 0)'],
+                'COMMIT': ['rgba(255, 255, 255, 1.0)', 'rgba(0, 240, 255, 0.9)', 'rgba(0, 180, 255, 0.8)', 'rgba(0, 255, 255, 0)'],
                 'READY': ['rgba(255, 255, 255, 0.8)', 'rgba(255, 251, 143, 0.7)', 'rgba(255, 169, 64, 0.6)', 'rgba(255, 169, 64, 0)'],
                 'COAST': ['rgba(255, 255, 255, 0.4)', 'rgba(145, 213, 255, 0.3)', 'rgba(9, 109, 217, 0.2)', 'rgba(9, 109, 217, 0)']
             };
@@ -2170,69 +2244,7 @@
             ctx.restore();
         }
 
-        // --- 🔥 FIRE ELEMENT CURSOR (V20.4) ---
-        function drawFireCursor(ctx, rawX, rawY, x, y, state) {
-            const time = Date.now();
-            const colors = {
-                'COMMIT': ['rgba(255, 255, 255, 1.0)', 'rgba(255, 69, 0, 0.8)', 'rgba(255, 140, 0, 0.6)'],
-                'READY': ['rgba(255, 255, 255, 0.6)', 'rgba(255, 195, 0, 0.5)', 'rgba(255, 69, 0, 0.3)'],
-                'COAST': ['rgba(255, 255, 255, 0.2)', 'rgba(255, 140, 0, 0.2)', 'rgba(128, 0, 0, 0.1)']
-            };
-            const c = colors[state] || colors['READY'];
-
-            ctx.save();
-            ctx.globalCompositeOperation = 'screen';
-
-            // 1. Heat Distortion Beam
-            if (systemState.parameters.physics.showLaserBeam) {
-                ctx.beginPath();
-                ctx.moveTo(rawX, rawY);
-                ctx.lineTo(x, y);
-                ctx.strokeStyle = c[1];
-                ctx.lineWidth = state === 'COMMIT' ? 12 : 6;
-                ctx.lineCap = 'round';
-                ctx.globalAlpha = 0.6;
-                ctx.stroke();
-
-                // Subtler Flicker Core (V20.5: Reduced magnitude to stop "perceived" oscillation)
-                ctx.beginPath();
-                ctx.moveTo(rawX, rawY);
-                ctx.lineTo(x + (Math.random() - 0.5) * 3, y + (Math.random() - 0.5) * 3);
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
-                ctx.globalAlpha = 0.2;
-                ctx.stroke();
-            }
-
-            // 2. Rising Fireball at Tip (V20.5: Slower pulse)
-            const fireSize = (state === 'COMMIT' ? 25 : 15) + Math.sin(time / 250) * 3;
-            const grad = ctx.createRadialGradient(x, y, 0, x, y, fireSize);
-            grad.addColorStop(0, c[0]);
-            grad.addColorStop(0.4, c[1]);
-            grad.addColorStop(1, 'rgba(255, 0, 0, 0)');
-
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(x, y, fireSize, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 3. Emitted Sparks
-            if (state === 'COMMIT' || state === 'READY') {
-                for (let i = 0; i < (state === 'COMMIT' ? 5 : 2); i++) {
-                    const sparkTime = (time + i * 500) % 1000;
-                    const sRatio = sparkTime / 1000;
-                    const angle = (i * Math.PI * 2 / 5) + time / 1000;
-                    const sx = x + Math.cos(angle) * 30 * sRatio;
-                    // Rise up in screen space
-                    const sy = y + Math.sin(angle) * 10 * sRatio - 60 * sRatio;
-                    ctx.fillStyle = '#FFD700';
-                    ctx.globalAlpha = 1 - sRatio;
-                    ctx.beginPath(); ctx.arc(sx, sy, 2 * (1 - sRatio), 0, Math.PI * 2); ctx.fill();
-                }
-            }
-
-            ctx.restore();
-        }
+        // Duplicate drawFireCursor (V20.4) removed to resolve P5 Syntax Breach in V26.3.2
 
         function drawElementalJuice(ctx, landmarks, readinessScore, canvasWidth, canvasHeight) {
             if (readinessScore <= 5) return;
@@ -2799,10 +2811,17 @@
                 fVisuals.add(systemState.parameters.physics, 'showTrailMesh').name('Show Trail Ribbon (Legacy)');
                 fVisuals.add(systemState.parameters.physics, 'showHFOClaw').name('Show HFO Pointer Claw');
 
-                const fCam = gui.addFolder('P0: Camera Range');
+                const fCam = gui.addFolder('P0: Phoenix Mirror Opticks');
                 fCam.add(systemState.parameters.camera, 'resolution', ['640x480', '1280x720', '1920x1080']).onChange(syncConfig);
                 fCam.add(systemState.parameters.camera, 'fpsTarget', 15, 60, 1).onChange(syncConfig);
                 fCam.add(systemState.parameters.camera, 'mirror').onChange(syncConfig);
+                fCam.add(systemState.parameters.camera, 'scale', 0.1, 1.0).name('Mirror Scale').onChange(resizeCanvas);
+                fCam.add(systemState.parameters.camera, 'brightness', 0, 1.0).name('Brightness').onChange(updateObsidianFilters);
+                fCam.add(systemState.parameters.camera, 'contrast', 0, 3).name('Contrast').onChange(updateObsidianFilters);
+                fCam.add(systemState.parameters.camera, 'grayscale', 0, 1).name('Grayscale').onChange(updateObsidianFilters);
+
+                // Initialize filters
+                updateObsidianFilters();
 
                 const fLand = gui.addFolder('P0: Neural Shards');
                 fLand.add(systemState.parameters.landmarks, 'minConfidence', 0.1, 1).onChange(syncConfig);
@@ -2857,10 +2876,11 @@
                         systemState.ui.excalidrawOverlay.style.opacity = val;
                     }
                 });
+                fExcal.add(systemState.parameters.excalidraw, 'harborFactor', 0.5, 1.0, 0.01).name('Safe Harbor Index').onChange(resizeCanvas);
 
                 const fTools = gui.addFolder('P3: Excalidraw Tools');
                 fTools.add(systemState.parameters.excalidraw, 'activeTool', [
-                    'selection', 'rectangle', 'diamond', 'ellipse', 'arrow', 'line', 'draw', 'text', 'eraser'
+                    'selection', 'rectangle', 'diamond', 'ellipse', 'arrow', 'line', 'freedraw', 'text', 'eraser'
                 ]).name('Active Tool').onChange(val => {
                     if (systemState.ui.excalidrawIframe) {
                         systemState.ui.excalidrawIframe.contentWindow.postMessage({
@@ -2876,7 +2896,6 @@
 
                 const fDebug = gui.addFolder('P5: Deep Visual Debugging');
                 fDebug.add(systemState.parameters, 'devMode').name('Enable Full Telemetry').onChange(syncConfig);
-                fDebug.add(systemState.parameters.landmarks, 'showSkeleton').name('Draw Skeleton');
 
                 function syncConfig() {
                     const valid = P1Bridger.validateConfig(systemState.parameters);
@@ -2892,6 +2911,25 @@
                         logMission("⚠️ P1: Configuration Breach Detected", '#FF4136');
                     }
                 }
+            }
+        }
+
+        function updateObsidianFilters() {
+            const video = document.getElementById('video-feed');
+            if (!video) return;
+            const cam = systemState.parameters.camera;
+            video.style.setProperty('--cam-gray', cam.grayscale);
+            video.style.setProperty('--cam-contrast', cam.contrast);
+            video.style.setProperty('--cam-bright', cam.brightness);
+
+            // Re-apply filter string to ensure it updates (CSS vars are reactive but some browsers need a kick)
+            // V26.3.1: Also dim the Excalidraw overlay if it's too bright (80% of mirror brightness)
+            video.style.filter = `grayscale(var(--cam-gray)) contrast(var(--cam-contrast)) brightness(var(--cam-bright))`;
+
+            if (systemState.ui.excalidrawIframe) {
+                // V26.3.3: Ensure UI is bright and clear, matching lightened mirror
+                const uiBright = Math.min(1.0, cam.brightness * 1.2);
+                systemState.ui.excalidrawIframe.style.filter = `contrast(1.05) brightness(${uiBright}) grayscale(0.05)`;
             }
         }
 
@@ -2919,14 +2957,41 @@
             let drawW = parentWidth, drawH = parentWidth / vRatio;
             if (drawH > parentHeight) { drawH = parentHeight; drawW = drawH * vRatio; }
 
+            // Apply Tunable Video Scale [V26.3]
+            const videoScale = systemState.parameters.camera.scale || 1.0;
+            drawW *= videoScale;
+            drawH *= videoScale;
+
+            // Updated [V26.3.1]: Restore explicit containment forcing for video aspect parity
+            // We use object-fit: contain on the video element but force its box to drawW/drawH
+            video.style.width = `${drawW}px`;
+            video.style.height = `${drawH}px`;
+            video.style.left = `${(parentWidth - drawW) / 2}px`;
+            video.style.top = `${(parentHeight - drawH) / 2}px`;
+            video.style.position = 'absolute';
+            video.style.objectFit = 'contain';
+
             // Set buffer size to match video source (High-fidelity sensing baseline)
             canvas.width = vw;
             canvas.height = vh;
 
             // V24.19: Substrate Parity Alignment
-            // Center overlays to match object-fit: contain video centering
+            // Center overlays to match explicit video centering
             const offsetX = (parentWidth - drawW) / 2;
             const offsetY = (parentHeight - drawH) / 2;
+
+            // V26.3: Safe Harbor Inset factor
+            const harborFactor = systemState.parameters.excalidraw.harborFactor || 0.85;
+            const harborW = drawW * harborFactor;
+            const harborH = drawH * harborFactor;
+            const harborX = offsetX + (drawW - harborW) / 2;
+            const harborY = offsetY + (drawH - harborH) / 2;
+
+            // V26.3.4: Integer Snapping for Seam-free Gutter Layout
+            const snapX = Math.round(harborX);
+            const snapY = Math.round(harborY);
+            const snapW = Math.round(harborW);
+            const snapH = Math.round(harborH);
 
             // V24.20: Store view bounds for coordinate transformation parity
             systemState.ui.viewBounds = {
@@ -2936,15 +3001,13 @@
                 offsetY: offsetY
             };
 
-            // Sync all canvas elements (Overlay, Babylon, Pixi)
-            // V24.20: Including Excalidraw UI in the parity box
-            const substrates = [
+            // Sync all canvas layers (Overlay, Babylon, Pixi)
+            const canvasLayers = [
                 canvas,
-                ...systemState.ui.juiceLayers.map(l => l.canvas || l.app?.view),
-                systemState.ui.excalidrawOverlay
+                ...systemState.ui.juiceLayers.map(l => l.canvas || l.app?.view)
             ];
 
-            substrates.forEach(el => {
+            canvasLayers.forEach(el => {
                 if (el) {
                     el.style.position = 'absolute';
                     el.style.left = `${offsetX}px`;
@@ -2953,6 +3016,36 @@
                     el.style.height = `${drawH}px`;
                 }
             });
+
+            // V26.3: Independent Safe Harbor sizing for Excalidraw UI
+            if (systemState.ui.excalidrawOverlay) {
+                const el = systemState.ui.excalidrawOverlay;
+                el.style.position = 'absolute';
+                el.style.left = `${snapX}px`;
+                el.style.top = `${snapY}px`;
+                el.style.width = `${snapW}px`;
+                el.style.height = `${snapH}px`;
+            }
+
+            // V26.3: Gutter Dimming Logic
+            if (systemState.ui.dimmers) {
+                const { top, bottom, left, right } = systemState.ui.dimmers;
+                const isExEnabled = systemState.parameters.excalidraw.enabled && systemState.parameters.p0Active;
+                const display = isExEnabled ? 'block' : 'none';
+
+                if (top) {
+                    Object.assign(top.style, { display, left: '0px', top: '0px', width: '100%', height: `${snapY}px` });
+                }
+                if (bottom) {
+                    Object.assign(bottom.style, { display, left: '0px', top: `${snapY + snapH}px`, width: '100%', height: `${parentHeight - (snapY + snapH)}px` });
+                }
+                if (left) {
+                    Object.assign(left.style, { display, left: '0px', top: `${snapY}px`, width: `${snapX}px`, height: `${snapH}px` });
+                }
+                if (right) {
+                    Object.assign(right.style, { display, left: `${snapX + snapW}px`, top: `${snapY}px`, width: `${parentWidth - (snapX + snapW)}px`, height: `${snapH}px` });
+                }
+            }
 
             // Trigger engine resizes to match the new CSS bounds
             systemState.ui.juiceLayers.forEach(l => {
@@ -2982,19 +3075,25 @@
                     
                     <!-- EXCALIDRAW OVERLAY LAYER [V20.1: Dark Mode Hardening] -->
                     ${isFlagEnabled('ui-excalidraw') ? `
-                    <div id="excalidraw-hero-overlay" style="position:absolute; width:100%; height:100%; z-index:4; opacity: 0.8;">
+                    <div id="excalidraw-hero-overlay" style="position:absolute; width:85%; height:85%; top:7.5%; left:7.5%; z-index:12; opacity: 0.95; display:none; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 30px rgba(0,0,0,0.8); background: transparent; border-radius: 4px;">
                         <iframe 
                             id="excalidraw-iframe"
                             src="excalidraw_v20_wrapper.html" 
-                            style="width:100%; height:100%; border:none; filter: contrast(1.1) brightness(0.9); background: transparent;"
+                            style="width:100%; height:100%; border:none; filter: contrast(1.1) brightness(0.9) grayscale(0.1); background: transparent;"
                             allow="clipboard-read; clipboard-write; focus-without-user-activation; pointer-lock">
                         </iframe>
                     </div>
                     ` : ''}
 
-                    <div id="babylon-juice-overlay" style="position:absolute; width:100%; height:100%; pointer-events:none; z-index:9;"></div>
-                    <div id="pixi-juice-overlay" style="position:absolute; width:100%; height:100%; pointer-events:none; z-index:10;"></div>
-                    <canvas id="overlay-canvas" style="z-index:11;"></canvas>
+                    <!-- V26.3 Gutter Dimmers -->
+                    <div id="dim-top" class="gutter-dimmer"></div>
+                    <div id="dim-bottom" class="gutter-dimmer"></div>
+                    <div id="dim-left" class="gutter-dimmer"></div>
+                    <div id="dim-right" class="gutter-dimmer"></div>
+
+                    <div id="babylon-juice-overlay" style="position:absolute; width:100%; height:100%; pointer-events:none; z-index:14;"></div>
+                    <div id="pixi-juice-overlay" style="position:absolute; width:100%; height:100%; pointer-events:none; z-index:15;"></div>
+                    <canvas id="overlay-canvas" style="z-index:16;"></canvas>
                     <button id="btn-ignite" class="hfo-btn" style="position:absolute; bottom:30px; z-index:20;">IGNITE OMEGA</button>
                 </div>
             `;
@@ -3006,6 +3105,14 @@
             // Reference for opacity control
             systemState.ui.excalidrawOverlay = wrap.querySelector('#excalidraw-hero-overlay');
             systemState.ui.excalidrawIframe = wrap.querySelector('#excalidraw-iframe');
+
+            // V26.3: Gutter Dimmers
+            systemState.ui.dimmers = {
+                top: wrap.querySelector('#dim-top'),
+                bottom: wrap.querySelector('#dim-bottom'),
+                left: wrap.querySelector('#dim-left'),
+                right: wrap.querySelector('#dim-right')
+            };
 
             // V23: Initialize Hybrid Substrates (Gated by V24.1 OpenFeature)
             const babylonWrap = wrap.querySelector('#babylon-juice-overlay');
@@ -3028,6 +3135,11 @@
                 // V24.1: Ensure only enabled engines are displayed
                 if (babylonJuice) babylonJuice.canvas.style.display = 'block';
                 if (pixiJuice) pixiJuice.app.view.style.display = 'block';
+
+                // 🎨 V26.1: Show Excalidraw overlay on Ignite if enabled
+                if (systemState.ui.excalidrawOverlay && systemState.parameters.excalidraw.enabled) {
+                    systemState.ui.excalidrawOverlay.style.display = 'block';
+                }
 
                 await initP0();
                 const [w, h] = systemState.parameters.camera.resolution.split('x');
@@ -3221,6 +3333,9 @@
             }
         });
 
+        // V26.3.1: Initialize Obsidian Filters on DOM Ready
+        setTimeout(updateObsidianFilters, 500);
+
         window.addEventListener('resize', () => {
             layout.updateSize();
             resizeCanvas();
@@ -3230,6 +3345,20 @@
         window.addEventListener('beforeunload', () => {
             console.log("🌀 [HFO LIFECYCLE]: Initiating global disposal sequence...");
             window.hfoLifecycle.disposeAll();
+        });
+
+        // 🌉 HFO BRIDGE: Sync initial state with Excalidraw on Ready
+        window.addEventListener('message', (event) => {
+            const { type } = event.data;
+            if (type === 'EXCALIDRAW_READY') {
+                console.log("🎨 [P3] Excalidraw Ready. Syncing initial tool:", systemState.parameters.excalidraw.activeTool);
+                if (systemState.ui.excalidrawIframe) {
+                    systemState.ui.excalidrawIframe.contentWindow.postMessage({
+                        type: 'SET_TOOL',
+                        data: { tool: systemState.parameters.excalidraw.activeTool }
+                    }, '*');
+                }
+            }
         });
     </script>
 </body>

@@ -1,0 +1,48 @@
+# 🐉 OMEGA GEN 4 | VERSION 27 SPECIFICATION
+# Code Name: "Sequential Sovereign"
+# Date: 2026-01-15
+# Medallion: Bronze (Evolutionary)
+
+mission: "Phoenix Reconstruction | Mission Omega"
+v27_focus: "Sequential FSM Enforcement & Wrist-Anchored State Signaling"
+
+fsm_sovereignty:
+  states:
+    - IDLE: "Default / Tracking only."
+    - READY: "Palm Facing + Dwell Completed. Pointer Armed."
+    - COMMIT: "Pointer Up detected while READY. Interaction Active."
+    
+  transitions:
+    - IDLE_to_READY: 
+        trigger: "isPalmFacing == true"
+        logic: "Leaky Bucket Dwell > ReadyThreshold (80)"
+    - READY_to_COMMIT:
+        trigger: "gesture == 'Pointing_Up' && confidence > 0.7"
+        constraint: "Must remain in READY (Palm facing)"
+    - ANY_to_IDLE:
+        trigger: "isPalmFacing == false"
+        logic: "Immediate transition or sub-100ms grace."
+
+visual_signaling:
+  wrist_chip:
+    anchor: "Landmark 0 (Wrist)"
+    elements:
+      - label: "STATE_NAME"
+      - color_mapping:
+          IDLE: "Grey / Transparent"
+          READY: "Amber / Pulsing"
+          COMMIT: "Cyan / Solid"
+    offset: { x: 0, y: 50, z: 0 } # Screen-space pixels below wrist
+
+instruction_guide:
+  location: "Port 7: Navigator (Guide Tab)"
+  content:
+    - phase_1: "✋ Show your PALM to the camera. Watch the 'Readiness' bar fill."
+    - phase_2: "✨ Once AMBER (Ready), point your INDEX FINGER up to interact."
+    - phase_3: "🖱️ Move the pointer to click/select while hold pointing."
+    - phase_4: "🔙 Turn your PALM AWAY or close your hand to return to IDLE."
+
+p5_constraints:
+  - "Zero-gravity state chip (must not cause jitter)."
+  - "No state skipping (e.g. IDLE -> COMMIT is forbidden)."
+  - "Red Truth: Verification of sequential transitions in P6 telemetry."

@@ -1,0 +1,37 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: ⚔️
+# OMEGA GEN 4 V29.0 SPECIFICATION
+# Focus: Absolute UPE Authority, Zero-CDN Parity, Operator Loop Lock
+
+mission_objectives:
+  - id: P0_LOCAL_ASSETS
+    status: HARD_REQUIREMENT
+    description: "Phase 4 - Zero-CDN. Use local FilesetResolver base path. Load WASM and .task models from lib/mediapipe/."
+    source: omega_gen4_v25_spec
+
+  - id: P1_UPE_AUTHORITY
+    status: CRITICAL
+    description: "Make UPE truly authoritative. No other code should compute clientX/clientY mappings or zoom margins outside UPE to eliminate edge-reach distortion."
+
+  - id: P7_OPERATOR_LOCK
+    status: ESSENTIAL
+    description: "Implement Essentials/Developer gate. Single readiness gauge as the only 'arming truth' in the UI to ensure one successful click in 30s without noise."
+    source: omega_gen4_v25_spec
+
+technical_debt:
+  - id: EDGE_DISTORTION
+    type: COORDINATE_DRIFT
+    description: "Reported coordinate distortion at screen edges due to non-UPE calculations."
+
+  - id: CDN_DEPENDENCY
+    type: INFRASTRUCTURE_FRAGILITY
+    description: "Relying on unpkg.com and jsdelivr causes latency and offline failure."
+
+  - id: DEBUG_NOISE
+    type: UX_FRICTION
+    description: "UI clutter during arming sequence interferes with mission operations."
+
+findings:
+  - id: IFRAME_OFFSET_DRIFT
+    description: "Manual iframeRect.left/top subtractions in dispatchToHydraHydrant caused parity drift at edges. Fixed by centralizing toClientX/Y in UPE."
+  - id: ZOOM_OFFSET_CONSISTENCY
+    description: "Inconsistent use of offsetX/offsetY variables across drawing vs interaction layers. UPE now enforces these globally."

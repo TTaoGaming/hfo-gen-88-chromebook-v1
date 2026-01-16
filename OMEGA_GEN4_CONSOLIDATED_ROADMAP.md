@@ -10,6 +10,7 @@
 All work adheres to the **Hexagonal Ports and Adapters** pattern, ensuring components are swappable and testable.
 
 ### 📍 Port Mappings (JADC2 Alignment)
+
 - **P0 SENSE (ISR)**: MediaPipe / Camera / Landmark Sensing.
 - **P1 FUSE (Data Fabric)**: Coordinate fusion, Mirror-Awareness, Zod Contract Validation.
 - **P2 SHAPE (Digital Twin)**: Physics Manifold (Planck.js / Matter.js / Rapier).
@@ -24,25 +25,29 @@ All work adheres to the **Hexagonal Ports and Adapters** pattern, ensuring compo
 ## 🎯 STRATEGIC PRIORITIES (V25/V26 HARDENING)
 
 ### 1. Offline & Dependency Resilience (CRITICAL)
+
 - **Goal**: Zero external network requests during runtime.
 - **Action**: Localize all CDN assets (GoldenLayout, Babylon.js, OpenFeature, MediaPipe WASM/Models) into the `lib/` directory.
 - **Verification**: Must pass `P5 Forensic Audit` in Airplane Mode.
 
 ### 2. Readiness Charger (The Leaky Bucket)
+
 - **Goal**: Move from magic dwell timers to a deterministic "Readiness Score" (0-100%).
 - **Implementation**:
-    - **Fill Rate**: Adjustable charge speed when "Armed" (Index Up).
-    - **Drain Rate**: Adjustable decay speed on tracking loss or disengagement.
-    - **Visual**: "Gaze-and-Dwell" style charging bar with ticks and color shifts (Grey → Amber → Cyan).
+  - **Fill Rate**: Adjustable charge speed when "Armed" (Index Up).
+  - **Drain Rate**: Adjustable decay speed on tracking loss or disengagement.
+  - **Visual**: "Gaze-and-Dwell" style charging bar with ticks and color shifts (Grey → Amber → Cyan).
 
 ### 3. Spatial Ergonomics & Rectification
+
 - **Goal**: Ensure 1:1 mapping between hand and virtual target on Chromebook V-1.
 - **Action**:
-    - **Screen Buffer**: User-adjustable `screenBufferPx` (e.g., 50px) bezel-safe zone.
-    - **Camera Offset**: Calibrate `object-fit: contain` video box to match overlay layers.
-    - **Direct Projection**: Use MCP (Knuckle) as ray origin for superior stability.
+  - **Screen Buffer**: User-adjustable `screenBufferPx` (e.g., 50px) bezel-safe zone.
+  - **Camera Offset**: Calibrate `object-fit: contain` video box to match overlay layers.
+  - **Direct Projection**: Use MCP (Knuckle) as ray origin for superior stability.
 
 ### 4. Interactive Parent Discovery (Hydra-Pulse)
+
 - **Goal**: Reliable click injection into complex DOM (Excalidraw/React).
 - **Action**: Use `findInteractiveParent` heuristics + 10ms "Pulse" delay to allow state settling before execution.
 
@@ -60,17 +65,20 @@ All work adheres to the **Hexagonal Ports and Adapters** pattern, ensuring compo
 ## 📅 PHASED EXECUTION ROADMAP
 
 ### PHASE ALPHA: INFRASTRUCTURE (IN-PROGRESS)
+
 - [x] Resolve Chronos Fractures (Blackboard repair).
 - [x] Consolidate 8-Port Architecture in V26.
 - [x] Implement Lifecycle Management (Anti-Zombie engines).
 
 ### PHASE BETA: HARDENING (IMMEDIATE)
+
 - [ ] Localize all CDN dependencies.
 - [ ] Implement user-tunable Fill/Drain rates for Leaky Bucket.
 - [ ] Verify 50px Screen Buffer reachability.
 - [ ] Create 30s Interactive Onboarding Tutorial.
 
 ### PHASE GOLD: PRODUCTION (FUTURE)
+
 - [ ] Achieve 88% Mutation Score (Silver Layer promotion).
 - [ ] Nightly Stress Event (NSE) verification.
 - [ ] Multi-Hand "Hot Seat" mutual exclusion.

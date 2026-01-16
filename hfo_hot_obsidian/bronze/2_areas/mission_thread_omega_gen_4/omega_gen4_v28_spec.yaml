@@ -1,0 +1,57 @@
+# Medallion: Bronze | OMEGA GEN 4 V28.0 SPECIFICATION
+# Mission: "Overscan Guardian" (Internal Zoom & Edge Resilience)
+# Status: ACTIVE / EVOLVED
+
+design_goals:
+  - Eliminate visible "gutters" or "bezels" by slightly zooming the video feed to fill the screen.
+  - Provide a clean, full-screen interaction area while maintaining a hidden sensory safety margin.
+  - Maintain 1:1 parity between visual elements and coordinate injection via centered overscan.
+
+technical_strategy:
+  - name: "Overscan Pattern"
+    description: "Digital zoom/center-crop of the sensing layers (Video/Canvas) while keeping the interaction layer at 100% container size."
+    implementation:
+      - CSS: "video { transform: scale(1/harborFactor); } parent { overflow: hidden; }"
+      - Logic: "Projection requires ViewBounds offset (screenX = normX * drawW + offsetX)."
+  
+  - name: "Sequential Sovereign FSM"
+    description: "Strictly sequential state machine (IDLE -> READY -> COMMIT) with Palm-Gate safety."
+    interaction:
+      - Idle: Tracking only, low opacity.
+      - Ready: Palm-face dwell (Leaky Bucket) armed.
+      - Commit: Pointing-up gesture triggered from Ready state.
+      - Reset: Palm-turn away globally resets to IDLE.
+
+  - name: "Wrist-Anchored Status guidance"
+    description: "Visual status chip (MD3 Card style) anchored to the hand wrist (LM-0) for real-time tracking feedback."
+
+version: 28.0
+codename: Overscan Guardian
+hive: E (Evolve)
+status: Bronze incubation
+mutantScore: 0%
+
+port_1_bridger:
+  name: "Web Weaver / Port 1"
+  logic:
+    - name: "Universal Projection Engine (UPE)"
+      description: "A centralized singleton for all screen-to-buffer coordinate translations."
+      enforcement: "All layers (Skeleton, Fireball, Injection) MUST use Bridger.toScreenX/Y."
+      benefit: "Guarantees 1:1 parity across visual and interaction substrates regardless of CSS zoom levels."
+
+  - name: "Dynamic Buffer Parameter"
+    description: "Transition from fixed pixels to a percentage-based 'Safe Zone' factor."
+    parameter: "systemState.parameters.excalidraw.safeZoneFactor" # 0.8 = 80% of screen
+
+coordinate_mapping_v3:
+  input: "MediaPipe Landmarks (0.0 - 1.0)"
+  logic: |
+    // 1. Calculate the 'Safe Window' in Camera Space
+    // 2. Map Camera Space [Margin, 1-Margin] to Screen Space [OverlayLeft, OverlayRight]
+    // 3. Clamp output to [0, 1] relative to the Excalidraw container
+  output: "W3C PointerEvents targeted specifically at the inset iframe."
+
+success_criteria:
+  - User can reach the corners of the Excalidraw UI without their hand leaving the camera frame.
+  - No horizontal/vertical drift when transitioning from center to edge.
+  - 100% P5 Forensic Pass for coordinate integrity.

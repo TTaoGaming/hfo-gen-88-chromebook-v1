@@ -5,13 +5,13 @@ id: OMEGA-GEN4-HOT-BRONZE
 name: "Omega Gen 4: Phoenix Production Monolith"
 mission_thread: Omega
 status: "Bootstrapping (Phase 1)"
-version: "V19.4.0-RED"
+version: "V26.3.0-HARBOR"
 
 phases:
   - id: B1
     title: "Phase 1: Sensing & Contract (P0/P1)"
     description: "Stabilize MediaPipe & Zod 6.0 production schemas within the monolith. Ensure 100% P1 Contract Pass Rate."
-    goal: "Eliminate telemetry jitter and bridge to physics coordinates. Mirror Awareness enforced (V19.4)."
+    goal: "Eliminate telemetry jitter and bridge to physics coordinates. Mirror Awareness enforced (V19.4). Safe Harbor Subsectioning (V26.3)."
     status: "Active (P0/P1 Integrated)"
 
   - id: B2

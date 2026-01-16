@@ -1,14 +1,13 @@
 <!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
-<!-- OMEGA GEN 4 V26 (Phoenix Rebirth | Re-anchored to V24.23 Baseline) -->
-<!-- Mission: Implement Skeleton Lifecycle Management (Fade on tracking loss) -->
-<!-- Skip Note: Version 25 skipped due to recursive AI loops and silent regressions. -->
+<!-- OMEGA GEN 4 V26.2 (Phoenix Rebirth | Buffered Interaction) -->
+<!-- Mission: Implement user-adjustable screen buffer for Excalidraw edge stability -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO OMEGA GEN 4 | V26</title>
+    <title>HFO OMEGA GEN 4 | V26.2</title>
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet"
@@ -556,7 +555,8 @@
                 excalidraw: {
                     opacity: 0.8,
                     enabled: true,
-                    activeTool: 'draw'
+                    activeTool: 'freedraw',
+                    screenBuffer: 30 // V26.2: Pixel margin to prevent edge fighting
                 },
                 visuals: {
                     engine: 'BABYLON',
@@ -1439,8 +1439,19 @@
                             const finalProjX = isMirror ? (1.0 - projectedPoint.x) : projectedPoint.x;
                             const finalTipX = isMirror ? (1.0 - tipRaw.x) : tipRaw.x;
 
-                            const screenX = finalProjX * width;
-                            const screenY = projectedPoint.y * height;
+                            // V26.2: Rectification Buffer
+                            // Expands the central camera area to cover the full screen, preventing edge-fighting.
+                            const buffer = systemState.parameters.excalidraw.screenBuffer || 0;
+                            const vW = width || 1280;
+                            const vH = height || 720;
+                            const bufX = buffer / vW;
+                            const bufY = buffer / vH;
+
+                            const rectifiedX = Math.max(0, Math.min(1, (finalProjX - bufX) / (1 - 2 * bufX || 1)));
+                            const rectifiedY = Math.max(0, Math.min(1, (projectedPoint.y - bufY) / (1 - 2 * bufY || 1)));
+
+                            const screenX = rectifiedX * vW;
+                            const screenY = rectifiedY * vH;
 
                             // V24.17 Fix: Also mirror the raw anchor point and projected point in 3D
                             const mirroredProjected3D = {
@@ -2857,10 +2868,11 @@
                         systemState.ui.excalidrawOverlay.style.opacity = val;
                     }
                 });
+                fExcal.add(systemState.parameters.excalidraw, 'screenBuffer', 0, 200, 1).name('Edge Buffer (px)');
 
                 const fTools = gui.addFolder('P3: Excalidraw Tools');
                 fTools.add(systemState.parameters.excalidraw, 'activeTool', [
-                    'selection', 'rectangle', 'diamond', 'ellipse', 'arrow', 'line', 'draw', 'text', 'eraser'
+                    'selection', 'rectangle', 'diamond', 'ellipse', 'arrow', 'line', 'freedraw', 'text', 'eraser'
                 ]).name('Active Tool').onChange(val => {
                     if (systemState.ui.excalidrawIframe) {
                         systemState.ui.excalidrawIframe.contentWindow.postMessage({
@@ -2982,7 +2994,7 @@
                     
                     <!-- EXCALIDRAW OVERLAY LAYER [V20.1: Dark Mode Hardening] -->
                     ${isFlagEnabled('ui-excalidraw') ? `
-                    <div id="excalidraw-hero-overlay" style="position:absolute; width:100%; height:100%; z-index:4; opacity: 0.8;">
+                    <div id="excalidraw-hero-overlay" style="position:absolute; width:100%; height:100%; z-index:4; opacity: 0.8; display:none;">
                         <iframe 
                             id="excalidraw-iframe"
                             src="excalidraw_v20_wrapper.html" 
@@ -3028,6 +3040,11 @@
                 // V24.1: Ensure only enabled engines are displayed
                 if (babylonJuice) babylonJuice.canvas.style.display = 'block';
                 if (pixiJuice) pixiJuice.app.view.style.display = 'block';
+
+                // 🎨 V26.1: Show Excalidraw overlay on Ignite if enabled
+                if (systemState.ui.excalidrawOverlay && systemState.parameters.excalidraw.enabled) {
+                    systemState.ui.excalidrawOverlay.style.display = 'block';
+                }
 
                 await initP0();
                 const [w, h] = systemState.parameters.camera.resolution.split('x');
@@ -3230,6 +3247,20 @@
         window.addEventListener('beforeunload', () => {
             console.log("🌀 [HFO LIFECYCLE]: Initiating global disposal sequence...");
             window.hfoLifecycle.disposeAll();
+        });
+
+        // 🌉 HFO BRIDGE: Sync initial state with Excalidraw on Ready
+        window.addEventListener('message', (event) => {
+            const { type } = event.data;
+            if (type === 'EXCALIDRAW_READY') {
+                console.log("🎨 [P3] Excalidraw Ready. Syncing initial tool:", systemState.parameters.excalidraw.activeTool);
+                if (systemState.ui.excalidrawIframe) {
+                    systemState.ui.excalidrawIframe.contentWindow.postMessage({
+                        type: 'SET_TOOL',
+                        data: { tool: systemState.parameters.excalidraw.activeTool }
+                    }, '*');
+                }
+            }
         });
     </script>
 </body>

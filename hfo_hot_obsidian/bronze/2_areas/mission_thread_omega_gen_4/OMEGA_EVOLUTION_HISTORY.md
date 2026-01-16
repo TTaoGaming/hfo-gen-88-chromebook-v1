@@ -55,6 +55,15 @@
 4. **Coasting (V16)**: Handling consumer-grade camera tracking dropouts without cursor "snapping".
 5. **Hybrid Adaptation (V20.7)**: Introducing spec-drifting heuristics to solve real-world interaction failures in headless or complex DOM environments.
 6. **Skeleton Lifecycle (V24.21)**: Implementing Alpha-Lerp fading for skeletons to eliminate ghosting during tracking loss or off-screen transitions.
+7. **Safe Harbor Substrate (V26.3)**: Visual subsectioning of the Excalidraw UI to decouple interaction bounds from the camera's physical FOV. Reverted coordinate squashing for exact 1:1 mapping within the "Safe Harbor."
 
 ---
 *Spider Sovereign (Port 7) | HFO Shards Archives*
+
+## 📜 RECENT EVOLUTION LOG
+
+* **V26.3.3 (2026-01-16)**: Lightened Obsidian. Gutter `0.2`. Camera `0.9` Brightness. Fixed `drawFireCursor` duplicate.
+* **V26.3.4 (2026-01-16)**: Gutter Hardening. Implemented `Math.round` snapping for dimmers and harbor to eliminate sub-pixel seams. Removed double-dimming by setting center harbor background to `transparent`. Verified via white-screen audit.
+* **V27.0 (2026-01-16)**: Sequential Sovereign. strictly sequential FSM (Idle-Ready-Commit). Wrist-anchored status chip (LM-0) for real-time tracking feedback.
+* **V28.0 (2026-01-16)**: Overscan Guardian. Implemented "Overscan" pattern (Digital Zoom/Center-Crop) to eliminate visible gutters/bezels. Maintained 1:1 parity via ViewBounds coordinate translation.
+<!-- NEXT_VERSION_ANCHOR -->
