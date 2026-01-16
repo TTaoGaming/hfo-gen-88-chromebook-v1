@@ -146,4 +146,60 @@ i want you to clone and evolve to gen4 v26 from v24.23. one major thing we need 
 omega gen 4 v 27. need to focus on unified readiness timer with user adjustable fill/drain raite that everything else uses as an abstraction
 v28 focus on screen sizing because excalidraw has bezels that we need to account for in the camera, we can't do gestures with our hand half off the screen.
 v29 need to be focused on user onboarding
-v30 can be offline dependencies.
+v30 can be offline dependencies
+---
+
+stop, emit to obsidian blackboard and create a forensic report of the lies. the ai kept telling me the fts duckdb is ready but look at when confronted it's fake. document this green lie and how ALL TRUST IS LOST
+---
+
+UX important idea = overscan user tuneable avoid gesture not captured, a slighty smaller rectangle but imperceptable to user until they tune it
+
+you know what, what i need is strangler fig, i need a new orchestration hub that is built on a better architecture, the current are too bespoke we need to simplify and hexagonal exemplar adopt using shared substrate stop individually coding and attack the class of problem at a higher abstraction. GIve me 4 options, what are my best ways to do something like this. I think I have my architecture fully laid out but ai agents can not build this in 1 shot and will fail spectacularly
+---
+
+oops these bottom few should be 1/15/2026, I still have bad discipline with timestamps, which is likely why my swarm also struggle with them lol
+---
+
+I want you to keep the ports available so it's easy to see that visual engines can be swapped, gesture recognizers can be swapped, FSM can be swapped, INJECTORS can be swapped for different apps. I am building JADC2 MOSAIC WARFARE TILES with a hexagonal ports in octet for stigmergy ai swarm. please help me clone and evolve to x28.2I want to understand my biggest weaknesses better, what would kill us? we want to be anti fragile HYPER-SLIVERS, how do we do this correctly? what's my problem called in research? what's the best battle tested exemplars with high TRL maturity, who can we adopt and assimilate into HFO?
+---
+
+ai physics based stop motion, having ai create scripts to step through
+---
+
+ok i already am implementing elements of this but i think the word i am looking for is a deterministic ai swarm. we are based off of JADC2 mosaic warfare tiles with HYPER-SLIVERS aristocrats style swarms. how do we look at the problem class and solve the entire class of problems? there is enough data for you here to build it, the question is how do we do this correctly? my main goals are simplicity antifragile extendability, my main ideas are a fractal architecture for simplicity and infinite recursiveness and my 8x8 galois lattice as semantic grounding and conceptual incarnation with my 8 legendary commanders
+---
+
+there seems to have introduced a weird distorsion of the coordinates at screen edges so there is no 1:1 parity from visuals to mediapipeline. I want you to help me clone and evolve 28.3 and help me find the source of this problem, I think it has to do with these 3 problsm, please make note of them into the v29 spec yaml that I want you to create. If you only fix 3 things next (highest leverage)
+
+Finish Phase 4 (offline/no-CDN): make V28 run fully with local WASM/models/libs. Your own spec calls this out as a hard requirement.
+
+omega_gen4_v25_spec
+
+MediaPipe’s FilesetResolver supports a base path for loading WASM locally—use that.
+
+Make UPE truly authoritative: no other code should compute clientX/clientY mappings or zoom margins outside UPE. If anything still does, you’ll keep getting “parity drift.”
+
+Lock the operator loop: implement the Essentials/Developer gate + a single readiness gauge that is the only “arming truth” in the UI. (This is the path to “one successful click in 30s” without debug noise.)
+
+omega_gen4_v25_spec
+---
+
+akka agentic platform and MCP sounds nice but I've never used akka and i have trouble with bespoke mcp. tell me more about this. what are my options here. I struggled with temporal, I like prefect for certain things but I am still to inexperienced. in fact I am too inexperienced in general. what I need is cognitive frameworks to bring me to master class by leveraging ai. I want to understand how I can use them, their strength weaknesses and connections. I am building my own human wetware RAG in my mind with system 1 and system 2 thinking
+---
+need a simple user onboarding, palm towards camera = ready, palm away from camera = idle with a dwell leaky bucket hysteresis. IDLE = skeleton visuals READY = AMBER PHOENIX CORE fire pointer COMMIT = CYAN PHOENIX CORE, which is high confidence gesture + palm towards camera + dwell leaky bucket hysteresis filled. so we can get the user to READY <-> IDLE a few times, then we hae then READY -> COMMIT -> IDLE and show them the one way flow for ready/arming and commit/fire to IDLE/RESET. so the user understands that their X fingertip is being tracked and we'll allow switching and other stuff later. and they understand that once they commit, it is locked regardless of gesture until they IDLE so the idea is anti midas and sticky and easy for UX and user. with configurable palm angle cones. In fact we can provide like 2 presets and the user can always go into DEV options for fine tuning parameters
+---
+
+### OMEGA GEN 4 V30: ONBOARDING & ANTI-MIDAS LOCK (2026-01-16)
+
+The V30 evolution focuses on stabilizing the user feedback loop and enforcing "Sticky Commit" logic. 
+
+**Core Logic Transitions:**
+1. **IDLE (Skeleton Only)**: Baseline tracking.
+2. **READY (Amber Fire)**: Triggered by Palm Facing + Dwell.
+3. **COMMIT (Cyan Fire)**: Triggered by Pointer_Up + Palm Facing + Dwell.
+4. **RESET**: Returns to IDLE only when Palm is turned away (Hysteresis Drain).
+
+**Mechanical Constraints:**
+- **Anti-Midas Lock**: Once in COMMIT, the interaction is captured and "locked." Gesture changes do not trigger a pointerup/release until the palm itself is turned away.
+- **Onboarding**: A guided cycle of READY <-> IDLE (sensing awareness) followed by a full READY -> COMMIT -> IDLE (interaction awareness) flow.
+- **Configurable Cones**: 2 Presets + Dev tuning for palm angle sensitivity.

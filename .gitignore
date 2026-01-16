@@ -68,3 +68,4 @@ hfo_cold_obsidian/bronze/6_persist/
 *.parquet
 *.zim
 hfo_hot_obsidian/bronze/6_persist/wiki_rag/
+hfo_hot_obsidian/4_archive/stigmergy_anchors/
