@@ -1,46 +1,46 @@
 {
-    "timestamp": "Thu Jan 15 15:08:02 2026",
+    "timestamp": "Thu Jan 15 19:56:11 2026",
     "hardware": {
-        "ram_used_gb": 4.5,
-        "ram_avail_gb": 1.82,
-        "cpu_load_1m": 2.904296875,
-        "disk_free_gb": 48.91
+        "ram_used_gb": 4.81,
+        "ram_avail_gb": 1.51,
+        "cpu_load_1m": 0.8896484375,
+        "disk_free_gb": 47.26
     },
     "active_commanders": [
         {
             "pid": 17423,
             "cmd": "python3 -u hfo_p0_lidless_daemon.py",
-            "mem_mb": 11.34375
+            "mem_mb": 9.57421875
         },
         {
             "pid": 17898,
             "cmd": "hfo_p1_blight_daemon.py",
-            "mem_mb": 5.609375
+            "mem_mb": 3.6015625
         },
         {
             "pid": 17899,
             "cmd": "hfo_p2_stub_daemon.py",
-            "mem_mb": 5.6953125
+            "mem_mb": 3.5703125
         },
         {
             "pid": 17900,
             "cmd": "hfo_p3_stub_daemon.py",
-            "mem_mb": 5.5859375
+            "mem_mb": 3.59375
         },
         {
             "pid": 17901,
             "cmd": "hfo_p4_stub_daemon.py",
-            "mem_mb": 5.609375
+            "mem_mb": 3.5625
         },
         {
             "pid": 17902,
             "cmd": "hfo_p5_stub_daemon.py",
-            "mem_mb": 5.6328125
+            "mem_mb": 3.609375
         },
         {
             "pid": 17904,
             "cmd": "hfo_p7_stub_daemon.py",
-            "mem_mb": 5.58984375
+            "mem_mb": 3.5859375
         }
     ],
     "status": "GREEN"
