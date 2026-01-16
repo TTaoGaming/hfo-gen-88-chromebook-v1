@@ -353,9 +353,9 @@
             }
             disposeAll() {
                 this.disposables.forEach(obj => {
-                    try { 
-                        obj.dispose(); 
-                    } catch (e) { 
+                    try {
+                        obj.dispose();
+                    } catch (e) {
                         console.error("[LIFECYCLE] Purge Error:", e);
                     }
                 });
@@ -1919,7 +1919,7 @@
                                 finalX = subX;
                                 finalY = subY;
                             }
-                        } catch (e) { 
+                        } catch (e) {
                             // Cross-origin or hidden iframe access failure is expected but logged in dev
                             if (systemState.parameters.devMode) console.warn("[P3] Deep Target Search Failure:", e);
                         }
@@ -1958,8 +1958,8 @@
                 if (isDown && !pState.wasDown) {
                     pState.lock = target;
                     if (target.setPointerCapture) {
-                        try { 
-                            target.setPointerCapture(pid); 
+                        try {
+                            target.setPointerCapture(pid);
                         } catch (e) {
                             if (systemState.parameters.devMode) console.warn("[P3] SetPointerCapture failed:", e);
                         }
@@ -1972,8 +1972,8 @@
                 if (!isDown && pState.wasDown) {
                     dispatchToHydraHydrant(target, new PointerEvent('pointerup', { ...eventInit, pressure: 0.0, buttons: 0, button: 0 }));
                     if (target.releasePointerCapture) {
-                        try { 
-                            target.releasePointerCapture(pid); 
+                        try {
+                            target.releasePointerCapture(pid);
                         } catch (e) {
                             if (systemState.parameters.devMode) console.warn("[P3] ReleasePointerCapture failed:", e);
                         }
@@ -1994,8 +1994,8 @@
                             pointerId: pid, bubbles: true, pointerType: 'mouse'
                         }));
                         if (pState.lock.releasePointerCapture) {
-                            try { 
-                                pState.lock.releasePointerCapture(pid); 
+                            try {
+                                pState.lock.releasePointerCapture(pid);
                             } catch (e) {
                                 if (systemState.parameters.devMode) console.warn("[P3] Cancel: ReleasePointerCapture failed:", e);
                             }

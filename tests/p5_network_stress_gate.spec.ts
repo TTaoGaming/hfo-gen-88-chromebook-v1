@@ -19,10 +19,11 @@ test.describe('Port 5 Infrastructure Gate', () => {
             failedRequests.push(`${request.url()} [${failure?.errorText || 'Unknown Error'}]`);
         });
 
-        // Listen for non-200 responses
+        // Listen for non-200 responses (But allow 304 Not Modified)
         page.on('response', (response) => {
-            if (!response.ok() && response.status() !== 0) { // status 0 is often a reset/canceled
-                failedRequests.push(`${response.url()} [HTTP ${response.status()}]`);
+            const status = response.status();
+            if (!response.ok() && status !== 304 && status !== 0) {
+                failedRequests.push(`${response.url()} [HTTP ${status}]`);
             }
         });
 

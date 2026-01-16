@@ -24,7 +24,7 @@ while ((match = scriptRegex.exec(content)) !== null) {
     const code = match[1];
     try {
         const ast = acorn.parse(code, { ecmaVersion: 'latest', sourceType: 'module' });
-        
+
         // Track declared variables and used variables
         const declared = new Set();
         const used = new Set();
@@ -46,10 +46,10 @@ while ((match = scriptRegex.exec(content)) !== null) {
 
         // Refined usage check: If a variable is used in the predictLoop but only declared in an else/if block
         // (For a truly Pareto optimal hardening, we look for 'results' specifically or common patterns)
-        
+
         // Let's look for the 'results' pattern specifically in this iteration
         if (code.includes('results') && !code.includes('let results') && !code.includes('var results') && !code.includes('const results')) {
-             // This is a bit too simple, let's look for usage BEFORE declaration or outside block boundary
+            // This is a bit too simple, let's look for usage BEFORE declaration or outside block boundary
         }
 
         // Actual Acorn-based boundary check (Simplified for speed)
@@ -60,7 +60,7 @@ while ((match = scriptRegex.exec(content)) !== null) {
             Identifier(node, ancestors) {
                 const name = node.name;
                 if (globals.has(name)) return;
-                
+
                 // Check if this identifier is part of a member expression (e.g. systemState.p0)
                 const parent = ancestors[ancestors.length - 2];
                 if (parent && parent.type === 'MemberExpression' && parent.property === node && !parent.computed) return;
@@ -91,7 +91,7 @@ if (resultsUsage && resultsDecl) {
     // Find the 'else {' that precedes 'let results'
     const declIndex = totalContent.indexOf('let results');
     const prevElseIndex = totalContent.lastIndexOf('else {', declIndex);
-    
+
     if (prevElseIndex !== -1) {
         // Find the matching closing brace for the else block
         let openBraces = 0;

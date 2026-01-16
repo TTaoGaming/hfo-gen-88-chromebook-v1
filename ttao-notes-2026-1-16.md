@@ -37,3 +37,15 @@ Checking the proxy and the firewall
 Running Connectivity Diagnostics
 ERR_CONNECTION_RESET. WHAT IS HAPPENING WITH MY APP. why are you ai agents regressing and not being caught? why is my system so WEAK?
 ---
+
+i think this is a code smell. if we are running on a TRUE shared data substrate these issues wouldn't happen because we use w3c pointer. the problem, i think the ai lied to me about the shared data substrate, please screate a script and test because I think the issue with full screen hero is not resolved. I think we are overcomplicating this, please give me a forensic analysis what is actually happening in my app? what is the logic? it should be divided by ports and be decoupled, or are they spagetti already?
+---
+
+ok let's do 1 anbd 4, what I want to do is to test resizing panels and making sure that excalidraw doesn't do weird clipping and we maintain the user tunable overscan to avoid camera edge tracking errors (we track the overscan so users can still interact with the bottom ui bar even if it visually appears the hand tracking doesn't include the bottom but since we overscan we still have data there, we just minimize the interaction space a little and keep it looking beautiful with a full container, the gutters looked really bad)
+---
+
+due to the unreliable handedness of mediapipeline we need to make palm cone angle accept palm front towards camera and palm away from camera, we do not gate my palm direction we just gate on angle, palm orientation dwell leaky bucket hysteresis = READINESS fill/drain bar with hysteresis. palm front/back facing camera vs hand side facing camera is what determings READY/IDLE
+---
+
+1, use the lifecycle triplet. 2, the structural repairs failed, excalidraw still gets clipped on different golden layout it is so brittle. 3 return to strictly once sequential, READY - COMMIT - RELEASE - SETTINGS
+---

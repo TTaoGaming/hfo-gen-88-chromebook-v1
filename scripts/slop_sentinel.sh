@@ -43,4 +43,21 @@ if [ ! -z "$FRAUD" ]; then
 fi
 
 echo "✅ [P5-SLOP-PASS]: No slop patterns detected."
+
+# 4. Hallucinated Gestures (Emoji Slop)
+# 🤚 is a confirmed hallucination. Correct language: 🖐️ (SENSE), ☝️ (AIM), 🫷 (RELEASE)
+HALLUCINATION_EMOJIS=(
+    "🤚"
+)
+
+for emoji in "${HALLUCINATION_EMOJIS[@]}"; do
+    # Scan all user files recursively in hfo_hot_obsidian and other relevant dirs.
+    H_FLAGS=$(find hfo_hot_obsidian hfo_cold_obsidian . -maxdepth 6 \( -name "*.html" -o -name "*.py" -o -name "*.js" -o -name "*.md" -o -name "*.jsonl" \) | grep -vE "node_modules|\.git|\.stryker" | xargs grep -l "$emoji" 2>/dev/null)
+    if [ ! -z "$H_FLAGS" ]; then
+        echo "🚨 [GESTURE-HALLUCINATION]: Forbidden emoji '$emoji' detected in the following files:"
+        echo "$H_FLAGS"
+        echo "Please use the correct sequence: 🖐️ (SENSE), ☝️ (AIM), 🫷 (RELEASE)."
+    fi
+done
+
 exit 0

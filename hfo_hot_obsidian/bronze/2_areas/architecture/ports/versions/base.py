@@ -671,6 +671,12 @@ class Port5Immunize:
              if os.path.exists(eval_gate_path):
                  if subprocess.run(["python3", eval_gate_path, active_ws]).returncode != 0:
                      return {"status": "FAIL", "message": "Logic Gate (Schema Parity) Failed"}
+             
+             # V32: Interaction Check (Anti-Blockage)
+             interact_gate_path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/p5_interaction_gate.py"
+             if os.path.exists(interact_gate_path):
+                 if subprocess.run(["python3", interact_gate_path, active_ws]).returncode != 0:
+                     return {"status": "FAIL", "message": "Interaction Gate (Blockage Detected) Failed"}
             
         # 2. Resource Reachability (Anti-Hallucination)
         try:

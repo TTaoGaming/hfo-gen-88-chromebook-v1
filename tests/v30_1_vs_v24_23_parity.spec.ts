@@ -20,7 +20,7 @@ test.describe('HFO Parity: Golden Master (v24.23) vs Candidate (v30.1)', () => {
     test('Step 1: Record Golden Telemetry from v24.23', async ({ page }) => {
         console.log('⏺️ Recording Baseline from v24.23...');
         await page.goto(V23_URL);
-        
+
         // Wait for P1Bridger to be ready
         await page.waitForFunction(() => typeof (window as any).P1Bridger !== 'undefined', { timeout: 10000 });
 
@@ -43,7 +43,7 @@ test.describe('HFO Parity: Golden Master (v24.23) vs Candidate (v30.1)', () => {
             for (let i = 0; i < 50; i++) {
                 const x = 0.5 + Math.sin(i * 0.1) * 0.2;
                 const y = 0.5 + Math.cos(i * 0.1) * 0.2;
-                
+
                 const landmarks = createHand(x, y);
                 // Frame 25-50: BACK OF HAND (Flip palm vector)
                 if (i >= 25) {
@@ -51,13 +51,13 @@ test.describe('HFO Parity: Golden Master (v24.23) vs Candidate (v30.1)', () => {
                     landmarks[5] = landmarks[17];
                     landmarks[17] = temp;
                 }
-                
+
                 const mockResults = {
                     landmarks: [landmarks],
                     gestures: [[{ categoryName: 'Pointing_Up', score: 0.99 }]],
                     handedness: [[{ categoryName: 'Right' }]]
                 };
-                
+
                 // @ts-ignore
                 const cursors = P1Bridger.fuse(mockResults, 16.6);
                 results.push({ frame: i, cursors });
@@ -125,7 +125,7 @@ test.describe('HFO Parity: Golden Master (v24.23) vs Candidate (v30.1)', () => {
                 // Note: v30 might have different screen scaling, but unit coords (0-1) should match
                 expect(candidate.screenX).toBeCloseTo(golden.screenX, 2);
                 expect(candidate.screenY).toBeCloseTo(golden.screenY, 2);
-                
+
                 // FSM parity is critical
                 expect(candidate.fsmState).toBe(golden.fsmState);
             }

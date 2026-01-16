@@ -1,0 +1,32 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# HFO OMEGA GEN 4 GESTURE LANGUAGE SPECIFICATION (V31+)
+
+tutorial:
+  phases:
+    READY:
+      name: "READY"
+      id: 1
+      emoji_triplet: "🖐️ ➡ 🔥"
+      header: "Phase 1: READY 🖐️ ➡ 🔥"
+      body: "Welcome Initiate! Show your <span class=\"tutorial-highlight\">Palm Towards</span> the camera to ignite the <span class=\"tutorial-highlight\">READY - Amber Phoenix Core</span>."
+    COMMIT:
+      name: "COMMIT"
+      id: 2
+      emoji_triplet: "☝️ ➡ ☄️"
+      header: "Phase 2: COMMIT ☝️ ➡ ☄️"
+      body: "Excellent! Now <span class=\"tutorial-highlight\">Point your Index Finger Up</span> to focus the core into the <span class=\"tutorial-highlight\">COMMIT - Cyan Phoenix Core</span>."
+    RELEASE_IDLE:
+      name: "RELEASE IDLE"
+      id: 3
+      emoji_triplet: "🤚 ➡ 🚫"
+      header: "Phase 3: RELEASE IDLE 🤚 ➡ 🚫"
+      body: "Safety first. Turn your hand away (<span class=\"tutorial-highlight\">Back of Hand</span>) to extinguish the flame."
+    SETTINGS:
+      name: "SETTINGS"
+      id: 4
+      emoji_triplet: "⚙️ ➡ 📈"
+      header: "Phase 4: SETTINGS ⚙️ ➡ 📈"
+      body: "Navigator access granted. Use the panels to tune parameters. This tutorial will self-destruct in 8s."
+      behavior:
+        duration_ms: 8000
+        ui_elements: ["#m3-progress-bar", "#m3-progress-container"]

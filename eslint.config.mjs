@@ -30,6 +30,7 @@ export default [
                 MouseEvent: "readonly",
                 Image: "readonly",
                 ImageData: "readonly",
+                ResizeObserver: "readonly",
                 CanvasRenderingContext2D: "readonly",
                 HTMLVideoElement: "readonly",
                 HTMLCanvasElement: "readonly",
