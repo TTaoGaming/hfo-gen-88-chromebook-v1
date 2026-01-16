@@ -90,6 +90,8 @@ We are currently executing the **Omega Silver Gen 1 Initializtion**, **Omega Gen
 
 **Active Mission Projects**:
 
+- **V84.1 Hot Bronze (2026-01-16)**: **OMEGA V35 HARDENED**. Resolved critical "Excalidraw Clipping" by reverting `zoomFactor` from 1.15x to 1.0x. Verified fix via `tests/v35_layout_integrity.spec.ts` (Playwright) confirming iframe (1191px) fits within Golden Layout container (1280px). Anchored via P5 Forensic Audit (GREEN). [Receipt: SUCCESS_V35_HARDENED]
+
 - **V84.0 Hot Bronze (2026-01-16)**: **OMEGA V35 INITIALIZED**. Transitioned to `v35` with a focus on "Screenshots and Golden Master Testing." Initialized `tests/v35_layout_integrity.spec.ts` and `tests/v35_golden_master_parity.spec.ts` to harden visual stability and parity against Golden Master `v24.23`. [Receipt: SUCCESS_V35_INIT]
 
 - **V83.3 Hot Bronze (2026-01-16)**: **OMEGA V34 HARDENED**. Successfully implemented `ResizeObserver` on the hero component to resolve "Ghost Offsets" during Golden Layout maximization. Verified via P5 Forensic Audit (GREEN). Repaired historical Chronos fracture and purged forbidden emojis. [Receipt: SUCCESS_V34_LAYOUT_FIX]

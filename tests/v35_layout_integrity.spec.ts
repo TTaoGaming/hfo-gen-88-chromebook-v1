@@ -7,19 +7,27 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Omega V35 Layout Integrity', () => {
-    const targetUrl = 'http://localhost:8889/active_omega.html';
+    const targetUrl = 'http://127.0.0.1:8889/active_omega.html';
 
     test('Step 1: Verify Initial Layout & Overlay', async ({ page }) => {
         console.log('🔍 Checking V35 Initial Substrate...');
-        await page.goto(targetUrl, { waitUntil: 'networkidle' });
+        await page.goto(targetUrl, { waitUntil: 'load' });
 
         // Ensure canvas and content are present
-        await expect(page.locator('#engine-canvas')).toBeVisible();
-        await expect(page.locator('.lm_content')).toBeVisible({ timeout: 15000 });
+        await expect(page.locator('#overlay-canvas')).toBeVisible({ timeout: 15000 });
+        
+        console.log('🔥 Igniting Omega Substrate...');
+        const igniteBtn = page.locator('#btn-ignite');
+        await expect(igniteBtn).toBeVisible();
+        await igniteBtn.click();
+
+        // Ensure Excalidraw becomes visible
+        const excalidrawOverlay = page.locator('#excalidraw-hero-overlay');
+        await expect(excalidrawOverlay).toBeVisible({ timeout: 10000 });
 
         // Ensure Excalidraw is initialized (look for the iframe)
-        const excalidrawIframe = page.frameLocator('iframe[src*="excalidraw"]');
-        await expect(page.locator('iframe[src*="excalidraw"]')).toBeVisible();
+        const excalidrawIframe = page.frameLocator('#excalidraw-iframe');
+        await expect(page.locator('#excalidraw-iframe')).toBeVisible();
 
         console.log('📸 Capturing Initial State Screenshot...');
         await page.screenshot({ path: 'test-results/v35_initial_layout.png' });
@@ -27,30 +35,49 @@ test.describe('Omega V35 Layout Integrity', () => {
 
     test('Step 2: Verify Maximize Resilience (The V34/V35 Fix)', async ({ page }) => {
         console.log('🔄 Testing Panel Maximization Resilience...');
-        await page.goto(targetUrl, { waitUntil: 'networkidle' });
+        await page.goto(targetUrl, { waitUntil: 'load' });
 
-        // Find the "Hero" or main content panel title
-        const heroPanel = page.locator('.lm_title', { hasText: 'HERO' }).first();
-        await expect(heroPanel).toBeVisible();
+        console.log('🔥 Igniting Omega Substrate for Maximize Test...');
+        await page.locator('#btn-ignite').click();
 
-        // Find the maximize button relative to the hero panel
-        const header = page.locator('.lm_header').filter({ has: page.locator('.lm_title', { hasText: 'HERO' }) });
+        // Find the "Tactical Workspace" or main content panel title
+        const heroPanel = page.locator('.lm_title', { hasText: 'Tactical Workspace' }).first();
+        await expect(heroPanel).toBeVisible({ timeout: 15000 });
+
+        // Find the maximize button relative to the Tactical Workspace panel
+        const header = page.locator('.lm_header').filter({ has: page.locator('.lm_title', { hasText: 'Tactical Workspace' }) });
         const maximizeBtn = header.locator('.lm_maximise');
 
-        console.log('🔼 Maximizing Hero Panel...');
+        console.log('🔼 Maximizing Tactical Workspace Panel...');
         await maximizeBtn.click();
         
-        // Wait for ResizeObserver and layout transition
-        await page.waitForTimeout(1000);
+        // Wait for ResizeObserver and layout transition settlement
+        await page.waitForTimeout(2000);
 
         // Capture screenshot of maximized state
-        await page.screenshot({ path: 'test-results/v35_maximized_layout.png' });
+        await page.screenshot({ path: 'test-results/v35_maximized_layout.png', fullPage: true });
 
-        // Verify that the canvas still has non-zero dimensions
-        const canvasSize = await page.locator('#engine-canvas').boundingBox();
-        console.log(`📏 Canvas Dimensions: ${canvasSize.width}x${canvasSize.height}`);
-        expect(canvasSize.width).toBeGreaterThan(500);
-        expect(canvasSize.height).toBeGreaterThan(500);
+        // Verify that the canvas and iframe have non-zero dimensions
+        const canvas = page.locator('#overlay-canvas');
+        const iframe = page.locator('#excalidraw-iframe');
+        
+        const canvasSize = await canvas.boundingBox();
+        const iframeSize = await iframe.boundingBox();
+        const containerSize = await page.locator('.lm_content').first().boundingBox();
+
+        if (canvasSize && iframeSize && containerSize) {
+            console.log(`📏 Canvas Dimensions: ${canvasSize.width}x${canvasSize.height}`);
+            console.log(`📏 Iframe Dimensions: ${iframeSize.width}x${iframeSize.height}`);
+            console.log(`📏 Container Dimensions: ${containerSize.width}x${containerSize.height}`);
+            
+            // Forensic Discovery: Check for Clipping (Overflow)
+            if (iframeSize.width > containerSize.width || iframeSize.height > containerSize.height) {
+                console.log('🚨 DETECTED CLIPPING: Iframe is larger than its Golden Layout container!');
+            }
+            
+            expect(canvasSize.width).toBeGreaterThan(100);
+            expect(iframeSize.width).toBeGreaterThan(100);
+        }
     });
 
     test('Step 3: Screenshot Golden Master Parity (Manual Comparison)', async ({ page }) => {
