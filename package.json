@@ -9,6 +9,8 @@
     "p5:preflight": "python3 scripts/p5_preflight_audit.py && npx eslint active_omega.html",
     "p5:gate": "npx playwright test tests/p5_network_stress_gate.spec.ts",
     "p4:regression": "npx playwright test tests/p4_visual_regression.spec.ts",
+    "test:v35": "npx playwright test tests/v35_layout_integrity.spec.ts",
+    "test:parity": "npx playwright test tests/v35_golden_master_parity.spec.ts",
     "harden": "npm run p5:preflight && npm run p5:gate && npm run p4:regression",
     "clean:chrome": "sudo apt purge google-chrome-stable -y && sudo apt autoremove -y",
     "hfo:setup": "npm install && echo 'SKIPPING LINUX-CHROME INSTALL (Use Native Chromebook Browser)'",

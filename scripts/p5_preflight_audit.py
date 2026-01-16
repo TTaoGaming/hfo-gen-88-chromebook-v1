@@ -15,7 +15,7 @@ from pathlib import Path
 BASE_DIR = Path("/home/tommytai3/active/hfo_gen_88_chromebook_v_1")
 HTML_FILES = [
     BASE_DIR / "active_omega.html",
-    BASE_DIR / "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v34.html"
+    BASE_DIR / "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v35.html"
 ]
 
 def audit_file(file_path):

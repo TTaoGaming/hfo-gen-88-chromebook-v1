@@ -90,6 +90,10 @@ We are currently executing the **Omega Silver Gen 1 Initializtion**, **Omega Gen
 
 **Active Mission Projects**:
 
+- **V84.0 Hot Bronze (2026-01-16)**: **OMEGA V35 INITIALIZED**. Transitioned to `v35` with a focus on "Screenshots and Golden Master Testing." Initialized `tests/v35_layout_integrity.spec.ts` and `tests/v35_golden_master_parity.spec.ts` to harden visual stability and parity against Golden Master `v24.23`. [Receipt: SUCCESS_V35_INIT]
+
+- **V83.3 Hot Bronze (2026-01-16)**: **OMEGA V34 HARDENED**. Successfully implemented `ResizeObserver` on the hero component to resolve "Ghost Offsets" during Golden Layout maximization. Verified via P5 Forensic Audit (GREEN). Repaired historical Chronos fracture and purged forbidden emojis. [Receipt: SUCCESS_V34_LAYOUT_FIX]
+
 - **V83.2 Hot Bronze (2026-01-16)**: **OMEGA V33.1 PURIFIED**. Executed surgical purge of logic slop in `v33_1`. Reverted to strictly sequential `TutorialSystem` (READY ➡ COMMIT ➡ RELEASE ➡ SETTINGS) and restored `isPalmVisible` gating from `v31_3`. Re-standardized lifecycle triplet: 🖐️ (SENSE), ☝️ (AIM), 🫷 (RELEASE). Removed failed `ResizeObserver` and overscan clamping hacks. Verified 🤚 removal via P5 Forensic Audit. [Receipt: SUCCESS_V33_1_PURIFIED]
 
 - **V82.9 Hot Bronze (2026-01-16)**: **OMEGA V32 LAYOUT HARDENED**. Identified and resolved "Fullscreen Hero" regressions in Golden Layout. Implemented `ResizeObserver` on hero component for reliable `resizeCanvas` triggers during maximization. Elevated `#status-bar` to `z-index: 2000` to prevent occlusion. Eliminated "Glass Wall" interaction block by setting `pointer-events: none` on Excalidraw overlay by default. Verified via P5 Forensic PASS. [Receipt: SUCCESS_V32_HARDENED]
