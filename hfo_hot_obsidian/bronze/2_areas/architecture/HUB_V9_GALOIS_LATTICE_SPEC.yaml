@@ -1,0 +1,33 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+# 🏗️ HFO HUB V9: 8x8 Galois Lattice Specification
+
+name: "HFO Galois Lattice"
+generation: 88
+medallion_layer: "Bronze"
+
+lattice:
+  P0_SENSE: [ISR, Relay, Fuse, Simul, SEAD, Trace, Cache, Hunt]
+  P1_FUSE: [Hash, Sign, Verify, Chain, Anchor, Block, Ledger, Trust]
+  P2_SHAPE: [Static, Dynamic, Fluid, Plasma, Solid, Gas, Bose, Fermi]
+  P3_DELIVER: [Event, Signal, Packet, Stream, Pulse, Wave, Beam, Field]
+  P4_DISRUPT: [Noise, Jitter, Lag, Drift, Drop, Split, Merge, Null]
+  P5_DEFEND: [Purity, Integrity, Provenance, Forensic, Audit, Gate, Seal, Pyre]
+  P6_STORE: [Ingest, Index, Query, Rollup, Prune, Archive, Shard, Mirror]
+  P7_NAVIGATE: [Map, C2, Sync, Logic, Warp, Vote, Memo, BMC2]
+
+operational_phases:
+  HUNT: [P0, P7]
+  INTERLOCK: [P1, P6]
+  VALIDATE: [P2, P5]
+  EVOLVE: [P3, P4]
+
+akka_actors:
+  - id: "Commander"
+    role: "P7 Logic"
+    supervises: ["Lidless_P0", "Web_P1", "Kraken_P6"]
+    persistence: "DuckDB"
+
+governance:
+  rule_0: "Verifiable Truth Red > Meaningless Green"
+  rule_1: "0 Bespoke Code - Exemplar Adoption Only"
+  rule_2: "Immutable Blackboards - Append Only"

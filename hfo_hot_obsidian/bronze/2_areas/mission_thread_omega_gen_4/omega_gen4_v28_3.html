@@ -11,16 +11,16 @@
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+        href="./lib/css/goldenlayout-base.css" />
     <link type="text/css" rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+        href="./lib/css/goldenlayout-dark-theme.css" />
 
     <!-- Babylon.js Dependencies -->
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="./lib/js/babylon.js"></script>
+    <script src="./lib/js/babylon.loaders.min.js"></script>
 
     <!-- OpenFeature SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@openfeature/web-sdk@0.7.0/dist/web-sdk.min.js"></script>
+    <script src="./lib/js/web-sdk.min.js"></script>
 
     <style>
         :root {
@@ -211,11 +211,11 @@
     <script type="importmap">
     {
         "imports": {
-            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
-            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
-            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
-            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm",
-            "planck": "https://cdn.jsdelivr.net/npm/planck-js@0.3.1/+esm"
+            "golden-layout": "./lib/js/golden-layout.esm.js",
+            "lil-gui": "./lib/js/lil-gui.esm.js",
+            "@mediapipe/tasks-vision": "./lib/js/vision_bundle.js",
+            "zod": "./lib/js/zod.esm.js",
+            "planck": "./lib/js/planck.esm.js"
         }
     }
     </script>
@@ -255,10 +255,17 @@
             }
         };
 
-        if (window.OpenFeature) {
-            window.OpenFeature.setProvider(HFOFeatureProvider);
+                // 🛡️ [HFO] Initialize OpenFeature (Local UMD Bridge)
+        const OF_ROOT = window.OpenFeature || {};
+        const api = OF_ROOT.OpenFeature || OF_ROOT.default || OF_ROOT;
+
+        if (typeof api.setProvider === 'function') {
+            api.setProvider(HFOFeatureProvider);
+            console.log("🚀 [HFO] OpenFeature Hardened (Offline Ready)");
+        } else {
+            console.warn("⚠️ [HFO] OpenFeature API not found in expected UMD location.");
         }
-        const featureClient = window.OpenFeature ? window.OpenFeature.getClient() : {
+                const featureClient = typeof api.getClient === 'function' ? api.getClient() : {
             getBooleanValue: (key, def) => {
                 if (urlParams.has(`flag-${key}`)) return urlParams.get(`flag-${key}`) === 'true';
                 return featureConfig[key] ?? def;
@@ -2625,7 +2632,7 @@
                 gui.add(systemState.parameters.ui, 'gate', ['ESSENTIALS', 'DEVELOPER']).name('OPERATOR GATE').onChange(val => {
                     localStorage.setItem('hfo_oper_gate', val);
                     logMission(`UI_GATE_SHIFT: ${val}`);
-                    location.reload(); 
+                    location.reload();
                 });
 
                 const fTelem = gui.addFolder('P6: Telemetry & Replay [V24.6]');
@@ -2668,20 +2675,20 @@
                 fPorts.add(systemState.parameters.ports, 'p3_injector', ['HYDRA_ADAPTER_PULSE', 'DIRECT_DOM_CLICK']).name('P3: Effect Injector').onChange(val => {
                     logMission(`P3 Injector Swapped: ${val}`);
                 });
-                
+
                 fPorts.add(systemState.parameters.visuals, 'engine', ['BABYLON', 'PIXI', 'CANVAS']).name('P4: Visual Substrate').onChange(val => {
                     logMission(`Port 4: Visual Engine Swapping to ${val}...`);
-                    
+
                     // 🔄 HYPER-SLIVER ENGINE SWAP
                     if (val === 'BABYLON') {
                         if (systemState.ui.juiceLayers[0] instanceof BabylonJuiceSubstrate) {
-                             systemState.ui.juiceLayers[0].canvas.style.display = 'block';
+                            systemState.ui.juiceLayers[0].canvas.style.display = 'block';
                         }
                         if (systemState.p0.canvas) systemState.p0.canvas.style.display = 'none';
                     } else if (val === 'CANVAS') {
                         if (systemState.p0.canvas) systemState.p0.canvas.style.display = 'block';
                         if (systemState.ui.juiceLayers[0] instanceof BabylonJuiceSubstrate) {
-                             systemState.ui.juiceLayers[0].canvas.style.display = 'none';
+                            systemState.ui.juiceLayers[0].canvas.style.display = 'none';
                         }
                     } else if (val === 'PIXI') {
                         logMission("⚠️ PIXI Engine selected. Note: Library removed in V28.1 for performance. Stub mode active.", "#FFA500");

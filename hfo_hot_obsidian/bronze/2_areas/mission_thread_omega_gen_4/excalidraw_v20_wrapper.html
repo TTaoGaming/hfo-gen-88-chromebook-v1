@@ -6,10 +6,9 @@
     <meta charset="UTF-8">
     <title>HFO Excalidraw Wrapper</title>
     <!-- 📦 React & Excalidraw UMD -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script crossorigin
-        src="https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/excalidraw.production.min.js"></script>
+    <script crossorigin src="./lib/js/react.min.js"></script>
+    <script crossorigin src="./lib/js/react-dom.min.js"></script>
+    <script crossorigin src="./lib/js/excalidraw.min.js"></script>
     <style>
         body,
         html,
@@ -27,7 +26,7 @@
 <body>
     <div id="app"></div>
     <script>
-        window.EXCALIDRAW_ASSET_PATH = "https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/";
+        window.EXCALIDRAW_ASSET_PATH = "./lib/excalidraw-assets/";
 
         const render = () => {
             const lib = window.ExcalidrawLib || window.Excalidraw;

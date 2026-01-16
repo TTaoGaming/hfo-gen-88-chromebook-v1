@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "HFO Gen 88 Omega Workspace - Chromebook V-1",
   "scripts": {
-    "start": "python3 -m http.server 8889 --directory hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/",
-    "launch": "xdg-open http://localhost:8889/omega_workspace_v52.html",
+    "start": "python3 scripts/hfo_threaded_server.py",
+    "start:omega": "python3 scripts/hfo_threaded_server.py & sleep 1 && xdg-open http://localhost:8889/active_omega.html",
+    "launch": "npm run p5:preflight && xdg-open http://localhost:8889/active_omega.html",
+    "p5:preflight": "python3 scripts/p5_preflight_audit.py && npx eslint active_omega.html",
+    "p5:gate": "npx playwright test tests/p5_network_stress_gate.spec.ts",
+    "p4:regression": "npx playwright test tests/p4_visual_regression.spec.ts",
+    "harden": "npm run p5:preflight && npm run p5:gate && npm run p4:regression",
     "clean:chrome": "sudo apt purge google-chrome-stable -y && sudo apt autoremove -y",
     "hfo:setup": "npm install && echo 'SKIPPING LINUX-CHROME INSTALL (Use Native Chromebook Browser)'",
     "hfo:probe": "node scripts/hfo_host_probe.js",
@@ -15,13 +20,25 @@
   },
   "devDependencies": {
     "@stryker-mutator/typescript-checker": "^9.4.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-html": "^8.1.3",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "@playwright/test": "^1.57.0",
+    "@stabgan/openrouter-mcp-multimodal": "^1.5.0",
+    "axios": "^1.13.2",
+    "nactor": "^0.2.0",
+    "openai": "^6.16.0",
     "playwright": "^1.57.0",
     "zod": "^3.22.4"
+  },
+  "optionalDependencies": {
+    "robotjs": "^0.6.0"
   }
 }

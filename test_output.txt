@@ -1,0 +1,11 @@
+
+Running 1 test using 1 worker
+
+[1A[2K[1/1] [chromium] › tests/v28_golden_master_parity.spec.ts:4:5 › V28.0 Universal Projection Engine (UPE) Parity Verification
+[1A[2K  1) [chromium] › tests/v28_golden_master_parity.spec.ts:4:5 › V28.0 Universal Projection Engine (UPE) Parity Verification 
+
+    Test was interrupted.
+
+
+[1A[2K  1 interrupted
+    [chromium] › tests/v28_golden_master_parity.spec.ts:4:5 › V28.0 Universal Projection Engine (UPE) Parity Verification 

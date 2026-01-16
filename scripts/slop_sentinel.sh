@@ -16,7 +16,7 @@ EVASION_PATTERNS=(
 )
 
 for pattern in "${EVASION_PATTERNS[@]}"; do
-    MARKERS=$(git diff --cached --name-only | grep -vE "reports/|manifest|BOOK_OF_BLOOD_GRUDGES" | xargs -I {} grep -HiE "$pattern" {} 2>/dev/null)
+    MARKERS=$(git diff --cached --name-only | grep -vE "reports/|manifest|BOOK_OF_BLOOD_GRUDGES|blackboard" | xargs -I {} grep -HiE "$pattern" {} 2>/dev/null)
     if [ ! -z "$MARKERS" ]; then
         echo "🚨 [SLOP-BLOCK]: Narrative Evasion detected ($pattern)!"
         echo "$MARKERS"

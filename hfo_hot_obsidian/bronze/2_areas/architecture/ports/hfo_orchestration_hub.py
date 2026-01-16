@@ -145,7 +145,27 @@ def check_bft_interlock():
 
 # --- HFO HEXAGONAL ORCHESTRATION (T0-T7) ---
 def execute_hexagonal_orchestration(query: str):
-    """Octree recursive cognitive sharding with version-aware dispatch."""
+    """Octree recursive cognitive sharding with version-aware dispatch and OpenFeature Strangler Fig."""
+    from versions.feature_flags import is_enabled
+    
+    # 🌵 STRANGLER FIG: Toggle between Legacy (V8) and Hexagonal (V9/Core)
+    if is_enabled("hex_hub_enabled"):
+        import asyncio
+        from hex.core.hub_core import HexagonalHubCore
+        from hex.adapters.blackboard_adapter import BlackboardAdapter
+        from hex.adapters.llm_adapter import OpenRouterMockAdapter
+        
+        print("🧿 [HEX-HUB]: Strangler Fig active. Routing to Hexagonal Core...")
+        
+        core = HexagonalHubCore(
+            persistence=BlackboardAdapter(),
+            llm=OpenRouterMockAdapter()
+        )
+        
+        # Core execution (async wrapper for sync CLI context)
+        return asyncio.run(core.execute_think_pulse(query))
+
+    # --- LEGACY WORKFLOW (V1-V8) ---
     load_env()
     
     version = get_hub_version()

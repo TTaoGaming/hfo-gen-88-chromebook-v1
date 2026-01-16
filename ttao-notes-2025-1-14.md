@@ -186,20 +186,49 @@ omega_gen4_v25_spec
 
 akka agentic platform and MCP sounds nice but I've never used akka and i have trouble with bespoke mcp. tell me more about this. what are my options here. I struggled with temporal, I like prefect for certain things but I am still to inexperienced. in fact I am too inexperienced in general. what I need is cognitive frameworks to bring me to master class by leveraging ai. I want to understand how I can use them, their strength weaknesses and connections. I am building my own human wetware RAG in my mind with system 1 and system 2 thinking
 ---
+
 need a simple user onboarding, palm towards camera = ready, palm away from camera = idle with a dwell leaky bucket hysteresis. IDLE = skeleton visuals READY = AMBER PHOENIX CORE fire pointer COMMIT = CYAN PHOENIX CORE, which is high confidence gesture + palm towards camera + dwell leaky bucket hysteresis filled. so we can get the user to READY <-> IDLE a few times, then we hae then READY -> COMMIT -> IDLE and show them the one way flow for ready/arming and commit/fire to IDLE/RESET. so the user understands that their X fingertip is being tracked and we'll allow switching and other stuff later. and they understand that once they commit, it is locked regardless of gesture until they IDLE so the idea is anti midas and sticky and easy for UX and user. with configurable palm angle cones. In fact we can provide like 2 presets and the user can always go into DEV options for fine tuning parameters
 ---
 
 ### OMEGA GEN 4 V30: ONBOARDING & ANTI-MIDAS LOCK (2026-01-16)
 
-The V30 evolution focuses on stabilizing the user feedback loop and enforcing "Sticky Commit" logic. 
+The V30 evolution focuses on stabilizing the user feedback loop and enforcing "Sticky Commit" logic.
 
 **Core Logic Transitions:**
+
 1. **IDLE (Skeleton Only)**: Baseline tracking.
 2. **READY (Amber Fire)**: Triggered by Palm Facing + Dwell.
 3. **COMMIT (Cyan Fire)**: Triggered by Pointer_Up + Palm Facing + Dwell.
 4. **RESET**: Returns to IDLE only when Palm is turned away (Hysteresis Drain).
 
 **Mechanical Constraints:**
+
 - **Anti-Midas Lock**: Once in COMMIT, the interaction is captured and "locked." Gesture changes do not trigger a pointerup/release until the palm itself is turned away.
 - **Onboarding**: A guided cycle of READY <-> IDLE (sensing awareness) followed by a full READY -> COMMIT -> IDLE (interaction awareness) flow.
 - **Configurable Cones**: 2 Presets + Dev tuning for palm angle sensitivity.
+
+---
+
+Strict Local Asset Checksums: If we are going offline, I need a script to verify file sizes/hashes before I update the importmap. No more "Green Lies" regarding corrupted local mirrors.
+UPE Calibration Harness: A simple test-bed file (upe_test.html) that draws a crosshair where it thinks it is clicking. This would let me verify parity without the complexity of Excalidraw/Babylon interference.
+One-Way Versioning: Strict adherence to "Clone then Mutate." When I try to fix v28.3 directly, I lose the "Baseline Truth" of v28.2.
+what I want you to do is to add to the  Version 29 spec YAML with. Some ideas and suggestions of what you're thinking to help start cutting. Down the hypothesis and decision search space so that we can actually find the answers to these problems. Because right now you're continuing to fix 28.3, but you failed two three times already. So. I think we need to stop. We need to improve the evaluation harness and make sure it's called correctly, enforcing it through hard gates, most likely with precommits, but also with. A running daemon, most likely. We'll set that up later. The point is, right now I think my evaluation harness and enforcement harness is just too soft. Please update the YAML
+---
+
+If you only fix 3 things next (highest leverage)
+
+Finish Phase 4 (offline/no-CDN): make V28 run fully with local WASM/models/libs. Your own spec calls this out as a hard requirement.
+
+omega_gen4_v25_spec
+
+MediaPipe’s FilesetResolver supports a base path for loading WASM locally—use that.
+
+Make UPE truly authoritative: no other code should compute clientX/clientY mappings or zoom margins outside UPE. If anything still does, you’ll keep getting “parity drift.”
+
+Lock the operator loop: implement the Essentials/Developer gate + a single readiness gauge that is the only “arming truth” in the UI. (This is the path to “one successful click in 30s” without debug noise.)
+
+omega_gen4_v25_spec
+---
+
+ok that seems to work in part but the ui layer is still not working for excalidraw but the drawing layer is,  and there is still the issue of video and babylon bisuals not matching 1:1. there is something wrong here I think it's due to the overscan that we are implementing, we should be on a shared data fabrix so it shouldn't matter but maybe my data fabric isn't enforced can you create a script and check for me the truth?
+---
