@@ -233,11 +233,47 @@ if __name__ == "__main__":
         # Keep legacy P0 compatibility with V2 support
         try:
             from versions.base import Port0ObserveV2
-            print(Port0ObserveV2.execute_all(sys.argv[2] if len(sys.argv) > 2 else "ping"))
-        except (ImportError, AttributeError):
-            # Fallback to direct shard call if V2 is not imported correctly
-            shard_results = Port0Observe.port0_shard0_observe(sys.argv[2] if len(sys.argv) > 2 else "ping")
-            print(json.dumps(shard_results))
+            print(json.dumps(Port0ObserveV2.execute_all(sys.argv[2] if len(sys.argv) > 2 else "ping"), indent=2))
+        except Exception as e:
+            print(json.dumps({"error": f"Port 0 execution failed: {e}"}))
+    elif cmd == "p1":
+        try:
+            from versions.base import Port1Bridge
+            print(json.dumps(Port1Bridge.execute_all(), indent=2))
+        except Exception as e:
+            print(json.dumps({"error": f"Port 1 execution failed: {e}"}))
+    elif cmd == "p2":
+        try:
+            from versions.base import Port2Shape
+            print(json.dumps(Port2Shape.execute_all(), indent=2))
+        except Exception as e:
+            print(json.dumps({"error": f"Port 2 execution failed: {e}"}))
+    elif cmd == "p3":
+        try:
+            from versions.base import Port3Inject
+            print(json.dumps(Port3Inject.execute_all(), indent=2))
+        except Exception as e:
+            print(json.dumps({"error": f"Port 3 execution failed: {e}"}))
+    elif cmd == "p4":
+        try:
+            from versions.base import Port4Disrupt
+            print(json.dumps(Port4Disrupt.execute_all(), indent=2))
+        except Exception as e:
+            print(json.dumps({"error": f"Port 4 execution failed: {e}"}))
+    elif cmd == "p6":
+        try:
+            from versions.base import Port6Assimilate
+            query = sys.argv[2] if len(sys.argv) > 2 else "General Mission"
+            print(json.dumps(Port6Assimilate.execute_all(query), indent=2))
+        except Exception as e:
+            print(json.dumps({"error": f"Port 6 execution failed: {e}"}))
+    elif cmd == "p7":
+        try:
+            from versions.base import Port7Navigate
+            query = sys.argv[2] if len(sys.argv) > 2 else "General Mission"
+            print(json.dumps(Port7Navigate.execute_all(query), indent=2))
+        except Exception as e:
+            print(json.dumps({"error": f"Port 7 execution failed: {e}"}))
     elif cmd == "p5":
         if len(sys.argv) > 2 and sys.argv[2].lower() == "manifest":
             print(Port5Immunize.get_manifest())

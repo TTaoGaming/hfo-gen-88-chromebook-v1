@@ -1,7 +1,7 @@
 import duckdb
 import os
 
-DB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_unified_v88.duckdb"
+DB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb"
 
 def search_logic_survivors():
     conn = duckdb.connect(DB_PATH)

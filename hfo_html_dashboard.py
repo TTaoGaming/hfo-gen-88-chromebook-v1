@@ -3,8 +3,8 @@ import os
 import json
 from datetime import datetime
 
-DB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_unified_v88.duckdb"
-OUTPUT_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/MISSION_CONTROL/HIVE_DASHBOARD.html"
+DB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb"
+OUTPUT_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/MISSION_CONTROL/HIVE_DASHBOARD.html"
 
 def generate_dashboard():
     conn = duckdb.connect(DB_PATH)

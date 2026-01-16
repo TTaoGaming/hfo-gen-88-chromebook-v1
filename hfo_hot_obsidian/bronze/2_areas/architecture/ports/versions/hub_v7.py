@@ -62,10 +62,16 @@ class HubV7:
             # --- ADVERSARIAL THEATER DETECTION ---
             if isinstance(output, dict):
                 content_str = str(output).lower()
-                if any(x in content_str for x in ["placeholder", "stub", "todo", "ai theater"]):
+                # If they are honest about being a stub, it's not theater
+                is_stub = output.get("workmanship") == "STUB" or output.get("status") == "STUB"
+                
+                if not is_stub and any(x in content_str for x in ["placeholder", "stub", "todo", "ai theater"]):
                     output["ADVERSARIAL_THEATER"] = True
                     output["INTEGRITY_SIGNAL"] = "RED_TRUTH"
                     print(f"🚩 [HUB-V7]: ADVERSARIAL THEATER DETECTED in {node.name}")
+                elif is_stub:
+                    output["INTEGRITY_SIGNAL"] = "HONEST_STUB"
+                    print(f"📡 [HUB-V7]: HONEST STUB ACKNOWLEDGED in {node.name}")
 
             node.state = "COMPLETED"
             
@@ -120,8 +126,9 @@ class HubV7:
         3. QUORUM AUDIT: Explicitly state if we have at least 6 shards (n-f) agreeing on the core mission objective.
         4. ADVERSARIAL DETECTION & THEATER AUDIT: 
            - Flag any shards providing erroneous, stalled, or "hallucinated" data (e.g. error messages or empty stubs where results were expected).
-           - Identify "ADVERSARIAL THEATER": Shards claiming "READY" or "PASS" when they are actually returning placeholders or deterministic stubs.
-           - POLICY: VERIFIABLE TRUTH RED > MEANINGLESS GREEN. A confirmed failure (Red) is a 100% valid mission signal. A fake success (Green) is an adversarial attack.
+           - Identify "ADVERSARIAL THEATER": Shards claiming "READY" or "PASS" when they are actually returning placeholders or deterministic stubs without labeling them as such.
+           - POLICY: VERIFIABLE TRUTH RED > MEANINGLESS GREEN.
+           - WORKMANSHIP REWARD: Shards that explicitly label themselves with 'workmanship: STUB' are NOT adversarial; they are being honest about their current state. Reward this transparency in the BFT consensus. Shards that return empty content but claim "READY/PASS" WITHOUT a STUB label (and specifically those containing hidden 'placeholder' or 'todo' strings) are identified as THEATER.
 
         OUTPUT FORMAT (STRICT JSON):
         {{

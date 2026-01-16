@@ -12,6 +12,8 @@ import datetime
 import subprocess
 import hashlib
 import requests
+import duckdb
+import fcntl
 from typing import List, Dict, Any
 
 # --- GLOBAL UTILS ---
@@ -19,6 +21,7 @@ BLACKBOARD_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsi
 QUARANTINE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/blackboard_quarantine.jsonl"
 ENV_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.env"
 CONFIG_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/hfo_config.json"
+KRAKEN_DB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb"
 
 def get_config():
     if os.path.exists(CONFIG_PATH):
@@ -74,7 +77,11 @@ def log_to_blackboard(entry: Dict[str, Any]):
     entry["signature"] = signature
 
     with open(BLACKBOARD_PATH, "a") as f:
-        f.write(json.dumps(entry, sort_keys=True) + "\n")
+        try:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            f.write(json.dumps(entry, sort_keys=True) + "\n")
+        finally:
+            fcntl.flock(f, fcntl.LOCK_UN)
 
 def get_last_thought() -> Dict[str, Any]:
     if not os.path.exists(BLACKBOARD_PATH):
@@ -145,8 +152,14 @@ class Port0Observe:
     def port0_shard4_disrupt(query: str):
         """P0.4: SEAD ([0,4] Sense x Disrupt). Tool: Repo-Grep."""
         try:
-            cmd = ["grep", "-ri", query, "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"]
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            # 🛑 OPTIMIZATION: Do not grep the whole 22GB workspace.
+            # Focus on source code and ignore massive data/temp dirs.
+            cmd = [
+                "grep", "-ri", 
+                "--exclude-dir={.git,.stryker-tmp,node_modules,npm,hfo_gen_88_cb_v2,hfo_cold_obsidian}", 
+                query, "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
             return {"results": [{"content": line} for line in result.stdout.splitlines()[:10]]}
         except Exception as e: return {"error": str(e)}
 
@@ -155,9 +168,12 @@ class Port0Observe:
         """P0.5: TRACE ([0,5] Sense x Defend). Tool: Blackboard Sensing."""
         try:
             if os.path.exists(BLACKBOARD_PATH):
-                with open(BLACKBOARD_PATH, "r") as f:
-                    lines = f.readlines()
-                    return {"results": [{"line": l.strip()} for l in lines[-10:] if query.lower() in l.lower()]}
+                # 🛑 OPTIMIZATION: Do not read the entire blackboard into memory.
+                # Use tail to get the last ~200 lines for contextual sensing.
+                cmd = ["tail", "-n", "200", BLACKBOARD_PATH]
+                result = subprocess.run(cmd, capture_output=True, text=True)
+                lines = result.stdout.splitlines()
+                return {"results": [{"line": l.strip()} for l in lines if query.lower() in l.lower()][-10:]}
             return {"results": []}
         except Exception as e: return {"error": str(e)}
 
@@ -188,77 +204,112 @@ class Port0ObserveV2(Port0Observe):
     
     @staticmethod
     def port0_shard6_assimilate_v2(query: str):
-        """P0.6: CACHE ([6,0] Store x Sense). Content-level retrieval using DuckDB."""
-        rag_path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/6_persist/wiki_rag/20231101.en/*.parquet"
-        zim_path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/6_persist/wikipedia_simple.zim"
-        
-        # 🔑 KEYWORD EXTRACTION: Strip common prefixes to find the actual topic
+        """P0.6: CACHE ([6,0] Store x Sense). Content-level retrieval using Kraken DuckDB."""
+        # 🔑 KEYWORD EXTRACTION: Strip common prefixes
         topic = query
-        for prefix in ["search local wiki for ", "search wiki for ", "search for ", "search "]:
+        for prefix in ["search local wiki for ", "search wiki for ", "search for ", "search ", "find "]:
             if query.lower().startswith(prefix):
                 topic = query[len(prefix):]
                 break
-        
-        # Strip trailing punctuation for better matching
         topic = topic.strip(" .?!;:")
         
         results = []
         error = None
+        kraken_metadata = {"source": "Kraken-DuckDB-FTS"}
+        
         try:
-            import duckdb
-            import pandas as pd
-            # Sanitize topic for SQL
-            safe_topic = topic.replace("'", "''")
-            
-            con = duckdb.connect(database=':memory:')
-            # Search both title and text for the extracted topic
-            sql = f"""
-                SELECT title, text, url 
-                FROM read_parquet('{rag_path}') 
-                WHERE title ILIKE '%{safe_topic}%' OR text ILIKE '%{safe_topic}%' 
-                LIMIT 3
-            """
-            df = con.execute(sql).df()
-            for _, row in df.iterrows():
-                results.append({
-                    "title": row['title'],
-                    "snippet": row['text'][:300] + "...",
-                    "url": row['url'],
-                    "source": "Local-RAG"
-                })
-            con.close()
+            # INTEGRATION: Talk to the Kraken Keeper (DuckDB ILIKE Search)
+            if os.path.exists(KRAKEN_DB_PATH):
+                con = duckdb.connect(database=KRAKEN_DB_PATH, read_only=True)
+                con.execute("SET memory_limit = '512MB';")
+                safe_topic = topic.replace("'", "''")
+                
+                # Step 1: Find paths
+                sql_paths = f"SELECT path, project, hash FROM file_system WHERE path ILIKE '%{safe_topic}%' LIMIT 3"
+                rows = con.execute(sql_paths).fetchall()
+                
+                for path, project, f_hash in rows:
+                    # Step 2: Grab content
+                    content_sql = f"SELECT content::VARCHAR FROM blobs WHERE hash = '{f_hash}'"
+                    content_row = con.execute(content_sql).fetchone()
+                    text = content_row[0] if content_row else ""
+                    
+                    results.append({
+                        "title": f"[{project}] {os.path.basename(path)}",
+                        "snippet": text[:400] + "..." if text else "",
+                        "url": f"file://{path}",
+                        "source": "Kraken-DuckDB"
+                    })
+                con.close()
+            else:
+                # Fallback to legacy RAG-Lite if Kraken is offline
+                rag_path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/6_persist/wiki_rag/20231101.en/*.parquet"
+                if any(os.path.exists(p) for p in [rag_path.replace('*', '')]): # Check dir
+                    con = duckdb.connect(database=':memory:')
+                    safe_topic = topic.replace("'", "''")
+                    sql = f"""
+                        SELECT title, text, url FROM read_parquet('{rag_path}') 
+                        WHERE title ILIKE '%{safe_topic}%' OR text ILIKE '%{safe_topic}%' LIMIT 3
+                    """
+                    df = con.execute(sql).df()
+                    for _, row in df.iterrows():
+                        results.append({
+                            "title": row['title'],
+                            "snippet": row['text'][:300] + "...",
+                            "source": "Legacy-RAG"
+                        })
+                    con.close()
         except Exception as e:
             error = str(e)
 
-        # 🚀 GOLD BOOTSTRAP: Inject HFO Context if results are thin and query is relevant
+        # 🚀 GOLD BOOTSTRAP: Inject HFO Context
         is_gold = False
         hfo_keywords = ["hfo", "mosaic", "port", "medallion", "hive", "sliver"]
         if (not results or len(results) < 2) and any(kw in topic.lower() for kw in hfo_keywords):
             capsule_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "mission_capsule.json")
             try:
-                with open(capsule_path, "r") as f:
-                    capsule = json.load(f)
-                    results.append({
-                        "title": "HFO ARCHITECTURE CAPSULE (Internal Wiki)",
-                        "snippet": f"MISSION THREAD: {capsule.get('mission_thread', {}).get('ALPHA')}\nPORTS: {list(capsule.get('architecture', {}).keys())}",
-                        "url": "local://mission_capsule.json",
-                        "source": "HFO-Gold-Standard"
-                    })
-                    is_gold = True
-            except: return None # Hardened from P-S-S
+                if os.path.exists(capsule_path):
+                    with open(capsule_path, "r") as f:
+                        capsule = json.load(f)
+                        results.append({
+                            "title": "HFO ARCHITECTURE CAPSULE (Internal Wiki)",
+                            "snippet": f"MISSION THREAD: {capsule.get('mission_thread', {}).get('ALPHA')}\nPORTS: {list(capsule.get('architecture', {}).keys())}",
+                            "source": "HFO-Gold-Standard"
+                        })
+                        is_gold = True
+            except Exception as e:
+                print(f"DEBUG: base.py Gold Bootstrap Error: {e}", file=sys.stderr)
 
-        exists_zim = os.path.exists(zim_path)
+        # 🏗️ [P0.6 FALLBACK]: Blackboard Context Search
+        if not results and topic:
+            try:
+                if os.path.exists(BLACKBOARD_PATH):
+                    with open(BLACKBOARD_PATH, "r") as f:
+                        lines = f.readlines()
+                        # Search last 500 lines for recent mission context
+                        found = 0
+                        for line in reversed(lines[-500:]):
+                            if topic.lower() in line.lower():
+                                entry = json.loads(line)
+                                results.append({
+                                    "title": f"Blackboard Recapitulation: {entry.get('phase', 'UNKNOWN')}",
+                                    "snippet": str(entry.get('summary', entry.get('output', {}).get('summary', ''))[:300]),
+                                    "url": f"blackboard://{entry.get('timestamp')}",
+                                    "source": "Stigmergy-Blackboard"
+                                })
+                                found += 1
+                                if found >= 3: break
+            except Exception as e:
+                print(f"DEBUG: base.py Blackboard Fallback Error: {e}", file=sys.stderr)
+
+        workmanship = "CORE" if results else "STUB"
         
         return {
-            "status": "GOLD" if is_gold else ("READY" if results else ("STUB" if not exists_zim else "DEGRADED")),
-            "metadata": {
-                "source": "RAG-Lite + ZIM", 
-                "results_count": len(results),
-                "zim_ready": exists_zim,
-                "error": error
-            },
+            "status": "GOLD" if is_gold else ("READY" if results else "STUB"),
+            "workmanship": workmanship,
+            "metadata": {**kraken_metadata, "results_count": len(results), "error": error},
             "results": results,
-            "message": "Local Wikipedia content retrieved." if results else "No local content found or DuckDB error."
+            "message": "Kraken/Blackboard knowledge retrieved." if results else "No matches in Kraken or Blackboard."
         }
 
     @staticmethod
@@ -331,7 +382,10 @@ class Port1Bridge:
     @classmethod
     def execute_all(cls):
         last_thought = get_last_thought()
-        return {"p1": cls.pillar_1_zod_check(last_thought.get("p0", {}))}
+        res = cls.pillar_1_zod_check(last_thought.get("p0", {}))
+        # Tag as STUB if it's not actually doing high-fidelity lattice fusion
+        res["workmanship"] = "STUB" if res.get("status") == "STUB" else "CORE"
+        return {"p1": res}
 
     @staticmethod
     def get_pheromone(output: Dict[str, Any]) -> str:
@@ -350,7 +404,11 @@ class Port2Shape:
 
     @classmethod
     def execute_all(cls):
-        return {"p1_lattice": {"status": "placeholder"}, "p2_physics": cls.audit_physics()}
+        audit = cls.audit_physics()
+        return {
+            "p1_lattice": {"status": "STUB", "workmanship": "STUB", "message": "Lattice mapping pending V8 integration"}, 
+            "p2_physics": {**audit, "workmanship": "CORE"}
+        }
 
     @staticmethod
     def get_pheromone(output: Dict[str, Any]) -> str:
@@ -369,7 +427,11 @@ class Port3Inject:
                 content = f.read()
                 if any(x in content for x in ["p3InjectPointer", "port3Inject", "port3W3cPointerInjector"]):
                     has_p3 = True
-        return {"status": "READY" if has_p3 else "MISSING", "pillars": {"P3.1_W3C_Pointer": has_p3}}
+        return {
+            "status": "READY" if has_p3 else "MISSING", 
+            "workmanship": "CORE" if has_p3 else "STUB",
+            "pillars": {"P3.1_W3C_Pointer": has_p3}
+        }
 
     @staticmethod
     def get_pheromone(output: Dict[str, Any]) -> str:
@@ -476,7 +538,10 @@ class Port4Disrupt:
 
     @classmethod
     def execute_all(cls):
-        return {"p1": cls.pillar_1_detect_reward_hacking()}
+        return {
+            "workmanship": "CORE", 
+            "p1": cls.pillar_1_detect_reward_hacking()
+        }
 
 # --- PORT 5: DEFEND (HFO: Immunizer / Immunize | JADC2 Domain: Coev. Blue Team) ---
 class Port5Immunize:
@@ -528,6 +593,7 @@ class Port5Immunize:
         
         results = {
             "commander": "PYRE PRAETORIAN",
+            "workmanship": "CORE",
             "escalation_level": level,
             "shards": {}
         }
@@ -786,6 +852,64 @@ class Port6Assimilate:
     """The HFO Storage Octet (Kraken Keeper). JADC2 Verb: STORE."""
     
     @staticmethod
+    def query_kraken(query: str, limit: int = 5):
+        """Query the unified DuckDB Kraken database."""
+        try:
+            if not os.path.exists(KRAKEN_DB_PATH):
+                return {"status": "ERROR", "message": f"Kraken DB missing at {KRAKEN_DB_PATH}"}
+            
+            con = duckdb.connect(database=KRAKEN_DB_PATH, read_only=True)
+            con.execute("SET memory_limit = '512MB';")
+            safe_query = query.replace("'", "''")
+            
+            # Step 1: Find matching paths (Fast)
+            sql_paths = f"""
+                SELECT path, project, hash FROM file_system 
+                WHERE path ILIKE '%{safe_query}%' 
+                LIMIT {limit}
+            """
+            rows = con.execute(sql_paths).fetchall()
+            
+            results = []
+            for path, project, f_hash in rows:
+                # Step 2: Grab content ONLY for these files
+                content_sql = f"SELECT content::VARCHAR FROM blobs WHERE hash = '{f_hash}'"
+                content_row = con.execute(content_sql).fetchone()
+                text = content_row[0] if content_row else ""
+                
+                results.append({
+                    "filename": os.path.basename(path),
+                    "path": path,
+                    "project": project,
+                    "snippet": text[:400] + "..." if text else "Binary/Empty",
+                })
+            con.close()
+            return {"status": "SUCCESS", "results": results}
+        except Exception as e:
+            return {"status": "ERROR", "message": f"Kraken Query Failed: {e}"}
+
+    @staticmethod
+    def get_kraken_status():
+        """Get size and record count of the Kraken database."""
+        try:
+            if not os.path.exists(KRAKEN_DB_PATH):
+                return {"exists": False}
+            con = duckdb.connect(database=KRAKEN_DB_PATH, read_only=True)
+            count = con.execute("SELECT count(*) FROM file_system").fetchone()[0]
+            unique = con.execute("SELECT count(*) FROM blobs").fetchone()[0]
+            con.close()
+            size = os.path.getsize(KRAKEN_DB_PATH)
+            return {
+                "exists": True, 
+                "file_count": count,
+                "unique_blobs": unique,
+                "size_gb": round(size / (1024**3), 2),
+                "path": KRAKEN_DB_PATH
+            }
+        except Exception as e:
+            return {"exists": True, "error": str(e)}
+
+    @staticmethod
     def _leverage_llm_call(query: str, data_context: str):
         """Helper to discover leverage points using Donella Meadows framework."""
         api_key = os.getenv("OPENROUTER_API_KEY")
@@ -819,7 +943,8 @@ class Port6Assimilate:
 
     @staticmethod
     def execute_all(query: str = "General Mission"):
-        size = os.path.getsize(BLACKBOARD_PATH) if os.path.exists(BLACKBOARD_PATH) else 0
+        bb_size = os.path.getsize(BLACKBOARD_PATH) if os.path.exists(BLACKBOARD_PATH) else 0
+        kraken_status = Port6Assimilate.get_kraken_status()
         
         # Assimilate data context from last 10 blackboard entries
         data_context = ""
@@ -829,17 +954,24 @@ class Port6Assimilate:
                     lines = f.readlines()
                     data_context = "\n".join(lines[-10:])
             except Exception as e:
-                # 🕵️ P5: Resilience logic for blackboard read failure; defaulting to empty context.
                 print(f"⚠️ [P5_RESILIENCE]: Blackboard read failed: {e}")
-                data_context = "" # P5-PASS: Non-stub initialization
-            
+                data_context = "" 
+        
+        # Integrated Kraken Search for Mission Context
+        kraken_results = Port6Assimilate.query_kraken(query)
+        
         leverage = Port6Assimilate._leverage_llm_call(query, data_context)
         
         return {
-            "status": "HEALTHY" if size > 0 else "EMPTY", 
-            "blackboard": {"exists": os.path.exists(BLACKBOARD_PATH), "size": size},
+            "status": "HEALTHY" if kraken_status.get("exists") else "DEGRADED", 
+            "workmanship": "CORE",
+            "blackboard": {"exists": os.path.exists(BLACKBOARD_PATH), "size": bb_size},
+            "kraken_keeper": {
+                "status": kraken_status,
+                "recent_search": kraken_results
+            },
             "leverage_discovery": leverage,
-            "fsm_sync": "OBSIDIAN_V42"
+            "fsm_sync": "OBSIDIAN_KRAKEN_V1"
         }
 
     @staticmethod
@@ -858,7 +990,7 @@ class Port7Navigate:
         if not api_key:
             return {"status": "DEGRADED", "error": "No API Key"}
         
-        prompt = f"Role: {role} Nav-Shard. Context: {context}\n\nTask: {prompt_template}\nQuery: {query}\n\nReturn JSON: {{'status': 'ACTIVE', 'navigation': '...'}}"
+        prompt = f"Role: {role} Nav-Shard. Context: {context}\n\nTask: {prompt_template}\nQuery: {query}\n\nReturn JSON: {{'status': 'ACTIVE', 'workmanship': 'CORE', 'navigation': '...'}}"
         try:
             response = requests.post(
                 url="https://openrouter.ai/api/v1/chat/completions",
@@ -876,10 +1008,13 @@ class Port7Navigate:
                 # Safeguard against malformed JSON or markdown blocks
                 if "```json" in res_content:
                     res_content = res_content.split("```json")[1].split("```")[0].strip()
-                return json.loads(res_content)
+                parsed = json.loads(res_content)
+                if "workmanship" not in parsed:
+                    parsed["workmanship"] = "CORE" # Default for LLM logic
+                return parsed
         except Exception as e:
-            return {"status": "DEGRADED", "error": str(e)}
-        return {"status": "STUB", "message": "Navigator fallback"}
+            return {"status": "DEGRADED", "workmanship": "STUB", "error": str(e)}
+        return {"status": "STUB", "workmanship": "STUB", "message": "Navigator fallback"}
 
     @staticmethod
     def port7_shard0_observe(query: str, context: str = ""):
@@ -940,12 +1075,14 @@ class Port7Navigate:
                 )
                 criticism = resp2.json()["choices"][0]["message"]["content"]
                 return {
-                    "status": "ACTIVE", "role": "Logic (Sequential Prop-Critic)",
+                    "status": "ACTIVE", 
+                    "workmanship": "CORE",
+                    "role": "Logic (Sequential Prop-Critic)",
                     "full_thought": f"PROPOSAL:\n{proposal}\n\nCRITICISM:\n{criticism}"
                 }
             except Exception as e:
-                return {"status": "DEGRADED", "error": str(e)}
-        return {"status": "ACTIVE", "role": "Logic (Stubs Only)"}
+                return {"status": "DEGRADED", "workmanship": "STUB", "error": str(e)}
+        return {"status": "STUB", "workmanship": "STUB", "role": "Logic (Stubs Only)"}
 
     @staticmethod
     def port7_shard4_disrupt(query: str, context: str = ""):
@@ -982,6 +1119,7 @@ class Port7Navigate:
     @classmethod
     def execute_all(cls, query: str):
         return {
+            "workmanship": "CORE",
             "Port7_shard0": cls.port7_shard0_observe(query),
             "Port7_shard1": cls.port7_shard1_bridge(query),
             "Port7_shard2": cls.port7_shard2_shape(query),

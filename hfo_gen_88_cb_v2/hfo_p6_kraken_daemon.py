@@ -180,6 +180,12 @@ def run_daemon():
     print("🧠 Building FTS Index for SSOT Search...")
     # This might take a few minutes on 72GB of potential text
     try:
+        # Schema Check: Ensure score column exists for FTS ranking
+        cols = conn.execute("PRAGMA table_info('file_system')").fetchall()
+        if "score" not in [c[1] for c in cols]:
+            conn.execute("ALTER TABLE file_system ADD COLUMN score FLOAT DEFAULT 0")
+            
+        conn.execute("INSTALL fts; LOAD fts;")
         conn.execute("PRAGMA create_fts_index('file_system', 'path', 'era', 'project')")
         print("✅ FTS Index Built Successfully.")
     except Exception as e:
@@ -188,5 +194,42 @@ def run_daemon():
     print(f"✅ Protocol L2 Cold Bronze Complete. Total: {total_processed}")
     conn.close()
 
+def search_db(query):
+    conn = init_db()
+    print(f"🔎 [P6 KRAKEN SEARCH] Query: '{query}'")
+    print("-" * 80)
+    try:
+        search_sql = f"""
+            SELECT path, era, project, score
+            FROM (
+                SELECT *, fts_main_file_system.match_bm25(path, '{query}') AS search_score
+                FROM file_system
+            ) sq
+            WHERE search_score IS NOT NULL
+            ORDER BY search_score DESC
+            LIMIT 20;
+        """
+        results = conn.execute(search_sql).fetchall()
+        if not results:
+            print("❌ No results found.")
+        for r in results:
+            print(f"[{r[1] or '----'}] {r[2] or '----'} | {r[0]}")
+    except Exception as e:
+        print(f"❌ Search Error: {e}")
+    conn.close()
+
 if __name__ == "__main__":
-    run_daemon()
+    import sys
+    if len(sys.argv) > 2 and sys.argv[1] == "search":
+        search_db(sys.argv[2])
+    elif len(sys.argv) > 1 and sys.argv[1] == "status":
+        conn = init_db()
+        stats = conn.execute("SELECT count(*), count(DISTINCT hash) FROM file_system").fetchone()
+        eras = conn.execute("SELECT era, count(*) FROM file_system GROUP BY era").fetchall()
+        print(f"🐙 Kraken Keeper Status:")
+        print(f"   Files: {stats[0]}")
+        print(f"   Unique Blobs: {stats[1]}")
+        print(f"   Eras: {eras}")
+        conn.close()
+    else:
+        run_daemon()

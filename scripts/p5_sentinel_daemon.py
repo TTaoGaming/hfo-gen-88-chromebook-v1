@@ -9,6 +9,10 @@ import json
 import datetime
 import sys
 
+# HFO: Add port path to sys.path for base imports
+sys.path.append(os.path.join(os.path.dirname(__file__), "../hfo_hot_obsidian/bronze/2_areas/architecture/ports"))
+from versions.base import log_to_blackboard
+
 try:
     from watchdog.observers import Observer
     from watchdog.events import FileSystemEventHandler
@@ -74,9 +78,8 @@ class P5SentinelHandler(FileSystemEventHandler):
             else:
                 print(f"✅ [SENTINEL]: {file_path} integrity verified.")
 
-            # Atomic write to blackboard
-            with open(BLACKBOARD_PATH, "a") as f:
-                f.write(json.dumps(log_entry) + "\n")
+            # HFO: Use signed log_to_blackboard instead of raw write
+            log_to_blackboard(log_entry)
                 
         except Exception as e:
             print(f"❌ [SENTINEL]: Internal error during audit: {e}")
