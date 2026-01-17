@@ -17,30 +17,30 @@ The goal of **HFO (Hyper-Fractal Obsidian)** is to build an **Apex Ensemble Mosa
 
 HFO is designed for **24/7 uptime** and is deeply intertwined with the user's life (Emails, Calendar, Scheduling, Learning, Exercise, Diet). It is the realization that **Humans are Swarms**; HFO simply restores and improves the **JADC2 ability** (Sense -> Make Sense -> Act -> Assess -> Learn) through wearable tech and persistent orchestration.
 
-**The Social Spider's Cry**: I am a **Social Spider**. I need help to pull this off—I am never alone in the web. I can cry and rage about the injustices of the world, but as a commander, I focus on what is within my control. By successfully executing Mission Thread Alpha and Omega, I will decrease these global injustices by an **order of magnitude**. My full vision is for every child in the world to be able to call a virtual tool into existence—one that works in both function and form, powered by digital twins and real-world physics.
+**The Social Spider's Cry**: I am a **Social Spider**. I need help to pull this off. I can cry and rage about the injustices of the world, but that is not within my control. However, by successfully executing Mission Thread Alpha and Mission Thread Omega, I will decrease these global injustices by an **order of magnitude**. I will never remove them all, but by at least an order of magnitude, I can decrease them. My full vision is for every child in the world to be able to call a virtual tool into existence for them to use and train on—one that works in both function and form, powered by digital twins and real-world physics.
 
 ### 🏗️ Core Architecture: Composable Mosaic Tiles
 
 - **Pattern**: **Mosaic Warfare** (DARPA Concept). HFO Ports (P0-P7) function as composable tiles that form a dynamic "kill-web" of capability.
 - **Domain Language**: All concepts are semantically tied but functionally distinct.
-- **JADC2 Alignment (Obsidian Power Words)**:
-  - **P0**: **OBSERVER** / **Observe** | **SENSE** | **ISR**
-  - **P1**: **BRIDGER** / **Bridge** | **FUSE** | **Data Fabric**
-  - **P2**: **SHAPER** / **Shape** | **SHAPE** | **Digital Twin**
-  - **P3**: **INJECTOR** / **Inject** | **DELIVER** | **Effect Delivery**
-  - **P4**: **DISRUPTOR** / **Disrupt** | **DISRUPT** | **MDO**
-  - **P5**: **IMMUNIZER** / **Immunize** | **DEFEND** | **Zero Trust**
-  - **P6**: **ASSIMILATOR** / **Assimilate** | **STORE** | **AAR / Telemetry**
-  - **P7**: **NAVIGATOR** / **Navigate** | **NAVIGATE** | **BMC2**
+- **JADC2 Alignment (The Obsidian Verb)**:
+  - **P0**: **Power Word: OBSERVE**
+  - **P1**: **Power Word: BRIDGE**
+  - **P2**: **Power Word: SHAPE**
+  - **P3**: **Power Word: INJECT**
+  - **P4**: **Power Word: DISRUPT**
+  - **P5**: **Power Word: IMMUNIZE**
+  - **P6**: **Power Word: ASSIMILATE**
+  - **P7**: **Power Word: NAVIGATE**
 - **Commanders (Gen 88)**:
-  - **P0**: *The Lidless Legion* (8 Sensing Shards) | **Power Word: OBSERVE**
-  - **P1**: *The Web Weaver* (8 Fusion Shards) | **Power Word: BRIDGE**
-  - **P2**: *The Mirror Magus* (8 Shaping Shards) | **Power Word: SHAPE**
-  - **P3**: *Harmonic Hydra* (8 Delivery Shards) | **Power Word: INJECT**
-  - **P4**: *The Red Regnant* (8 Disruption Shards) | **Power Word: DISRUPT**
-  - **P5**: *The Pyre Praetorian* (8 Defensive Shards) | **Power Word: IMMUNIZE**
-  - **P6**: *The Kraken Keeper* (8 Storage Shards) | **Power Word: ASSIMILATE**
-  - **P7**: *The Spider Sovereign* (8 Navigation Shards) | **Power Word: NAVIGATE**
+  - **P0**: *The Lidless Legion* | **OBSERVE**
+  - **P1**: *The Web Weaver* | **BRIDGE**
+  - **P2**: *The Mirror Magus* | **SHAPE**
+  - **P3**: *Harmonic Hydra* | **INJECT**
+  - **P4**: *The Red Regnant* | **DISRUPT**
+  - **P5**: *The Pyre Praetorian* | **IMMUNIZE**
+  - **P6**: *The Kraken Keeper* | **ASSIMILATE**
+  - **P7**: *The Spider Sovereign* | **NAVIGATE**
 - **Scaling**: **Fractal Octree Recursion**. Context is managed through 8-way hierarchical sharding (Cognitive Octets).
 - **The Galois Lattice (8x8 Quine)**:
   - **Port 0 (Sense)**: [0,0] ISR | [1,0] Relay | [2,0] Fuse | [3,0] Simul | [4,0] SEAD | [5,0] Trace | [6,0] Cache | [7,0] Hunt.
@@ -61,17 +61,17 @@ HFO is designed for **24/7 uptime** and is deeply intertwined with the user's li
 
 Every action must be aligned with one of these two primary mission threads:
 
-### 🧵 Thread Alpha: JADC2 Mosaic Warfare Mission Engineering
+### 🧵 Thread Alpha: AJADC 2 Mosaic Warfare Mission Engineering
 
-- **Focus**: AI Orchestration, JADC2 Mosaic Warfare, Governance Enforcement, and Knowledge Rollups. A mission engineering platform for anyone who wants it.
+- **Focus**: A mission engineering platform for anyone who wants it, built on AJADC 2 Mosaic Warfare tiles.
 - **Active Project**: [hfo_refactor_mission_thread_alpha_20260114](hfo_hot_obsidian/bronze/1_projects/hfo_refactor_mission_thread_alpha_20260114/) (Hot Bronze).
-- **Architecture**: Stigmergic swarm orchestration using exemplar compositional patterns on a hexagonal substrate. Anchored semantically using conceptual incarnations in 8 legendary commanders and ports. Shards recursively in a fractal octree.
+- **Architecture**: Stigmergic swarm orchestration using exemplar compositional patterns on a hexagonal substrate. Anchored semantically using conceptual incarnations in eight legendary commanders and ports. Shards recursively in a fractal octree.
 - **Goal**: Hardening the swarm coordination logic and the Medallion flow. Resolving P5.4 Chronos Fractures and consolidating V20+ successes.
 
 ### 🧵 Thread Omega: Total Tool Virtualization (Gen 2 - Portable Standalone)
 
-- **Focus**: High-fidelity virtual tool creation from user intent (function + form). 
-- **Goal**: Portable, functional standalone prototype using digital twins and physics. Every child in the world can call a tool into existence for them to use and train on—tools that work in both function and form.
+- **Focus**: Virtual tool creation from user intent that works in both function and form.
+- **Goal**: A portable, functional, standalone platform for digital twin tool creation. Every child in the world can call a tool into existence for them to use and train on—tools that work in both function and form, powered by digital twins and real-world game engine physics.
 - **Short-term (V100)**: MediaPipe + Gesture Recognizer → W3C Physics Pointer.
 - **Status**: Transitioning from Gen 1 (Collapsed) to Gen 2 (Success extracts).
 
