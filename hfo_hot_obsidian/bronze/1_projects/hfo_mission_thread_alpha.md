@@ -111,26 +111,29 @@ Following the identification of "Vector-Level" brittleness, the following shards
 **Adversarial Detection**: Port 5 has flagged "Adversarial Theater" in the stubs—claiming readiness without performing semantic mission logic.
 **Operational Pivot**: Transitioning to **Hydrated Daemons**. Shards must move from "Passive Hardware Monitors" to "Active Stigmergy Shards" that listen to the Blackboard and react in background threads.
 
-### 📅 VISION HORIZONS 
+### 📅 VISION HORIZONS
 
 #### ⏱️ SHORT-TERM (THIS WEEK)
+
 - **Hydrate Port 0**: Transition the "Lidless Legion" from a Hub-triggered tool to a background sensing daemon.
 - **Repair Chronos**: Resolve the temporal fractures (Blackboard signature drift) to restore BFT integrity.
 - **Omega Gen 2 Prototype**: Hardening the standalone FSM (Ready-Commit-Release) for kiosk deployment.
 
 #### 📈 MID-TERM (NEXT MONTH / THIS YEAR)
+
 - **Silver Promotion**: Move Tier 1 modules to Silver Medallion (88% Mutation Score).
 - **Galois Lattice Hydration**: 32/64 cards in the Grimoire must be manifest as executable logic.
 - **Offline Substrate**: 100% localization of MediaPipe and BabylonJS assets for Chromebook-native execution.
 
 #### 🌌 LONG-TERM (100+ YEARS)
+
 - **Autonomic Planet-Scaling**: HFO as a hardware-agnostic, planet-wide cognitive symbiote.
 - **Solar Horizon Defense**: Establishing the foundational logic to assist Gaia through the sun's transitional phases (8bn year target).
 - **The Strange Loop Apex**: HFO as the "Commander Layer" for interstellar mission engineering, preserving consciousness beyond the biological/solar limitations.
 
 ---
 
-  - 🧪 O7: Agents/Notes (Orchestration Logic)
+- 🧪 O7: Agents/Notes (Orchestration Logic)
 - [ ] **Assimilator (P6) Configuration**: (Phasing In)
   - 🏗️ A6: Leverage Points (Donella Meadows). Mission-specific data-driven discovery. FIND high-leverage intervention points wherever they exist. Exemplars are one subset of leverage points.
 - [ ] **Navigator (P7) Configuration**: (Phasing In)

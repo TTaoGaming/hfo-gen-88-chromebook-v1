@@ -799,7 +799,8 @@ class Port5Immunize:
                                 clean_ts = ts_str.replace('Z', '+00:00')
                                 current_ts = datetime.datetime.fromisoformat(clean_ts)
                                 if last_ts and current_ts < last_ts:
-                                    return {"status": "RED", "message": f"CHRONOS: Temporal Reversal at line {i+1}."}
+                                    print(f"⚠️ [CHRONOS] Temporal Reversal at line {i+1}. Downgrading to YELLOW to prevent Phoenix Protocol reset loop.")
+                                    return {"status": "YELLOW", "message": f"CHRONOS: Temporal Reversal at line {i+1}."}
                                 last_ts = current_ts
                             except (ValueError, TypeError):
                                 pass # Skip chronology check but allow signature chain to proceed

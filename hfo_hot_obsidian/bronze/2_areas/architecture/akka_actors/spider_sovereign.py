@@ -17,7 +17,6 @@ from typing import Dict, List, Any
 import time
 import sys
 import os
-import json
 
 # Add versions.base path
 sys.path.append("/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports")
@@ -43,24 +42,6 @@ class SpiderSovereign:
             "P7_NAVIGATE": self.navigator         # Spider Sovereign itself
         }
         self.active_threads = ["ALPHA", "OMEGA"]
-        self.web_memory = self._load_web_memory()
-
-    def _load_web_memory(self) -> Dict[str, Any]:
-        """Loads consolidated mission thread metadata as 'Web Memory'."""
-        memory = {"ALPHA": {}, "OMEGA": {}}
-        paths = {
-            "ALPHA": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/mission_thread_alpha_consolidation.json",
-            "OMEGA": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/mission_thread_omega_consolidation.json"
-        }
-        for thread, path in paths.items():
-            if os.path.exists(path):
-                try:
-                    with open(path, "r") as f:
-                        memory[thread] = json.load(f)
-                    print(f"🕸️ [SPIDER-SOVEREIGN] {thread} Web Memory synced.")
-                except Exception as e:
-                    print(f"⚠️ [SPIDER-SOVEREIGN] Failed to load {thread} memory: {e}")
-        return memory
 
     def incarnate(self, port: str):
         """
