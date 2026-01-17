@@ -104,7 +104,7 @@ test.describe('P5 Runtime Sentry', () => {
     // 🛡️ [HFO SENTRY] Initialize Listeners
     const failedResources: string[] = [];
     const localErrors: string[] = [];
-    
+
     page.on('requestfailed', request => failedResources.push(`${request.url()} [${request.failure()?.errorText}]`));
     page.on('console', msg => { if (msg.type() === 'error') localErrors.push(msg.text()); });
     page.on('pageerror', err => localErrors.push(err.message));

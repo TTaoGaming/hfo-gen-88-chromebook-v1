@@ -72,3 +72,29 @@ i need you to put in 2 notes into the gen88 cb v2.  The first note is that each 
 
 I've been working on my emission thread Omega, and I am now in version 4, version 40.1, and I think I got as close as I have ever gotten towards my dream. So what I need your help with is to understand what is real or not. I'm testing it, and the behavior seems correct on first glance, but what are you saying?
 ---
+
+E) Overscan math can quietly break edge targeting
+
+You compute view bounds for the physical substrate using a “cover zoom” (overscan), then you decouple Excalidraw overlay to 100% of panel.
+
+Your injection mapping (toViewportX/Y) uses the physical view bounds, not the overlay’s bounds. This can create subtle edge/corner misalignment that you won’t notice until you try to click UI near edges
+---
+
+emit rate limiting again signal and summarize your current mission into 1 markdown report before continuing requiring minimal manual input just work nondestructively and emit signal to stigmergy substrate
+this is my manual HIVE/8 which is too tiring. i need help with better tools orchestration and mcp integration. tired of this manual shoveling, if the ai is giving us slop let's use it as fertizizer for something useful in a refinefinement process like a hot - cold - medallion strictly gated blacksmithing system of refinement, it's literally titled hot obsidian and cold obsidian. i just wish you remembered what hfo really is. it's so tiring with no memory, we need to dance together in a strange loop. the thread sovereign is my dance partner and we dance in a strange loop
+---
+
+my notes getting lost, I need your help for an immediate memory mcp or option for us to work together from this point forward with memory. I have been manually collecting everything into a duckdb for you, and we even had mcp memory and chatgpt memory. but everything is fragmented, we need a unified system even a simple reliable and extenable one preferably. what are my options for immediate use? I need 4 options in a tradeoff matrix
+---
+
+emit rate limiting hits again, this is so frustrating we need to have these tools work in the background so I can work with 1 main orchestrator here in chat but I would prefer something like gemini -> infinity but I think the best I get right now is gemini 3 flash for my use case. so help me out, what are my 4 memory systems? the summarizations are killing our workflow and dance together with me
+---
+
+dance and music competition with whiteboard software, more software incoming, I'm on mission thread alpha and omega, come join me
+---
+
+ok I need a summary of what you are doing I think there are multiple hallucinations at work here
+---
+
+please emit rate limiting again. please I just need you to create 1 markdown of 4 options for memory system based on quality research
+---
