@@ -1,6 +1,7 @@
 # Hive Fleet Obsidian: 8 Legendary Commanders (The Galois Lattice)
 
 ## 🌌 The 8x8 Architectural Matrix
+
 Each Port represents a specific JADC2 Domain and Verb intersection within the HFO Manifold.
 
 | Port | Commander | HFO Role | Obsidian Verb | JADC2 Domain | MTG Anchor |
@@ -19,6 +20,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 ## 🛠️ Commander Deep Dives
 
 ### P0: Lidless Legion (The Eye)
+
 - **Obsidian Verb**: OBSERVE
 - **JADC2 Role**: ISR (Intelligence, Surveillance, Reconnaissance)
 - **Primary MTG**: [Urza, Lord High Artificer]
@@ -27,6 +29,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 - **Function**: Infinite scrying for mission-critical transitions.
 
 ### P1: Web Weaver (The Loom)
+
 - **Obsidian Verb**: BRIDGE
 - **JADC2 Role**: Data Fabric
 - **Primary MTG**: [Breya, Etherium Shaper]
@@ -35,6 +38,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 - **Function**: Bridge disparate waveforms into a unified fabric.
 
 ### P2: Mirror Magus (The Echo)
+
 - **Obsidian Verb**: SHAPE
 - **JADC2 Role**: Digital Twin
 - **Primary MTG**: [Sakashima of a Thousand Faces]
@@ -43,6 +47,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 - **Function**: Maintain a shadow-object simulator at machine speed.
 
 ### P3: Harmonic Hydra (The Pulse)
+
 - **Obsidian Verb**: INJECT
 - **JADC2 Role**: Kill-Web Disseminator
 - **Primary MTG**: [Ghave, Guru of Spores]
@@ -51,6 +56,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 - **Function**: Route tactical events with sub-millisecond latency.
 
 ### P4: Red Regnant (The Scream)
+
 - **Obsidian Verb**: DISRUPT
 - **JADC2 Role**: Electronic Warfare / Coev. Red Team
 - **Primary MTG**: [Elesh Norn, Mother of Machines]
@@ -59,6 +65,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 - **Function**: Saturate the adversary OODA loop by silencing native signals.
 
 ### P5: Pyre Praetorian (The Shield)
+
 - **Obsidian Verb**: IMMUNIZE
 - **JADC2 Role**: Force Protection / ROE Engine
 - **Primary MTG**: [Syrix, Carrier of the Flame]
@@ -67,6 +74,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 - **Function**: Enforce legal and tactical boundaries; prohibit AI theater.
 
 ### P6: Kraken Keeper (The Vault)
+
 - **Obsidian Verb**: ASSIMILATE
 - **JADC2 Role**: Knowledge Repository / AAR
 - **Primary MTG**: [Arixmethes, Slumbering Isle]
@@ -76,6 +84,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 - **Function**: Preserve high-frequency mission history for recursive evolution.
 
 ### P7: Spider Sovereign (The Web)
+
 - **Obsidian Verb**: NAVIGATE
 - **JADC2 Role**: BMC2 (Battle Management Command & Control)
 - **Primary MTG**: [Kenrith, the Returned King]
@@ -86,6 +95,7 @@ Each Port represents a specific JADC2 Domain and Verb intersection within the HF
 ---
 
 ## 📜 The Litany of the Eight
+>
 > And Branches Growing from the Gate, (**P1: BRIDGE**)  
 > And Spawns Evolve to Recreate, (**P2: SHAPE**)  
 > When Ignitions Flow to Pulsate, (**P3: INJECT**)  

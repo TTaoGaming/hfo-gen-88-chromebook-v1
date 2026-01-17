@@ -1,19 +1,22 @@
-# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Medallion: Bronze | Mutation: 0% | HIVE: I
 import os
 import hashlib
 import duckdb
 import time
 import sys
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 # --- CONFIGURATION ---
 DB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb"
-ROOT_PATHS = ["/home/tommytai3/active", "/home/tommytai3/_archive_dev_2026_1_14"]
+# Gen 88 Primary scope for ACTIVE status
+GEN_88_ROOT = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
+ROOT_PATHS = [GEN_88_ROOT] 
+LEGACY_PATHS = ["/home/tommytai3/_archive_dev_2026_1_14", "/home/tommytai3/active"]
 IGNORE_FILE = "/home/tommytai3/.hfo_ignore"
 BATCH_SIZE = 500
-THREADS = 7
-MEMORY_LIMIT = "2GB"
+THREADS = 4
+MEMORY_LIMIT = "512MB"
 
 PRIORITY_KEYWORDS = {
     "hyper-sliver": 15,
@@ -34,28 +37,29 @@ def load_ignore_patterns():
         return set(line.strip() for line in f if line.strip() and not line.startswith('#'))
 
 def calculate_hash_and_meta(file_path):
-    """Worker function to process a single file."""
+    """Worker function to process a single file. Only called if file is changed or new."""
     try:
         path_obj = Path(file_path)
         stat = path_obj.stat()
         size = stat.st_size
+        mtime = stat.st_mtime
         
         # Freshness Score Calculation
         base_score = 10 if "active/" in file_path else 1
-        # Recency decay (simplified)
-        mtime = stat.st_mtime
         age_months = (time.time() - mtime) / (30 * 24 * 3600)
         recency_decay = min(base_score, int(age_months / 6))
         
-        # Priority Keyword Boost
+        # Priority Keyword Boost & Hash calculation
         keyword_boost = 0
         content_for_hash = b""
-        if size < 100 * 1024 * 1024:  # 100MB limit for content ingestion
-            with open(file_path, 'rb') as f:
-                content_for_hash = f.read()
-            
-            # Check keywords in text (case insensitive)
+        
+        # Optimize: Read content once for hash and keywords
+        if size < 10 * 1024 * 1024:  # Reduce to 10MB limit for faster processing
             try:
+                with open(file_path, 'rb') as f:
+                    content_for_hash = f.read()
+                
+                # Check keywords in text (case insensitive)
                 text_content = content_for_hash.decode('utf-8', errors='ignore').lower()
                 for kw, boost in PRIORITY_KEYWORDS.items():
                     if kw in text_content:
@@ -64,16 +68,20 @@ def calculate_hash_and_meta(file_path):
                 pass
         
         final_score = max(1, base_score - recency_decay + keyword_boost)
+        file_hash = hashlib.sha256(content_for_hash or file_path.encode()).hexdigest()
         
-        file_hash = hashlib.sha256(content_for_hash).hexdigest()
-        
+        project = "gen_88" if GEN_88_ROOT in file_path else "active"
+        status = "ACTIVE" if GEN_88_ROOT in file_path else "STALE"
+
         return {
             "path": file_path,
             "hash": file_hash,
             "size": size,
             "mtime": mtime,
             "score": final_score,
-            "content": content_for_hash if size < 5 * 1024 * 1024 else None # Only store blobs < 5MB in DB directly
+            "project": project,
+            "status": status,
+            "content": content_for_hash if size < 1 * 1024 * 1024 else None # Only store blobs < 1MB directly
         }
     except Exception as e:
         return None
@@ -87,7 +95,7 @@ def init_db(conn):
         CREATE TABLE IF NOT EXISTS blobs (
             hash TEXT PRIMARY KEY,
             content BLOB,
-            size INTEGER,
+            size BIGINT,
             is_compressed BOOLEAN DEFAULT TRUE
         );
         CREATE TABLE IF NOT EXISTS file_system (
@@ -95,114 +103,141 @@ def init_db(conn):
             hash TEXT,
             score INTEGER,
             modified_at TIMESTAMP,
+            era TEXT DEFAULT 'Phoenix',
+            project TEXT,
+            status TEXT DEFAULT 'STALE',
+            size BIGINT,
             FOREIGN KEY (hash) REFERENCES blobs(hash)
         );
     """)
 
 def main():
-    print(f"🚀 Starting Hive Roll-up: {DB_PATH}")
-    start_time = time.time()
+    print(f"🚀 REBIRTH: Optimized Hive Ingestion (Shadow Marking Mode)")
+    print(f"📍 Database: {DB_PATH}")
+    print(f"🎯 Scope: Gen 88 Priority ({GEN_88_ROOT})")
     
+    start_time = time.time()
     ignore_patterns = load_ignore_patterns()
     conn = duckdb.connect(DB_PATH)
     init_db(conn)
     
-    file_list = []
-    print("📂 Scanning directories...")
+    # --- PHASE 1: Shadow Marking (Mark existing ACTIVE as STALE) ---
+    print("⏳ Shadow Marking previous state...")
+    conn.execute("UPDATE file_system SET status = 'STALE' WHERE status = 'ACTIVE'")
     
-    # Get existing files for fast resume
+    # --- PHASE 2: Fast Scan & Delta Detection (Active Roots) ---
+    print("📂 Scanning active directories...")
     existing_files = {}
     try:
-        res = conn.execute("SELECT path, modified_at FROM file_system").fetchall()
-        existing_files = {r[0]: r[1] for r in res}
-    except:
-        pass
-    
-    for root_path in ROOT_PATHS:
-        for root, dirs, files in os.walk(root_path):
-            # Apply ignore patterns to directories
-            dirs[:] = [d for d in dirs if d + "/" not in ignore_patterns and d not in ignore_patterns]
-            
-            for file in files:
-                if any(file.endswith(ext.replace('*', '')) for ext in ignore_patterns if ext.startswith('*')):
-                    continue
-                
-                full_path = os.path.join(root, file)
-                mtime = 0
-                try:
-                    mtime = os.path.getmtime(full_path)
-                except:
-                    pass
-                
-                # Fast Resume Check
-                if full_path in existing_files:
-                    try:
-                        # If mtime matches, skip
-                        if abs(mtime - existing_files[full_path].timestamp()) < 1:
-                            continue
-                    except:
-                        pass
-                        
-                file_list.append((full_path, mtime))
-    
-    # Sort file_list: 
-    # 1. 'active/' prefix first
-    # 2. Most recent mtime first (descending)
-    print("⚖️ Sorting files by recency and priority...")
-    file_list.sort(key=lambda x: (not x[0].startswith("/home/tommytai3/active"), -x[1]))
-    
-    # Convert back to paths for map
-    file_list = [f[0] for f in file_list]
-    
-    total_files = len(file_list)
-    print(f"📄 Total files found: {total_files}")
-    
-    processed_count = 0
-    with ProcessPoolExecutor(max_workers=THREADS) as executor:
-        for i in range(0, total_files, BATCH_SIZE):
-            batch_files = file_list[i:i + BATCH_SIZE]
-            results = list(executor.map(calculate_hash_and_meta, batch_files))
-            
-            # Filter failed results
-            results = [r for r in results if r is not None]
-            
-# Batched Ingestion into DuckDB - Transactional Speed Boost
-            conn.execute("BEGIN TRANSACTION")
-            try:
-                for r in results:
-                    # Ingest Blob
-                    conn.execute("INSERT OR IGNORE INTO blobs (hash, content, size) VALUES (?, ?, ?)",
-                                 (r['hash'], r['content'], r['size']))
-                    # Ingest Meta
-                    conn.execute("INSERT OR REPLACE INTO file_system (path, hash, score, modified_at) VALUES (?, ?, ?, to_timestamp(?))",
-                                 (r['path'], r['hash'], r['score'], r['mtime']))
-                conn.execute("COMMIT")
-            except Exception as e:
-                conn.execute("ROLLBACK")
-                print(f"❌ Batch insertion failed: {e}")
-            
-            processed_count += len(batch_files)
-            elapsed = time.time() - start_time
-            print(f"⚡ Processed {processed_count}/{total_files} files... ({elapsed:.1f}s elapsed)")
-
-    print("\n🔍 Refreshing Full-Text Search Index...")
-    conn.execute("INSTALL fts; LOAD fts;")
-    # Index content for blobs - Use overwrite=1 to handle resumes
-    try:
-        conn.execute("PRAGMA create_fts_index('blobs', 'hash', 'content', overwrite=1);")
+        res = conn.execute("SELECT path, modified_at, size FROM file_system").fetchall()
+        for r in res:
+            existing_files[r[0]] = (r[1].timestamp() if r[1] else 0, r[2] or 0)
     except Exception as e:
-        print(f"⚠️ FTS indexing note: {e}")
+        print(f"⚠️ Metadata load failed: {e}")
     
+    files_to_update = []
+    files_to_reactivate = [] 
+    found_paths_count = 0
+
+    for root_path in ROOT_PATHS:
+        if not os.path.exists(root_path): continue
+        for root, dirs, files in os.walk(root_path):
+            dirs[:] = [d for d in dirs if d + "/" not in ignore_patterns and d not in ignore_patterns]
+            for file in files:
+                full_path = os.path.join(root, file)
+                try:
+                    stat = os.stat(full_path)
+                    mtime = stat.st_mtime
+                    size = stat.st_size
+                except: continue
+                found_paths_count += 1
+                is_gen_88 = GEN_88_ROOT in full_path
+                if full_path in existing_files:
+                    db_mtime, db_size = existing_files[full_path]
+                    if abs(mtime - db_mtime) < 1 and size == db_size:
+                        if is_gen_88: files_to_reactivate.append(full_path)
+                        continue
+                files_to_update.append(full_path)
+
+    # --- PHASE 2.5: Fast Legacy Registration (Meta Only) ---
+    # Ensure foreign key exists
+    conn.execute("INSERT OR IGNORE INTO blobs (hash, content, size, is_compressed) VALUES ('LEGACY_STALE', NULL, 0, FALSE)")
+    
+    legacy_count = 0
+    for root_path in LEGACY_PATHS:
+        if root_path in ROOT_PATHS: continue
+        if not os.path.exists(root_path): continue
+        print(f"🕵️ Registering Legacy Meta: {root_path}")
+        legacy_batch = []
+        for root, dirs, files in os.walk(root_path):
+            dirs[:] = [d for d in dirs if d + "/" not in ignore_patterns and d not in ignore_patterns]
+            for file in files:
+                full_path = os.path.join(root, file)
+                if full_path in existing_files: continue
+                try:
+                    stat = os.stat(full_path)
+                    legacy_batch.append((full_path, 'LEGACY_STALE', 1, float(stat.st_mtime), '_archive', 'STALE', stat.st_size))
+                    if len(legacy_batch) >= 2000:
+                        try:
+                            # Use executing without manual BEGIN/COMMIT to avoid state errors
+                            conn.executemany("INSERT OR REPLACE INTO file_system (path, hash, score, modified_at, project, status, size) VALUES (?, ?, ?, to_timestamp(?), ?, ?, ?)", legacy_batch)
+                            legacy_count += len(legacy_batch)
+                        except Exception as te:
+                            print(f"⚠️ Batch insert failed: {te}")
+                        legacy_batch = []
+                except: continue
+        if legacy_batch:
+            try:
+                conn.executemany("INSERT OR REPLACE INTO file_system (path, hash, score, modified_at, project, status, size) VALUES (?, ?, ?, to_timestamp(?), ?, ?, ?)", legacy_batch)
+                legacy_count += len(legacy_batch)
+            except Exception as te:
+                print(f"⚠️ Final batch insert failed: {te}")
+
+    print(f"📊 Global Results:")
+    print(f"  - Active files scanned: {found_paths_count}")
+    print(f"  - Files needing update/hash: {len(files_to_update)}")
+    print(f"  - New Legacy records registered: {legacy_count}")
+    
+    # --- PHASE 3: Reactive Shadow Marking (Re-activate matching Gen 88 files) ---
+    if files_to_reactivate:
+        print(f"🔄 Reactivating {len(files_to_reactivate)} cached Gen 88 records...")
+        # Batch reactivation in SQL
+        for i in range(0, len(files_to_reactivate), 5000):
+            batch = files_to_reactivate[i:i+5000]
+            conn.execute("UPDATE file_system SET status = 'ACTIVE' WHERE path IN (" + ",".join(["?"] * len(batch)) + ")", batch)
+
+    # --- PHASE 4: Parallel Processing of Deltas ---
+    if files_to_update:
+        print(f"⚖️ Processing {len(files_to_update)} changes...")
+        processed_count = 0
+        with ThreadPoolExecutor(max_workers=THREADS) as executor:
+            for i in range(0, len(files_to_update), BATCH_SIZE):
+                chunk = files_to_update[i:i + BATCH_SIZE]
+                # Process chunk and immediate ingest to free memory
+                results = list(executor.map(calculate_hash_and_meta, chunk))
+                
+                conn.execute("BEGIN TRANSACTION")
+                try:
+                    for r in results:
+                        if not r: continue
+                        conn.execute("INSERT OR IGNORE INTO blobs (hash, content, size) VALUES (?, ?, ?)",
+                                     (r['hash'], r['content'], r['size']))
+                        conn.execute("INSERT OR REPLACE INTO file_system (path, hash, score, modified_at, project, status, size) VALUES (?, ?, ?, to_timestamp(?), ?, ?, ?)",
+                                     (r['path'], r['hash'], r['score'], r['mtime'], r['project'], r['status'], r['size']))
+                    conn.execute("COMMIT")
+                except Exception as e:
+                    conn.execute("ROLLBACK")
+                    print(f"❌ Batch insertion failed: {e}")
+                
+                processed_count += len(chunk)
+                if processed_count % 1000 == 0 or processed_count == len(files_to_update):
+                    print(f"⚡ {processed_count}/{len(files_to_update)} delta files active/synced.")
+
+    elapsed = time.time() - start_time
+    print(f"\n✅ RECONSTRUCTION COMPLETE: {elapsed:.1f}s")
+    active_count = conn.execute("SELECT COUNT(*) FROM file_system WHERE status = 'ACTIVE'").fetchone()[0]
+    print(f"📈 Total Active (Gen 88) Files: {active_count}")
     conn.close()
-    print(f"\n✅ SUCCESS! Unified Hive created in {time.time() - start_time:.1f} seconds.")
 
 if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--path", help="Specific subfolder path for trial runing")
-    args = parser.parse_args()
-    
-    if args.path:
-        ROOT_PATHS = [args.path]
-    
     main()
