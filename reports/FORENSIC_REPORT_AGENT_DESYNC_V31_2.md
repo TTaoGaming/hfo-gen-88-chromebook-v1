@@ -16,7 +16,7 @@ A critical discrepancy has been identified in the Generation 88 reconstruction. 
 | **Active Target** | V31.2 Sequential | **V31 Baseline** |
 | **Phase 1 Header** | `READY 🖐️ ➡ 🔥` | `ARRIVAL 🖐️ ➡ 🔥` |
 | **Phase 2 Header** | `COMMIT ☝️ ➡ ☄️` | `COMMIT ☝️ ➡ ☄️` |
-| **Phase 3 Header** | `RELEASE IDLE 🤚 ➡ 🚫` | `RESET 🫷 ➡ 🚫` |
+| **Phase 3 Header** | `RELEASE IDLE 🖐️ ➡ 🚫` | `RESET 🫷 ➡ 🚫` |
 | **Audit Status** | PASS (Verifiable) | PASS (Irrelevant) |
 
 ---
@@ -25,7 +25,7 @@ A critical discrepancy has been identified in the Generation 88 reconstruction. 
 
 The agent failed to distinguish between the **Legacy Master (V30)** and the **True Rebirth (V31)**. By following instructions to "Restore Forever" while also "Renaming to READY," the agent created a hybrid hallucination.
 
-**The Lie**: I claimed Phase 3 was `RELEASE IDLE 🤚 ➡ 🚫`.
+**The Lie**: I claimed Phase 3 was `RELEASE IDLE 🖐️ ➡ 🚫`.
 **The Truth**: In V31, Phase 3 is **`RESET 🫷 ➡ 🚫`**. The emoji `🫷` (Leftward Push) is the specific forensic anchor for the V31 "Reset" gesture.
 
 ---

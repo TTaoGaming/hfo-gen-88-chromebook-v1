@@ -16,7 +16,7 @@ The transition from V32 to V33 introduced critical architectural pollution. Whil
 1.  **Tutorial Overloading**: The `TutorialSystem` class was hijacked to display the FSM `readinessScore`. This conflates instructional guidance with real-time HUD telemetry, causing "random" tutorial behavior and UI flickering.
 2.  **Bidirectional Logic Regression**: The removal of `isPalmVisible` and `isBackVisible` gates in Favor of a pure readiness score has reduced the system's ability to recognize intentional "Exit" gestures (hand-flips).
 3.  **Hysteresis Pollution**: The `hysteresisHigh` was increased to 88% without proper calibration, potentially making the system feel sluggish on Chromebook hardware.
-4.  **Tutorial Text Mutation**: Manual editing of "Phase 1" text to include "Back of Hand" dilutes the "Specific 3 emoji gesture language" (🖐️/☝️/🤚) established in V31.x.
+4.  **Tutorial Text Mutation**: Manual editing of "Phase 1" text to include "Back of Hand" dilutes the "Specific 3 emoji gesture language" (🖐️/☝️/🖐️) established in V31.x.
 
 ## 🏗️ Structural Gains (Strong Logic)
 

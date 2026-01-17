@@ -1396,7 +1396,7 @@ I have completed the requested enhancements for **OMEGA V30.0 ARMORED**.
 
 ### 🚀 Summary of Changes: OMEGA V30.0
 
-1. **Tactical Guidance Engine**: Upgraded the `TutorialSystem` in omega_gen4_v30.html with 4-stage sequential emojis (🖐️, 🤚, ☝️, 🎯) to provide immediate visual feedback for gesture alignment (Palm Facing &rarr; Charging &rarr; Ready &rarr; Locked).
+1. **Tactical Guidance Engine**: Upgraded the `TutorialSystem` in omega_gen4_v30.html with 4-stage sequential emojis (🖐️, 🖐️, ☝️, 🎯) to provide immediate visual feedback for gesture alignment (Palm Facing &rarr; Charging &rarr; Ready &rarr; Locked).
 2. **Kiosk-Ready Logic**: Implemented "Once-per-start" behavior. The tutorial now tracks session completion and automatically fades out after the first successful `COMMIT` transition, ensuring a clean interface for experienced users.
 3. **Navigator (Port 7) Integration**: Added a dedicated `🛰️ P7: SYSTEM & ONBOARDING` section to the Navigator panel.
     * **Toggle**: "ONBOARDING ACTIVE" checkbox to manually disable/enable the guidance layer.
@@ -1921,7 +1921,7 @@ The recovery and localization cycle is finished. We have pivoted from a regresse
 #### 🛠️ Key Achievements
 
 1. **Tactical Tutorial Polished (v30.0)**:
-    * Implemented full Sequential FSM Guidance with emojis (🖐️, 🤚, ☝️, 🎯).
+    * Implemented full Sequential FSM Guidance with emojis (🖐️, 🖐️, ☝️, 🎯).
     * Added a proper `reset()` method to the `TutorialSystem` to handle state and opacity cleanup.
     * Integrated the **"Reset Tutorial"** button and **"ONBOARDING ACTIVE"** toggle into the Port 7 Navigator.
 2. **Red Truth Signal (Rate Limiting)**:

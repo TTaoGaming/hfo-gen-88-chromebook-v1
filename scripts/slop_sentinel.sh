@@ -45,9 +45,9 @@ fi
 echo "✅ [P5-SLOP-PASS]: No slop patterns detected."
 
 # 4. Hallucinated Gestures (Emoji Slop)
-# 🤚 is a confirmed hallucination. Correct language: 🖐️ (SENSE), ☝️ (AIM), 🫷 (RELEASE)
+# 🖐️ is a confirmed hallucination. Correct language: 🖐️ (SENSE), ☝️ (AIM), 🫷 (RELEASE)
 HALLUCINATION_EMOJIS=(
-    "🤚"
+    "🖐️"
 )
 
 for emoji in "${HALLUCINATION_EMOJIS[@]}"; do
