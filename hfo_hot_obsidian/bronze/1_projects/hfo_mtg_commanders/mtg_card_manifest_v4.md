@@ -18,7 +18,7 @@ Stats: 1/1
 
 ---
 
-## �� THE 8 LEGENDARY COMMANDERS (P0-P7)
+## 🫷 THE 8 LEGENDARY COMMANDERS (P0-P7)
 
 ### [P0] The Lidless Legion {U}
 

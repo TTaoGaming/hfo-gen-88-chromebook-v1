@@ -17,7 +17,8 @@ test.describe('Port 4 Visual Integrity', () => {
         const tutorial = page.locator('#tutorial-overlay');
 
         // Ensure main UI components are visible
-        await expect(page.locator('#engine-canvas')).toBeVisible();
+        const canvas = page.locator('#babylon-canvas, #engine-canvas').first();
+        await expect(canvas).toBeVisible();
         await expect(page.locator('.lm_content')).toBeVisible({ timeout: 10000 });
 
         // Capture screenshot of the whole page
@@ -28,21 +29,18 @@ test.describe('Port 4 Visual Integrity', () => {
         });
     });
 
-    test('Check Element Presets (Dui/Li/etc)', async ({ page }) => {
+    test('Check Element Presets (Trigrams)', async ({ page }) => {
         await page.goto(targetUrl, { waitUntil: 'networkidle' });
 
         // Open Navigator panel (Port 7)
-        // This assumes a specific ID or title for the navigator tab
-        const navigatorTab = page.locator('.lm_title', { hasText: 'NAVIGATOR' });
+        const navigatorTab = page.locator('.lm_title', { hasText: 'Navigator' });
         if (await navigatorTab.isVisible()) {
             await navigatorTab.click();
         }
 
-        // Verify element preset buttons are present
-        const waterBtn = page.locator('button', { hasText: 'WATER (DUI)' });
-        const fireBtn = page.locator('button', { hasText: 'FIRE (LI)' });
-
-        await expect(waterBtn).toBeVisible();
-        await expect(fireBtn).toBeVisible();
+        // Verify element preset dropdown or text is present
+        // V40.1 uses a lil-gui dropdown for Trigrams
+        const elementLabel = page.locator('div.name', { hasText: 'HFO Element (Trigram)' });
+        await expect(elementLabel).toBeVisible();
     });
 });

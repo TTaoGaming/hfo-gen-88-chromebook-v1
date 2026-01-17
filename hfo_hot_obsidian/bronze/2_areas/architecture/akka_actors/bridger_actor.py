@@ -1,5 +1,9 @@
 # Medallion: Bronze | Mutation: 0% | HIVE: I
-from base_actor import HardenedBaseActor
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+try:
+    from .base_actor import HardenedBaseActor
+except (ImportError, ValueError):
+    from base_actor import HardenedBaseActor
 from typing import Dict, Any
 
 class BridgerActor(HardenedBaseActor):

@@ -9,8 +9,8 @@ import * as path from 'path';
  * to verify bit-perfect parity and detect coordinate drift.
  */
 
-const V20_URL = 'http://127.0.0.1:5500/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v24_20.html';
-const V25_URL = 'http://127.0.0.1:5500/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v25.html';
+const V20_URL = 'http://127.0.0.1:8889/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v24_20.html';
+const V25_URL = 'http://127.0.0.1:8889/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v25.html';
 const TELEMETRY_PATH = path.join(__dirname, '../test-results/golden_telemetry_v20.jsonl');
 
 test.describe('V25 Parity: v24.20 (Golden) vs v25.0 (Current)', () => {

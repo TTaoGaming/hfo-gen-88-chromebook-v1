@@ -62,13 +62,21 @@ def log_to_blackboard(entry: Dict[str, Any]):
     last_signature = "LEGACY"
     if os.path.exists(BLACKBOARD_PATH):
         try:
-            with open(BLACKBOARD_PATH, "r") as f:
-                lines = f.readlines()
-                if lines:
-                    last_line = lines[-1].strip()
-                    if last_line:
+            with open(BLACKBOARD_PATH, "rb") as f:
+                # Seek to near the end of the file to find the last line without reading all
+                f.seek(0, os.SEEK_END)
+                size = f.tell()
+                if size > 0:
+                    # Read the last 4096 bytes (should contain the last line)
+                    seek_pos = max(0, size - 4096)
+                    f.seek(seek_pos)
+                    last_chunk = f.read().decode('utf-8', errors='ignore')
+                    lines = [l for l in last_chunk.splitlines() if l.strip()]
+                    if lines:
+                        last_line = lines[-1].strip()
                         last_signature = json.loads(last_line).get("signature", "LEGACY")
-        except Exception:
+        except Exception as e:
+            # print(f"DEBUG: Signature fetch fallback: {e}")
             last_signature = "ERROR"
 
     entry_str = json.dumps(entry, sort_keys=True)

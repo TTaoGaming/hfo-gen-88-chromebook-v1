@@ -1,0 +1,55 @@
+{
+  "mission_thread_alpha": {
+    "hot_bronze": [
+      "hfo_hot_obsidian/bronze/1_projects/pending_silver_promotion/THREAD_ALPHA_MANIFEST.yaml",
+      "hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/MISSION_THREADS.yaml",
+      "hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/P7_FRACTAL_OCTREE.yaml"
+    ],
+    "cold_bronze": [
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/THREAD_ALPHA_MANIFEST.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/THREAD_ALPHA_MANIFEST_G88.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/MISSION_THREADS.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/P7_FRACTAL_OCTREE.yaml"
+    ]
+  },
+  "mission_thread_omega": {
+    "root": [
+      "OMEGA_GEN4_MANIFEST.yaml"
+    ],
+    "hot_bronze": [
+      "hfo_hot_obsidian/bronze/1_projects/pending_silver_promotion/omega_gen4_manifest.yaml",
+      "hfo_hot_obsidian/bronze/1_projects/9_omega_tools.yaml",
+      "hfo_hot_obsidian/bronze/1_projects/mission_thread_omega_gen_2.yaml",
+      "hfo_hot_obsidian/bronze/1_projects/omega_gen_3/omega_gen3_manifest.yaml",
+      "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v25_spec.yaml",
+      "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v26_3_spec.yaml",
+      "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v27_spec.yaml",
+      "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v28_spec.yaml",
+      "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v29_spec.yaml",
+      "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v30_spec.yaml"
+    ],
+    "hot_silver": [
+      "hfo_hot_obsidian/silver/1_projects/omega_gen_1_silver_manifest.yaml"
+    ],
+    "cold_bronze": [
+      "hfo_cold_obsidian/bronze/1_projects/9_omega_tools.yaml",
+      "hfo_cold_obsidian/bronze/1_projects/mission_thread_omega_gen_2.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega/THREAD_OMEGA_MANIFEST.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega/THREAD_OMEGA_MANIFEST_G88.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_manifest.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v6_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v11_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v12_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v13_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v14_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v15_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v18_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v19_4_spec.yaml",
+      "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v20_8_spec.yaml"
+    ],
+    "archive": [
+      "hfo_hot_obsidian/4_archive/mission_thread_omega_gen_1_RED_reward_hacking_death_spiral/THREAD_OMEGA_MANIFEST.yaml"
+    ]
+  }
+}

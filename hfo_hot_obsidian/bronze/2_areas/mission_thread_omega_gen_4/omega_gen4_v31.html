@@ -1379,7 +1379,7 @@
 
                             // Palm Facing Hysteresis (80 Enter, 64 Exit)
                             let isPalmFacing = systemState.p1.palmFacingStates[i];
-                            const normalZ = Math.abs(nz);
+                            const currentNormalZ = Math.abs(nz);
                             if (!isPalmFacing) {
                                 // Omni-Hand Tracking: Still support both for basic awareness
                                 if (normalZ > systemState.parameters.palm.enterThreshold) isPalmFacing = true;

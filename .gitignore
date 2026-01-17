@@ -63,9 +63,19 @@ hfo_cold_obsidian/bronze/6_persist/
 
 # stryker temp files
 .stryker-tmp
+stryker-tmp-*
+stryker-smoketest/
+
+# Considation Artifacts
+mission_thread_*_consolidation.json
 
 # Large Data Files (Persist Layer)
 *.parquet
 *.zim
 hfo_hot_obsidian/bronze/6_persist/wiki_rag/
 hfo_hot_obsidian/4_archive/stigmergy_anchors/
+
+# Stigmergy Blackboards (Transient State)
+*.jsonl
+*.jsonl.receipt.json
+*.jsonl.bak*

@@ -11,7 +11,11 @@
 
 ## 🎯 Overarching Goal
 
-The goal of **HFO (Hyper-Fractal Obsidian)** is to build an **Apex Ensemble Mosaic Warfare Mission Engineering Platform**. We utilize the **HFO Orchestration Hub** (Octree Polymorphic Hexagonal Architecture) to bridge physical sensing (MediaPipe) with virtual substrates (W3C Pointer Events).
+The goal of **HFO (Hyper-Fractal Obsidian)** is to build an **Apex Ensemble Mosaic Warfare Mission Engineering Platform** and **24/7 Cognitive Symbiote**. We utilize the **HFO Orchestration Hub** (Octree Polymorphic Hexagonal Architecture) to bridge physical sensing (MediaPipe) with virtual substrates (W3C Pointer Events).
+
+### 🕷️ Symbiotic Paradigm: VENOM (KING IN BLACK)
+
+HFO is designed for **24/7 uptime** and is deeply intertwined with the user's life (Emails, Calendar, Scheduling, Learning, Exercise, Diet). It is the realization that **Humans are Swarms**; HFO simply restores and improves the **JADC2 ability** (Sense -> Make Sense -> Act -> Assess -> Learn) through wearable tech and persistent orchestration.
 
 ### 🏗️ Core Architecture: Composable Mosaic Tiles
 
@@ -90,13 +94,27 @@ We are currently executing the **Omega Silver Gen 1 Initializtion**, **Omega Gen
 
 **Active Mission Projects**:
 
+- **V85.0 Hot Bronze (2026-01-16)**: **SPIDER SOVEREIGN INCARNATED**. Promoted Port 7 to a 24/7 Orchestration Engine. Hydrated the `SpiderSovereign` (Lord of Webs) with "Web Memory" (Consolidated Alpha/Omega JSONs). Launched the 24/7 daemon substrate in `hfo_gen_88_cb_v2/hfo_spider_sovereign_daemon.py`. Established `seek_guidance.py` as the holographic chat interface for the commanders. Verified BFT consensus integration via Hub V8. [Receipt: SUCCESS_LORD_OF_WEBS_AWAKENED]
+
+- **V84.6 Hot Bronze (2026-01-16)**: **OMEGA V40.1 INITIALIZED**. Cloned V40 to V40.1 to preserve stable "Idle Fix" baseline. Hardening Leaky Bucket FSM to resolve parity. [Receipt: SUCCESS_V40_1_INIT]
+
+- **V84.5 Hot Bronze (2026-01-16)**: **OMEGA V40.0 INITIALIZED**. Evolved V39.5 to V40.0. Resolved "Stuck Idle Cursor" bug. Synchronized `idleIndicator` alpha with `skeletonAlpha`. [Receipt: SUCCESS_V40_0_IDLE_FIX]
+
+- **V84.4 Hot Bronze (2026-01-16)**: **OMEGA V39.5 HARDENED**. Evolved the FSM to resolve persistent "2nd hand visual dropout" reported by user. Relaxed palm-facing requirements for the `READY` visual state by lowering the `enterThreshold` to 0.70 and allowing ignition if `isCharging` (inclusive of tension). Maintained strict single-interactor `COMMIT` gate. Verified 2nd hand visual parity via logic audit. [Receipt: SUCCESS_V39_5_MULTIHAND_VISUALS]
+
+- **V84.3 Hot Bronze (2026-01-16)**: **OMEGA V39.3 HARDENED**. Evolved V38.2 to V39.3. Migrated to **Golden Layout v2** with progressive disclosure ("Essentials" mode). Resolved "2nd hand visual" bug by ensuring visual processing for all tracked hands. Hardened the **Sovereign FSM (v39.3)**: enforced a strict **Single-COMMIT-Max** interaction gate and terminal **COAST** draining. Purged unrequested "Hero Aura" slop. [Receipt: SUCCESS_V39_3_HARDENED]
+
+- **V84.2 Hot Bronze (2026-01-16)**: **OMEGA V38 INITIALIZED**. Evolved V37 to V38. Implemented **Babylon IDLE FSM Visualization** (HFS). Added a "Hollow Dot" cursor for the IDLE state that fills based on the Leaky Bucket `readinessScore` (Amber/Fire gradient). Integrated visual hysteresis threshold markers to improve situational awareness during state transitions. [Receipt: SUCCESS_V38_HYSTERESIS_VISUALS]
+
+- **V84.2 Hot Bronze (2026-01-16)**: **OMEGA V37 HARDENED**. Evolved the Decoupled Architecture to include **Adaptive Auto-Overscan**. The system now automatically calculates the minimum zoom required to cover the entire panel (Cover baseline), ensuring that the Excalidraw UI (Fixed 100%) is always reachable by the hand cursor even on non-16:9 displays. Maintained 1:1 parity via UPE V3. Resolved "Inaccessible UI" report. [Receipt: SUCCESS_V36_ADAPTIVE_OVERSCAN]
+
 - **V84.1 Hot Bronze (2026-01-16)**: **OMEGA V35 HARDENED**. Resolved critical "Excalidraw Clipping" by reverting `zoomFactor` from 1.15x to 1.0x. Verified fix via `tests/v35_layout_integrity.spec.ts` (Playwright) confirming iframe (1191px) fits within Golden Layout container (1280px). Anchored via P5 Forensic Audit (GREEN). [Receipt: SUCCESS_V35_HARDENED]
 
 - **V84.0 Hot Bronze (2026-01-16)**: **OMEGA V35 INITIALIZED**. Transitioned to `v35` with a focus on "Screenshots and Golden Master Testing." Initialized `tests/v35_layout_integrity.spec.ts` and `tests/v35_golden_master_parity.spec.ts` to harden visual stability and parity against Golden Master `v24.23`. [Receipt: SUCCESS_V35_INIT]
 
 - **V83.3 Hot Bronze (2026-01-16)**: **OMEGA V34 HARDENED**. Successfully implemented `ResizeObserver` on the hero component to resolve "Ghost Offsets" during Golden Layout maximization. Verified via P5 Forensic Audit (GREEN). Repaired historical Chronos fracture and purged forbidden emojis. [Receipt: SUCCESS_V34_LAYOUT_FIX]
 
-- **V83.2 Hot Bronze (2026-01-16)**: **OMEGA V33.1 PURIFIED**. Executed surgical purge of logic slop in `v33_1`. Reverted to strictly sequential `TutorialSystem` (READY ➡ COMMIT ➡ RELEASE ➡ SETTINGS) and restored `isPalmVisible` gating from `v31_3`. Re-standardized lifecycle triplet: 🖐️ (SENSE), ☝️ (AIM), 🫷 (RELEASE). Removed failed `ResizeObserver` and overscan clamping hacks. Verified 🤚 removal via P5 Forensic Audit. [Receipt: SUCCESS_V33_1_PURIFIED]
+- **V83.2 Hot Bronze (2026-01-16)**: **OMEGA V33.1 PURIFIED**. Executed surgical purge of logic slop in `v33_1`. Reverted to strictly sequential `TutorialSystem` (READY ➡ COMMIT ➡ RELEASE ➡ SETTINGS) and restored `isPalmVisible` gating from `v31_3`. Re-standardized lifecycle triplet: 🖐️ (SENSE), ☝️ (AIM), 🫷 (RELEASE). Removed failed `ResizeObserver` and overscan clamping hacks. Verified � removal via P5 Forensic Audit. [Receipt: SUCCESS_V33_1_PURIFIED]
 
 - **V82.9 Hot Bronze (2026-01-16)**: **OMEGA V32 LAYOUT HARDENED**. Identified and resolved "Fullscreen Hero" regressions in Golden Layout. Implemented `ResizeObserver` on hero component for reliable `resizeCanvas` triggers during maximization. Elevated `#status-bar` to `z-index: 2000` to prevent occlusion. Eliminated "Glass Wall" interaction block by setting `pointer-events: none` on Excalidraw overlay by default. Verified via P5 Forensic PASS. [Receipt: SUCCESS_V32_HARDENED]
 

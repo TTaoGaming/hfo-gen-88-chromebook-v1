@@ -1,5 +1,8 @@
 # Medallion: Bronze | Mutation: 0% | HIVE: I
-from base_actor import HardenedBaseActor
+try:
+    from .base_actor import HardenedBaseActor
+except (ImportError, ValueError):
+    from base_actor import HardenedBaseActor
 from typing import Dict, Any
 
 class NavigatorActor(HardenedBaseActor):

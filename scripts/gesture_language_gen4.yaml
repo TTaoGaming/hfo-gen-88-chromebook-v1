@@ -18,8 +18,8 @@ tutorial:
     RELEASE_IDLE:
       name: "RELEASE IDLE"
       id: 3
-      emoji_triplet: "🤚 ➡ 🚫"
-      header: "Phase 3: RELEASE IDLE 🤚 ➡ 🚫"
+      emoji_triplet: "🫷 ➡ 🚫"
+      header: "Phase 3: RELEASE IDLE 🫷 ➡ 🚫"
       body: "Safety first. Turn your hand away (<span class=\"tutorial-highlight\">Back of Hand</span>) to extinguish the flame."
     SETTINGS:
       name: "SETTINGS"

@@ -7,8 +7,8 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Port 5 Infrastructure Gate', () => {
-    // Audit Port 5500 (Live Server) to catch regressions as requested
-    const targetUrl = 'http://localhost:5500/active_omega.html';
+    // Audit Port 8889 (Live Server) to catch regressions as requested
+    const targetUrl = 'http://localhost:8889/active_omega.html';
 
     test('Audit for net::ERR_CONNECTION_RESET and high-concurrency 404s', async ({ page }) => {
         const failedRequests: string[] = [];

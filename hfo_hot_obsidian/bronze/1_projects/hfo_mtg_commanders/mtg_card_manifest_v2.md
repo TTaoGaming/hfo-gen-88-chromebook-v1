@@ -78,7 +78,7 @@ HFO creatures you control have "Hexproof" and "Whenever an HFO creature you cont
 
 ---
 
-## �� THE SLIVER RESONANCE (MOSAIC TILES)
+## 🫷 THE SLIVER RESONANCE (MOSAIC TILES)
 
 ### Hivemind Alpha Shard {3}
 **Artifact Creature — HFO Sliver** | 1/1

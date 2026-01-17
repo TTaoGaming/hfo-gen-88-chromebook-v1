@@ -15,7 +15,7 @@ test.describe('Omega V35 Layout Integrity', () => {
 
         // Ensure canvas and content are present
         await expect(page.locator('#overlay-canvas')).toBeVisible({ timeout: 15000 });
-        
+
         console.log('🔥 Igniting Omega Substrate...');
         const igniteBtn = page.locator('#btn-ignite');
         await expect(igniteBtn).toBeVisible();
@@ -50,7 +50,7 @@ test.describe('Omega V35 Layout Integrity', () => {
 
         console.log('🔼 Maximizing Tactical Workspace Panel...');
         await maximizeBtn.click();
-        
+
         // Wait for ResizeObserver and layout transition settlement
         await page.waitForTimeout(2000);
 
@@ -60,7 +60,7 @@ test.describe('Omega V35 Layout Integrity', () => {
         // Verify that the canvas and iframe have non-zero dimensions
         const canvas = page.locator('#overlay-canvas');
         const iframe = page.locator('#excalidraw-iframe');
-        
+
         const canvasSize = await canvas.boundingBox();
         const iframeSize = await iframe.boundingBox();
         const containerSize = await page.locator('.lm_content').first().boundingBox();
@@ -69,12 +69,12 @@ test.describe('Omega V35 Layout Integrity', () => {
             console.log(`📏 Canvas Dimensions: ${canvasSize.width}x${canvasSize.height}`);
             console.log(`📏 Iframe Dimensions: ${iframeSize.width}x${iframeSize.height}`);
             console.log(`📏 Container Dimensions: ${containerSize.width}x${containerSize.height}`);
-            
+
             // Forensic Discovery: Check for Clipping (Overflow)
             if (iframeSize.width > containerSize.width || iframeSize.height > containerSize.height) {
                 console.log('🚨 DETECTED CLIPPING: Iframe is larger than its Golden Layout container!');
             }
-            
+
             expect(canvasSize.width).toBeGreaterThan(100);
             expect(iframeSize.width).toBeGreaterThan(100);
         }
@@ -83,7 +83,7 @@ test.describe('Omega V35 Layout Integrity', () => {
     test('Step 3: Screenshot Golden Master Parity (Manual Comparison)', async ({ page }) => {
         // This test captures a screenshot for manual confirmation vs Golden Master
         await page.goto(targetUrl, { waitUntil: 'networkidle' });
-        
+
         // Trigger a specific state (e.g. SENSE/🖐️) via evaluating window state if possible
         // or just capture the idle state.
         await page.screenshot({ path: 'test-results/v35_golden_parity_check.png' });

@@ -2500,7 +2500,7 @@ Stats: 1/1
 
 ---
 
-## �� THE 8 LEGENDARY COMMANDERS (P0-P7)
+## 🫷 THE 8 LEGENDARY COMMANDERS (P0-P7)
 
 ### [P0] The Lidless Legion {U}
 **Legendary Artifact Creature — HFO Swarm** | 1/1
@@ -12048,7 +12048,7 @@ Stats: 1/1
 
 ---
 
-## �� THE 8 LEGENDARY COMMANDERS (P0-P7)
+## 🫷 THE 8 LEGENDARY COMMANDERS (P0-P7)
 
 ### [P0] The Lidless Legion {U}
 **Legendary Artifact Creature — HFO Swarm** | 1/1
@@ -20578,7 +20578,7 @@ HFO creatures you control have "Hexproof" and "Whenever an HFO creature you cont
 
 ---
 
-## �� THE SLIVER RESONANCE (MOSAIC TILES)
+## 🫷 THE SLIVER RESONANCE (MOSAIC TILES)
 
 ### Hivemind Alpha Shard {3}
 **Artifact Creature — HFO Sliver** | 1/1
@@ -20695,7 +20695,7 @@ Stats: 1/1
 
 ---
 
-## �� THE 8 LEGENDARY COMMANDERS (P0-P7)
+## 🫷 THE 8 LEGENDARY COMMANDERS (P0-P7)
 
 ### [P0] The Lidless Legion {U}
 

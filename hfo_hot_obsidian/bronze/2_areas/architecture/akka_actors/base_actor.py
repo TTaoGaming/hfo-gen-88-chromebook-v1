@@ -16,11 +16,40 @@ class HardenedBaseActor:
         self.actor_id = actor_id
         self.mission_thread = mission_thread
         self.db_path = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb"
+        self._ensure_tables()
         self.state: Dict[str, Any] = {}
         self.load_state()
 
     def _get_connection(self):
         return duckdb.connect(database=self.db_path)
+
+    def _ensure_tables(self):
+        """Ensures that the necessary tables exist in DuckDB."""
+        try:
+            con = self._get_connection()
+            con.execute("""
+                CREATE TABLE IF NOT EXISTS actor_states (
+                    actor_id VARCHAR PRIMARY KEY,
+                    mission_thread VARCHAR,
+                    state_json VARCHAR,
+                    version INTEGER,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            con.execute("""
+                CREATE TABLE IF NOT EXISTS mission_journal (
+                    id INTEGER PRIMARY KEY,
+                    actor_id VARCHAR,
+                    event_type VARCHAR,
+                    payload VARCHAR,
+                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            # DuckDB doesn't support AUTOINCREMENT directly but we can use sequences if needed.
+            # mission_journal id will be handled by DuckDB if we use a sequence.
+            con.close()
+        except Exception as e:
+            print(f"⚠️ [ACTOR-SYSTEM] Table Ensure Failed: {e}")
 
     def load_state(self):
         """Loads state from DuckDB actor_states table."""

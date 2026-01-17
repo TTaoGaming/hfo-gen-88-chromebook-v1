@@ -49,3 +49,18 @@ due to the unreliable handedness of mediapipeline we need to make palm cone angl
 
 1, use the lifecycle triplet. 2, the structural repairs failed, excalidraw still gets clipped on different golden layout it is so brittle. 3 return to strictly once sequential, READY - COMMIT - RELEASE - SETTINGS
 ---
+
+ok let's do ui lifting, the idea is that excalidraw should always remain usable in all it's functions so I planned a overscan pattern, but it's not enough for the bottom bar but it works well for the other top, left, right so let's do UI lifting just for excalidraw. the idea is that these patterns will be reused across multiple w3c pointer consumers. I am building the reliable gesture to interaction layer, I can just fork software
+---
+
+i think idle also needs a cursor visualization but something very simple like a hollow dot, and we can tie it to the readiness charge to the dot fills with X (maybe fire gradient) and there are hysteresis markers so it's easy to see when it's transition into and out of READY fsm. it's a small circle dwell leaky bucket hysteresis for the current phoenix core
+---
+
+ok this so far looks good what we need is to clone and evolve to v39 and focus on ui polish. we need to clean up defasult golden layout panels and the settings need a essentials(kiosk)/developer toggle so users are given progressive disclosure
+---
+
+i think I already have the halo in IDLE, can you explain more of what you mean. I am testing and i noticed a bug with my 2nd hand not triggering visuals or interactions even though the skeleton overlay is visible, I think the fsm is broken on the 2nd hand. the idea is that IDLE + READY is visuals only COMMIT = w3c pointer. COAST = maintain state with timeout
+---
+
+attaching image, one hand correctly displays fire cursor, the other hand seems to be showing the right skeleton and state change charge up cursor but I don't see the phoenix core visualization. there seems to be something wrong, with N = max number of hands mediapipeline, IDLE = N high confidence tracking hysteresis READY = N high confidence tracking hysteresis with palm angle dwell leaky bucket hysteresis filled. COMMIT = 1 ONLY with interactions. so if we have max 4 hands we might have 4 idle hands and 4 ready hands but only ever 1 commit at a time. this is to prevent unwanted interactions, the idle and ready state are visuals only with no interaction to the other layers yet
+---
