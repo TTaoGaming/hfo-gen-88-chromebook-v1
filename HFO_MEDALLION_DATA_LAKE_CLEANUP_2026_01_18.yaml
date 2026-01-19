@@ -5,6 +5,7 @@ manifest:
   timezone: "America/Denver"
   repo_root: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
   generated_by: "GitHub Copilot"
+  release_label: "Gen 88 CB v3"
   evidence:
     - path: "hfo_cold_obsidian"
     - path: "hfo_hot_obsidian"
@@ -24,6 +25,31 @@ expected_architecture:
   expectation_notes:
     - "Root should be mostly repo/tooling metadata plus the two main Obsidian folders."
     - "Most working files should live under hot/cold Obsidian layers (primarily bronze at present)."
+
+root_keep_allowlist:
+  - .git/
+  - .serena/
+  - .husky/
+  - hfo_cold_obsidian/
+  - hfo_hot_obsidian/
+  - hfo_gen_88_cb_v2/
+  - .github/
+  - .vscode/
+  - .venv/
+  - node_modules/
+  - scripts/
+  - hfo_mcp_gateway_hub.py
+  - HFO_MEDALLION_DATA_LAKE_CLEANUP_2026_01_18.yaml
+  - AGENTS.md
+  - COLD_START.md
+  - ROOT_GOVERNANCE.md
+  - package.json
+  - tsconfig.json
+  - .gitignore
+  - .env
+  - .pre-commit-config.yaml
+  - pyproject.toml
+  - requirements.txt
 
 governance_documents:
   - path: "ROOT_GOVERNANCE.md"
@@ -219,6 +245,17 @@ mcp_gateway_transition:
     path: "hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py"
     action: "archive copy (keep source intact)"
     status: "pending"
+
+consolidation_plan:
+  target_label: "Gen 88 CB v3"
+  phases:
+    - "Move root working artifacts into hot_obsidian/bronze staging for processing."
+    - "Freeze into cold_obsidian/bronze once validated."
+    - "Clear hot_obsidian/bronze to rehydrate latest stable Mission Thread Alpha/Omega."
+
+move_ledger:
+  path: "hfo_hot_obsidian/bronze/2_areas/root_cleanup_staging_2026_01_18/MOVE_LEDGER_2026_01_18.md"
+  status: "generated"
 
 notes:
   - "Repo/tooling metadata at root (.git, .github, .vscode, package.json, eslint config) is expected to remain at root."
