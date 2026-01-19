@@ -19,31 +19,31 @@ repos:
     always_run: true
   - id: hfo-governance-check
     name: HFO Governance Header Check
-    entry: python3 hfo_hot_obsidian/bronze/2_areas/p5_defend/hfo_governance_check.py
+    entry: python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/hfo_governance_check.py
     language: python
     files: \.(py|ts|js|v|md)$
   - id: hfo-quarantine-manager
     name: HFO Automated Quarantine Manager
-    entry: python3 hfo_hot_obsidian/bronze/2_areas/p5_defend/integrity_sentinel.py
+    entry: python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/integrity_sentinel.py
     language: python
     files: hfo_hot_obsidian/(silver|gold|hfo)/.*$
   - id: hfo-theater-sentinel
     name: HFO AI Theater Sentinel
-    entry: python3 hfo_hot_obsidian/bronze/2_areas/p5_defend/temporal_sentinel.py
+    entry: python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/temporal_sentinel.py
     language: python
     always_run: true
   - id: hfo-medallion-guard
     name: HFO Medallion Transition Guard
-    entry: python3 hfo_hot_obsidian/bronze/2_areas/p5_defend/medallion_guard.py
+    entry: python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/medallion_guard.py
     language: python
     files: ^(hfo_cold_obsidian|hfo_hot_obsidian/silver|hfo_hot_obsidian/gold)/.*$
   - id: hfo-orchestration-hub-hardgate
     name: HFO P5 HardGate Orchestration Hub Check
-    entry: python3 hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5
-    language: python
+    entry: bash -c 'PYTHONPATH=/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/orchestration_hub_archive_2026_01_18/hfo_orchestration_hub.py p5'
+    language: system
     always_run: true
   - id: hfo-file-defense-audit
     name: HFO File-Level Defensive Audit
-    entry: python3 hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5
-    language: python
+    entry: bash -c 'PYTHONPATH=/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/orchestration_hub_archive_2026_01_18/hfo_orchestration_hub.py p5'
+    language: system
     files: \.(py|ts|js|html|yaml|md)$

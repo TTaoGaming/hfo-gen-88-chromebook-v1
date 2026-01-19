@@ -1,0 +1,1 @@
+/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/BOOK_OF_BLOOD_GRUDGES.md

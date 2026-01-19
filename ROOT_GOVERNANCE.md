@@ -3,7 +3,7 @@
 # ⚖️ HFO Root Governance & Anti-Pollution Manifest
 
 **Status**: HARDENED
-**Medallion*
+**Medallion**
 **Mission**: Phoenix Project (Chromebook V-1)
 
 ---
@@ -16,7 +16,7 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 
 - `hfo_cold_obsidian/`: Hardened source of truth (Read-Only context).
 - `hfo_hot_obsidian/`: Active integration and development layer.
-- `hfo_gen_88_cb_v2/`: Port 6 (Kraken Keeper) Storage Hub & SSOT Infrastructure.
+- `hfo_cold_obsidian/bronze/4_archive/gen_88_cb_v2_archive_2026_01_18/`: Archived Gen 88 CB v2 SSOT snapshot (root copy prohibited).
 - `.github/`: Agent personas, steering instructions, and automation.
 - `.vscode/`: Workspace configuration.
 - `.venv/`: Local Python environment.
@@ -27,6 +27,7 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 - `AGENTS.md`: High-level mission briefing.
 - `COLD_START.md`: Resurrection protocols.
 - `ROOT_GOVERNANCE.md`: This manifest.
+- `hfo_cold_obsidian/BOOK_OF_BLOOD_GRUDGES.md` (+ `.receipt.json`): P5 seal file (symlinked to Cold Bronze reports/receipts).
 - `package.json` / `tsconfig.json`: Essential system and project configurations.
 - `.gitignore`: Git exclusion rules.
 - `.env`: API keys and environment variables.
@@ -40,6 +41,10 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 1. **Never Commit Secrets**: All API keys and session tokens must be environmental.
 2. **Medallion Pathing**: Do not commit experimental logic directly to `silver/` or `gold/` without a `bronze/` cooling period.
 3. **Atomic Changes**: Commit based on Port functionality or HIVE phase completion.
+
+## ✅ Pre-Commit Governance Enforcement
+
+All commits must pass `.pre-commit-config.yaml` checks. ROOT governance changes are blocked unless the governance hooks and P5 audit complete successfully.
 
 ## 📓 Immutable Blackboard (Red Truth)
 
