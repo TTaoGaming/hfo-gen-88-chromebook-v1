@@ -26,7 +26,10 @@ import mcp.types as types
 
 BASE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
 BLACKBOARD_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl")
-DUCKDB_PATH = os.path.join(BASE_PATH, "hfo_gen_88_cb_v2/hfo_unified_v88.duckdb")
+DUCKDB_PATH = os.path.join(
+    BASE_PATH,
+    "hfo_cold_obsidian/bronze/4_archive/gen_88_cb_v2_archive_2026_01_18/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb",
+)
 FILE_INDEX_DB_PATH = os.path.join(BASE_PATH, "hfo_unified_v88_merged.duckdb")
 RECEIPTS_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/bronze/3_resources/receipts/hfo_mcp_gateway_receipts.jsonl")
 BATON_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/bronze/3_resources/receipts/hfo_mcp_gateway_baton.jsonl")
@@ -390,7 +393,7 @@ def _duck_search(query: str, limit: int) -> dict:
         try:
             conn.close()
         except Exception:
-            pass
+            ...
 
 
 def _openrouter_chat(model: str, messages: list[dict]) -> dict:
