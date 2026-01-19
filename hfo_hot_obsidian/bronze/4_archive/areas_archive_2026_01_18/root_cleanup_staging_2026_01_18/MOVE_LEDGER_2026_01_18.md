@@ -318,7 +318,3 @@ This ledger lists root-relative source paths moved into staging.
 - /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/test_vault.md.receipt.json -> /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/receipts/test_vault.md.receipt.json
 - /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/.MEDALLION_SEAL -> /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/medallion_seal/.MEDALLION_SEAL
 - /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/.MEDALLION_SEAL.receipt.json -> /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/medallion_seal/.MEDALLION_SEAL.receipt.json
-- /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/* -> /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/projects_archive_2026_01_18/
-- /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/* -> /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/
-- /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha (created)
-- /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega (created)
