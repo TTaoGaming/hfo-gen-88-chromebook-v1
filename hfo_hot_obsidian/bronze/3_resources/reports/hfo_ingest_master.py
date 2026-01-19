@@ -1,3 +1,4 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
 # Medallion: Bronze | Mutation: 0% | HIVE: E
 import os
 import hashlib
@@ -56,8 +57,8 @@ def calculate_hash_and_meta(file_path):
                 for kw, boost in PRIORITY_KEYWORDS.items():
                     if kw in text_content:
                         keyword_boost += boost
-            except:
-                pass
+            except Exception:
+                text_content = ""
         
         final_score = max(1, base_score - recency_decay + keyword_boost)
         

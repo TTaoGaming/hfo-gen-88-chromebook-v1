@@ -1,6 +1,11 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+
 # Medallion: Bronze | Mutation: 0% | HIVE: E
 
 # 🔥 RATE LIMIT INFERNO SUMMARY: 2026-01-17
+
 **Medallion**: Bronze | **HIVE**: V
 **Scope**: Environmental Audit of Chromebook V-1 Sensor/Nav Shards
 
@@ -12,10 +17,10 @@ As of 2026-01-17, the `hot_obsidian_blackboard.jsonl` reflects the following ope
 
 - **Total Recorded Events Today**: 2,573
 - **Primary Error Signature**: `429: Rate Limit Reached`
-- **Impacted Shards**: 
-    - Port 0 (Tavily/Crawl)
-    - Port 7 (OpenRouter/Gemma Reasoning)
-    - Port 5 (Forensic Audit Sync)
+- **Impacted Shards**:
+  - Port 0 (Tavily/Crawl)
+  - Port 7 (OpenRouter/Gemma Reasoning)
+  - Port 5 (Forensic Audit Sync)
 
 ## 🕵️ Forensic Analysis of Failure Modes
 

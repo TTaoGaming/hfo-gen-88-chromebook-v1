@@ -1,3 +1,4 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
 # Medallion: Bronze | Mutation: 0% | HIVE: I
 import os
 

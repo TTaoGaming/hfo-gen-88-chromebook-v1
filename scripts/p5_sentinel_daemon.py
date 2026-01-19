@@ -8,6 +8,8 @@ import os
 import json
 import datetime
 import sys
+import urllib.request
+import urllib.error
 
 # HFO: Add port path to sys.path for base imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "../hfo_hot_obsidian/bronze/2_areas/architecture/ports"))
@@ -25,6 +27,90 @@ BLACKBOARD_PATH = "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
 HUB_PATH = "hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py"
 WATCH_EXTENSIONS = {".py", ".ts", ".js", ".html", ".yaml", ".md"}
 IGNORE_SUBSTRINGS = {"blackboard", ".receipt.json", ".git", ".venv", "node_modules", "__pycache__"}
+TRIPWIRE_INTERVAL_SECONDS = 300
+DUCKDB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb"
+GATEWAY_RECEIPTS_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/receipts/hfo_mcp_gateway_receipts.jsonl"
+
+
+def log_tripwire(status: str, tool: str, details: str):
+    log_to_blackboard({
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
+        "phase": "TOOL_TRIPWIRE",
+        "status": status,
+        "tool": tool,
+        "details": details,
+    })
+
+
+def check_tavily():
+    api_key = os.environ.get("TAVILY_API_KEY")
+    if not api_key:
+        log_tripwire("FAIL", "tavily", "TAVILY_API_KEY missing")
+        return
+    payload = {
+        "api_key": api_key,
+        "query": "healthcheck",
+        "search_depth": "basic",
+        "max_results": 1,
+    }
+    req = urllib.request.Request(
+        "https://api.tavily.com/search",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            if resp.status != 200:
+                log_tripwire("FAIL", "tavily", f"HTTP {resp.status}")
+    except urllib.error.HTTPError as e:
+        log_tripwire("FAIL", "tavily", f"HTTPError {e.code}")
+    except Exception as e:
+        log_tripwire("FAIL", "tavily", f"Request failed: {e}")
+
+
+def check_openrouter():
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        log_tripwire("FAIL", "openrouter", "OPENROUTER_API_KEY missing")
+        return
+    req = urllib.request.Request(
+        "https://openrouter.ai/api/v1/models",
+        headers={"Authorization": f"Bearer {api_key}"},
+        method="GET",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            if resp.status != 200:
+                log_tripwire("FAIL", "openrouter", f"HTTP {resp.status}")
+    except urllib.error.HTTPError as e:
+        log_tripwire("FAIL", "openrouter", f"HTTPError {e.code}")
+    except Exception as e:
+        log_tripwire("FAIL", "openrouter", f"Request failed: {e}")
+
+
+def check_duckdb():
+    if not os.path.exists(DUCKDB_PATH):
+        log_tripwire("FAIL", "duckdb", "DuckDB file missing")
+        return
+    try:
+        size = os.path.getsize(DUCKDB_PATH)
+        if size <= 0:
+            log_tripwire("FAIL", "duckdb", "DuckDB file size is 0")
+    except Exception as e:
+        log_tripwire("FAIL", "duckdb", f"DuckDB stat failed: {e}")
+
+
+def check_gateway_receipts():
+    if not os.path.exists(GATEWAY_RECEIPTS_PATH):
+        log_tripwire("FAIL", "mcp_gateway", "Gateway receipts log missing")
+
+
+def run_tripwires():
+    check_tavily()
+    check_openrouter()
+    check_duckdb()
+    check_gateway_receipts()
 
 class P5SentinelHandler(FileSystemEventHandler):
     def __init__(self):
@@ -101,7 +187,12 @@ if __name__ == "__main__":
     observer.start()
     
     try:
+        last_tripwire = 0.0
         while True:
+            now = time.time()
+            if now - last_tripwire >= TRIPWIRE_INTERVAL_SECONDS:
+                run_tripwires()
+                last_tripwire = now
             time.sleep(1)
     except KeyboardInterrupt:
         print("\n🛑 [SENTINEL]: Powering down...")

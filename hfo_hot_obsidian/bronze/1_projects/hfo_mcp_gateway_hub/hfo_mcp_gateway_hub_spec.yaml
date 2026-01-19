@@ -1,0 +1,123 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Project: HFO MCP Gateway Hub
+# Canonical Name: hfo_mcp_gateway_hub
+# Alias: "hfo mco gateway hub" (user shorthand)
+
+project:
+  name: hfo_mcp_gateway_hub
+  layer: hot_bronze
+  created: 2026-01-18
+  purpose: Single entry-path MCP gateway enforcing receipts, durable state, and audit logging.
+
+constraints:
+  - all actions must go through MCP gateway
+  - every change must produce receipts: think -> audit -> commit
+  - agent state persisted in DuckDB
+  - blackboard is append-only audit log
+  - no free-form bypasses
+
+entry_path:
+  gateway_binary: hfo_mcp_gateway_hub.py
+  gateway_role: MCP front door for all tool actions
+  gateway_must_log:
+    - blackboard
+    - duckdb mission_journal
+
+power_words:
+  OBSERVE:
+    role: P0
+    intent: external search + codebase sensing + memory retrieval
+    subshards: [SEARCH, FILESYSTEM, MEMORY]
+  BRIDGE:
+    role: P1
+    intent: schema/contract bridge and tool routing
+    subshards: [CONTRACTS, ROUTES]
+  SHAPE:
+    role: P2
+    intent: physics/geometry shaping and validation
+    subshards: [PHYSICS, PARITY]
+  INJECT:
+    role: P3
+    intent: controlled effect delivery and action emission
+    subshards: [DISPATCH, TARGETING]
+  DISRUPT:
+    role: P4
+    intent: adversarial checks + fuzzing gates
+    subshards: [FUZZ, CHAOS]
+  IMMUNIZE:
+    role: P5
+    intent: audits, receipts, integrity gates
+    subshards: [AUDIT, SL0P, CHRONOS]
+  ASSIMILATE:
+    role: P6
+    intent: storage, journal queries, rollups
+    subshards: [DUCKDB, ARCHIVE]
+  NAVIGATE:
+    role: P7
+    intent: orchestration + sequential reasoning
+    subshards: [SEQUENTIAL_THINK, ORCHESTRATE]
+
+hive8_phases:
+  phase_1:
+    name: Hindsight - Hunting Hyperheuristics
+    roles: [OBSERVE, NAVIGATE]
+  phase_2:
+    name: Insight - Interlocking Interfaces
+    roles: [BRIDGE, ASSIMILATE]
+  phase_3:
+    name: Validated Foresight - Validation Vanguards
+    roles: [SHAPE, IMMUNIZE]
+  phase_4:
+    name: Evolve - Evolving Engines
+    roles: [DELIVER, DISRUPT]
+
+persistence:
+  actor_state:
+    store: duckdb
+    table: actor_states
+    source: hfo_hot_obsidian/bronze/2_areas/architecture/akka_actors/base_actor.py
+  mission_journal:
+    store: duckdb
+    table: mission_journal
+  audit_log:
+    store: blackboard jsonl
+    file: hfo_hot_obsidian/hot_obsidian_blackboard.jsonl
+  baton_log:
+    store: jsonl
+    file: hfo_hot_obsidian/bronze/3_resources/receipts/hfo_mcp_gateway_baton.jsonl
+    security:
+      - strict_timestamp
+      - hash_chain
+
+receipt_chain:
+  required_sequence:
+    - phase1_receipt
+    - phase2_receipt
+    - phase3_receipt
+    - phase4_receipt
+    - commit_receipt
+  enforcement:
+    - pre-commit hook
+    - gateway hardgate
+
+non_goals:
+  - refactor existing mission logic
+  - replace orchestration hub logic
+  - change blackboard signature rules
+
+acceptance:
+  - gateway is the only allowed entry for tool execution
+  - missing receipts block commit
+  - all actions produce blackboard + mission_journal logs
+
+red_tests_plan:
+  - gateway file must exist at repository root
+  - gateway exposes required tool surface (observe_navigate, bridge_assimilate, shape_immunize, deliver_disrupt, query_journal)
+  - receipt chain must be enforced (missing phase receipts block later phases; missing phase4 blocks commit)
+  - all gateway tool calls must log to blackboard
+  - actor state must persist to DuckDB
+
+references:
+  - hfo_hexagonal_mcp_hub.py
+  - hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py
+  - hfo_hot_obsidian/bronze/2_areas/architecture/akka_actors/base_actor.py

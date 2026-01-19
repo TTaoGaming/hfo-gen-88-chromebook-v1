@@ -21,6 +21,10 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@modelcontextprotocol/inspector": "^0.15.0",
+    "@modelcontextprotocol/server-filesystem": "^2026.1.14",
+    "@modelcontextprotocol/server-memory": "^2025.11.25",
+    "@modelcontextprotocol/server-sequential-thinking": "^2025.12.18",
     "@stryker-mutator/core": "^9.4.0",
     "@stryker-mutator/karma-runner": "^9.4.0",
     "@stryker-mutator/typescript-checker": "^9.4.0",

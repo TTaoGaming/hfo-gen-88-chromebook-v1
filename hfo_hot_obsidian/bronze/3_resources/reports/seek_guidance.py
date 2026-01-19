@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Medallion: Bronze | Mutation: 0% | HIVE: V
 # Medallion: Bronze | Mutation: 0% | HIVE: E
 import sys
 import os

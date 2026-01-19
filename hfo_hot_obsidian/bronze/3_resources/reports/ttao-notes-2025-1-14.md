@@ -1,3 +1,5 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+
 # Medallion: Bronze | Mutation: 0% | HIVE: E
 
 ai swarm keeps moving my personal notes out of root which is a problem

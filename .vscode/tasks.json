@@ -34,9 +34,10 @@
 			}
 		},
 		{
-			"label": "Port 5: Forensic Audit (Manual)",
+			"label": "Port 5: Forensic Audit (Auto Close)",
 			"type": "shell",
 			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5",
+			"isBackground": true,
 			"problemMatcher": [],
 			"group": {
 				"kind": "test",
@@ -44,11 +45,15 @@
 			},
 			"presentation": {
 				"echo": true,
-				"reveal": "always",
+				"reveal": "silent",
 				"focus": false,
-				"panel": "shared",
+				"panel": "dedicated",
+				"close": true,
 				"showReuseMessage": false,
 				"clear": false
+			},
+			"runOptions": {
+				"instanceLimit": 1
 			}
 		},
 		{
