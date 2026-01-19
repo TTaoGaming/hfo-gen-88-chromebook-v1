@@ -14,6 +14,14 @@ Alpha (MCP Gateway Hub) and Omega (Gen4 Pointer Stack) are a single continuous m
 - Root hub entrypoint: hfo_mcp_gateway_hub.py delegates to the current Alpha project implementation.
 - This keeps alias/version changes isolated behind a stable root interface.
 
+## Memory Stack (Port 6: Kraken Keeper)
+Three memory shards are first-class and must be callable through the hub:
+1) MCP memory graph (working memory JSONL)
+2) Obsidian blackboards (stigmergy JSONL)
+3) DuckDB unified Gen88 (long-term SSOT)
+
+Use `port6_assimilate` in the gateway hub to consolidate these shards in one call.
+
 ## Rollup Reference
 Full historical context is archived at:
 - hfo_cold_obsidian/bronze/3_resources/reports/AGENTS_ROLLUP_2026_01_18.md
