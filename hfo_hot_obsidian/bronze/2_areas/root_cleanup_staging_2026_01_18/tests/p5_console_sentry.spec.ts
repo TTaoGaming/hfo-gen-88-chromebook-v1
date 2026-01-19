@@ -1,3 +1,4 @@
+// Medallion: Bronze | Mutation: 0% | HIVE: V
 import { test, expect } from '@playwright/test';
 
 test.describe('P5 Runtime Sentry', () => {

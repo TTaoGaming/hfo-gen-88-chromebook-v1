@@ -1,3 +1,4 @@
+// Medallion: Bronze | Mutation: 0% | HIVE: V
 // Medallion: Bronze | Mutation: 88% | HIVE: V
 import { test, expect } from '@playwright/test';
 

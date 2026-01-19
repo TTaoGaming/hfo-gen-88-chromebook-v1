@@ -1,3 +1,4 @@
+// Medallion: Bronze | Mutation: 0% | HIVE: V
 
 const { test, expect } = require('@playwright/test');
 const path = require('path');

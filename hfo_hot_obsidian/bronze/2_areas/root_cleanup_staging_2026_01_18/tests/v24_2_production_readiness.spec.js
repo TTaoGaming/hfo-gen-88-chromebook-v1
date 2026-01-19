@@ -1,3 +1,4 @@
+// Medallion: Bronze | Mutation: 0% | HIVE: V
 // Medallion: Bronze | Mutation: 0% | HIVE: E
 // HFO OMEGA GEN 4 V24.2 PRODUCTION READINESS TEST
 const { test, expect } = require('@playwright/test');

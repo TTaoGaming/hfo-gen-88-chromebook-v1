@@ -1,4 +1,5 @@
 // Medallion: Bronze | Mutation: 0% | HIVE: V
+// Medallion: Bronze | Mutation: 0% | HIVE: V
 import { test, expect } from '@playwright/test';
 
 /**
@@ -41,13 +42,14 @@ test.describe('V40.2 Interaction Hardening', () => {
             const createHand = (x, y, z) => {
                 const landmarks = [];
                 for (let i = 0; i < 21; i++) {
-                    landmarks.push({ x: x + i * 0.001, y: y + i * 0.001, z: z });
+                    landmarks.push({ x: x + i * 0.0001, y: y + i * 0.0001, z: z });
                 }
-                // Landmarks for palm calculation
+                // V20.3: ANATOMICAL STABILITY (Hardened Rod)
+                // Landmarks for palm calculation (p0, p5, p17)
                 landmarks[0] = { x: x, y: y, z: z };
-                landmarks[5] = { x: x + 0.05, y: y, z: z };
-                landmarks[17] = { x: x, y: y + 0.05, z: z };
-                landmarks[8] = { x: x + 0.02, y: y - 0.1, z: z }; // Index tip
+                landmarks[5] = { x: x + 0.05, y: y, z: z + 0.02 }; // Injected Z-delta
+                landmarks[17] = { x: x, y: y + 0.05, z: z + 0.03 }; // Injected Z-delta
+                landmarks[8] = { x: x + 0.02, y: y - 0.1, z: z - 0.05 }; // Index tip (extended)
                 return landmarks;
             };
 
@@ -103,12 +105,13 @@ test.describe('V40.2 Interaction Hardening', () => {
             const createHand = (x, y, z) => {
                 const landmarks = [];
                 for (let i = 0; i < 21; i++) {
-                    landmarks.push({ x: x + i * 0.001, y: y + i * 0.001, z: z });
+                    landmarks.push({ x: x + i * 0.0001, y: y + i * 0.0001, z: z });
                 }
+                // V20.3: ANATOMICAL STABILITY (Hardened Rod)
                 landmarks[0] = { x: x, y: y, z: z };
-                landmarks[5] = { x: x + 0.05, y: y, z: z };
-                landmarks[17] = { x: x, y: y + 0.05, z: z };
-                landmarks[8] = { x: x + 0.02, y: y - 0.1, z: z };
+                landmarks[5] = { x: x + 0.05, y: y, z: z + 0.02 }; // Injected Z-delta
+                landmarks[17] = { x: x, y: y + 0.05, z: z + 0.03 }; // Injected Z-delta
+                landmarks[8] = { x: x + 0.02, y: y - 0.1, z: z - 0.05 }; // Index tip (extended)
                 return landmarks;
             };
 

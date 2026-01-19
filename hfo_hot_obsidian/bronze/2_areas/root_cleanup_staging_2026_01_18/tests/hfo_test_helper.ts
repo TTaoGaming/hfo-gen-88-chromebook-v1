@@ -1,4 +1,5 @@
 // Medallion: Bronze | Mutation: 0% | HIVE: V
+// Medallion: Bronze | Mutation: 0% | HIVE: V
 import config from './hfo_config.json';
 
 export const getActiveUrl = (version?: string) => {
