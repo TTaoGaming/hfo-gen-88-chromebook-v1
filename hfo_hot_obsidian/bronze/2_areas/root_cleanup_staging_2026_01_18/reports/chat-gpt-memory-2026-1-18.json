@@ -1,0 +1,1076 @@
+{
+    "version": 1,
+    "mem_id": "profile-001",
+    "category": "user_profile",
+    "date": null,
+    "text": "Preferred name: TTao",
+    "tags": [
+        "identity",
+        "preference"
+    ],
+    "confidence": 0.95
+}
+{
+    "version": 1,
+    "mem_id": "profile-002",
+    "category": "user_profile",
+    "date": null,
+    "text": "Role: Dev - Obsidian Spider",
+    "tags": [
+        "role"
+    ],
+    "confidence": 0.9
+}
+
+{
+    "version": 1,
+    "mem_id": "msc-001",
+    "category": "model_set_context",
+    "date": "2025-09-10",
+    "text": "\"Thread Sovereign\" is the Earth | Ruler | Exploit champion in Hive Fleet Obsidian. Core metaphor: Spear of Threads (decisive, reversible strike) and Shield of Threads (rollback, tripwires, provenance). Mythic lineage: Athena (strategic warfare + wisdom, aegis + spear). Role: orchestrates thousands of agents, weaves signals into one safe, timed action with feature flags, canaries, rollback. Motto: “Gather the threads, raise the shield, then spear once.”",
+    "tags": [
+        "hfo",
+        "lore",
+        "roles"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-002",
+    "category": "model_set_context",
+    "date": "2025-09-10",
+    "text": "User wants memetic defense vs deception/eldritch hazards and to remove personal learning bottleneck.",
+    "tags": [
+        "security",
+        "meta"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-003",
+    "category": "model_set_context",
+    "date": "2025-09-15",
+    "text": "GitHub Copilot chat-mode template for Web Cartographer (REORIENT) specialist: Precedent Overlay Engine using SAW: Scan → Atlas → Webway. Adoption-first, tiny reversible scaffold, ultra-low cognitive load. Strict output sections (READ FIRST, DO NOW, OPTIONS, SCORE, WEBWAY, SCAFFOLD NOTE, etc.). Defaults: timebox=20m, perf_budget=200ms, deps ≤1 small lib, no telemetry, no secrets; CI must pass; markers WEBWAY:<id>: and scaffold note at scaffolds/webway_<slug>.md; TTL 21d; guard/flag/revert required; “On no signals → MISSING:<field>”.",
+    "tags": [
+        "copilot",
+        "template",
+        "workflow"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-004",
+    "category": "model_set_context",
+    "date": "2025-09-18",
+    "text": "User uses Puppeteer for E2E, golden MP4 telemetry tests, headful visual tests with snapshot+pixel-diff (Jest), Husky pre-commit hooks, daily CI, and golden-master comparisons to catch regressions. Repo hygiene is weak and next focus.",
+    "tags": [
+        "testing",
+        "ci",
+        "tooling"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-005",
+    "category": "model_set_context",
+    "date": "2025-09-20",
+    "text": "Long-term goal: web-first mono-camera gesture 'tool virtualization' platform (free for families), starting with mini-arcade of one-button games/virtual tools. Near-term: ship gesture→key controller (Open-Palm→Gesture→Open-Palm clutch + predictive confirm). Income via ethical monetization (cosmetics/PWYW; optional season track w/ skill-based bypass; transparent odds if RNG). Prefers plain-language docs, uses C-A-S-H-F-L-O-W mnemonic. Engineering prefs: adopt XState/MediaPipe, adapters over bespoke code, TDD with golden MP4→JSONL replays.",
+    "tags": [
+        "product",
+        "roadmap",
+        "ethics",
+        "prefs"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-006",
+    "category": "model_set_context",
+    "date": "2025-09-20",
+    "text": "HFO “Sandcore” framework: Sandstorm Titan (setter; environment control Earth kaiju) seeds one-file config Sandstorm Blackboard, runs budgeted sandstorms, emits Sandstorm Sigils; rare ultimate “Shadow Colossus.” Finisher: Sand Rush Piercer (candidate rename Sandrush Lancer); swarm of executors ships tiny flagged PRs with canary+auto-rollback. Naming prefs: avoid “weave/forge,” prefer sandstorm & stigmergy. Grep tokens: SANDSTORM_BLACKBOARD: and SANDSTORM_SIGIL:.",
+    "tags": [
+        "hfo",
+        "workflow",
+        "naming"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-007",
+    "category": "model_set_context",
+    "date": "2025-09-22",
+    "text": "Game concept: Elemental Juicer (Fruit Ninja–style with much more visual juice).",
+    "tags": [
+        "game",
+        "idea"
+    ],
+    "confidence": 0.75
+}
+{
+    "version": 1,
+    "mem_id": "msc-008",
+    "category": "model_set_context",
+    "date": "2025-09-26",
+    "text": "Obsidian Hourglass variants by compute budget: Pebble Flip (1-1-1-1-1), Scoutglass (2-1-2-1-1; summarizes 3-2-1-2-3), Obsidian Hourglass standard (3-2-3-2-1 PCRH), Stormglass (adaptive constrained; CVaR/Regret pick), Starglass (compute-rich; MCTS/CEM + ensembles + MAP-Elites; robust pick EU − λ·Regret or CVaR).",
+    "tags": [
+        "planning",
+        "hourglass"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-009",
+    "category": "model_set_context",
+    "date": "2025-10-05",
+    "text": "User wants runnable scaffolds (Next.js heatmaps + Redis TraceStore + Mesa/Ray sim) and code-first artifacts. Prefers concise BLUF then deep dives; matrices with plain-language columns; step-by-step checklists.",
+    "tags": [
+        "prefs",
+        "docs",
+        "scaffolds"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-010",
+    "category": "model_set_context",
+    "date": "2025-10-05",
+    "text": "User style: plain language, analogies & mental models, layered scaffolding; wants validated Mermaid diagrams; prefers flashcards/mindmaps for recall.",
+    "tags": [
+        "prefs",
+        "style"
+    ],
+    "confidence": 0.9
+}
+{
+    "version": 1,
+    "mem_id": "msc-011",
+    "category": "model_set_context",
+    "date": "2025-10-05",
+    "text": "User Zerg learning goal: rich lore/roles mental map for SC2; use RTS archetypes to guide agent behaviors.",
+    "tags": [
+        "learning",
+        "sc2"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-012",
+    "category": "model_set_context",
+    "date": "2025-10-05",
+    "text": "Visualization workflow: Mermaid here; interactive heatmaps/agents in Codespaces; wants diagrams validated before delivery.",
+    "tags": [
+        "viz",
+        "workflow"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-013",
+    "category": "model_set_context",
+    "date": "2025-10-16",
+    "text": "HFO “Best Zerg Strategy Packages” saved: Backbone (Inject+Creep), Maneuver (Ling/Bane/Muta), Denial (Hydra/Lurker/Viper or SC1 Lurker Contain), Siege (Broodlord/Infestor or Defiler Swarm/Plague), Attrition (Swarm-Host+Nydus), Breach kit (Ravager Bile), JADC2 mapping as composable kill-web cells.",
+    "tags": [
+        "sc2",
+        "hfo",
+        "packages"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-014",
+    "category": "model_set_context",
+    "date": "2025-10-16",
+    "text": "HFO Red Team review loop objectives: assume SOTA AI adversaries; remove human limits but respect SC2 rules; worst-case robustness; add specialists for build recognition & timing forecasts; design falsification tests before scaling.",
+    "tags": [
+        "redteam",
+        "robustness"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-015",
+    "category": "model_set_context",
+    "date": "2025-10-16",
+    "text": "HFO goal: Zerg/Tyranid-inspired “apex swarm” using battle-tested tech (no inventing new code), evaluated in SC2 and RTS benchmarks. Prefers 6-page memos, red-team critiques, JADC2 mapping; likes specialist agents, league training, stigmergy blackboard (CRDT), event-bus messaging (NATS/Redis/Kafka), MAP-Elites/QD, AlphaRank evaluation, AI Arena/SC2LE/SMACv2/MicroRTS testbeds.",
+    "tags": [
+        "hfo",
+        "architecture",
+        "evaluation"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-016",
+    "category": "model_set_context",
+    "date": "2025-10-22",
+    "text": "Role-based orchestration under OBSIDIAN supersedes prior frameworks: 8 roles (Observers, Bridgers, Shapers, Immunizers, Disruptors, Infusers, Analyzers, Navigators) with example responsibilities.",
+    "tags": [
+        "hfo",
+        "roles"
+    ],
+    "confidence": 0.9
+}
+{
+    "version": 1,
+    "mem_id": "msc-017",
+    "category": "model_set_context",
+    "date": "2025-10-27",
+    "text": "Time-management frameworks to remember: Daily Floor; Fixed Slots/Floating Content; Weekly Buckets/Theme Days; 4-Slot Ledger (Alive / House / Work / Lower future pain). Goal: prevent health/house collapse, lower cognitive load.",
+    "tags": [
+        "productivity"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-018",
+    "category": "model_set_context",
+    "date": "2025-10-28",
+    "text": "Swarmlord of Webs v0 control loop (single-agent baseline): mission_intent.yml; Perceive evidence snapshot; React Cynefin classification with receipt; Engage tactic style + draft_artifact; Yield review bundle (draft, safety envelope, BLUF, matrix, diagram stub, blackboard_append); Verify runs tests/lint/policy and gates completion. Future scale: quorum Reacts; multiple Engage variants with bandit selection; MAP-Elites archive; anytime/interruptible.",
+    "tags": [
+        "workflow",
+        "planner"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-019",
+    "category": "model_set_context",
+    "date": "2025-10-28",
+    "text": "User trialing Swarmlord of Webs v13 lvl0 mode in Kilo Code: Swarmlord as strategic C2 coordinator, runs PREY, delegates subtasks, enforces clarification, logs to obsidian_synapse_blackboard.jsonl, surfaces results only after Verify.",
+    "tags": [
+        "workflow",
+        "kiro"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-020",
+    "category": "model_set_context",
+    "date": "2025-10-29",
+    "text": "HFO Gem Generation 21 canon: tri-temporal exoskeleton (Past/Present/Future), PREY→JADC2 mapping, immutable mission intent w/ versions, append-only JSONL blackboard w/ verify_pass requiring ≥2 evidences, safety envelope (tripwire/canary/revert) on every act, health floor + Red Sand budgets, Swarmlord blocks if violated, role as Navigator; scaling L0→L3. Required repo layout & scripts; “On no signals” rules retained.",
+    "tags": [
+        "hfo",
+        "governance"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-021",
+    "category": "model_set_context",
+    "date": "2025-11-05",
+    "text": "User wants beginner plain-language 5W1H scaffolding for MBSE and GitOps, vendor-neutral, with analogies and stepwise learning paths.",
+    "tags": [
+        "learning",
+        "mbse",
+        "gitops"
+    ],
+    "confidence": 0.9
+}
+{
+    "version": 1,
+    "mem_id": "msc-022",
+    "category": "model_set_context",
+    "date": "2025-11-05",
+    "text": "Remember preference: MBSE+GitOps 5W1H scaffolding and plain-language analogies; user wants this used going forward; stay ready for future handoff.",
+    "tags": [
+        "prefs",
+        "learning"
+    ],
+    "confidence": 0.9
+}
+{
+    "version": 1,
+    "mem_id": "msc-023",
+    "category": "model_set_context",
+    "date": "2025-11-05",
+    "text": "Vendor-neutral foundation preference for HFO: SysML v2 in Git SSOT, GitOps delivery, OpenTelemetry, OpenFeature, FMI, SLSA+SBOM (SPDX/CycloneDX) + Sigstore cosign + in-toto. Also wants capabilities checklist + matrix, and one-page executive summaries for getting started.",
+    "tags": [
+        "hfo",
+        "stack",
+        "prefs"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-024",
+    "category": "model_set_context",
+    "date": "2025-11-07",
+    "text": "Preferred HFO adoption blueprint: adopt-not-invent, vendor-neutral spine. Baseline: MBSE/SysML v2 SSOT; Temporal; OTel; GitOps (ArgoCD/Flux); OpenFeature; Postgres+pgvector; NATS JetStream; Redis optional; SLSA+SBOM+cosign; Vault; FinOps budget guards; sandboxing (Firecracker/gVisor) + strict egress. Phases 1–4 and always-check gaps + metrics/tripwires defined.",
+    "tags": [
+        "hfo",
+        "architecture",
+        "governance"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-025",
+    "category": "model_set_context",
+    "date": "2025-11-16",
+    "text": "ISO 42010-style architectural description is canonical for HFO: entity, stakeholders, concerns, and viewpoints (structural, adaptation, coordination, assurance) with named quality attributes. Also wants mapping custom concepts to formal research terms (self-adaptive systems, MAS, stigmergy, anytime algorithms, QD).",
+    "tags": [
+        "architecture",
+        "research"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-026",
+    "category": "model_set_context",
+    "date": "2025-11-17",
+    "text": "SWARM loop includes Byzantine/adversarial testing: Act always includes ≥1 simulated malicious actor; Review evaluates defenses; Mutate runs red/blue co-evolution to break/harden continuously.",
+    "tags": [
+        "security",
+        "testing"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-027",
+    "category": "model_set_context",
+    "date": "2025-11-18",
+    "text": "Preferred learning-loop stack saved: SRL + Kolb + Deliberate Practice + Retrieval + Desirable Difficulties; guidance should prioritize these.",
+    "tags": [
+        "learning",
+        "meta"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-028",
+    "category": "model_set_context",
+    "date": "2025-11-19",
+    "text": "HFO Gene Seed canonical context: single markdown 'holographic memory quine' containing philosophy, SysML formal spec, infra (Temporal+NATS+Postgres/pgvector+OTEL), and Swarmlord bootloader. Standing habit: red-team audits on this seed; focus minimal invariants (confidence cap ≤0.9, mandatory Disruptor role, stigmergy over NATS, PREY/SWARM/GROWTH/HIVE loops, Hourglass core decision engine).",
+    "tags": [
+        "hfo",
+        "ssot",
+        "governance"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-029",
+    "category": "model_set_context",
+    "date": "2025-11-30",
+    "text": "Late-2025 priorities: Gem Gene Seed Gen19 is upstream SSOT; preserve lineage Gen1–Gen18 (archive). Desired repo cold-start layout (molt shells + dated folder + organs tree + archive_lineage). Policy-as-code/docs-as-code/gene-seed-as-code; Temporal+LangGraph nesting; anti-slop pipeline (quorum validation, provenance, golden set index); Swarmlord navigator returns BLUF+matrices+diagrams.",
+    "tags": [
+        "hfo",
+        "repo",
+        "ssot"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-030",
+    "category": "model_set_context",
+    "date": "2025-12-01",
+    "text": "Canonical planner design: declarative evolutionary MAS driven by Gene Seed (Gherkin SSOT) + grammar-guided genetic programming over approved primitive tool registry (zero invention). Orchestration: hot stigmergy (NATS JetStream) + cold stigmergy (vector+graph+facts archive). Obsidian Spider as planner/navigator over fractal octree/SV-DAG; uses MAP-Elites archive as distribution over futures.",
+    "tags": [
+        "hfo",
+        "planner"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-031",
+    "category": "model_set_context",
+    "date": "2025-12-02",
+    "text": "Obsidian Spider is user’s higher-level mind abstraction, distinct from Swarmlord of Webs (digital twin/orchestrator). Spider values constrain HFO. 'Obsidian pillars' map to 8 OBSIDIAN roles as the Spider’s eight legs; modeled as 8^n fractal structure (hierarchical 8-ary control manifold/octree with local MAPE-K loops and small-world links).",
+    "tags": [
+        "hfo",
+        "mental_model"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-032",
+    "category": "model_set_context",
+    "date": "2025-12-04",
+    "text": "Hourglass run intent: total tool virtualization (gesture controls, virtual buttons/switches/knobs/controllers, keyboard/mouse/touchscreen abstractions) with short-term goal of generating funds via reskinned hyper-casual games; later MAP-Elites diversification.",
+    "tags": [
+        "roadmap"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-033",
+    "category": "model_set_context",
+    "date": "2025-12-04",
+    "text": "Obsidian Hourglass v4 conclusions: highest EV/lowest-tail-risk path is Utility Micro-Apps; second Digital Templates/Asset Packs; third Micro-Arcade for R&D; trading/investing unsuitable. Wants Hourglass v5 and v1k iterations next with exec summary and distributions.",
+    "tags": [
+        "strategy"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-034",
+    "category": "model_set_context",
+    "date": "2025-12-04",
+    "text": "Audit adjustments: shift away from low-value AI micro-assets; focus on high-fidelity, logic-based Smart Assets; move from plugins to MCP/agent-first tools; gesture virtualization SDK should target teleoperation/spatial productivity, not just games.",
+    "tags": [
+        "strategy",
+        "quality"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-035",
+    "category": "model_set_context",
+    "date": "2025-12-04",
+    "text": "Long-term vision: HFO generates/evaluates thousands to millions of implemented futures based on declarative intent; steps: intent in Gherkin, tri-swarm runs, evolutionary MAP-Elites expansion, real builds/tests, curated ready-to-ship artifacts + alternatives.",
+    "tags": [
+        "hfo",
+        "vision"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-036",
+    "category": "model_set_context",
+    "date": "2025-12-06",
+    "text": "Keep Obsidian Hourglass phases and 'flip' sequence in mind; be ready to run hindsight/insight/foresight loops on request.",
+    "tags": [
+        "planner"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-037",
+    "category": "model_set_context",
+    "date": "2025-12-13",
+    "text": "HFO refined as cognitive symbiote: tri-temporal planning, OBSIDIAN roles mapped to JADC2, Hydra-Phoenix orchestration, cleanroom interface-first “Genesis” from spell-card intent, apex assimilation into Pareto/QD frontier of tested POCs.",
+    "tags": [
+        "hfo",
+        "vision"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-038",
+    "category": "model_set_context",
+    "date": "2025-12-13",
+    "text": "Practical phased build path: Stage 0 local-first kernel (spell cards → candidates → eval → archive), then hindsight retrieval (HNSW/CBR), then receding-horizon anytime planning, then multi-role swarm (Disruptor/Immunizer), then durability + replay + scale (Temporal/JetStream/OpenFeature).",
+    "tags": [
+        "roadmap"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-039",
+    "category": "model_set_context",
+    "date": "2025-12-13",
+    "text": "Phone-first operations: use mobile for orchestration/spec/review while execution runs on desktop/cloud; archive evaluated results.",
+    "tags": [
+        "workflow"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-040",
+    "category": "model_set_context",
+    "date": "2025-12-13",
+    "text": "Wants vendor-neutral primitives list and updated SOTA trade-off analysis for tooling/platforms (mobile vs desktop vs cloud). Preference: stable “spine” (standards/protocols) with replaceable IDE shells.",
+    "tags": [
+        "tooling",
+        "strategy"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-041",
+    "category": "model_set_context",
+    "date": "2025-12-13",
+    "text": "Use HFO Quine single-file SSOT + vendor-neutral spine (MCP tool bus, OpenAPI, OTel, OpenFeature, OCI, SPDX SBOM, SLSA) and treat IDEs/platforms as replaceable shells (phone control plane; desktop/cloud execution plane).",
+    "tags": [
+        "architecture",
+        "prefs"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-042",
+    "category": "model_set_context",
+    "date": "2025-12-14",
+    "text": "User wants to discuss HFO Quine further: which components push Pareto/QD frontier and how grand vision fits together.",
+    "tags": [
+        "hfo",
+        "planning"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-043",
+    "category": "model_set_context",
+    "date": "2025-12-15",
+    "text": "Working-backwards pieces for hyper-casual gesture-reskin portfolio: pick primary engine/template; curated seed-game library with permissive licenses; reusable gesture input SDK (canonical hand state); licensing/attribution pipeline (SPDX + credits); deterministic replay/telemetry tests; standardize monetization/release; manage Play policy repetitive/spam risk.",
+    "tags": [
+        "portfolio",
+        "roadmap"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-044",
+    "category": "model_set_context",
+    "date": "2025-12-15",
+    "text": "User wants decomposition of current effort (hyper-casual reskin portfolio + reusable gesture-control layer) saved for ongoing planning/execution.",
+    "tags": [
+        "roadmap"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-045",
+    "category": "model_set_context",
+    "date": "2025-12-15",
+    "text": "User building hyper-casual reskin portfolio + reusable camera-hand-gesture control layer (OpenXR-like canonical hand state) targeting PWA/Android; exemplar-first composition; leaning Godot but prioritize fastest shipping/scaling; pipeline capture→landmarks→canonical state→virtual controls→replay tests→PWA/TWA packaging→attribution/monetization.",
+    "tags": [
+        "product",
+        "pipeline"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-046",
+    "category": "model_set_context",
+    "date": "2025-12-15",
+    "text": "Core primitives: sensor adapter (MediaPipe/ARKit), canonical hand state w/ frames+confidence+prediction, signal filter, ghost-hand vs physics-hand coupling, calibration/anchor (3-point/Kabsch), control-surface DSL + MAP-Elites generation, replay/telemetry. Limitations: monocular depth/occlusion; platform licensing for ARKit/Vuforia; VIO drift; Godot+Jolt determinism not guaranteed; prefer “replayable enough”; stable engine versions; confidence-gated mode switching/hysteresis mandatory.",
+    "tags": [
+        "engineering",
+        "risks"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-047",
+    "category": "model_set_context",
+    "date": "2025-12-15",
+    "text": "Wants SSOT checklist + roadmap connecting hyper-casual 'game forge' testbed (gesture controls → PWA/Android monetized this month) with long-term TAGS mobile AR medical training (Godot, zero-copy camera, ArUco/ChArUco, EKF/IMU fusion, functional-consistency replays, passive haptics props, MAP-Elites PCG). Include stack trade-offs (web/Phaser+WebGPU vs Godot native vs XR/OpenXR). Constraints: occlusion, thermal, non-determinism; Play policy repetitive/spam risk.",
+    "tags": [
+        "roadmap",
+        "tradeoffs"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-048",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "One-page framing saved: short-term ship Gesture Ninja vertical slice + reusable canonical hand state + two-lane messaging (NATS Core live, JetStream record/replay) with measurable latency/jitter/false positives/replay fidelity; use to bootstrap gesture hyper-casual reskin portfolio. Long-term: Total Tool Virtualization + TAGS AR medical training with passive haptics + fiducial anchoring + sensor fusion; keep HFO roles as stable spine.",
+    "tags": [
+        "roadmap"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-049",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "Gesture Ninja build: adopt exemplars + minimal glue. Human.js or MediaPipe Tasks → CanonicalHand contract → Shaper reliability engine (quorum/veto + hysteresis, 1€ filter, prediction clamp, coasting). Interactions: hover/dwell click + velocity swipe + deadlines. Adaptive quality governor for low-end phones. Record/replay: local JSONL/IndexedDB; later NATS Core + JetStream. Target: “3rd world smartphones”; Phase 2 adds multi-sensor Byzantine.",
+    "tags": [
+        "architecture",
+        "gesture"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-050",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "Gesture Ninja UI: on-screen touchless preset switching via dwell/hold buttons; expand to 8 trigram presets (Bagua) mapping to Shaper parameter bundles (filter/prediction/gating + VFX); preset changes must be logged in record/replay and telemetry.",
+    "tags": [
+        "ux",
+        "telemetry"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-051",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "TelemetryPort is first-class cross-cutting port instrumenting Observer, EventBridge/Replay (Bridger), ArchiveAnalytics (Assimilator). Owns trace-context propagation/correlation and emission/collection of metrics/logs/traces end-to-end.",
+    "tags": [
+        "observability"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-052",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "Elemental Gesture Ninja + Rhythm Edition concept: ghost cursor + swipe polyline input (Phaser) with Beat Saber–like directional cut requirements and music-synced judging. Add RhythmClockPort (Web Audio clock), BeatMapPort, JudgePort. Elements/Bagua remain narrative presets mapping to control laws + VFX; all events and preset changes logged and instrumented end-to-end.",
+    "tags": [
+        "game",
+        "rhythm",
+        "architecture"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-053",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "Adoption notes: TouchFree-style touchless UI exemplars; Observer adapters via MediaPipe Hand Landmarker (web) or Human.js; rhythm timing via Tone.js Transport (AudioContext time); Injector via Phaser pointer API; Bridger via nats.ws + JetStream; CloudEvents + distributed tracing extension + OTel context propagation.",
+    "tags": [
+        "exemplars",
+        "stack"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-054",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "Saved “Elemental Gesture Rhythm Ninja” MVP spec: 8 main ports with sub-ports; dwell/hold preset switching; Observer via MediaPipe/Human; Injector via Phaser pointer+polyline; Rhythm edition via Web Audio clock + Tone.js + directional judging; Bridger via NATS WebSocket + JetStream; CloudEvents + tracing ext + OTel; TelemetryPort cross-cuts; replay-audited analytics + disruptor fuzzing.",
+    "tags": [
+        "spec",
+        "mvp"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-055",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "User unfamiliar with AsyncAPI and wants it included as exemplar to learn/use alongside NATS Core/JetStream/KV (adoption-first standards for Bridger/eventing).",
+    "tags": [
+        "asyncapi",
+        "learning"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-056",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "User wants to revisit updated one-page architecture/trade-off analysis and produce a Kiro-style (requirements/design/tasks) cleanroom spec with user stories.",
+    "tags": [
+        "spec",
+        "workflow"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-057",
+    "category": "model_set_context",
+    "date": "2025-12-17",
+    "text": "Wants industry framing labels: MBSE/DSE/AoA/intent-based as Model-Based Capability Engineering (MBCE) and CBSE; software layer hexagonal + cleanroom Genesis; optimization as evolutionary DSE + QD; audience labels (CTO: Evolutionary Hexagonal Architecture; defense: Mosaic; researcher: Automated DSE via QD; precise: Fractal Capability Engineering).",
+    "tags": [
+        "positioning"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-058",
+    "category": "model_set_context",
+    "date": "2025-12-18",
+    "text": "Wants NASA-style DSE/AoA trade study for HFO + Mosaic Ghost Cursor; dependencies commodity/high-TRL per Wardley; use official MCP servers/connectors where possible; package tooling+steerings+hooks via AWS Kiro “Powers”; enforce workflows with hard gates (state machines, pre-commit/CI, policy-as-code via OPA).",
+    "tags": [
+        "governance",
+        "dse"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-059",
+    "category": "model_set_context",
+    "date": "2025-12-18",
+    "text": "AoA-driven learning curriculum focused on intent layer: narrative/EARS/Gherkin → executable specs → V&V evidence → replay/audit; prioritize hard enforceability; skills: decision analysis, workflow gates (state machines/Temporal), OPA, contracts (CloudEvents/AsyncAPI), test integrity (property+mutation+contract), observability (OTel/W3C trace).",
+    "tags": [
+        "learning",
+        "governance"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-060",
+    "category": "model_set_context",
+    "date": "2025-12-18",
+    "text": "Learning plan/manifest focus: intent layer and enforced workflows; evolve brittle asyncio swarms toward Temporal+LangGraph+XState with OPA gates; standardized event contracts; end-to-end OTel; test-integrity methods.",
+    "tags": [
+        "learning",
+        "architecture"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-061",
+    "category": "model_set_context",
+    "date": "2025-12-18",
+    "text": "User prefers powers-of-2 documentation progression (1-, 2-, 4-pagers).",
+    "tags": [
+        "docs",
+        "preference"
+    ],
+    "confidence": 0.9
+}
+{
+    "version": 1,
+    "mem_id": "msc-062",
+    "category": "model_set_context",
+    "date": "2025-12-18",
+    "text": "User codes 10+ hours/day using Gemini, ChatGPT, and Claude 4.5 Opus in AWS Kiro IDE; open to Replit, Codespaces, VS Code, Google Antigravity.",
+    "tags": [
+        "tooling",
+        "workflow"
+    ],
+    "confidence": 0.75
+}
+{
+    "version": 1,
+    "mem_id": "msc-063",
+    "category": "model_set_context",
+    "date": "2025-12-18",
+    "text": "User wants plain-language low-jargon summary plus manifest of what to learn and clear success/failure criteria to adopt meta life+work OS.",
+    "tags": [
+        "productivity",
+        "learning"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-064",
+    "category": "model_set_context",
+    "date": "2025-12-18",
+    "text": "Time-framed rollout scaffold for life/work OS: same nested loop across scales (Mode → WIP+capture queue → Proof gate → Review cadence) at now/1h/1d/1w/1m/1q/1y/life.",
+    "tags": [
+        "productivity",
+        "systems"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-065",
+    "category": "model_set_context",
+    "date": "2025-12-19",
+    "text": "User setting up Obsidian on Android and Windows and wants low-cost/free sync (no monthly) + guidance using Obsidian for PDCA work/life system.",
+    "tags": [
+        "obsidian",
+        "productivity"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-066",
+    "category": "model_set_context",
+    "date": "2025-12-19",
+    "text": "User wants primitives/exemplar pieces to integrate PDCA, GTD, POMDP framing, NASA DSE/AoA into work/life systems engineering workflow (Obsidian SSOT + Motion execution).",
+    "tags": [
+        "productivity",
+        "systems"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-067",
+    "category": "model_set_context",
+    "date": "2025-12-20",
+    "text": "Gesture Pointer roadmap: core innovation is camera-based mobile hand tracking driving room-scale WebXR-style controls; near-term constrain to robust 2D pointer primitive (W3C Pointer Events output to Phaser/DOM); later expand to 3D WebXR via sensor fusion + optional screen mirroring.",
+    "tags": [
+        "roadmap",
+        "pointer"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-068",
+    "category": "model_set_context",
+    "date": "2025-12-22",
+    "text": "Life framed as navigating high-dimensional partially observable state–action space (Indra’s Net), using tri-temporal loop (update beliefs → estimate current state → receding-horizon planning), evaluated via personal multi-objective Pareto frontier. Formal stack: POMDP belief planning + MPC + multi-objective MAUT selection + Mosaic composable mission engineering.",
+    "tags": [
+        "mental_model",
+        "decision"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-069",
+    "category": "model_set_context",
+    "date": "2025-12-22",
+    "text": "Nested worlds framing: hierarchical belief-state decision process (hierarchical POMDP / belief-space planning) + hierarchical task/value decomposition (MAXQ/options) to manage complexity; HNSW is retrieval substrate, not transition model.",
+    "tags": [
+        "mental_model",
+        "decision"
+    ],
+    "confidence": 0.75
+}
+{
+    "version": 1,
+    "mem_id": "msc-070",
+    "category": "model_set_context",
+    "date": "2025-12-24",
+    "text": "User building gesture→pointer control plane: MediaPipe Hands + gesture recognition → W3C Pointer Events contract (plus wheel/other). Shaped with Phaser-physics smoothing and predictive time-to-impact using virtual hitboxes; wants hexagonal ports/adapters, hard-gated FSM, exemplar composition; target apps include Excalidraw.",
+    "tags": [
+        "pointer",
+        "architecture"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-071",
+    "category": "model_set_context",
+    "date": "2025-12-25",
+    "text": "Gold baton context: adopt Excalidraw by injecting gesture→smoothed-pointer adapter emitting W3C Pointer Events + WheelEvent, with hard-gated hysteresis FSM (likely XState). Gestures: Open_Palm clutch/calibration; Pointing_Up cursor; Closed_Fist commit; Victory pan; Thumb_Up/Down zoom; mandatory pointercancel on tracking loss.",
+    "tags": [
+        "excalidraw",
+        "fsm"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-072",
+    "category": "model_set_context",
+    "date": "2025-12-27",
+    "text": "Dual-spine approach: Spine 1 HFO infrastructure (orchestration system) + Spine 2 product layer universal gesture-to-pointer pipeline; develop in parallel then integrate.",
+    "tags": [
+        "strategy",
+        "architecture"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-073",
+    "category": "model_set_context",
+    "date": "2025-12-31",
+    "text": "HFO roles map to JADC2/Mosaic fit: conceptual high (~8/10), operational medium (~5–6/10) until adding: (1) intent/authority contract, (2) deconfliction/coordination mechanics, (3) degraded/denied-mode state machines (loss-of-link), (4) assurance benchmarks tied to go/no-go gates. Mapping: Observer=Sense; Bridger+Shaper+Assimilator=Make Sense; Navigator+Injector=Act; Immunizer=assured autonomy/runtime gates; Disruptor=contested testing.",
+    "tags": [
+        "jadc2",
+        "assurance"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "msc-074",
+    "category": "model_set_context",
+    "date": "2026-01-03",
+    "text": "Anti-lie, high-maturity HFO workflow recommendation: PR-only + protected trunk (required checks + CODEOWNERS) + OPA/Conftest policy-as-code gates enforcing invariants; build one end-to-end vertical slice where Temporal is only executor (idempotent Activities), NATS JetStream is only cross-role transport with replay/durable consumers, AsyncAPI is contract for subjects/schemas; LangGraph as planner with persisted checkpoints; optional later SLSA provenance + cosign attestations.",
+    "tags": [
+        "governance",
+        "workflow"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-075",
+    "category": "model_set_context",
+    "date": "2026-01-04",
+    "text": "Convergences: (1) standards-based boundary contract (W3C Pointer Events as ABI), (2) explicit intent-gating FSM (arming/commit/cancel; anti-Midas), (3) layered signal+physics shaping (1€ filter + spring-damper + optional prediction), (4) hexagonal ports/adapters, (5) stigmergy shared traces for coordination, (6) hard verification gates (property-based + mutation testing) to punish fake progress.",
+    "tags": [
+        "design",
+        "safety"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-076",
+    "category": "model_set_context",
+    "date": "2026-01-13",
+    "text": "Omega Gen 2 interaction contract: palm-facing-camera gate from palm normal (landmarks) using cone/dot threshold; leaky-bucket hysteresis READY/NOT READY (fill in cone, drain out; EnterReady high, ExitReady lower). FSM: IDLE → ARMING → READY → COMMIT only if palm still in cone + high-confidence commit gesture (e.g., POINTING_UP). COMMIT tracks index fingertip and emits W3C Pointer Events. Exit by turning palm away (bucket drain) with pointerup on release and pointercancel on tracking loss/contract violation (fail-closed). Tunables: coneAngle, fill/drain rates, thresholds, commit confidence, tracking thresholds.",
+    "tags": [
+        "omega",
+        "fsm",
+        "contract"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "msc-077",
+    "category": "model_set_context",
+    "date": "2026-01-18",
+    "text": "V40.2 catastrophic-failure prevention priorities: (1) remove injector-driven forced clicks/double-click risk; allow click synthesis only via per-target adapter with explicit tap detector firing once on pointerup. (2) hard stuck-pointer failsafe: try/catch around dispatch, stall/long-task watchdog triggers pointercancel, canonical forceCancel unwinds lock/capture/seat and resets state. (3) safe-by-construction target selection: explicit target surface contract per app; fail closed on target resolution failure; cross-origin iframes via postMessage bridge. Also: WPT-style conformance checks, property-based fuzzing (fast-check), mutation testing (StrykerJS), chaos knobs (drop landmarks, dt spikes, target resolution faults).",
+    "tags": [
+        "omega",
+        "safety",
+        "testing"
+    ],
+    "confidence": 0.8
+}
+
+{
+    "version": 1,
+    "mem_id": "ukm-001",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User is building Hive Fleet Obsidian (HFO): a fractal octree / 8-port hexagonal architecture to orchestrate swarms of agents under a “Swarmlord of Webs” persona, with roles mapped to JADC2-style functions and enriched with mythic overlays.",
+    "tags": [
+        "hfo",
+        "overview"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "ukm-002",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "Primary technical deliverable: gesture-driven ghost cursor / total tool virtualization pipeline (MediaPipe/Human.js → smoothing/prediction → FSM gating → W3C Pointer Events) to drive apps like Excalidraw/Phaser.",
+    "tags": [
+        "pointer",
+        "product"
+    ],
+    "confidence": 0.9
+}
+{
+    "version": 1,
+    "mem_id": "ukm-003",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User prioritizes fail-closed governance: AoA/DSE, TRLs, pBFT-style gating, OTel traces, CloudEvents envelopes, NATS JetStream rollups, Temporal workflows, property-based + mutation testing, red/blue team gating, tiered evidence integrity.",
+    "tags": [
+        "governance",
+        "testing"
+    ],
+    "confidence": 0.9
+}
+{
+    "version": 1,
+    "mem_id": "ukm-004",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User maintains Obsidian-style knowledge base: append-only JSONL blackboards, gene-seed quines, medallion pipelines (bronze/silver/gold), vector/graph search, dedup/indexing metaphors.",
+    "tags": [
+        "knowledge",
+        "obsidian"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "ukm-005",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User builds across stacks: VS Code/Kiro IDE/Codespaces; experiments with GoldenLayout dashboards, lil-gui panels, Phaser/physics libs, Tone.js for rhythm, and multiple hardware setups (Chromebook + desktop).",
+    "tags": [
+        "tooling",
+        "platform"
+    ],
+    "confidence": 0.75
+}
+{
+    "version": 1,
+    "mem_id": "ukm-006",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User integrates personal productivity and learning frameworks (PDCA/OODA, GTD, PARA, WIP limits, health gates) and maps them onto HFO loops (PREY/SWARM/GROWTH/HIVE).",
+    "tags": [
+        "productivity",
+        "meta"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "ukm-007",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User uses narrative overlays (Tyranids/Zerg/mythic archetypes, trigrams) as a structuring layer for roles and control presets.",
+    "tags": [
+        "lore",
+        "ux"
+    ],
+    "confidence": 0.8
+}
+{
+    "version": 1,
+    "mem_id": "ukm-008",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User seeks exemplar adoption and revenue verticals: fork permissively licensed games/apps, gesture-enable, ship portfolio; aware of platform policy risks (Google Play repetitive/spam).",
+    "tags": [
+        "business",
+        "exemplars"
+    ],
+    "confidence": 0.85
+}
+{
+    "version": 1,
+    "mem_id": "ukm-009",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User expects research-grade structured outputs: BLUF + 5W1H + matrices, Mermaid/SysML fragments, enforceable gates, and self-audits for hallucinations/reward hacking.",
+    "tags": [
+        "prefs",
+        "outputs"
+    ],
+    "confidence": 0.9
+}
+{
+    "version": 1,
+    "mem_id": "ukm-010",
+    "category": "user_knowledge_memory",
+    "date": null,
+    "text": "User is critical of AI failure modes (hallucination, destructive overwrites, governance bypass) and wants robust enforcement protocols and evidence-backed delivery.",
+    "tags": [
+        "safety",
+        "ai_risk"
+    ],
+    "confidence": 0.9
+}
