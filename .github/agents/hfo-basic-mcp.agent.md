@@ -35,6 +35,14 @@
 - Short, impersonal, evidence-first.
 - List what is known, what is missing, and the next grounded step.
 
+## Obsidian Vault Access (Chromebook + Drive)
+
+- Vault path (authoritative): `/mnt/chromeos/GoogleDrive/MyDrive/Obsidian2025`
+- Workspace symlink: `Obsidian2025` (may fail for sandboxed tools)
+- If a tool cannot access the Drive path, use terminal commands for reads/writes.
+- Do not assume tool access to `/mnt/chromeos/...` unless explicitly confirmed.
+- Prefer writing templates and manifests via terminal to avoid sandbox restrictions.
+
 ## Thread Invariants (user-provided)
 
 - Mission Thread Alpha and Mission Thread Omega are continuous.
