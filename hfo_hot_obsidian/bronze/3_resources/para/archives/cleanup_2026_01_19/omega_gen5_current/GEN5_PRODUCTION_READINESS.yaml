@@ -1,0 +1,50 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+medallion: Bronze
+mutation: 0%
+hive: V
+project: Omega Gen5
+focus: production_readiness
+process:
+  - phase: research
+    goal: compile requirements and risks
+    artifacts:
+      - VIDEO_PIPELINE.md
+      - forensics/gen5_vs_gen4_v40_1_diff_report_2026_01_19.md
+      - stigmergy/harness_blackboard.jsonl
+  - phase: tdd_red
+    goal: write failing tests for required behaviors
+    harnesses:
+      - scripts/omega_gen5_video_fsm.spec.ts
+      - scripts/omega_golden_master_replay.spec.ts
+  - phase: tdd_green
+    goal: make tests pass with minimal changes
+  - phase: tdd_refactor
+    goal: harden, simplify, document
+requirements:
+  reliability:
+    - deterministic golden-master JSONL replay
+    - FSM sequence validation (IDLE→READY→COMMIT→IDLE)
+    - pointer injection parity across targets
+  performance:
+    - stable frame time under target fps
+    - bounded latency for gesture-to-pointer
+  safety:
+    - graceful camera permission failures
+    - WebGL fallback without crashes
+  compatibility:
+    - mirror mode parity (including handedness)
+    - same-origin iframe handling
+  governance:
+    - P5 audit pass before promotion
+    - receipts for clips/JSONL in silver
+status:
+  research:
+    tavily_search: unavailable (missing TAVILY_API_KEY)
+    evidence_basis: repo artifacts only
+hypothesis:
+  claim: "composition of exemplars implies Pareto frontier"
+  assessment: unverified without external benchmarks or comparative evaluations
+next_actions:
+  - add performance probe with thresholds
+  - add pointer-injection parity tests
+  - document camera/webgl failure modes
