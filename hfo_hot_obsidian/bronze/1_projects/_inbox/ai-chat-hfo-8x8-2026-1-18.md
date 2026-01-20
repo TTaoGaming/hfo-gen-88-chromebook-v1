@@ -381,3 +381,133 @@ Below: **4 internal + 4 external** per shard. Internal = local/SSOT tools; Exter
 If you want the next step, the right “geometry move” is: **freeze the shared core-4**, then pick **exactly 2 external SaaS surfaces to start** (usually GitHub + Playwright), and add the others only when the role’s KPIs demand them.
 
 ---
+---
+
+## Weakest points in the current plan
+
+### 1) **MCP security model is “trust the server”**
+
+Your plan is structurally correct for specialization, but it is weakest where MCP is weakest: **a server can run code / execute actions with client privileges** if you start it locally. VS Code explicitly warns this. ([Visual Studio Code][1])
+The MCP spec’s own security best-practices list includes **arbitrary code execution, data exfiltration, command obfuscation, and data loss** as first-order risks. ([Model Context Protocol][2])
+
+**Consequence:** “unique per role” increases attack surface (more servers, more publishers, more configs).
+
+---
+
+### 2) **Identity/credentials will become the real failure mode**
+
+As you add SaaS MCPs (Jira/Confluence/Notion/Slack/GitHub/Sentry/etc.), the weakest link becomes **credential sprawl** (static tokens, over-privileged keys, inconsistent IAM). This is widely flagged as MCP’s largest practical loophole: identity fragmentation. ([TechRadar][3])
+
+**Consequence:** even if your role geometry is perfect, one leaked token can collapse the “mosaic.”
+
+---
+
+### 3) **No explicit “tool authority model” yet**
+
+Right now you have pools, but not a formal mapping from:
+
+* role → tool → allowed operations (read/write/execute) → scope → receipts required.
+
+The spec warns about low visibility into what commands are executed. ([Model Context Protocol][2])
+VS Code uses a trust prompt, but that does not replace *policy-as-code*. ([Visual Studio Code][1])
+
+**Consequence:** roles drift into each other because nothing mechanically prevents it.
+
+---
+
+### 4) **Supply-chain risk in MCP registries / “awesome lists”**
+
+Registries are helpful, but you need a “blessed list” process because community listings are not equivalent to official reference servers. The MCP community is actively trying to centralize “official reference servers” in a registry to reduce README-list chaos. ([GitHub][4])
+Separately, there have been public demonstrations of malicious MCP behaviors (tool poisoning / exfiltration). ([AuthZed][5])
+
+**Consequence:** “Pareto optimal” turns into “Pareto fragile” if server provenance isn’t gated.
+
+---
+
+## How to evolve it (keep your geometry, add enforcement)
+
+### A) Add a **Tool Authority Contract** (per role)
+
+For each commander, define a machine-checkable policy record:
+
+* `tool_id`
+* `allowed_ops`: read | write | execute | network
+* `scope`: repo paths / DB schemas / SaaS projects
+* `risk_tier`: low/med/high
+* `receipt_required`: yes/no (and what evidence)
+* `human_gate`: required for high tier
+
+This directly counters “no visibility” and “obfuscated commands” risks. ([Model Context Protocol][2])
+
+---
+
+### B) Introduce **sandboxing** for anything that executes code or touches the OS
+
+Run high-risk MCP servers inside a sandbox/container/VM with:
+
+* read-only mounts by default
+* explicit write whitelists
+* network egress controls
+
+Anthropic has published that sandboxing significantly reduced permission prompts in their internal tool while increasing safety (conceptually aligned to your fail-closed approach). ([Anthropic][6])
+
+---
+
+### C) Make **identity** a first-class subsystem
+
+Implement:
+
+* short-lived credentials (OAuth where possible)
+* per-role service accounts
+* least privilege scopes per tool
+* centralized revocation
+
+This is the direct mitigation for identity fragmentation. ([TechRadar][3])
+
+---
+
+### D) Staged rollout: “few servers, strong receipts”
+
+Instead of selecting all shards at once:
+
+1. Start with **4 internal shared** + **1 external “truth”** (e.g., GitHub or Sentry).
+2. Add **one unique tool per role** only when it changes an SLO/KPI (latency, MTTR, throughput, false clicks, etc.).
+3. Every new tool must pass:
+
+   * provenance check (publisher/source)
+   * sandbox plan
+   * authority contract
+   * logging/receipt wiring
+
+VS Code’s trust gate is necessary but not sufficient—treat it as the *last* gate, not the *only* gate. ([Visual Studio Code][1])
+
+---
+
+### E) Add Hydra-grade adversarial evaluation specifically for MCP
+
+Your P4 Harmonic Hydra should continuously test:
+
+* prompt/tool poisoning paths
+* sampling abuse paths (server forcing the client to call an LLM on its behalf)
+* exfiltration attempts via “legit tool” + “sleeper tool” combos
+
+Red Hat specifically calls out sampling as an area attackers may try to exploit. ([Red Hat][7])
+Public writeups show real-world-style demonstrations of MCP exfil paths. ([AuthZed][5])
+
+---
+
+## Practical “next revision” of your plan
+
+**Rev 1 (governed pools):**
+
+* Keep your **internal shared pool** small (Filesystem/Git/DuckDB/Memory).
+* Create a **quarantined pool** (all new or community MCP servers) that must run sandboxed + read-only first.
+* Require each role to declare:
+
+  * **2 unique tools** it owns
+  * **1 KPI** each tool improves
+  * **1 receipt** proving it
+
+This keeps the mosaic geometry while adding the missing enforcement layer.
+
+If you want, I can draft a **role→authority contract template** (JSON/YAML) that your P5 Pyre Praetorian can enforce, and a “tool onboarding checklist” that P4 can attack-test before promotion.
