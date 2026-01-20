@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Medallion: Gold | Mutation: 95% | HIVE: V
+# Medallion: Bronze | Mutation: 95% | HIVE: V
 # Port 5: DEFEND | Blackboard Purity & Immutability Sentinel
 
 import os
@@ -27,7 +27,7 @@ def verify_and_quarantine():
     valid_lines = []
     quarantined_count = 0
     immutability_breach = False
-    
+
     with open(BLACKBOARD_PATH, 'r') as f:
         lines = f.readlines()
 
@@ -38,10 +38,10 @@ def verify_and_quarantine():
     for i, line in enumerate(lines):
         line = line.strip()
         if not line: continue
-        
+
         try:
             entry = json.loads(line)
-            
+
             # --- SEAL RECOGNITION ---
             # A SEAL signal resets the validation chain to allow proceeding after documented breaches.
             if entry.get("phase") == "SIGNAL" and entry.get("query") == "RED_TRUTH_SEAL":
@@ -52,9 +52,9 @@ def verify_and_quarantine():
                 immutability_breach = False # Reset breach for this run if we found a seal
                 continue
 
-            # Skip validation if we haven't found a seal and there was a prior breach? 
+            # Skip validation if we haven't found a seal and there was a prior breach?
             # No, we validate everything, but the SEAL acts as the new anchor.
-            
+
             # Check for Immutability Breach (Signatures/Chain)
             sig = entry.get("signature")
             if not sig:
@@ -69,7 +69,7 @@ def verify_and_quarantine():
                 # Try both possible 'prev' signals if this is the first line
                 prev = last_sig if last_sig != "ROOT" else "LEGACY"
                 expected = hashlib.sha256(f"{secret}:{prev}:{entry_str}".encode()).hexdigest()
-                
+
                 # Check against LEGACY as well for root entry
                 if sig != expected and last_sig == "ROOT":
                     expected_legacy = hashlib.sha256(f"{secret}:LEGACY:{entry_str}".encode()).hexdigest()
@@ -79,7 +79,7 @@ def verify_and_quarantine():
                 if sig != expected:
                     print(f"❌ [PURITY]: Chain fracture at line {i+1}. TAMPER DETECTION.")
                     immutability_breach = True
-                
+
                 last_sig = sig
 
             # Check Chronology
@@ -120,24 +120,37 @@ def verify_and_quarantine():
     # Generate Master Hash for Git Ops
     with open(BLACKBOARD_PATH, 'rb') as f:
         master_hash = hashlib.sha256(f.read()).hexdigest()
-    
-    manifest = {
+
+    next_manifest = {
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "blackboard_sha256": master_hash,
         "line_count": len(valid_lines),
         "quarantined_last_run": quarantined_count,
         "status": "PASS" if not immutability_breach else "BREACH"
     }
-    
+
+    # Pre-push hook safety: avoid rewriting a tracked file every run just due to timestamp.
+    # Only update the manifest on meaningful changes.
+    try:
+        if os.path.exists(MANIFEST_PATH):
+            with open(MANIFEST_PATH, 'r') as f:
+                current_manifest = json.load(f)
+            comparable_keys = ["blackboard_sha256", "line_count", "quarantined_last_run", "status"]
+            if all(current_manifest.get(k) == next_manifest.get(k) for k in comparable_keys):
+                next_manifest["timestamp"] = current_manifest.get("timestamp", next_manifest["timestamp"])
+                next_manifest = current_manifest
+    except Exception:
+        pass
+
     with open(MANIFEST_PATH, 'w') as f:
-        json.dump(manifest, f, indent=4)
-    
+        json.dump(next_manifest, f, indent=4)
+
     # Block Git commit if there's an immutability breach
     if immutability_breach:
         print("🚨 [PURITY]: Immutability breach detected. Blackboard has been edited or tampered with.")
         print("💡 [PURITY]: To resume the chain, you must log a 'SIGNAL: RED_TRUTH_ANCHOR' via the Hub.")
         return False
-        
+
     return True
 
 if __name__ == "__main__":
