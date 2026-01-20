@@ -12,7 +12,11 @@ import urllib.request
 import urllib.error
 
 # HFO: Add port path to sys.path for base imports
-sys.path.append(os.path.join(os.path.dirname(__file__), "../hfo_hot_obsidian/bronze/2_areas/architecture/ports"))
+PORTS_PATH = os.path.join(
+    os.path.dirname(__file__),
+    "../hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports",
+)
+sys.path.append(PORTS_PATH)
 from versions.base import log_to_blackboard
 
 try:
@@ -24,7 +28,7 @@ except ImportError:
 
 # Configuration
 BLACKBOARD_PATH = "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
-HUB_PATH = "hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py"
+HUB_PATH = "hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py"
 WATCH_EXTENSIONS = {".py", ".ts", ".js", ".html", ".yaml", ".md"}
 IGNORE_SUBSTRINGS = {"blackboard", ".receipt.json", ".git", ".venv", "node_modules", "__pycache__"}
 TRIPWIRE_INTERVAL_SECONDS = 300

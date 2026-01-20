@@ -1,6 +1,6 @@
 {
-    "activeVersion": "4_v40",
+    "activeVersion": "v40_1",
     "hubVersion": "8",
-    "baseUrl": "http://localhost:8889/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen",
+    "baseUrl": "http://localhost:8889/hfo_hot_obsidian/bronze/1_projects/omega_gen4_current/omega_gen4_",
     "suffix": ".html"
 }

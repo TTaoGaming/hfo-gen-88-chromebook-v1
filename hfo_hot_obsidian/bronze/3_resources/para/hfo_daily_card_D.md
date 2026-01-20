@@ -48,26 +48,31 @@ source_notes:
 | Sources | Grounding | brief link + constraints |
 
 ## 1) Pick 3 areas
+
 - area_1: work
 - area_2: health_admin
 - area_3: people_learning_play
 
 ## 2) Define outcomes (verb + object)
+
 - outcome_1: ship client outline
 - outcome_2: book dentist appointment
 - outcome_3: read 10 pages
 
 ## 3) Smallest next actions (2–5 min)
+
 - action_1: open outline doc
 - action_2: text dentist office
 - action_3: set 10‑page timer
 
 ## 4) Time anchor + MVP
+
 - anchor_label: 9:00–9:45 deep work
 - anchor_minutes: 45
 - daily_mvp: finish outline v1
 
 ## 5) Gherkin (implementation intention)
+
 Scenario:
   Given 9:00am and desk clear
   When I open the outline doc
@@ -75,12 +80,14 @@ Scenario:
   And if blocked, Then outline bullets only
 
 ## 6) WOOP (micro)
+
 - woop_wish: finish outline
 - woop_outcome: send to client
 - woop_obstacle: phone distractions
 - woop_plan: phone in another room
 
 ## 7) End‑of‑day review (scores 1–5)
+
 - score_work: 4
 - score_health_admin: 3
 - score_people_learning_play: 4
@@ -88,12 +95,14 @@ Scenario:
 - win_2: appointment booked
 
 ## 8) GTD status
+
 - gtd_status: clarify
 - gtd_next_action: email client v1
 - gtd_context: desk
 
 ## 9) Sources
-- source_1: https://example.com/brief
+
+- source_1: <https://example.com/brief>
 - source_2:
 - source_3:
 - source_notes: key constraints summarized

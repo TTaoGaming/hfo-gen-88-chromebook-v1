@@ -453,6 +453,74 @@
         }
         window.hfoPlayer = new TelemetryPlayer();
 
+        // --- REPLAY LOADER: JSONL TEXT INJECTION (Golden Master Harness) ---
+        window.hfoLoadReplayFromText = (text) => {
+            try {
+                const seq = text
+                    .split('\n')
+                    .filter(l => l.trim())
+                    .map(l => JSON.parse(l));
+                window.hfoPlayer.sequence = seq;
+                window.hfoPlayer.index = 0;
+                window.hfoPlayer.isPlaying = false;
+                console.log("🧪 [TELEMETRY] Replay loaded from text. Entries:", seq.length);
+                return seq.length;
+            } catch (e) {
+                console.error("[TELEMETRY] Failed to load replay from text:", e);
+                return 0;
+            }
+        };
+
+        // --- VIDEO CLIP HARNESS: Record live video/canvas to WEBM ---
+        window.hfoClipRecorder = (() => {
+            let recorder = null;
+            let chunks = [];
+
+            const getStream = () => {
+                if (systemState?.p0?.video && systemState.p0.video.srcObject) {
+                    return systemState.p0.video.srcObject;
+                }
+                if (systemState?.p0?.canvas?.captureStream) {
+                    return systemState.p0.canvas.captureStream(30);
+                }
+                return null;
+            };
+
+            const start = () => {
+                const stream = getStream();
+                if (!stream) {
+                    console.warn("[CLIP] No stream available (video or canvas). Ignite first.");
+                    return false;
+                }
+                chunks = [];
+                recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+                recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+                recorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `hfo_clip_${new Date().toISOString()}.webm`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                };
+                recorder.start();
+                console.log("🎥 [CLIP] Recording started.");
+                return true;
+            };
+
+            const stop = () => {
+                if (recorder && recorder.state !== 'inactive') {
+                    recorder.stop();
+                    console.log("🎥 [CLIP] Recording stopped.");
+                    return true;
+                }
+                return false;
+            };
+
+            return { start, stop };
+        })();
+
         // --- P1: FUSE CONTRACTS (The Bridger) ---
         const ConfigSchema = z.object({
             ui: z.object({

@@ -10,6 +10,7 @@ versions without changing callers.
 import os
 import sys
 import runpy
+from pathlib import Path
 
 BASE = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
 DEFAULT_TARGET = os.path.join(
@@ -17,6 +18,13 @@ DEFAULT_TARGET = os.path.join(
     "hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/hfo_mcp_gateway_hub.py",
 )
 TARGET = os.environ.get("HFO_HUB_TARGET", DEFAULT_TARGET)
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(BASE) / ".env", override=False)
+except Exception:
+    pass
 
 if __name__ == "__main__":
     sys.argv[0] = TARGET
