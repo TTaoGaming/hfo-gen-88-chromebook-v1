@@ -1,3 +1,4 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
 # 🧭 HFO Gen 88: AI Agent Steering & Governance
 
 ## 🏗️ Core Architecture: The Medallion Flow
@@ -22,6 +23,19 @@ We prioritize **Mutation Scoring** (Stryker) over simple line coverage. HFO oper
 - **Zod 6.0 Contracts**: Use Zod for all cross-port (P0-P7) communication. Define schemas in `contracts/` directories.
 - **Stigmergy Signals**: Use `.jsonl` blackboards for indirect coordination between ports.
 - **Immutable Provenance**: Every file should have a provenance header including its Medallion layer and mutation score.
+
+## 🧠 Memory MCP Protocol (Required)
+
+Make Memory MCP a first-class workflow step for every task:
+
+1) **Start of task**: read the last MCP memory tail and confirm alignment with current work.
+2) **End of task**: append a short `status_update` entry with:
+ - Summary of changes
+ - Tests run
+ - Short/long-term goals
+ - Source links (workspace-relative)
+
+This is mandatory for cognitive persistence and to prevent repeated regressions.
 
 ## 🔗 File Linking & Context
 
