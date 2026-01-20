@@ -1,0 +1,22 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen5: Hard Build Gate (CI)
+
+version: 1
+scope: omega_gen5_current
+policy: hard_gate
+last_updated: 2026-01-20
+
+checks:
+  lint:
+    required: true
+    command: "npm run lint:omega:gen5"
+  typecheck:
+    required: true
+    command: "npx tsc --noEmit"
+  format:
+    required: true
+    command: "npm run format:omega:gen5 -- --max-warnings=0"
+
+exceptions:
+  allowed: false
+  notes: "No exceptions permitted. Gate fails on any error."

@@ -1,15 +1,14 @@
 <!-- Medallion: Bronze | Mutation: 0% | HIVE: V -->
 <!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
-<!-- OMEGA V39: UI POLISH & PROGRESSIVE DISCLOSURE (KIOSK MODE) -->
-<!-- Goal: Implement Essentials/Developer toggle for progressive disclosure.
-     Simplify default Golden Layout for a clean Kiosk experience. -->
+<!-- OMEGA V7: PERFORMANCE GOVERNOR (FPS CAP + VISUAL FALLBACK) -->
+<!-- Goal: Minimal adaptive performance controls (safe FPS tiers + visual fallback). -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFO OMEGA GEN 4 | V39 UI Polish</title>
+    <title>HFO OMEGA GEN5 | V7 Performance Governor</title>
 
     <!-- CSS Dependencies -->
     <link type="text/css" rel="stylesheet" href="./lib/css/goldenlayout-base.css" />
@@ -279,7 +278,7 @@
 <body>
     <div id="layout-container"></div>
     <div id="status-bar">
-        <span>[HFO OMEGA V30.1 - RECONSTRUCTION ACTIVE]</span>
+        <span>[HFO OMEGA V7 - PERFORMANCE GOVERNOR ACTIVE]</span>
         <span id="p5-status" style="margin-left: 16px; color: #00FF41;">P5: ENFORCED</span>
         <span style="margin-left: auto;" id="state-indicator">P1: CONTRACTS ACTIVE | FSM: IDLE</span>
     </div>
@@ -857,6 +856,14 @@
                     coastDrainMultiplier: 1.25 // COAST drains faster by default
                 },
                 coasting: { timeoutMs: 150, confidenceThreshold: 0.4 },
+                performance: {
+                    governorEnabled: true,
+                    fpsCap: 30,
+                    lowFpsThreshold: 20,
+                    lowFpsWindow: 15,
+                    fallbackVisuals: true,
+                    lowFpsCount: 0
+                },
                 physics: {
                     mode: 'PLANCK_SPRING',
                     useDirectProjection: true, // V20.6 Feature Flag (Default ON)
@@ -2165,6 +2172,12 @@
             // V40.1: Clamp dt to prevent physical "time jumps" from bypassing Leaky Bucket logic
             dt = Math.max(0, Math.min(100, dt));
 
+            // V7: Adaptive Performance Governor (FPS cap + visual fallback)
+            if (applyPerformanceGovernor(dt)) {
+                requestAnimationFrame(predictLoop);
+                return;
+            }
+
             let results = null; // HOISTED: Ensure results exists in all branches
 
             // V24.6: Telemetry Replay Logic (Golden Master)
@@ -2251,6 +2264,36 @@
             });
 
             requestAnimationFrame(predictLoop);
+        }
+
+        function applyPerformanceGovernor(dt) {
+            const perf = systemState.parameters.performance;
+            if (!perf || !perf.governorEnabled) return false;
+
+            const fps = dt > 0 ? (1000 / dt) : 60;
+            if (perf.fpsCap && dt < (1000 / perf.fpsCap)) {
+                return true;
+            }
+
+            if (fps < perf.lowFpsThreshold) {
+                perf.lowFpsCount = (perf.lowFpsCount || 0) + 1;
+            } else if (perf.lowFpsCount > 0) {
+                perf.lowFpsCount -= 1;
+            }
+
+            if (perf.fallbackVisuals && perf.lowFpsCount >= perf.lowFpsWindow) {
+                systemState.parameters.physics.showTrailMesh = false;
+                systemState.parameters.physics.showHFOClaw = false;
+                systemState.ui.juiceLayers.forEach(layer => {
+                    if (layer instanceof BabylonJuiceSubstrate) {
+                        layer.perfMultiplier = Math.max(0.5, layer.perfMultiplier * 0.8);
+                    }
+                });
+                perf.lowFpsCount = 0;
+                logMission("P4: Governor engaged (low FPS).", "#FFA500");
+            }
+
+            return false;
         }
 
         // --- GEN5: Mock replay start (no camera required) ---
@@ -3439,6 +3482,14 @@
                 const ctrlCoastConf = fCoast.add(systemState.parameters.coasting, 'confidenceThreshold', 0, 1).name('Min Signal Confidence');
                 P7Navigator.applyTooltip(ctrlCoastTimeout, 'How long to coast on tracking loss before decay to IDLE.');
                 P7Navigator.applyTooltip(ctrlCoastConf, 'Minimum confidence required to avoid COAST.');
+
+                const fPerf = gui.addFolder('P4: Performance Governor');
+                gui._hfoFolders.fPerf = fPerf;
+                fPerf.add(systemState.parameters.performance, 'governorEnabled').name('Enable Governor');
+                fPerf.add(systemState.parameters.performance, 'fpsCap', 15, 60, 1).name('FPS Cap');
+                fPerf.add(systemState.parameters.performance, 'lowFpsThreshold', 10, 30, 1).name('Low FPS Threshold');
+                fPerf.add(systemState.parameters.performance, 'lowFpsWindow', 5, 60, 1).name('Low FPS Window');
+                fPerf.add(systemState.parameters.performance, 'fallbackVisuals').name('Fallback Visuals');
 
                 const fPhys = gui.addFolder('P2: Coordinate Substrate');
                 gui._hfoFolders.fPhys = fPhys;

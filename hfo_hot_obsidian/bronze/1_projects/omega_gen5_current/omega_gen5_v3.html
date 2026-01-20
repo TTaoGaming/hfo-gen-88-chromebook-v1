@@ -317,7 +317,6 @@
             'ui-excalidraw': true,
             'ui-lil-gui': true,
             'p3-injector': true,
-            'p3-legacy-click': true,
             'data-fabric': true
         };
 
@@ -738,12 +737,13 @@
                 exitThreshold: z.number().min(0).max(1)
             }),
             fsm: z.object({
-                hysteresisHigh: z.number().min(0).max(1),
-                hysteresisLow: z.number().min(0).max(1),
+                hysteresisHigh: z.number().min(0).max(100),
+                hysteresisLow: z.number().min(0).max(100),
                 chargeTimeMs: z.number().min(1),
                 releaseTimeMs: z.number().min(1),
                 coastDrainTimeMs: z.number().min(1), // Added for V16
-                tensionMs: z.number().min(0)
+                tensionMs: z.number().min(0),
+                commitExitDelayMs: z.number().min(0)
             }),
             coasting: z.object({
                 timeoutMs: z.number().min(0),
@@ -803,7 +803,7 @@
                 y: z.number(),
                 z: z.number()
             }),
-            readinessScore: z.number().min(0).max(1),
+            readinessScore: z.number(),
             skeletonAlpha: z.number().default(1.0), // V24.22: Fading on tracking loss
             handIndex: z.number(),
             pointerId: z.number(), // V24.4: Stable ABI ID
@@ -844,12 +844,13 @@
                 gestures: { minGestureConfidence: 0.7, preferredHand: 'Any' },
                 palm: { enterThreshold: 0.70, exitThreshold: 0.55 },
                 fsm: {
-                    hysteresisHigh: 0.88,
-                    hysteresisLow: 0.64,
+                    hysteresisHigh: 88,
+                    hysteresisLow: 64,
                     chargeTimeMs: 200,
                     releaseTimeMs: 200,
                     coastDrainTimeMs: 1200, // Slower drain for Inertia [V16]
-                    tensionMs: 100
+                    tensionMs: 100,
+                    commitExitDelayMs: 250
                 },
                 readiness: {
                     fillMultiplier: 1.0,
@@ -1190,7 +1191,7 @@
                                 ind.group.position.copyFrom(targetPos);
 
                                 const readiness = systemState.p1.readinessScores[i] || 0;
-                                const dwellRatio = readiness;
+                                const dwellRatio = readiness / 100;
                                 ind.fill.scaling = new BABYLON.Vector3(dwellRatio, dwellRatio, 1);
 
                                 // V40: Sync Alpha with Skeleton fading
@@ -1339,7 +1340,7 @@
                 fill.scaling = BABYLON.Vector3.Zero();
 
                 // V38: Threshold Marker (High Hysteresis)
-                const highThreshold = systemState.parameters.fsm.hysteresisHigh || 0.88;
+                const highThreshold = (systemState.parameters.fsm.hysteresisHigh || 88) / 100;
                 const marker = BABYLON.MeshBuilder.CreateTorus("idleMarker" + index, {
                     diameter: 0.22 * highThreshold,
                     thickness: 0.005,
@@ -1769,15 +1770,15 @@
                             // Readiness Energy: intent pre-arm for gestures/effects.
                             // Fill when palm/back faces camera, drain when faced away or in COAST.
                             if (shouldFill) {
-                                const fillAmount = (1 / systemState.parameters.fsm.chargeTimeMs) * dt;
+                                const fillAmount = (100 / systemState.parameters.fsm.chargeTimeMs) * dt;
                                 const fillScaled = fillAmount * systemState.parameters.readiness.fillMultiplier;
-                                systemState.p1.readinessScores[i] = Math.min(1, systemState.p1.readinessScores[i] + fillScaled);
+                                systemState.p1.readinessScores[i] = Math.min(100, systemState.p1.readinessScores[i] + fillScaled);
                             } else {
-                                const drainTime = isCoasting
+                                const drainTime = (isCoasting || !hasConfidence)
                                     ? systemState.parameters.fsm.coastDrainTimeMs
                                     : systemState.parameters.fsm.releaseTimeMs;
-                                const drainAmount = (1 / drainTime) * dt;
-                                const coastScale = isCoasting
+                                const drainAmount = (100 / drainTime) * dt;
+                                const coastScale = (isCoasting || !hasConfidence)
                                     ? systemState.parameters.readiness.coastDrainMultiplier
                                     : 1.0;
                                 const drainScaled = drainAmount * systemState.parameters.readiness.drainMultiplier * coastScale;
@@ -1910,7 +1911,7 @@
                         if (last && fsmState !== 'IDLE') {
                             const isCoasting = (fsmState === 'COAST' || fsmState === 'COMMIT');
                             const drainTime = systemState.parameters.fsm.coastDrainTimeMs;
-                            const drainAmount = (1 / drainTime) * dt;
+                            const drainAmount = (100 / drainTime) * dt;
                             const drainScaled = drainAmount * systemState.parameters.readiness.drainMultiplier * systemState.parameters.readiness.coastDrainMultiplier;
                             systemState.p1.readinessScores[i] = Math.max(0, systemState.p1.readinessScores[i] - drainScaled);
 
@@ -1941,18 +1942,7 @@
                                 });
                                 systemState.p1.fsmStates[i] = 'COAST';
                             } else {
-                                // Terminal Drain reached: emit one IDLE frame to ensure pointerup before drop
-                                cursorData = FusionSchema.parse({
-                                    ...last,
-                                    fsmState: 'IDLE',
-                                    readinessScore: readiness,
-                                    skeletonAlpha: 0,
-                                    handIndex: i,
-                                    landmarks: last.landmarks || [],
-                                    timestamp: now,
-                                    uiNormX: last.screenX / (systemState.p0.videoBounds?.width || 1280),
-                                    uiNormY: last.screenY / (systemState.p0.videoBounds?.height || 720)
-                                });
+                                // Terminal Drain reached
                                 systemState.p1.lastData[i] = null;
                                 systemState.p1.fsmStates[i] = 'IDLE';
                                 if (systemState.fsm.primaryHandIndex === i) systemState.fsm.primaryHandIndex = null;
@@ -2041,7 +2031,7 @@
                     },
                     'SETTINGS': {
                         header: 'Phase 4: SETTINGS ⚙️ ➡ 📈',
-                        body: 'Navigator access granted. <span class="tutorial-highlight">Release to interact</span> with the UI, then use the panels to tune parameters. This tutorial will self-destruct in 8s.'
+                        body: 'Navigator access granted. Use the panels to tune parameters. This tutorial will self-destruct in 8s.'
                     }
                 };
                 this.isVisible = false;
@@ -2267,27 +2257,15 @@
         window.hfoEval = {
             getReadinessScores: () => [...systemState.p1.readinessScores],
             setReadinessScore: (handIndex, value) => {
-                systemState.p1.readinessScores[handIndex] = Math.max(0, Math.min(1, value));
-                return systemState.p1.readinessScores[handIndex];
-            },
-            setReadinessParams: (params) => {
-                systemState.parameters.readiness = { ...systemState.parameters.readiness, ...params };
-                return { ...systemState.parameters.readiness };
-            },
-            fillReadiness: (handIndex, dt) => {
-                const fillAmount = (1 / systemState.parameters.fsm.chargeTimeMs) * dt;
-                const fillScaled = fillAmount * systemState.parameters.readiness.fillMultiplier;
-                systemState.p1.readinessScores[handIndex] = Math.min(1, systemState.p1.readinessScores[handIndex] + fillScaled);
+                systemState.p1.readinessScores[handIndex] = Math.max(0, Math.min(100, value));
                 return systemState.p1.readinessScores[handIndex];
             },
             drainReadiness: (handIndex, dt, useCoast = true) => {
                 const drainTime = useCoast
                     ? systemState.parameters.fsm.coastDrainTimeMs
                     : systemState.parameters.fsm.releaseTimeMs;
-                const drainAmount = (1 / drainTime) * dt;
-                const coastScale = useCoast ? systemState.parameters.readiness.coastDrainMultiplier : 1.0;
-                const drainScaled = drainAmount * systemState.parameters.readiness.drainMultiplier * coastScale;
-                systemState.p1.readinessScores[handIndex] = Math.max(0, systemState.p1.readinessScores[handIndex] - drainScaled);
+                const drainAmount = (100 / drainTime) * dt;
+                systemState.p1.readinessScores[handIndex] = Math.max(0, systemState.p1.readinessScores[handIndex] - drainAmount);
                 return systemState.p1.readinessScores[handIndex];
             }
         };
@@ -2425,7 +2403,7 @@
                             if (systemState.parameters.devMode) console.warn("[P3] SetPointerCapture failed:", e);
                         }
                     }
-                    dispatchToHydraHydrant(target, new PointerEvent('pointerdown', eventInit));
+                    dispatchToHydraHydrant(target, new PointerEvent('pointerdown', eventInit), true);
                 }
 
                 dispatchToHydraHydrant(target, new PointerEvent('pointermove', eventInit));
@@ -2468,21 +2446,12 @@
             });
         }
 
-        // --- TEST HARNESS: Expose injector for Playwright guards ---
-        if (!window.hfoTestHarness) window.hfoTestHarness = {};
-        window.hfoTestHarness.injectPointers = () => {
-            try {
-                w3cPointerNematocystInjector();
-            } catch (e) {
-                if (systemState.parameters.devMode) console.warn('[P3] Test harness inject failed:', e);
-            }
-        };
-
         /**
-         * 🔱 HYDRA HYDRANT: Payload Delivery Mechanism (W3C PointerEvents)
+         * 🔱 HYDRA HYDRANT: Payload Delivery Mechanism (Formalized V20.8 Pulse Strategy)
          * Optimized for React/Excalidraw and universal target discovery.
+         * @param {Boolean} isPulse - If true, triggers immediate click sequence.
          */
-        function dispatchToHydraHydrant(t, e) {
+        function dispatchToHydraHydrant(t, e, isPulse = false) {
             if (!t) return;
 
             // V28: Target Normalization (Find nearest interactive ancestor if child hit)
@@ -2502,25 +2471,54 @@
                 return el;
             };
 
+            const control = findControl(t);
             t.dispatchEvent(e);
 
-            // Focus Priming on Down (W3C only)
-            if (e.type === 'pointerdown') {
-                const control = findControl(t);
-                if (control?.focus) control.focus();
-            }
-
-            // Touchscreen emulation (pointerup -> click synthesis)
-            if (e.type === 'pointerup') {
-                const control = findControl(t);
-                const clickEv = new MouseEvent('click', {
+            // Legacy Mouse Simulation & V20.8 Pulse Sequence
+            if (e.type === 'pointerdown' || e.type === 'pointerup') {
+                const mouseType = e.type === 'pointerdown' ? 'mousedown' : 'mouseup';
+                const mouseEv = new MouseEvent(mouseType, {
                     bubbles: true,
                     cancelable: true,
                     clientX: e.clientX,
                     clientY: e.clientY,
+                    buttons: e.buttons,
+                    button: 0,
                     view: t.ownerDocument.defaultView || window
                 });
-                control.dispatchEvent(clickEv);
+                t.dispatchEvent(mouseEv);
+
+                // Focus Priming on Down
+                if (e.type === 'pointerdown') {
+                    if (control.focus) control.focus();
+                }
+
+                // V20.8 "Pulse Trigger": Force click on DOWN if pulse is active
+                if (isPulse && e.type === 'pointerdown') {
+                    // 10ms settle buffer for React to finalize hover/focus state
+                    setTimeout(() => {
+                        if (control.click) {
+                            control.click();
+                        } else {
+                            const clickEv = new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                clientX: e.clientX,
+                                clientY: e.clientY,
+                                view: t.ownerDocument.defaultView || window
+                            });
+                            control.dispatchEvent(clickEv);
+                        }
+                        if (systemState.parameters.devMode) console.log(`[P3] PULSE CLICK triggered on ${control.tagName}`);
+                    }, 10);
+                }
+
+                // Legacy Release Click (Fallback/Safety)
+                if (e.type === 'pointerup' && !isPulse) {
+                    setTimeout(() => {
+                        if (control.click) control.click();
+                    }, 10);
+                }
             }
         }
 
@@ -2743,8 +2741,8 @@
         }
 
         function drawElementalJuice(ctx, landmarks, readinessScore, canvasWidth, canvasHeight) {
-            if (readinessScore <= 0.05) return;
-            const intensity = readinessScore;
+            if (readinessScore <= 5) return;
+            const intensity = readinessScore / 100;
             const time = Date.now();
 
             ctx.save();
@@ -2824,10 +2822,10 @@
                                 </div>
                                 <div class="m3-stat">
                                     <span>Readiness Score</span>
-                                    <span>${((cursor.readinessScore || 0) * 100).toFixed(1)}%</span>
+                                    <span>${(cursor.readinessScore || 0).toFixed(1)}%</span>
                                 </div>
                                 <div class="m3-progress-container">
-                                    <div class="m3-progress-bar" style="width: ${(cursor.readinessScore || 0) * 100}%; background: ${stateColor}"></div>
+                                    <div class="m3-progress-bar" style="width: ${cursor.readinessScore || 0}%; background: ${stateColor}"></div>
                                 </div>
                                 <div class="m3-stat">
                                     <span>Rod Sync (Projected)</span>
@@ -2891,7 +2889,7 @@
                             if (!systemState.ui.history[i]) systemState.ui.history[i] = { zNorm: [], readiness: [] };
 
                             systemState.ui.history[i].zNorm.push(nz);
-                            systemState.ui.history[i].readiness.push(c.readinessScore);
+                            systemState.ui.history[i].readiness.push(c.readinessScore / 100);
                             if (systemState.ui.history[i].zNorm.length > 88) { // Pareto-length history
                                 systemState.ui.history[i].zNorm.shift();
                                 systemState.ui.history[i].readiness.shift();
@@ -2980,8 +2978,8 @@
                             const bHistory = systemState.ui.history[i].readiness;
                             drawSparkline(ctx, rgX - 5, rgY, rgW + 10, rgH, bHistory, '#D0BCFF44');
 
-                            const highY = rgY + rgH * (1 - systemState.parameters.fsm.hysteresisHigh);
-                            const lowY = rgY + rgH * (1 - systemState.parameters.fsm.hysteresisLow);
+                            const highY = rgY + rgH * (1 - systemState.parameters.fsm.hysteresisHigh / 100);
+                            const lowY = rgY + rgH * (1 - systemState.parameters.fsm.hysteresisLow / 100);
                             const targetY = rgY + rgH * (1 - 0.88); // 88% HIVE target
 
                             ctx.strokeStyle = '#555';
@@ -2995,7 +2993,7 @@
                             ctx.beginPath(); ctx.moveTo(rgX - 5, targetY); ctx.lineTo(rgX + rgW + 5, targetY); ctx.stroke();
                             ctx.setLineDash([]);
 
-                            const fillH = rgH * readinessScore;
+                            const fillH = rgH * (readinessScore / 100);
                             ctx.fillStyle = c.fsmState === 'READY' ? '#FFD700' : (c.fsmState === 'COMMIT' ? '#FF4136' : '#D0BCFF');
                             ctx.fillRect(rgX, rgY + rgH - fillH, rgW, fillH);
 
@@ -3003,10 +3001,10 @@
                             ctx.fillStyle = '#AAA';
                             ctx.font = '9px Roboto';
                             ctx.textAlign = 'center';
-                            ctx.fillText(`${(systemState.parameters.fsm.hysteresisHigh * 100).toFixed(0)}/${(systemState.parameters.fsm.hysteresisLow * 100).toFixed(0)} Z`, gageX + gageW / 2, gageY - 5);
+                            ctx.fillText(`80/64 Z`, gageX + gageW / 2, gageY - 5);
                             ctx.fillText(`88% HFO`, rgX + rgW / 2, rgY - 5);
                             ctx.fillText(`Z: ${nz.toFixed(2)}`, gageX + gageW / 2, gageY + gageH + 12);
-                            ctx.fillText(`READINESS: ${(readinessScore * 100).toFixed(0)}%`, rgX + rgW / 2, rgY + rgH + 12);
+                            ctx.fillText(`READINESS: ${readinessScore.toFixed(0)}%`, rgX + rgW / 2, rgY + rgH + 12);
                             ctx.fillText(`FSM: ${c.fsmState}`, x, y + radius + 35);
                         }
                     });
@@ -3138,20 +3136,20 @@
 
                         // Fill
                         ctx.fillStyle = (node.id === 'COAST' ? '#FFA500' : '#FFD700');
-                        ctx.fillRect(nx - nodeWidth / 2, ny + 22, nodeWidth * charge, 6);
+                        ctx.fillRect(nx - nodeWidth / 2, ny + 22, nodeWidth * (charge / 100), 6);
 
                         // HFO Threshold Markers (80/64)
                         ctx.strokeStyle = '#fff';
                         ctx.lineWidth = 1;
                         ctx.beginPath();
-                        ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * high, ny + 20);
-                        ctx.lineTo(nx - nodeWidth / 2 + nodeWidth * high, ny + 30);
+                        ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * (high / 100), ny + 20);
+                        ctx.lineTo(nx - nodeWidth / 2 + nodeWidth * (high / 100), ny + 30);
                         ctx.stroke();
 
                         ctx.strokeStyle = '#444';
                         ctx.beginPath();
-                        ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * low, ny + 20);
-                        ctx.lineTo(nx - nodeWidth / 2 + nodeWidth * low, ny + 30);
+                        ctx.moveTo(nx - nodeWidth / 2 + nodeWidth * (low / 100), ny + 20);
+                        ctx.lineTo(nx - nodeWidth / 2 + nodeWidth * (low / 100), ny + 30);
                         ctx.stroke();
                     }
                 });
@@ -3414,8 +3412,8 @@
 
                 const fFSM = gui.addFolder('P2: Sharding & Hysteresis (Dev)');
                 gui._hfoFolders.fFSM = fFSM;
-                fFSM.add(systemState.parameters.fsm, 'hysteresisHigh', 0, 1, 0.01).name('Ready Threshold (0-1)');
-                fFSM.add(systemState.parameters.fsm, 'hysteresisLow', 0, 1, 0.01).name('Idle Threshold (0-1)');
+                fFSM.add(systemState.parameters.fsm, 'hysteresisHigh', 0, 100).name('Ready Threshold');
+                fFSM.add(systemState.parameters.fsm, 'hysteresisLow', 0, 100).name('Idle Threshold');
                 const ctrlCharge = fFSM.add(systemState.parameters.fsm, 'chargeTimeMs', 10, 1000).name('Charge Time (ms)');
                 const ctrlRelease = fFSM.add(systemState.parameters.fsm, 'releaseTimeMs', 10, 1000).name('Release Time (ms)');
                 const ctrlCoastDrain = fFSM.add(systemState.parameters.fsm, 'coastDrainTimeMs', 10, 3000).name('Coast Drain (ms)');
@@ -3423,6 +3421,7 @@
                 P7Navigator.applyTooltip(ctrlRelease, 'Readiness energy drain time when facing away.');
                 P7Navigator.applyTooltip(ctrlCoastDrain, 'Readiness drain time during COAST/tracking loss.');
                 fFSM.add(systemState.parameters.fsm, 'tensionMs', 0, 500).name('Tension/Coyote (ms)');
+                fFSM.add(systemState.parameters.fsm, 'commitExitDelayMs', 0, 1000).name('Sticky Exit (ms)');
 
                 const fReadiness = gui.addFolder('P2: Readiness Energy');
                 gui._hfoFolders.fReadiness = fReadiness;

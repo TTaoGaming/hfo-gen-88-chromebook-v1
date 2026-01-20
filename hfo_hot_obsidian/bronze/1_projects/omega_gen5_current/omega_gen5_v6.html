@@ -1,7 +1,7 @@
 <!-- Medallion: Bronze | Mutation: 0% | HIVE: V -->
 <!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
 <!-- OMEGA V39: UI POLISH & PROGRESSIVE DISCLOSURE (KIOSK MODE) -->
-<!-- Goal: Implement Essentials/Developer toggle for progressive disclosure. 
+<!-- Goal: Implement Essentials/Developer toggle for progressive disclosure.
      Simplify default Golden Layout for a clean Kiosk experience. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1084,7 +1084,7 @@
 
                             // Update 21 landmark spheres
                             c.landmarks.forEach((lm, lIndex) => {
-                                // V24.18 Perspective Alignment: 
+                                // V24.18 Perspective Alignment:
                                 // projectToWorld correctly handles the perspective shift for depth.
                                 // V28.5 HARDENED: Use landmarks directly (already mirrored/scaled in Fabric)
                                 const targetZ = lm.z * 1.5;
@@ -3766,14 +3766,14 @@
                 wrap.innerHTML = `
                     <div class="hero-view-container">
                         <video id="video-feed" autoplay playsinline></video>
-                        
+
                         <!-- EXCALIDRAW OVERLAY LAYER [V20.1: Dark Mode Hardening] -->
                         ${isFlagEnabled('ui-excalidraw') ? `
                         <!-- V32: RESTORED INTERACTION (GLASS WALL MANAGED VIA Z-INDEX) -->
                         <div id="excalidraw-hero-overlay" style="position:absolute; width:100%; height:100%; z-index:4; opacity: 0.8; display:none; pointer-events: auto;">
-                            <iframe 
+                            <iframe
                                 id="excalidraw-iframe"
-                                src="excalidraw_v20_wrapper.html" 
+                                src="excalidraw_v20_wrapper.html"
                                 style="width:100%; height:100%; border:none; filter: contrast(1.1) brightness(0.9); background: transparent;"
                                 allow="clipboard-read; clipboard-write; display-capture">
                             </iframe>
@@ -3782,7 +3782,7 @@
 
                         <div id="babylon-juice-overlay" style="position:absolute; width:100%; height:100%; pointer-events:none; z-index:9;"></div>
                         <canvas id="overlay-canvas" style="z-index:11;"></canvas>
-                        
+
                         <!-- 📖 V30 TACTICAL TUTORIAL -->
                         <div id="hfo-tutorial" class="tutorial-overlay">
                             <div class="m3-label" id="tut-header">Tactical Instruction</div>
@@ -3914,8 +3914,8 @@
                 wrap.className = 'component-container';
                 wrap.style.background = '#000';
                 wrap.innerHTML = `
-                    <iframe 
-                        src="./excalidraw_v20_wrapper.html" 
+                    <iframe
+                        src="./excalidraw_v20_wrapper.html"
                         style="width:100%; height:100%; border:none; opacity: 0.8; filter: contrast(1.2) brightness(0.8);">
                     </iframe>
                     <div style="position:absolute; top:10px; right:10px; color:#555; font-size:9px; pointer-events:none;">OBSIDIAN MIRROR V8.0</div>

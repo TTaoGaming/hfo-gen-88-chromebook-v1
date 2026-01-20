@@ -1941,18 +1941,7 @@
                                 });
                                 systemState.p1.fsmStates[i] = 'COAST';
                             } else {
-                                // Terminal Drain reached: emit one IDLE frame to ensure pointerup before drop
-                                cursorData = FusionSchema.parse({
-                                    ...last,
-                                    fsmState: 'IDLE',
-                                    readinessScore: readiness,
-                                    skeletonAlpha: 0,
-                                    handIndex: i,
-                                    landmarks: last.landmarks || [],
-                                    timestamp: now,
-                                    uiNormX: last.screenX / (systemState.p0.videoBounds?.width || 1280),
-                                    uiNormY: last.screenY / (systemState.p0.videoBounds?.height || 720)
-                                });
+                                // Terminal Drain reached
                                 systemState.p1.lastData[i] = null;
                                 systemState.p1.fsmStates[i] = 'IDLE';
                                 if (systemState.fsm.primaryHandIndex === i) systemState.fsm.primaryHandIndex = null;
@@ -2041,7 +2030,7 @@
                     },
                     'SETTINGS': {
                         header: 'Phase 4: SETTINGS ⚙️ ➡ 📈',
-                        body: 'Navigator access granted. <span class="tutorial-highlight">Release to interact</span> with the UI, then use the panels to tune parameters. This tutorial will self-destruct in 8s.'
+                        body: 'Navigator access granted. Use the panels to tune parameters. This tutorial will self-destruct in 8s.'
                     }
                 };
                 this.isVisible = false;

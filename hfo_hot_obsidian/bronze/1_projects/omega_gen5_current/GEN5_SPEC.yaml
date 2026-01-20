@@ -1,0 +1,54 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen5 Specification (Hard Requirements)
+
+version: 1
+scope: omega_gen5_current
+last_updated: 2026-01-20
+
+requirements:
+  hard_build_gate:
+    description: "Hard build gate for lint/typecheck/format in CI; no exceptions."
+    policy:
+      lint: required
+      typecheck: required
+      format: required
+      exceptions: none
+    ci:
+      enforced: true
+      fail_on_error: true
+      artifacts:
+        - eslint
+        - typescript
+        - formatter
+
+  golden_replay_invariants:
+    description: "Golden replay + invariants form the anti-drift spine."
+    policy:
+      golden_replay: required
+      invariants: required
+      drift_tolerance: zero
+    references:
+      - replay/
+      - scripts/omega_gen5_excalidraw_replay.spec.ts
+      - scripts/omega_gen5_injector_harness.spec.ts
+
+  adaptive_performance_governor:
+    description: "Adaptive performance governor with FPS/thermal-safe tiers and GPU fallback."
+    policy:
+      fps_tiers: [15, 30, 60]
+      thermal_safe: required
+      gpu_fallback: required
+      degrade_strategy: "reduce effects, then disable heavy substrates"
+
+  adapter_contract_suite:
+    description: "Run the same trace against multiple target apps."
+    policy:
+      shared_trace: required
+      multi_target: required
+      targets:
+        - excalidraw
+        - internal_panels
+      invariants:
+        - pointer_injection
+        - coordinate_parity
+        - fsm_transitions
