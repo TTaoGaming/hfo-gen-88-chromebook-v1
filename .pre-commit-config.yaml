@@ -20,7 +20,7 @@ repos:
     stages: [pre-commit]
   - id: hfo-blackboard-purity
     name: HFO Blackboard Purity & Immutability
-    entry: bash scripts/hfo_precommit_time.sh blackboard-purity python3 scripts/blackboard_purity.py
+    entry: bash scripts/hfo_precommit_time.sh blackboard-purity python3 scripts/blackboard_purity.py --check-only --quiet
     language: system
     files: hot_obsidian_blackboard\.jsonl$
     always_run: true

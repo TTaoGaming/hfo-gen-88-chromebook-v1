@@ -6,6 +6,7 @@ import os
 import json
 import hashlib
 import sys
+import argparse
 from datetime import datetime
 
 BLACKBOARD_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
@@ -13,14 +14,56 @@ QUARANTINE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsi
 MANIFEST_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/blackboard_manifest.json"
 SECRET_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.hfo_secret"
 
+
+def _compute_sha256(path: str):
+    sha = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            sha.update(chunk)
+    return sha.hexdigest()
+
+
+def _read_manifest(path: str):
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, "r") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
 def get_secret():
     if os.path.exists(SECRET_PATH):
         with open(SECRET_PATH, "r") as f:
             return f.read().strip()
     return "HFO_DEFAULT_SECRET"
 
-def verify_and_quarantine():
+def verify_and_quarantine(*, quiet: bool = False, check_only: bool = False):
     if not os.path.exists(BLACKBOARD_PATH):
+        return True
+
+    if check_only:
+        blackboard_sha256 = _compute_sha256(BLACKBOARD_PATH)
+        manifest = _read_manifest(MANIFEST_PATH)
+        if manifest is None:
+            if not quiet:
+                print("❌ [PURITY]: Manifest missing/unreadable; run scripts/blackboard_purity.py to regenerate.")
+            return False
+
+        status = manifest.get("status")
+        if status != "PASS":
+            if not quiet:
+                print(f"❌ [PURITY]: Manifest status is {status!r}; refusing push.")
+            return False
+
+        if manifest.get("blackboard_sha256") != blackboard_sha256:
+            if not quiet:
+                print("❌ [PURITY]: Blackboard changed since last manifest generation.")
+                print("💡 [PURITY]: Stop blackboard writers, then run: python3 scripts/blackboard_purity.py")
+            return False
+
+        if not quiet:
+            print("✅ [PURITY]: Blackboard matches manifest (check-only).")
         return True
 
     secret = get_secret()
@@ -45,7 +88,8 @@ def verify_and_quarantine():
             # --- SEAL RECOGNITION ---
             # A SEAL signal resets the validation chain to allow proceeding after documented breaches.
             if entry.get("phase") == "SIGNAL" and entry.get("query") == "RED_TRUTH_SEAL":
-                print(f"⚓ [PURITY]: RED_TRUTH_SEAL found at line {i+1}. Restarting chain validation.")
+                if not quiet:
+                    print(f"⚓ [PURITY]: RED_TRUTH_SEAL found at line {i+1}. Restarting chain validation.")
                 last_sig = entry.get("signature")
                 last_timestamp = None # Reset chronology check for new epoch? Optional.
                 seal_found = True
@@ -58,7 +102,8 @@ def verify_and_quarantine():
             # Check for Immutability Breach (Signatures/Chain)
             sig = entry.get("signature")
             if not sig:
-                print(f"❌ [PURITY]: Unsigned entry at line {i+1}")
+                if not quiet:
+                    print(f"❌ [PURITY]: Unsigned entry at line {i+1}")
                 # We don't quarantine yet, just mark as breach
                 immutability_breach = True
             else:
@@ -77,7 +122,8 @@ def verify_and_quarantine():
                         expected = expected_legacy
 
                 if sig != expected:
-                    print(f"❌ [PURITY]: Chain fracture at line {i+1}. TAMPER DETECTION.")
+                    if not quiet:
+                        print(f"❌ [PURITY]: Chain fracture at line {i+1}. TAMPER DETECTION.")
                     immutability_breach = True
 
                 last_sig = sig
@@ -90,7 +136,8 @@ def verify_and_quarantine():
                     clean_ts = ts_str.replace('Z', '')
                     current_ts = datetime.fromisoformat(clean_ts)
                     if last_timestamp and current_ts < last_timestamp:
-                        print(f"❌ [PURITY]: Chronological breach at line {i+1} ({ts_str} < {last_timestamp.isoformat()})")
+                        if not quiet:
+                            print(f"❌ [PURITY]: Chronological breach at line {i+1} ({ts_str} < {last_timestamp.isoformat()})")
                         immutability_breach = True
                     last_timestamp = current_ts
                 except ValueError:
@@ -99,7 +146,8 @@ def verify_and_quarantine():
             valid_lines.append(line)
 
         except json.JSONDecodeError:
-            print(f"⚠️ [PURITY]: Malformed JSON at line {i+1}. Quarantining...")
+            if not quiet:
+                print(f"⚠️ [PURITY]: Malformed JSON at line {i+1}. Quarantining...")
             with open(QUARANTINE_PATH, 'a') as qf:
                 qentry = {
                     "quarantine_ts": datetime.utcnow().isoformat() + "Z",
@@ -115,7 +163,8 @@ def verify_and_quarantine():
         with open(BLACKBOARD_PATH, 'w') as f:
             for vline in valid_lines:
                 f.write(vline + "\n")
-        print(f"✅ [PURITY]: {quarantined_count} malformed entries moved to quarantine.")
+        if not quiet:
+            print(f"✅ [PURITY]: {quarantined_count} malformed entries moved to quarantine.")
 
     # Generate Master Hash for Git Ops
     with open(BLACKBOARD_PATH, 'rb') as f:
@@ -147,14 +196,25 @@ def verify_and_quarantine():
 
     # Block Git commit if there's an immutability breach
     if immutability_breach:
-        print("🚨 [PURITY]: Immutability breach detected. Blackboard has been edited or tampered with.")
-        print("💡 [PURITY]: To resume the chain, you must log a 'SIGNAL: RED_TRUTH_ANCHOR' via the Hub.")
+        if not quiet:
+            print("🚨 [PURITY]: Immutability breach detected. Blackboard has been edited or tampered with.")
+            print("💡 [PURITY]: To resume the chain, you must log a 'SIGNAL: RED_TRUTH_ANCHOR' via the Hub.")
         return False
 
     return True
 
 if __name__ == "__main__":
-    if not verify_and_quarantine():
+    parser = argparse.ArgumentParser(description="HFO Blackboard Purity & Immutability Sentinel")
+    parser.add_argument("--check-only", action="store_true", help="Verify manifest matches blackboard; do not rewrite files")
+    parser.add_argument("--quiet", action="store_true", help="Suppress per-line diagnostics")
+    args = parser.parse_args()
+
+    if not verify_and_quarantine(quiet=args.quiet, check_only=args.check_only):
         sys.exit(1)
-    print("✅ [PURITY]: Blackboard Integrity Verified. Manifest updated.")
+
+    if not args.quiet:
+        if args.check_only:
+            print("✅ [PURITY]: Blackboard Integrity Verified (check-only).")
+        else:
+            print("✅ [PURITY]: Blackboard Integrity Verified. Manifest updated.")
     sys.exit(0)
