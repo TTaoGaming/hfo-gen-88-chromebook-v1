@@ -22,8 +22,11 @@
     "test:omega:cdp": "HFO_CDP_URL=${HFO_CDP_URL:-http://localhost:9222} npx playwright test",
     "test:omega:replay": "npx playwright test scripts/omega_golden_master_replay.spec.ts --project=chromium",
     "test:omega:fsm": "npx playwright test scripts/omega_gen5_video_fsm.spec.ts --project=chromium",
-    "test:omega:fast": "npm run test:omega:replay && npm run test:omega:fsm",
+    "test:omega:readiness": "npx playwright test scripts/omega_gen5_readiness_drain.spec.ts --project=chromium",
+    "test:omega:energy": "npx playwright test scripts/omega_gen5_readiness_energy.spec.ts --project=chromium",
+    "test:omega:fast": "npm run test:omega:replay && npm run test:omega:fsm && npm run test:omega:readiness && npm run test:omega:energy",
     "test:omega:e2e": "npm run test:omega",
+    "cleanup:omega": "bash scripts/omega_gen5_cleanup.sh",
     "prepare": "husky"
   },
   "devDependencies": {
