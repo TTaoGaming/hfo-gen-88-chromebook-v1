@@ -45,6 +45,21 @@ package-lock.json
 .pre-commit-config.yaml.bak
 *.tmp
 *.log
+/.serena/
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.pnpm-store/
+.yarn/
+.turbo/
+.parcel-cache/
 
 # Workspace Specific
 .env
@@ -79,3 +94,14 @@ hfo_hot_obsidian/4_archive/stigmergy_anchors/
 *.jsonl
 *.jsonl.receipt.json
 *.jsonl.bak*
+
+# Cold archive imports (ignore for batch safety)
+hfo_cold_obsidian/bronze/1_projects/
+hfo_cold_obsidian/bronze/3_resources/reports/
+hfo_cold_obsidian/bronze/3_resources/para/
+hfo_cold_obsidian/bronze/3_resources/projects_archive_2026_01_18/
+hfo_cold_obsidian/bronze/4_archive/
+hfo_cold_obsidian/bronze/4_archive/obsidian2025_moved/
+
+# Local Drive vault link
+Obsidian2025
