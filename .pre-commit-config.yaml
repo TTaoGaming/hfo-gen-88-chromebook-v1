@@ -11,12 +11,20 @@ repos:
 # HFO Medallion Flow Governance
 - repo: local
   hooks:
+  - id: hfo-fast-suite
+    name: HFO Fast Suite (pre-commit)
+    entry: bash scripts/hfo_precommit_time.sh fast-tests npm run test:fast
+    language: system
+    pass_filenames: false
+    always_run: true
+    stages: [pre-commit]
   - id: hfo-blackboard-purity
     name: HFO Blackboard Purity & Immutability
-    entry: python3 scripts/blackboard_purity.py
-    language: python
+    entry: bash scripts/hfo_precommit_time.sh blackboard-purity python3 scripts/blackboard_purity.py
+    language: system
     files: hot_obsidian_blackboard\.jsonl$
     always_run: true
+    stages: [pre-push]
   - id: hfo-governance-check
     name: HFO Governance Header Check
     entry: python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/hfo_governance_check.py
@@ -29,9 +37,10 @@ repos:
     files: hfo_hot_obsidian/(silver|gold|hfo)/.*$
   - id: hfo-theater-sentinel
     name: HFO AI Theater Sentinel
-    entry: python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/temporal_sentinel.py
-    language: python
+    entry: bash scripts/hfo_precommit_time.sh theater-sentinel python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/temporal_sentinel.py
+    language: system
     always_run: true
+    stages: [pre-push]
   - id: hfo-medallion-guard
     name: HFO Medallion Transition Guard
     entry: python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/medallion_guard.py
@@ -39,16 +48,19 @@ repos:
     files: ^(hfo_cold_obsidian|hfo_hot_obsidian/silver|hfo_hot_obsidian/gold)/.*$
   - id: hfo-orchestration-hub-hardgate
     name: HFO P5 HardGate Orchestration Hub Check
-    entry: bash -c 'PYTHONPATH=/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/orchestration_hub_archive_2026_01_18/hfo_orchestration_hub.py p5'
+    entry: bash scripts/hfo_precommit_time.sh p5-hardgate bash -c 'PYTHONPATH=/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/orchestration_hub_archive_2026_01_18/hfo_orchestration_hub.py p5'
     language: system
     always_run: true
+    stages: [pre-push]
   - id: hfo-file-defense-audit
     name: HFO File-Level Defensive Audit
-    entry: bash -c 'PYTHONPATH=/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/orchestration_hub_archive_2026_01_18/hfo_orchestration_hub.py p5'
+    entry: bash scripts/hfo_precommit_time.sh file-defense bash -c 'PYTHONPATH=/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python /home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/orchestration_hub_archive_2026_01_18/hfo_orchestration_hub.py p5'
     language: system
     files: \.(py|ts|js|html|yaml|md)$
+    stages: [pre-push]
   - id: hfo-omega-fast-regression
     name: HFO Omega Fast Regression (Replay + FSM)
-    entry: bash /home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/hfo_omega_fast_regression.sh
+    entry: bash scripts/hfo_precommit_time.sh omega-fast bash /home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/hfo_omega_fast_regression.sh
     language: system
     always_run: true
+    stages: [pre-push]
