@@ -102,6 +102,42 @@
 				"showReuseMessage": false,
 				"clear": false
 			}
+		},
+		{
+			"label": "GitOps Batcher Once (No Push)",
+			"type": "shell",
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --no-push",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-defense",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "GitOps Batcher Once (Push End)",
+			"type": "shell",
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --push --push-mode end",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-defense",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "GitOps Batcher Once (No Verify, Push End)",
+			"type": "shell",
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --no-verify --push --push-mode end",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-defense",
+				"showReuseMessage": false
+			}
 		}
 	]
 }

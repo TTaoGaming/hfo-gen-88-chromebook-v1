@@ -13,6 +13,7 @@ Why
 Safety defaults
 - Does NOT push by default (set --push or env HFO_GITOPS_PUSH=1).
 - Uses explicit batch paths from .gitops/batches.json.
+- Uses git hooks by default; pass --no-verify only when you intentionally want to bypass pre-commit.
 
 Usage
 - One-shot run (no push):
@@ -113,8 +114,11 @@ def _has_staged() -> bool:
     return bool(_git(["diff", "--cached", "--name-only"], check=True))
 
 
-def _commit(message: str) -> str:
-    _git(["commit", "-m", message], check=True)
+def _commit(message: str, *, no_verify: bool) -> str:
+    args = ["commit", "-m", message]
+    if no_verify:
+        args.append("--no-verify")
+    _git(args, check=True)
     return _git(["rev-parse", "HEAD"], check=True)
 
 
@@ -122,7 +126,22 @@ def _push(remote: str, branch: str) -> None:
     _git(["push", remote, branch], check=True)
 
 
-def run_once(config_path: Path, push: bool | None) -> int:
+def _current_branch() -> str:
+    # Empty string in detached HEAD.
+    return _git(["symbolic-ref", "--short", "-q", "HEAD"], check=False)
+
+
+def _ensure_remote_exists(remote: str) -> None:
+    _git(["remote", "get-url", remote], check=True)
+
+
+def run_once(
+    config_path: Path,
+    push: bool | None,
+    *,
+    push_mode: str,
+    no_verify: bool,
+) -> int:
     if not config_path.exists():
         _log(f"missing config: {config_path}")
         return 2
@@ -136,10 +155,27 @@ def run_once(config_path: Path, push: bool | None) -> int:
     env_push = os.environ.get("HFO_GITOPS_PUSH", "").strip() in {"1", "true", "TRUE", "yes", "YES"}
     do_push = env_push if push is None else bool(push)
 
+    if do_push:
+        try:
+            _ensure_remote_exists(remote)
+        except subprocess.CalledProcessError as e:
+            _log(f"remote '{remote}' not configured; refusing to push\n{e.stdout}")
+            return 1
+
+        current = _current_branch()
+        if not current:
+            _log("detached HEAD; refusing to push")
+            return 1
+        if current != branch:
+            _log(f"current branch '{current}' != configured branch '{branch}'; refusing to push")
+            return 1
+
     _set_show_untracked(show_untracked)
 
     # Keep status cheap.
     _log(f"start push={do_push} remote={remote} branch={branch} showUntracked={show_untracked}")
+
+    any_commits = False
 
     for b in batches:
         try:
@@ -160,14 +196,24 @@ def run_once(config_path: Path, push: bool | None) -> int:
                 _log(f"batch {b.id}: no staged changes; skip")
                 continue
 
-            sha = _commit(b.message)
+            sha = _commit(b.message, no_verify=no_verify)
             _log(f"batch {b.id}: committed {sha[:12]}")
 
-            if do_push:
+            any_commits = True
+
+            if do_push and push_mode == "each":
                 _push(remote, branch)
                 _log(f"batch {b.id}: pushed {remote}/{branch}")
         except subprocess.CalledProcessError as e:
             _log(f"batch {b.id}: ERROR\n{e.stdout}")
+            return 1
+
+    if do_push and push_mode == "end" and any_commits:
+        try:
+            _push(remote, branch)
+            _log(f"pushed {remote}/{branch}")
+        except subprocess.CalledProcessError as e:
+            _log(f"push ERROR\n{e.stdout}")
             return 1
 
     _log("done")
@@ -179,6 +225,18 @@ def main() -> int:
     ap.add_argument("--config", type=str, default=str(DEFAULT_CONFIG))
     ap.add_argument("--push", action="store_true")
     ap.add_argument("--no-push", action="store_true")
+    ap.add_argument(
+        "--no-verify",
+        action="store_true",
+        help="Bypass git commit hooks (use intentionally; default runs hooks).",
+    )
+    ap.add_argument(
+        "--push-mode",
+        type=str,
+        choices=["each", "end"],
+        default="each",
+        help="When pushing is enabled, push after each batch commit (each) or once at the end (end).",
+    )
     ap.add_argument("--interval-sec", type=int, default=0)
     args = ap.parse_args()
 
@@ -192,11 +250,21 @@ def main() -> int:
 
     interval = int(args.interval_sec)
     if interval <= 0:
-        return run_once(Path(args.config), push)
+        return run_once(
+            Path(args.config),
+            push,
+            push_mode=str(args.push_mode),
+            no_verify=bool(args.no_verify),
+        )
 
     interval = max(60, interval)
     while True:
-        rc = run_once(Path(args.config), push)
+        rc = run_once(
+            Path(args.config),
+            push,
+            push_mode=str(args.push_mode),
+            no_verify=bool(args.no_verify),
+        )
         # If an error happens, back off but keep looping.
         if rc != 0:
             _log(f"non-zero rc={rc}; sleeping {interval}s")
