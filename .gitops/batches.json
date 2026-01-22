@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "defaults": {
+    "push": false,
+    "remote": "origin",
+    "branch": "master",
+    "showUntracked": false
+  },
+  "batches": [
+    {
+      "id": "tracked-only",
+      "type": "tracked",
+      "message": "chore(gitops): tracked updates",
+      "paths": ["."]
+    },
+    {
+      "id": "root-entrypoints",
+      "type": "untracked",
+      "message": "chore(entrypoint): add active omega entrypoints",
+      "paths": [
+        "active_hfo_omega_entrypoint.html",
+        "active_hfo_omega_entrypoint.json",
+        "active_omega.html",
+        "active_omega.json"
+      ]
+    },
+    {
+      "id": "contracts",
+      "type": "untracked",
+      "message": "contracts: add zod schemas",
+      "paths": ["contracts/"]
+    },
+    {
+      "id": "gen6-core",
+      "type": "untracked",
+      "message": "gen6: add omega_gen6_current artifacts (v10/v11 + specs)",
+      "paths": [
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v11.html",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/GEN6_V11_PORT2_MIRROR_MAGUS_TRACER_SPEC_2026_01_21.yaml",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/GEN6_TRIPWIRE_THREAD_PLANCK_BABYLON_TRADE_STUDY_2026_01_21.md",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/GEN6_V12_TRIPWIRE_THREAD_PLANCK_BABYLON_SPEC_2026_01_21.yaml",
+        "scripts/omega_gen6_v10_diagnostic_tracer_bullet_venom.spec.ts",
+        "scripts/omega_gen6_v11_port2_tracer_venom.spec.ts",
+        "scripts/omega_gen6_v11_p2_gesture_language_base.spec.ts"
+      ]
+    }
+  ]
+}
