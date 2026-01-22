@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gen5 Sandbox Canvas App</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #05070c;
+            color: #eaeef7;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        }
+
+        #hud {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 10px;
+            border-radius: 8px;
+            backdrop-filter: blur(6px);
+        }
+
+        #hud small {
+            opacity: 0.8;
+            display: block;
+        }
+
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            touch-action: none;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="hud">
+        <div><strong>Sandbox Canvas</strong></div>
+        <small>Draw with pointer. Touch-action disabled.</small>
+        <small id="status">ready</small>
+    </div>
+    <canvas id="c"></canvas>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const status = document.getElementById('status');
+
+        const ctx = canvas.getContext('2d', { alpha: true });
+
+        function resize() {
+            const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+            canvas.width = Math.floor(window.innerWidth * dpr);
+            canvas.height = Math.floor(window.innerHeight * dpr);
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            drawBackground();
+        }
+
+        function drawBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            // Subtle grid
+            ctx.fillStyle = '#05070c';
+            ctx.fillRect(0, 0, w, h);
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = 1;
+            const step = 40;
+            for (let x = 0; x < w; x += step) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+            for (let y = 0; y < h; y += step) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+
+            // Title
+            ctx.fillStyle = 'rgba(234, 238, 247, 0.9)';
+            ctx.font = '600 18px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+            ctx.fillText('Gen5 Sandbox App (same-origin iframe)', 16, h - 20);
+        }
+
+        let activeId = null;
+        let last = null;
+
+        function posFromEvent(e) {
+            const rect = canvas.getBoundingClientRect();
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+
+        function strokeLine(a, b) {
+            ctx.strokeStyle = 'rgba(80, 170, 255, 0.95)';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+        }
+
+        canvas.addEventListener('pointerdown', (e) => {
+            canvas.setPointerCapture(e.pointerId);
+            activeId = e.pointerId;
+            last = posFromEvent(e);
+            status.textContent = `pointerdown id=${e.pointerId} type=${e.pointerType}`;
+
+            // dot
+            ctx.fillStyle = 'rgba(255, 140, 0, 0.9)';
+            ctx.beginPath();
+            ctx.arc(last.x, last.y, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            e.preventDefault();
+        }, { passive: false });
+
+        canvas.addEventListener('pointermove', (e) => {
+            if (activeId !== e.pointerId || !last) return;
+            const p = posFromEvent(e);
+            strokeLine(last, p);
+            last = p;
+            status.textContent = `pointermove id=${e.pointerId} (${Math.round(p.x)},${Math.round(p.y)})`;
+            e.preventDefault();
+        }, { passive: false });
+
+        function endPointer(e, label) {
+            if (activeId === e.pointerId) {
+                activeId = null;
+                last = null;
+            }
+            status.textContent = `${label} id=${e.pointerId}`;
+            e.preventDefault();
+        }
+
+        canvas.addEventListener('pointerup', (e) => endPointer(e, 'pointerup'), { passive: false });
+        canvas.addEventListener('pointercancel', (e) => endPointer(e, 'pointercancel'), { passive: false });
+
+        window.addEventListener('resize', resize);
+        resize();
+    </script>
+</body>
+
+</html>

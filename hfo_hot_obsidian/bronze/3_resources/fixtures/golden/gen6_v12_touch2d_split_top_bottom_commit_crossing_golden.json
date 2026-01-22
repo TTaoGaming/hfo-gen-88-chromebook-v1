@@ -1,0 +1,28 @@
+{
+  "schema": "hfo.gen6.golden.touch2d.v1",
+  "name": "gen6_v12_touch2d_split_top_bottom_commit_crossing",
+  "notes": {
+    "intent": "Simulate a COMMIT fingertip moving top→bottom across y=0.5 in uiNorm touch2d space.",
+    "expected": [
+      "zone_enter top",
+      "zone_exit top",
+      "zone_enter bottom",
+      "bottom enter maps to Space keypress payload"
+    ]
+  },
+  "cursorTemplate": {
+    "handIndex": 0,
+    "pointerId": 10,
+    "readinessScore": 0.95,
+    "fsmState": "COMMIT",
+    "uiNormX": 0.5
+  },
+  "frames": [
+    { "dt": 16, "now": 0, "uiNormY": 0.25 },
+    { "dt": 16, "now": 16, "uiNormY": 0.35 },
+    { "dt": 16, "now": 32, "uiNormY": 0.45 },
+    { "dt": 16, "now": 48, "uiNormY": 0.55 },
+    { "dt": 16, "now": 64, "uiNormY": 0.65 },
+    { "dt": 16, "now": 80, "uiNormY": 0.75 }
+  ]
+}

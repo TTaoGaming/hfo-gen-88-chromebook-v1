@@ -1,0 +1,72 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# GEN5 v12.1 Dino v1 Assimilation Spec (2026-01-21)
+#
+# Intent
+# - Create a Dino-focused Gen5 variant for rapid touchscreen/gesture substrate validation.
+# - Dino runs as a same-origin iframe adapter and is hot-swappable via the existing AppHost dropdown.
+# - Tie the HFO COMMIT FSM edge to a deterministic action for Dino: synthesize a Space keypress.
+#
+# Non-goals (for this Bronze pass)
+# - No new cross-port schema expansion (avoid breaking Contracts.AppManifestSchema).
+# - No cross-origin embedding.
+# - No heavy test runs on constrained hardware.
+#
+version: "v12.1"
+variant_id: "omega_gen5_v12_1_dino_v1"
+date: "2026-01-21"
+
+inputs:
+  control_surface:
+    - "W3C PointerEvents injection (P3)"
+    - "HFO FSM state COMMIT edge (IDLE_READY→COMMIT)"
+  action_binding:
+    commit_triggers:
+      - type: "keyboard"
+        key: "Space"
+        code: "Space"
+        target_app: "dino-v1"
+
+apps:
+  - appId: "dino-v1"
+    title: "Dino Runner (v1)"
+    kind: "iframe"
+    same_origin_required: true
+    entrypoint: "dino_v1_wrapper.html"
+    targetPolicy: "ACTIVE_APP_ONLY"
+    pointerAdapter: "standard"
+    runtime:
+      overlayKey: "dinoOverlay"
+      iframeKey: "dinoIframe"
+    behavior:
+      default_active_in_variant: true
+      commit_keypress_on_pointerdown_edge: true
+
+ui:
+  hot_swap:
+    mechanism: "Existing App dropdown wired to P7 AppHost activation"
+    requirement: "Dino appears as a separate dropdown option"
+  overlay_tuning:
+    keep:
+      - "opacity"
+      - "overscan/zoom"
+    note: "Must remain universal (not Dino-specific)."
+
+routing:
+  pointer_targeting:
+    flag: "flag-p3-target-active-app=true"
+    enforce: "ACTIVE_APP_ONLY for dino-v1"
+    constraint: "iframe hit-testing requires same-origin"
+
+implementation_artifacts:
+  - "hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v12_1_dino_v1.html"
+  - "hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/dino_v1_wrapper.html"
+
+acceptance:
+  - "Loading the variant shows the App dropdown with Dino present"
+  - "In ui-multiapp mode, Dino becomes active by default"
+  - "With p3-target-active-app enabled, pointer routing resolves into the Dino iframe"
+  - "On COMMIT edge, a Space keypress is dispatched into the Dino iframe (best-effort focus)"
+
+next_steps:
+  - "(Optional) Add a lightweight Playwright gate that asserts activation + resolveTargetAt inside Dino iframe"
+  - "If Space keypress is insufficient, adjust to ArrowUp or add a per-app key mapping layer (schema-safe)"
