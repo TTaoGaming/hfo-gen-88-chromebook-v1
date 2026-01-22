@@ -16,12 +16,13 @@ The **Thermal Throttling Mode** is a defensive performance layer designed for he
 
 The goal of this mechanism is to reduce GPU/CPU load while maintaining a "nice" and professional visual aesthetic. It avoids the "blocky" look of low-resolution scaling by optimizing the rendering pipeline itself.
 
-### 🛠️ Optimization Levers:
+### 🛠️ Optimization Levers
+
 - **Adaptive Frame Pacing**: Locks the UI refresh rate to a stable 30FPS or 45FPS instead of fluctuating towards 60FPS.
 - **Layer Pruning**: Automatically disables non-essential visual flair:
-    - Drop shadows on landing elements.
-    - Backdrop blurs (frosted glass effects).
-    - High-frequency particle or transition animations.
+  - Drop shadows on landing elements.
+  - Backdrop blurs (frosted glass effects).
+  - High-frequency particle or transition animations.
 - **Vector Path Simplification**: Reduces the complexity of SVG/Canvas path drawing for Port 2 (SHAPE) interactions.
 
 ---
@@ -30,7 +31,8 @@ The goal of this mechanism is to reduce GPU/CPU load while maintaining a "nice" 
 
 The most significant power savings come from reducing the workload on **Port 0 (SENSE)** landmark extraction. By downscaling the raw video input, we reduce the total pixels processed by the MediaPipe/TensorFlow models.
 
-### 📉 Downscaling Path:
+### 📉 Downscaling Path
+
 - **Standard (Default)**: HD (1280x720) or Full HD (1920x1080).
 - **Throttled Tier 1**: 480p (854x480). Optimized for balance between gesture precision and thermal output.
 - **Throttled Tier 2**: 360p (640x360). "Deep Throttle" mode for critical thermal events or low-battery scenarios.
@@ -48,7 +50,9 @@ The most significant power savings come from reducing the workload on **Port 0 (
 | `thermal_input_res` | String | `"auto"` | `hd` \| `480p` \| `360p` |
 
 ### Signal Architecture (Stigmergy)
+
 When `thermal_throttle_enabled` is true, Port 7 (NAVIGATE) broadcasts the state to all ports via the `hot_obsidian_blackboard.jsonl`:
+
 ```json
 {"timestamp": "2026-01-20T...", "agent": "P7_NAVIGATE", "signal": "THERMAL_THROTTLE_LOCK", "state": "ACTIVE", "tier": "480p_OPTIMIZED"}
 ```
@@ -56,6 +60,7 @@ When `thermal_throttle_enabled` is true, Port 7 (NAVIGATE) broadcasts the state 
 ---
 
 ## 🏁 Next Steps for Swarm
+
 1. **P0 Update**: Implement resolution-switching logic in the Mediapipe wrapper.
 2. **P3/P5 Audit**: Ensure that pointer precision scales correctly with lower input resolutions to avoid "coordinate drift."
 3. **UI Integration**: Add a "Thermal Saver" toggle to the Omega Gen 5 settings panel.
