@@ -28,6 +28,8 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 - `COLD_START.md`: Resurrection protocols.
 - `ROOT_GOVERNANCE.md`: This manifest.
 - `hfo_mcp_gateway_hub.py`: Root shim delegating to the current Alpha MCP Gateway Hub.
+- `active_hfo_omega_entrypoint.html` / `active_hfo_omega_entrypoint.json`: Canonical Omega launcher entrypoint (safe target forwarder).
+- `active_omega.html` / `active_omega.json`: Legacy Omega launcher shim (kept for backward compatibility).
 - `hfo_cold_obsidian/BOOK_OF_BLOOD_GRUDGES.md` (+ `.receipt.json`): P5 seal file (symlinked to Cold Bronze reports/receipts).
 - `package.json` / `tsconfig.json`: Essential system and project configurations.
 - `.gitignore`: Git exclusion rules.

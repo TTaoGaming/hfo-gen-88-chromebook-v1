@@ -7,8 +7,9 @@ DB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo
 def init_db():
     print(f"🧬 [ALPHA] Initializing Actor State Schema in {DB_PATH}...")
     try:
+        os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
         con = duckdb.connect(database=DB_PATH)
-        
+
         # Create actor_states table for stateful persistence
         con.execute("""
             CREATE TABLE IF NOT EXISTS actor_states (
@@ -19,7 +20,7 @@ def init_db():
                 version INTEGER DEFAULT 1
             );
         """)
-        
+
         # Create mission_journal for event sourcing
         con.execute("""
             CREATE TABLE IF NOT EXISTS mission_journal (
@@ -30,7 +31,7 @@ def init_db():
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         """)
-        
+
         print("✅ [ALPHA] Schema Initialized: actor_states, mission_journal.")
         con.close()
     except Exception as e:

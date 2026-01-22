@@ -36,7 +36,7 @@
 		{
 			"label": "Port 5: Forensic Audit (Auto Close)",
 			"type": "shell",
-			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5",
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py p5",
 			"isBackground": true,
 			"problemMatcher": [],
 			"group": {
@@ -59,7 +59,35 @@
 		{
 			"label": "Port 5: Forensic Audit (V32 Report)",
 			"type": "shell",
-			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py p5"
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py p5"
+		},
+		{
+			"label": "Gen5 Local Server",
+			"type": "shell",
+			"command": "python3",
+			"args": [
+				"scripts/hfo_threaded_server.py"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Resource Shepherd Daemon",
+			"type": "shell",
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_resource_shepherd_daemon.py --interval-sec 300",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "dedicated",
+				"group": "hfo-defense",
+				"showReuseMessage": false,
+				"clear": false
+			},
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
 		}
 	]
 }

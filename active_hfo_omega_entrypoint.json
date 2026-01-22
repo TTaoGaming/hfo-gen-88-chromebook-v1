@@ -1,0 +1,25 @@
+{
+    "_provenance": {
+        "medallion": "bronze",
+        "mutation_score": 0,
+        "hive": "V"
+    },
+    "medallion": "bronze",
+    "pattern": "active_hfo_omega_entrypoint",
+    "active": {
+        "thread": "OMEGA",
+        "gen": "gen5",
+        "baseline": {
+            "path": "/hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v12.html",
+            "defaultFlags": {
+                "flag-engine-babylon": "false",
+                "flag-engine-canvas": "true",
+                "flag-disable-camera": "true",
+                "flag-ui-multiapp": "true",
+                "flag-ui-games": "false",
+                "flag-p3-target-active-app": "true",
+                "flag-ui-intent": "true"
+            }
+        }
+    }
+}

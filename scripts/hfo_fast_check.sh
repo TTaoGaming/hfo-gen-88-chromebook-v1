@@ -16,7 +16,7 @@ trap cleanup EXIT
 
 # Wait for server
 for _ in {1..20}; do
-  if curl -fsS "http://localhost:${PORT}/active_omega.html" >/dev/null 2>&1; then
+  if curl -fsS "http://localhost:${PORT}/active_hfo_omega_entrypoint.html" >/dev/null 2>&1; then
     break
   fi
   sleep 0.5

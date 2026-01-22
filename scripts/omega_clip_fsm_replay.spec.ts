@@ -22,7 +22,7 @@ test('Clip Replay FSM: IDLE→READY→COMMIT→IDLE + move right', async ({ hfoP
     throw new Error('HFO_CLIP_JSONL is required (path to mock results JSONL).');
   }
 
-  const url = getActiveUrl('gen5_v1');
+  const url = process.env.HFO_GEN5_URL || getActiveUrl('gen5_v1');
   await hfoPage.goto(url);
   await hfoPage.initHFO();
 
