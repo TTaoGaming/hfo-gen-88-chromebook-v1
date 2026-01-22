@@ -1,0 +1,402 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Gen5 v10 Hexagonal Modular Monolith Spec (single-HTML)
+# Date: 2026-01-20
+# Purpose: Reference spec for evolving Gen5 toward strong hexagonal boundaries
+#          while remaining a single HTML artifact (no bundler required).
+# Focus: Option 2 (Port Facades in-HTML) + Option 4 (Contracts + Adapter Registry)
+
+spec:
+  id: gen5_v10_hex_modular_monolith
+  version: "2026-01-20"
+  status: draft
+  scope:
+    - "Single HTML artifact (omega_gen5_v10_1.html is the baseline)."
+    - "Enforce hex port boundaries (P0–P7) via Port Facades."
+    - "Enforce adapter swaps via tokenized Adapter Registry."
+    - "Keep Playwright evaluation harness stable (window.hfoEval available)."
+  non_goals:
+    - "No immediate extraction to external modules/bundler output."
+    - "No behavior refactor of sensing/physics/rendering unless gated."
+    - "No change to default fast suite target unless explicitly decided."
+
+references:
+  artifacts:
+    v10_broken:
+      - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v10.html
+    v10_1_baseline:
+      - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v10_1.html
+    postmortem:
+      - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/OMEGA_GEN5_V10_POSTMORTEM_AND_V10_1_PLAN_2026_01_20.md
+  harness:
+    specs:
+      - scripts/omega_gen5_readiness_drain.spec.ts
+      - scripts/omega_gen5_excalidraw_ready.spec.ts
+    smoke_scripts:
+      - scripts/hfo_gen5_version_smoke.sh
+    npm_scripts:
+      - "npm run test:gen5:v9:smoke"
+      - "npm run test:gen5:v10_1:smoke"
+
+invariants:
+  single_authority:
+    rule: "A symbol must have exactly one authority within the build unit. Imported/bound identifiers must not be re-declared."
+    enforcement:
+      - "No duplicate `const X` for the same concept across sections."
+      - "Contracts are SSOT: no schema copies in other sections."
+  hex_boundaries:
+    rule: "Cross-port calls must route through Port Facade APIs only (Ports.p0..p7)."
+    enforcement:
+      - "Adapters never call other adapters directly (must go through ports)."
+      - "UI code must not reach into physics internals directly; must go via Ports."
+  fail_closed:
+    rule: "Missing adapter/token or contract validation failure must throw early (boot fails loudly)."
+  contract_validation:
+    rule: "All cross-port payloads (observations, fused fabric, events) validate via Zod before use."
+  harness_stability:
+    rule: "window.hfoEval must exist after init and expose readiness drain API used by Playwright."
+
+architecture:
+  build_unit:
+    type: "single_html"
+    script_style: "<script type=\"module\">"
+    sections_order:
+      - contracts
+      - tokens_and_registry
+      - adapters
+      - ports_facades
+      - composition_root
+      - boot
+      - p5_defend_checks
+
+contracts:
+  owner_port: P1
+  ssot_object_name: "Contracts"
+  required_schemas:
+    - name: Config
+      purpose: "Runtime flags/parameters: camera disable, engine selection, UI toggles, etc."
+    - name: Landmark
+      purpose: "Single landmark point with confidence + world/screen coordinates as used by Gen5."
+    - name: Fusion
+      purpose: "Fused hand/body representation (validated)."
+    - name: DataFabric
+      purpose: "Canonical fused state consumed by P2/P3/P6."
+  rule:
+    - "Contracts.* are the only schemas; no duplicated Zod objects elsewhere."
+
+adapter_registry:
+  object_name: "Registry"
+  tokens_object_name: "TOKENS"
+  rules:
+    - "register(token) is single-use (no overriding without explicit allow)."
+    - "resolve(token) throws if missing (fail-closed)."
+    - "Adapters are pure-ish: no cross-adapter calls except via ports."
+  canonical_tokens:
+    - token: p0.sense
+      provides: "Observation capture (MediaPipe/camera or mock)"
+    - token: p1.fuse
+      provides: "Universal DataFabric weaver (fusion + contract validation)"
+    - token: p2.physics
+      provides: "Physics stepper (Planck or stub)"
+    - token: p2.render
+      provides: "Rendering substrate (Canvas/Babylon)"
+    - token: p3.injector
+      provides: "Pointer/W3C event injector"
+    - token: p6.store
+      provides: "Telemetry sink (console/duckdb bridge)"
+    - token: p7.navigate
+      provides: "Mission orchestration + total tool virtualization intent"
+    - token: eval.hfo
+      provides: "Evaluation harness (readiness drain + debug hooks)"
+
+ports:
+  facade_object_name: "Ports"
+  design:
+    - "Ports are stable APIs grouped by port number: Ports.p0..Ports.p7"
+    - "Ports close over adapters from Registry.resolve(token)"
+    - "Ports validate input/output via Contracts"
+
+  mapping:
+    P0:
+      name: SENSE
+      responsibilities:
+        - "Acquire raw observations (camera/mediapipe results)."
+        - "Emit observations only (no fusion)."
+      outputs:
+        - "observations (raw)"
+
+    P1:
+      name: FUSE
+      responsibilities:
+        - "Validate + fuse observations into DataFabric."
+        - "Act as the single authority for the 'universal fabric' shape (interop envelope analogous to CloudEvents/AsyncAPI patterns)."
+        - "Maintain readiness score semantics for harness."
+      outputs:
+        - "data_fabric (Contracts.DataFabric)"
+
+    P2:
+      name: SHAPE
+      responsibilities:
+        - "Consume DataFabric and produce physics + shape state."
+        - "Render via selected substrate (Canvas/Babylon)."
+
+    P3:
+      name: DELIVER
+      responsibilities:
+        - "Transform DataFabric into W3C-ish pointer events."
+        - "Inject events via injector adapter."
+
+    P4:
+      name: DISRUPT
+      responsibilities:
+        - "Feedback loops, suppression, stability heuristics."
+
+    P5:
+      name: DEFEND
+      responsibilities:
+        - "Integrity checks at boot + runtime (tokens present, objects frozen, schema validate)."
+        - "Expose eval harness as stable surface (window.hfoEval)."
+
+    P6:
+      name: STORE
+      responsibilities:
+        - "Telemetry export (frames, readiness, events)."
+
+    P7:
+      name: NAVIGATE
+      responsibilities:
+        - "UI shell + configuration (safe runtime parameter hot-swap)."
+        - "Mission Thread OMEGA north-star: compose gestures/visuals/apps/sensors into tools."
+        - "Capture intent manifests for evaluation harness + archive-backed mastery loops."
+
+p1_universal_fabric:
+  intent: "CloudEvents-inspired envelope for cross-port interop, owned exclusively by P1."
+  status_v10_1: "internal-only (non-breaking); DataFabric remains the canonical data object used by existing consumers"
+  envelope_fields:
+    required:
+      - specversion
+      - id
+      - type
+      - source
+      - time
+      - data
+    optional:
+      - subject
+      - datacontenttype
+      - monotonicMs
+      - dt
+  invariants:
+    - "Envelope must not replace or mutate DataFabric schema; it is metadata that wraps DataFabric."
+    - "No consumer may depend on envelope presence unless guarded by a test gate."
+
+composition_root:
+  responsibilities:
+    - "Parse flags/config into Contracts.Config."
+    - "Register adapters into Registry (based on flags)."
+    - "Create Ports facade from adapters + contracts."
+    - "Bind stable globals: window.hfoEval, window.hfoPorts, window.hfoRegistry"
+  boot_order:
+    - "Create Contracts"
+    - "Create Registry + TOKENS"
+    - "Register adapters"
+    - "Create Ports"
+    - "Run P5 integrity checks"
+    - "Start main loop"
+
+p5_defend:
+  required_checks:
+    - "Registry must resolve required tokens (p0.sense, p2.physics, p2.render, p3.injector, eval.hfo)."
+    - "Contracts schemas available."
+    - "window.hfoEval set exactly once (single authority)."
+
+testing:
+  gating:
+    - name: gen5_v10_1_smoke
+      command: "npm run test:gen5:v10_1:smoke"
+      pass_criteria:
+        - "readiness drain spec passes"
+        - "excalidraw ready spec passes"
+    - name: gen5_v10_1_p1_ports_smoke
+      command: "npm run test:gen5:v10_1:smoke:p1ports"
+      pass_criteria:
+        - "P1 ports weave produces DataFabric + envelope"
+    - name: gen5_v10_1_p7_nav_smoke
+      command: "npm run test:gen5:v10_1:smoke:p7"
+      pass_criteria:
+        - "Ports.p7.navigate exists"
+        - "Mission vision returns mission_thread=OMEGA"
+        - "patchParameters + setExcalidrawTool are safe headless"
+
+    - name: gen5_v10_2_smoke
+      command: "npm run test:gen5:v10_2:smoke"
+      pass_criteria:
+        - "readiness drain spec passes"
+        - "excalidraw ready spec passes"
+
+    - name: gen5_v10_2_p1_ports_smoke
+      command: "npm run test:gen5:v10_2:smoke:p1ports"
+      pass_criteria:
+        - "P1 ports weave produces DataFabric + envelope"
+
+    - name: gen5_v10_2_p7_nav_smoke
+      command: "npm run test:gen5:v10_2:smoke:p7"
+      pass_criteria:
+        - "Ports.p7.navigate exists"
+        - "Mission vision returns mission_thread=OMEGA"
+        - "patchParameters + setExcalidrawTool are safe headless"
+
+    - name: gen5_v10_2_p4_disrupt_smoke
+      command: "npm run test:gen5:v10_2:smoke:p4"
+      pass_criteria:
+        - "Ports.p4.disrupt exists"
+        - "Under flag-p4-disrupt=true, P4 isEnabled() returns true"
+        - "P4 noOp returns ok:true with timestamp"
+        - "Other port facades remain reachable"
+
+    - name: gen5_v10_2_clip_replay
+      command: "npm run test:gen5:v10_2:clip"
+      pass_criteria:
+        - "MP4-derived JSONL replay produces IDLE→READY→COMMIT→IDLE sequence"
+        - "COMMIT phase moves right (screenX increases)"
+
+    - name: gen5_v11_smoke
+      command: "npm run test:gen5:v11:smoke"
+      pass_criteria:
+        - "readiness drain spec passes"
+        - "excalidraw ready spec passes"
+
+    - name: gen5_v11_p1_ports_smoke
+      command: "npm run test:gen5:v11:smoke:p1ports"
+      pass_criteria:
+        - "P1 ports weave produces DataFabric + envelope"
+
+    - name: gen5_v11_p7_nav_smoke
+      command: "npm run test:gen5:v11:smoke:p7"
+      pass_criteria:
+        - "Ports.p7.navigate exists"
+        - "Mission vision returns mission_thread=OMEGA"
+        - "patchParameters + setExcalidrawTool are safe headless"
+
+    - name: gen5_v11_p4_disrupt_smoke
+      command: "npm run test:gen5:v11:smoke:p4"
+      pass_criteria:
+        - "Ports.p4.disrupt exists"
+        - "Under flag-p4-disrupt=true, P4 isEnabled() returns true"
+        - "P4 noOp returns ok:true with timestamp"
+        - "Other port facades remain reachable"
+
+    - name: gen5_v11_clip_replay
+      command: "npm run test:gen5:v11:clip"
+      pass_criteria:
+        - "MP4-derived JSONL replay produces IDLE→READY→COMMIT→IDLE sequence"
+        - "COMMIT phase moves right (screenX increases)"
+  notes:
+    - "Default fast suite may target omega_gen5_v4.html; do not assume coverage unless using per-version smoke."
+
+production_readiness:
+  north_star: "Mission Thread OMEGA: Total Tool Virtualization"
+  checklist:
+    now:
+      - "Single-HTML boot safety (no dual-authority identifiers)"
+      - "8-port map documented (P0–P7)"
+      - "P1 owns DataFabric + envelope (schema-enforced)"
+      - "P7 exposes mission vision + intent manifest surface"
+      - "Per-version smoke gates exist (v10.2)"
+      - "Golden clip replay gate exists (MP4-derived JSONL)"
+      - "Bring P4 DISRUPT online as a token+adapter+facade (opt-in red-team disruptor)"
+    next:
+      - "Tokenize and harden P5 DEFEND beyond eval.hfo (default-on once coverage exists)"
+      - "Route P3 injection exclusively through Ports.p3 (remove hidden coupling)"
+      - "Zod schema for P7 intent manifest (fail-closed at boundary)"
+      - "Add v11 port doctrine blurbs/keywords + synergy map (agent-readable)"
+      - "Add at least one end-to-end gate: intent → tool effect (beyond smoke)"
+
+migration_plan:
+  principle: "Seams first, extraction later"
+  steps:
+    - "Introduce TOKENS + Registry in v10.1 without behavior changes."
+    - "Introduce Ports facade that wraps existing functions/objects."
+    - "Move window.hfoEval wiring into composition root (P5 responsibility)."
+    - "Gradually move code behind adapters (wrap then refactor), keeping smoke gates green."
+
+progress:
+  glance:
+    baseline_artifact: hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11.html
+    implemented_globals:
+      - window.hfoTokens
+      - window.hfoRegistry
+      - window.hfoPorts
+      - window.hfoDefend
+      - window.hfoEval
+    implemented_tokens:
+      - eval.hfo
+      - p0.sense
+      - p1.fuse
+      - p2.physics
+      - p2.render
+      - p3.injector
+      - p4.disrupt
+      - p6.store
+      - p7.navigate
+    implemented_ports:
+      - "Ports.p0.sense.readForVideo(nowMs) -> p0.sense"
+      - "Ports.p1.weave(results, dt, nowMs) -> p1.fuse"
+      - "Ports.p2.physics.getTelemetry() -> p2.physics"
+      - "Ports.p2.render.listJuiceLayers() -> p2.render"
+      - "Ports.p3.deliver() -> p3.injector"
+      - "Ports.p4.disrupt.* -> p4.disrupt"
+      - "Ports.p5.eval() -> eval.hfo"
+      - "Ports.p6.store() -> p6.store"
+      - "Ports.p7.navigate.* -> p7.navigate"
+    strict_mode:
+      flag: flag-p5-defend-strict
+      default: off
+      required_tokens_when_enabled:
+        - eval.hfo
+        - p3.injector
+        - p6.store
+    latest_gate:
+      ts: "2026-01-20T16:12:03-07:00"
+      v11_readiness_drain: PASS
+      v11_excalidraw_ready: PASS
+      v11_p1_ports_smoke: PASS
+      v11_p7_nav_smoke: PASS
+      v11_p4_disrupt_smoke: PASS
+      v11_clip_replay: PASS
+      commands:
+        - "HFO_GEN5_URL=... npx playwright test scripts/omega_gen5_readiness_drain.spec.ts --project=chromium"
+        - "HFO_GEN5_URL=... npx playwright test scripts/omega_gen5_excalidraw_ready.spec.ts --project=chromium"
+        - "npm run test:gen5:v10_1:smoke:p1ports"
+        - "npm run test:gen5:v10_1:smoke:p7"
+        - "npm run test:gen5:v10_2:smoke"
+        - "npm run test:gen5:v10_2:smoke:p1ports"
+        - "npm run test:gen5:v10_2:smoke:p7"
+        - "npm run test:gen5:v10_2:clip"
+
+  log:
+    - ts: "2026-01-20T14:45:44-07:00"
+      change: "Added minimal Adapter Registry + Ports facade scaffold in v10.1 (eval.hfo + p3.injector) with optional strict defend flag."
+      tests: "npm run test:gen5:v10_1:smoke (PASS)"
+    - ts: "2026-01-20T14:50:41-07:00"
+      change: "Expanded v10.1 scaffold: added p6.store token/adapter wrapping TelemetryRecorder and exposed Ports.p6.store()."
+      tests:
+        - "npx playwright test scripts/omega_gen5_readiness_drain.spec.ts --project=chromium (PASS)"
+        - "npx playwright test scripts/omega_gen5_excalidraw_ready.spec.ts --project=chromium (PASS)"
+    - ts: "2026-01-20T14:52:51-07:00"
+      change: "Expanded v10.1 scaffold: added p0.sense + p2.physics + p2.render tokens/adapters and exposed Ports.p0/Ports.p2 (side-effect-free wrappers)."
+      tests:
+        - "npx playwright test scripts/omega_gen5_readiness_drain.spec.ts --project=chromium (PASS)"
+        - "npx playwright test scripts/omega_gen5_excalidraw_ready.spec.ts --project=chromium (PASS)"
+    - ts: "2026-01-20T15:00:39-07:00"
+      change: "Spec update: made P1 (FUSE/Web Weaver) the explicit single authority for the universal DataFabric shape; documented canonical token p1.fuse."
+      tests: "n/a (spec-only edit)"
+    - ts: "2026-01-20T15:08:47-07:00"
+      change: "Formalized P1 universal fabric envelope (non-breaking) and added a dedicated Playwright smoke gate for Ports.p1.weave + envelope."
+      tests: "npm run test:gen5:v10_1:smoke:p1ports (PASS)"
+
+    - ts: "2026-01-20T15:26:37-07:00"
+      change: "Formalized P7 NAVIGATE as Mission Thread OMEGA holder: added p7.navigate token + adapter (mission vision, safe parameter patching, tool/intent setters) and a dedicated Playwright smoke gate."
+      tests: "npm run test:gen5:v10_1:smoke:p7 (PASS)"
+
+    - ts: "2026-01-20T15:43:56-07:00"
+      change: "Started v10.2 hardening line: cloned v10.1→v10.2 (single-HTML), added v10.2 per-version smoke scripts + MP4-derived golden clip replay gate, and updated v10 spec with production-readiness checklist aligned to Mission Thread OMEGA."
+      tests: "npm run test:gen5:v10_2:smoke (PASS); npm run test:gen5:v10_2:smoke:p1ports (PASS); npm run test:gen5:v10_2:smoke:p7 (PASS); npm run test:gen5:v10_2:clip (PASS)"

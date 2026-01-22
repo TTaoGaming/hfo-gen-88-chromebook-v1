@@ -1,0 +1,221 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Gen5 v11.1 AppHost + Multi-App Spec (single-HTML)
+# Date: 2026-01-20
+# Purpose: Define the v11.1 delta needed to evolve v11 from “substrate + one app”
+#          into “substrate + AppHost”, enabling multi-app v12 (apps as tabs) without a bundler.
+# Scope: Additive + opt-in via flags; preserve v11 behavior as default.
+
+spec:
+  id: gen5_v11_1_apphost_multiapp
+  base:
+    artifact: hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11.html
+    note: "v11.1 must be a minimal, gated evolution of v11 (no behavior changes unless flags enabled)."
+  version: "2026-01-20"
+  status: draft
+
+vision:
+  north_star: "Mission Thread OMEGA: Total Tool Virtualization"
+  v11_1_goal: "Introduce a first-class AppHost (P7) so different apps can be swapped in GoldenLayout tabs while sharing the same gesture→pointer (P3) and Babylon cursor substrate (P2)."
+
+references:
+  readiness_report:
+    - hfo_hot_obsidian/bronze/3_resources/reports/GEN5_MULTIAPP_V12_READINESS_2026_01_20.md
+  prior_specs:
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/GEN5_V10_HEX_MODULAR_MONOLITH_SPEC_2026_01_20.yaml
+  launcher:
+    - active_hfo_omega_entrypoint.html
+    - active_hfo_omega_entrypoint.json
+
+non_goals:
+  - "No extraction to bundler or multi-file JS modules; remain single-HTML artifact."
+  - "No cross-origin app embedding in v11.1 (same-origin iframes only)."
+  - "No full multi-user routing or permissions system yet."
+  - "No change to P0/P1 fusion semantics; DataFabric remains canonical."
+
+invariants:
+  single_authority:
+    rule: "A symbol must have exactly one authority within the build unit."
+    enforcement:
+      - "No duplicate const/function declarations for the same concept across sections."
+      - "Contracts are SSOT: schemas exist only under Contracts (P1 authority)."
+  hex_boundaries:
+    rule: "Cross-domain calls route through Port Facades and tokenized adapters only."
+    enforcement:
+      - "P3 must not directly inspect arbitrary global DOM; it queries AppHost for routing policy when multi-app is enabled."
+      - "UI layout logic must not mutate port internals; it activates apps through Ports.p7.apps.*."
+  fail_closed:
+    rule: "When v11.1 multi-app flags are enabled, missing tokens/contracts must throw early."
+  harness_stability:
+    rule: "window.hfoEval and existing v11 smoke/clip gates must remain valid."
+
+architecture:
+  build_unit:
+    type: single_html
+    script_style: "<script type=\"module\">"
+  sections_order:
+    - contracts
+    - tokens_and_registry
+    - adapters
+    - ports_facades
+    - composition_root
+    - boot
+    - p5_defend_checks
+
+contracts:
+  owner_port: P1
+  ssot_object_name: Contracts
+  new_schemas_v11_1:
+    - name: AppManifest
+      purpose: "Describes an app that can be mounted/swapped by AppHost."
+      required_fields:
+        - appId
+        - title
+        - kind
+        - mount
+      optional_fields:
+        - icon
+        - tags
+        - entrypoint
+        - defaultParametersPatch
+        - requestedCapabilities
+        - targetPolicy
+    - name: IntentManifest
+      purpose: "Typed intent payload owned by P7; consumers must not rely on ad-hoc intent strings."
+      required_fields:
+        - id
+        - type
+        - ts
+        - data
+      optional_fields:
+        - subject
+        - source
+    - name: TargetPolicy
+      purpose: "How P3 should resolve pointer injection targets when multi-app is enabled."
+      allowed_values:
+        - ACTIVE_APP_ONLY
+        - ACTIVE_APP_OR_FALLBACK
+        - GLOBAL
+  rule:
+    - "Contracts.* are the only schemas; no duplicated Zod objects elsewhere."
+
+adapter_registry:
+  object_name: Registry
+  tokens_object_name: TOKENS
+  existing_tokens_v11:
+    - eval.hfo
+    - p0.sense
+    - p1.fuse
+    - p2.physics
+    - p2.render
+    - p3.injector
+    - p4.disrupt
+    - p6.store
+    - p7.navigate
+  new_tokens_v11_1:
+    - token: p7.apphost
+      provides: "App registry + lifecycle + active app selection."
+    - token: ui.layout
+      provides: "GoldenLayout integration boundary (tab events → app activation)."
+    - token: p3.target_router
+      provides: "Target resolution policy for pointer injection (delegates to AppHost)."
+  rules:
+    - "register(token) is single-use (no overriding without explicit allow)."
+    - "resolve(token) throws if missing (fail-closed when required by flags)."
+
+ports:
+  facade_object_name: Ports
+  v11_baseline_surfaces:
+    - Ports.p7.navigate.getMissionVision
+    - Ports.p7.navigate.patchParameters
+    - Ports.p7.navigate.setIntent
+    - Ports.p3.deliver
+    - Ports.p2.render (Babylon cursor layers)
+
+  v11_1_new_surfaces:
+    P7:
+      name: NAVIGATE
+      additions:
+        - "Ports.p7.apps.register(AppManifest)"
+        - "Ports.p7.apps.list()"
+        - "Ports.p7.apps.activate(appId, opts?)"
+        - "Ports.p7.apps.deactivate(appId)"
+        - "Ports.p7.apps.getActive()"
+        - "Ports.p7.apps.getActiveTargetRoot()"
+        - "Ports.p7.apps.emitAppEvent(type, payload) -> stigmergy optional"
+
+    P3:
+      name: DELIVER
+      additions:
+        - "When multi-app enabled, P3 resolves target via p3.target_router (AppHost-first)."
+
+composition_root:
+  responsibilities:
+    - "Register default apps (at least 2 demo apps) when multi-app flag enabled."
+    - "Attach GoldenLayout tab activation hooks (ui.layout adapter) when enabled."
+    - "Expose AppHost via Ports.p7.apps facade."
+  flags:
+    - flag-ui-multiapp: "Enable AppHost + app tabs. Default false in v11.1."
+    - flag-p3-target-active-app: "Route pointer injection only to active app. Default false."
+    - flag-p5-defend-strict-v11_1: "Fail-close if AppHost + target router missing. Default false."
+
+p3_target_routing:
+  baseline_v11_behavior:
+    - "Resolve via elementFromPoint, with special casing for Excalidraw overlay iframe."
+  v11_1_behavior_when_enabled:
+    - policy: ACTIVE_APP_ONLY
+    - rule: "If active app is an iframe, resolve target within that iframe document; never inject outside it."
+    - fallback: "If policy is ACTIVE_APP_OR_FALLBACK, use v11 discovery when active app cannot resolve."
+
+ui_layout:
+  approach:
+    - "Keep existing hero as the physical host container."
+    - "Add an apps stack (tabs) where each tab corresponds to an appId."
+    - "When tab activated, call Ports.p7.apps.activate(appId)."
+
+default_apps_v11_1:
+  requirement: "Provide at least 2 same-origin demo apps for gating."
+  candidates:
+    - appId: excalidraw
+      kind: iframe
+      entrypoint: excalidraw_v20_wrapper.html
+      notes: "Existing overlay app; used as baseline."
+    - appId: sandbox_canvas
+      kind: iframe
+      entrypoint: "(new) simple local HTML that logs pointer events"
+      notes: "Used to prove per-app pointer routing."
+
+testing:
+  gating:
+    - name: gen5_v11_1_apphost_surface
+      purpose: "Ensure Ports.p7.apps exists and can register/list/activate."
+      pass_criteria:
+        - "window.hfoPorts.p7.apps.list returns >=2 apps"
+        - "activate switches active app"
+    - name: gen5_v11_1_pointer_routes_to_active_app
+      purpose: "Ensure P3 injects into active app only when flag enabled."
+      pass_criteria:
+        - "When app A active, app B receives no pointerdown/pointerup"
+        - "When app B active, app A receives no pointerdown/pointerup"
+    - name: gen5_v11_1_layout_tab_activation
+      purpose: "GoldenLayout tab selection triggers Ports.p7.apps.activate."
+      pass_criteria:
+        - "Switching tabs changes active appId"
+    - name: gen5_v11_1_teardown_no_leaks
+      purpose: "App unmount releases pointer capture and detaches DOM nodes."
+      pass_criteria:
+        - "deactivate removes iframe from host"
+        - "no stray activePointers remain after deactivate"
+
+production_readiness_delta:
+  v11_ready:
+    - "GoldenLayout shell"
+    - "P3 pointer injection"
+    - "Babylon cursor substrate"
+    - "Tokenized registry + ports facades"
+  v11_1_adds:
+    - "AppHost abstraction"
+    - "Deterministic per-app pointer routing"
+    - "Contracts for app + intent manifests"
+  v12_unblocks:
+    - "Apps as tabs: plug-and-play hero apps"
+    - "Swap apps without rewriting P3/P2 substrate"

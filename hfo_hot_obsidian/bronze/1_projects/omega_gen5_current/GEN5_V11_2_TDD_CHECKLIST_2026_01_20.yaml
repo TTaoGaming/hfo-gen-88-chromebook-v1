@@ -1,0 +1,61 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Gen5 v11.2 TDD Checklist (Multi-App Shared Substrate)
+# Date: 2026-01-20
+# Purpose: Drive v11.2 evolution using red→green→refactor gates.
+
+spec:
+  id: gen5_v11_2_tdd_checklist
+  version: "2026-01-20"
+  status: active
+  base_artifact:
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11_1.html
+  target_artifact:
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11_2.html
+
+principles:
+  - "Red tests first: write failing Playwright gates before implementing features."
+  - "Single-HTML artifact; evolve via flags and stable port facades."
+  - "Shared substrate: one camera + one DataFabric + one FSM, many UI/apps/views."
+
+checklist:
+  0_setup:
+    goal: "Create v11.2 stepping-stone + red gates"
+    items:
+      - id: CLONE_V11_2
+        status: done
+        artifact: hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11_2.html
+      - id: RED_TEST_MULTIVIEW
+        status: planned
+        test_file: scripts/omega_gen5_v11_2_multiview_red.spec.ts
+        intent: "Fail until multi-view single-camera service exists."
+
+  1_shared_camera_service:
+    goal: "One getUserMedia call feeds multiple GoldenLayout views"
+    acceptance:
+      - "Expose Ports.p0.camera.getStream() and Ports.p0.camera.getUserMediaCallCount()"
+      - "When ui-multiview enabled, at least 2 video mirrors attach the same MediaStream"
+      - "getUserMedia called exactly once"
+    red_gate:
+      command: "npx playwright test scripts/omega_gen5_v11_2_multiview_red.spec.ts --project=chromium"
+
+  2_fsm_fanout_bus:
+    goal: "1 FSM drives multiple shell apps/views"
+    acceptance:
+      - "Expose Ports.p7.bus.subscribe(type) and emit(type,payload)"
+      - "Emit typed FsmEvent on transition (at least stateChanged)"
+      - "At least two observers receive same event"
+    red_gate:
+      command: "npx playwright test scripts/omega_gen5_v11_2_fsm_fanout_red.spec.ts --project=chromium"
+    status: planned
+
+  3_multiapp_integration_hardening:
+    goal: "Keep multi-app stable while adding shared-substrate services"
+    acceptance:
+      - "Existing v11.1 multiapp tests still pass against v11.2"
+    gates:
+      - command: "npx playwright test scripts/omega_gen5_v11_1_multiapp.spec.ts --project=chromium"
+    status: planned
+
+notes:
+  - "All new behavior must be flag-gated and default-off."
+  - "Prefer same-origin iframes for app isolation (fits current injection strategy)."
