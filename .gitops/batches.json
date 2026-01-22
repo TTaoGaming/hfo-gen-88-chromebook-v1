@@ -100,9 +100,7 @@
       "paths": [
         "hfo_hot_obsidian/bronze/3_resources/fixtures/",
         "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/",
-        "hfo_hot_obsidian/bronze/3_resources/reports/",
-        "hfo_hot_obsidian/gold/3_resources/reports/rollups/",
-        "hfo_hot_obsidian/silver/3_resources/reports/"
+        "hfo_hot_obsidian/bronze/3_resources/reports/"
       ]
     },
     {
