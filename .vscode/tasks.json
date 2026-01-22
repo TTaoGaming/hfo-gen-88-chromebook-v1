@@ -88,6 +88,20 @@
 			"runOptions": {
 				"runOn": "folderOpen"
 			}
+		},
+		{
+			"label": "GitOps Batcher Daemon (No Push)",
+			"type": "shell",
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --interval-sec 600 --no-push",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "dedicated",
+				"group": "hfo-defense",
+				"showReuseMessage": false,
+				"clear": false
+			}
 		}
 	]
 }
