@@ -14,6 +14,16 @@
       "paths": ["."]
     },
     {
+      "id": "gitops-tools",
+      "type": "untracked",
+      "message": "chore(gitops): add safe batcher + resource shepherd",
+      "paths": [
+        ".gitops/batches.json",
+        "scripts/hfo_gitops_batcher.py",
+        "scripts/hfo_resource_shepherd_daemon.py"
+      ]
+    },
+    {
       "id": "root-entrypoints",
       "type": "untracked",
       "message": "chore(entrypoint): add active omega entrypoints",
