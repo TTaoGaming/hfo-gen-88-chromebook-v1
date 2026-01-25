@@ -2,6 +2,10 @@
 
 # HFO Swarm Handoff: Omega Gen 5 v8
 
+> ⚠️ Historical artifact: this handoff reflects the **v8-era** state. Gen5 has since evolved through v10.x → v11 → v11.1+.
+>
+> Use the current handoff instead: `hfo_hot_obsidian/bronze/3_resources/reports/HFO_HANDOFF_OMEGA_GEN5_2026_01_20.md`
+
 **Status**: Pre-Purge Diagnostic | **Timestamp**: 2026-01-20 | **HIVE**: V
 
 ## 📋 Mission Summary

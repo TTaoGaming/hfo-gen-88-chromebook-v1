@@ -76,7 +76,10 @@ observed_root:
     - .stryker-tmp/
     - .venv/
     - .vscode/
+    - active_hfo_omega_entrypoint.html
+    - active_hfo_omega_entrypoint.json
     - active_omega.html
+    - active_omega.json
     - AGENTS.md
     - check_blackboard.txt
     - COLD_START.md
