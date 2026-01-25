@@ -59,7 +59,7 @@ repos:
     files: \.(py|ts|js|html|yaml|md)$
     stages: [pre-push]
   - id: hfo-omega-fast-regression
-    name: HFO Omega Fast Regression (Replay + FSM)
+    name: HFO Omega Fast Regression (CI-first; set HFO_OMEGA_FAST_REGRESSION_FORCE=1 to run locally)
     entry: bash scripts/hfo_precommit_time.sh omega-fast bash /home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/hfo_omega_fast_regression.sh
     language: system
     always_run: true

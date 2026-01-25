@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ "${HFO_OMEGA_FAST_REGRESSION_FORCE:-}" != "1" ]]; then
+  echo "[hfo] Skipping local Omega fast regression (CI-first)."
+  echo "[hfo] To force locally: HFO_OMEGA_FAST_REGRESSION_FORCE=1 bash scripts/hfo_omega_fast_regression.sh"
+  exit 0
+fi
+
 ROOT_DIR="/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
 PYTHON_BIN="$ROOT_DIR/.venv/bin/python"
 SERVER_CMD="$PYTHON_BIN $ROOT_DIR/scripts/hfo_threaded_server.py"
