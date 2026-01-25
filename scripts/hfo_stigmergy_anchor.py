@@ -13,6 +13,7 @@ import sys
 import datetime
 import json
 import subprocess
+from subprocess import TimeoutExpired
 
 # Paths
 ROOT_DIR = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
@@ -20,24 +21,29 @@ HOT_DIR = os.path.join(ROOT_DIR, "hfo_hot_obsidian")
 BACKUP_DIR = os.path.join(ROOT_DIR, "hfo_hot_obsidian/4_archive/stigmergy_anchors")
 BLACKBOARD_PATH = os.path.join(HOT_DIR, "hot_obsidian_blackboard.jsonl")
 CONFIG_PATH = os.path.join(ROOT_DIR, "scripts/hfo_config.json")
+P5_HUB_PATH = os.path.join(
+    HOT_DIR,
+    "bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py",
+)
+P5_AUDIT_CONTEXT = os.path.join(HOT_DIR, "bronze/__anchor_fast_gate__.txt")
 
 def perform_backup():
     """Performs a timestamped backup of critical files."""
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     anchor_path = os.path.join(BACKUP_DIR, f"anchor_{timestamp}")
     os.makedirs(anchor_path, exist_ok=True)
-    
+
     print(f"⚓ [ANCHOR]: Initiating Backup Anchor [{timestamp}]...")
-    
+
     # 1. Backup Blackboard
     if os.path.exists(BLACKBOARD_PATH):
         shutil.copy2(BLACKBOARD_PATH, os.path.join(anchor_path, "hot_obsidian_blackboard.jsonl"))
-    
+
     # 2. Backup AGENTS.md
     agents_path = os.path.join(ROOT_DIR, "AGENTS.md")
     if os.path.exists(agents_path):
         shutil.copy2(agents_path, os.path.join(anchor_path, "AGENTS.md"))
-        
+
     # 3. Backup Active Workspace HTML
     try:
         if os.path.exists(CONFIG_PATH):
@@ -57,15 +63,21 @@ def perform_backup():
 def architectural_cleanup():
     """Placeholder for architectural cleanup tasks."""
     print("🧹 [ANCHOR]: Initiating Architectural Cleanup...")
-    
+
     # 1. Run P5 Audit and log summary
     try:
-        hub_path = os.path.join(HOT_DIR, "bronze/2_areas/architecture/ports/hfo_orchestration_hub.py")
-        result = subprocess.run([sys.executable, hub_path, "p5"], capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, P5_HUB_PATH, "p5", P5_AUDIT_CONTEXT],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
         if result.returncode == 0:
             print("✅ [ANCHOR]: P5 Audit PASS.")
         else:
             print("⚠️ [ANCHOR]: P5 Audit FAIL. Drift detected.")
+    except TimeoutExpired:
+        print("⚠️ [ANCHOR]: P5 Audit TIMEOUT. Treating as drift.")
     except Exception as e:
         print(f"❌ [ANCHOR]: Cleanup failed: {e}")
 
@@ -73,14 +85,14 @@ def main_loop(interval_minutes=10):
     """Main loop for the Stigmergy Anchor."""
     print(f"⚓ [ANCHOR]: Stigmergy Anchor Active. Interval: {interval_minutes}m")
     os.makedirs(BACKUP_DIR, exist_ok=True)
-    
+
     while True:
         try:
             perform_backup()
             architectural_cleanup()
         except Exception as e:
             print(f"🚨 [ANCHOR]: Error in main loop: {e}")
-            
+
         print(f"💤 [ANCHOR]: Sleeping for {interval_minutes} minutes...")
         time.sleep(interval_minutes * 60)
 

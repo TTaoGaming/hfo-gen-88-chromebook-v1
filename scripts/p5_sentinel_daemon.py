@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Medallion: Gold | Mutation: 95% | HIVE: V
+# Medallion: Bronze | Mutation: 95% | HIVE: V
 # Port 5: DEFEND | P5 Sentinel Daemon (Watchdog)
 
 import time
@@ -31,8 +31,28 @@ BLACKBOARD_PATH = "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
 HUB_PATH = "hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py"
 WATCH_EXTENSIONS = {".py", ".ts", ".js", ".html", ".yaml", ".md"}
 IGNORE_SUBSTRINGS = {"blackboard", ".receipt.json", ".git", ".venv", "node_modules", "__pycache__"}
+IGNORE_SUBSTRINGS.add("stigmergy_anchors")
 TRIPWIRE_INTERVAL_SECONDS = 300
 DUCKDB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb"
+try:
+    from pathlib import Path
+
+    _here = Path(__file__).resolve()
+    for _parent in [_here.parent] + list(_here.parents):
+        if (_parent / "hfo_pointers.py").exists() and (_parent / "hfo_pointers.json").exists():
+            if str(_parent) not in sys.path:
+                sys.path.insert(0, str(_parent))
+            break
+
+    from hfo_pointers import resolve_path
+
+    DUCKDB_PATH = resolve_path(
+        "paths.duckdb_unified",
+        env_var="HFO_DUCKDB_UNIFIED_PATH",
+        default=DUCKDB_PATH,
+    )
+except Exception:
+    pass
 GATEWAY_RECEIPTS_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/receipts/hfo_mcp_gateway_receipts.jsonl"
 
 
@@ -124,15 +144,15 @@ class P5SentinelHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.is_directory:
             return
-        
+
         path = event.src_path
         ext = os.path.splitext(path)[1]
-        
+
         if ext in WATCH_EXTENSIONS and not any(sub in path for sub in IGNORE_SUBSTRINGS):
             now = time.time()
             if path in self.last_triggered and (now - self.last_triggered[path]) < self.cooldown:
                 return
-            
+
             self.last_triggered[path] = now
             print(f"🛡️ [SENTINEL]: Change detected: {path}")
             self.run_p5_audit(path)
@@ -145,11 +165,11 @@ class P5SentinelHandler(FileSystemEventHandler):
                 capture_output=True,
                 text=True
             )
-            
+
             # Use return code 0 as success, others as breach
             is_breach = result.returncode != 0
             status = "BREACH" if is_breach else "PASS"
-            
+
             log_entry = {
                 "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z",
                 "phase": "WATCH_SENTINEL",
@@ -157,7 +177,7 @@ class P5SentinelHandler(FileSystemEventHandler):
                 "status": status,
                 "msg": "Real-time integrity audit triggered by filesystem event."
             }
-            
+
             if is_breach:
                 log_entry["details"] = result.stdout.strip()
                 print(f"🚨 [SENTINEL]: BREACH DETECTED in {file_path}!")
@@ -170,7 +190,7 @@ class P5SentinelHandler(FileSystemEventHandler):
 
             # HFO: Use signed log_to_blackboard instead of raw write
             log_to_blackboard(log_entry)
-                
+
         except Exception as e:
             print(f"❌ [SENTINEL]: Internal error during audit: {e}")
 
@@ -181,15 +201,15 @@ if __name__ == "__main__":
 
     event_handler = P5SentinelHandler()
     observer = Observer()
-    
+
     # Watch HFO domains
     observer.schedule(event_handler, path="hfo_hot_obsidian", recursive=True)
     observer.schedule(event_handler, path=".", recursive=False)
-    
+
     print("🌀 [SENTINEL]: P5 Sentinel Daemon active. Mode: Real-time Defense.")
     print(f"📝 [SENTINEL]: Logging to {BLACKBOARD_PATH}")
     observer.start()
-    
+
     try:
         last_tripwire = 0.0
         while True:

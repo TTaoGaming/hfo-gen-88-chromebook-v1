@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""
-Medallion: Bronze | Mutation: 0% | HIVE: V
-PORT 5: PREFLIGHT AUDIT SENTRY
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+
+"""PORT 5: PREFLIGHT AUDIT SENTRY
+
 Validates that all local assets referenced in HTML files exist on the filesystem.
 Prevents 404/ERR_CONNECTION_RESET by ensuring I/O readiness.
 """
@@ -14,8 +15,10 @@ from pathlib import Path
 # Paths to audit
 BASE_DIR = Path("/home/tommytai3/active/hfo_gen_88_chromebook_v_1")
 HTML_FILES = [
+    BASE_DIR / "active_hfo_omega_entrypoint.html",
     BASE_DIR / "active_omega.html",
-    BASE_DIR / "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v35.html"
+    BASE_DIR / "hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v12.html",
+    BASE_DIR / "hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11.html",
 ]
 
 def audit_file(file_path):
@@ -25,16 +28,16 @@ def audit_file(file_path):
 
     print(f"🔍 [P5-AUDIT]: Scanning {file_path.name}...")
     content = file_path.read_text()
-    
+
     # Match src="./..." or href="./..."
     patterns = [
         r'src=["\']\./([^"\']+)["\']',
         r'href=["\']\./([^"\']+)["\']'
     ]
-    
+
     missing_count = 0
     total_refs = 0
-    
+
     for pattern in patterns:
         matches = re.findall(pattern, content)
         for match in matches:
@@ -43,7 +46,7 @@ def audit_file(file_path):
             clean_path = match.split('?')[0].split('#')[0]
             # Check relative to the HTML file's directory
             asset_path = file_path.parent / clean_path
-            
+
             if not asset_path.exists():
                 print(f"  ❌ [MISSING]: {clean_path} (Resolved to: {asset_path})")
                 missing_count += 1
@@ -63,7 +66,7 @@ def main():
     for html_file in HTML_FILES:
         if not audit_file(html_file):
             success = False
-    
+
     if not success:
         sys.exit(1)
     print("✨ [P5-PREFLIGHT-COMPLETE]: All systems go.")

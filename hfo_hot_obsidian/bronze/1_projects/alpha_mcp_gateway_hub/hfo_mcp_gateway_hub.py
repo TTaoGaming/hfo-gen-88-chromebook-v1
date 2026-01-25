@@ -24,13 +24,40 @@ from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
 import mcp.types as types
 
+try:
+    from pathlib import Path
+
+    _here = Path(__file__).resolve()
+    for _parent in [_here.parent] + list(_here.parents):
+        if (_parent / "hfo_pointers.py").exists() and (_parent / "hfo_pointers.json").exists():
+            if str(_parent) not in sys.path:
+                sys.path.insert(0, str(_parent))
+            break
+except Exception:
+    pass
+
 BASE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
 BLACKBOARD_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl")
-DUCKDB_PATH = os.path.join(
-    BASE_PATH,
-    "hfo_cold_obsidian/bronze/4_archive/gen_88_cb_v2_archive_2026_01_18/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb",
-)
-FILE_INDEX_DB_PATH = os.path.join(BASE_PATH, "hfo_unified_v88_merged.duckdb")
+try:
+    from hfo_pointers import resolve_path
+
+    DUCKDB_PATH = resolve_path(
+        env_var="HFO_DUCKDB_UNIFIED_PATH",
+        dotted_key="paths.duckdb_unified",
+    )
+    FILE_INDEX_DB_PATH = resolve_path(
+        env_var="HFO_DUCKDB_FILE_INDEX_PATH",
+        dotted_key="paths.duckdb_file_index",
+    )
+except Exception:
+    DUCKDB_PATH = os.environ.get(
+        "HFO_DUCKDB_UNIFIED_PATH",
+        "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo_unified_v88.duckdb",
+    )
+    BASE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
+    FILE_INDEX_DB_PATH = os.path.join(
+        BASE_PATH, os.environ.get("HFO_DUCKDB_FILE_INDEX_PATH", "hfo_unified_v88_merged.duckdb")
+    )
 RECEIPTS_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/bronze/3_resources/receipts/hfo_mcp_gateway_receipts.jsonl")
 BATON_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/bronze/3_resources/receipts/hfo_mcp_gateway_baton.jsonl")
 MCP_MEMORY_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl")

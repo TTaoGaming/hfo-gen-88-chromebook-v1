@@ -13,6 +13,36 @@ DB_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_gen_88_cb_v2/hfo
 
 server = Server("hfo-duckdb-mcp")
 
+
+def _ensure_db_initialized() -> None:
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    con = duckdb.connect(database=DB_PATH)
+    try:
+        con.execute(
+            """
+            CREATE TABLE IF NOT EXISTS actor_states (
+                actor_id VARCHAR PRIMARY KEY,
+                mission_thread VARCHAR,
+                state_json JSON,
+                last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                version INTEGER DEFAULT 1
+            );
+            """
+        )
+        con.execute(
+            """
+            CREATE TABLE IF NOT EXISTS mission_journal (
+                event_id UUID DEFAULT gen_random_uuid(),
+                actor_id VARCHAR,
+                event_type VARCHAR,
+                payload JSON,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+            """
+        )
+    finally:
+        con.close()
+
 @server.list_tools()
 async def handle_list_tools() -> list[types.Tool]:
     """List available tools."""
@@ -47,28 +77,29 @@ async def handle_call_tool(
     name: str, arguments: dict | None
 ) -> list[types.TextContent | types.ImageContent | types.EmbeddedResource]:
     """Handle tool execution requests."""
+    _ensure_db_initialized()
     if name == "query_journal":
         actor_id = arguments.get("actor_id")
         limit = arguments.get("limit", 10)
         event_type = arguments.get("event_type")
-        
+
         query = "SELECT * FROM mission_journal"
         params = []
         conditions = []
-        
+
         if actor_id:
             conditions.append("actor_id = ?")
             params.append(actor_id)
         if event_type:
             conditions.append("event_type = ?")
             params.append(event_type)
-            
+
         if conditions:
             query += " WHERE " + " AND ".join(conditions)
-        
+
         query += " ORDER BY timestamp DESC LIMIT ?"
         params.append(limit)
-        
+
         try:
             con = duckdb.connect(database=DB_PATH)
             df = con.execute(query, params).fetch_df()
