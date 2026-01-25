@@ -15,15 +15,34 @@ cleanup() {
 trap cleanup EXIT
 
 # Wait for server
+server_ready=0
 for _ in {1..20}; do
-  if curl -fsS "http://localhost:${PORT}/active_omega.html" >/dev/null 2>&1; then
+  if curl -fsS "http://localhost:${PORT}/active_hfo_omega_entrypoint.html" >/dev/null 2>&1; then
+    server_ready=1
     break
   fi
   sleep 0.5
 done
 
+if [[ "$server_ready" != "1" ]]; then
+  echo "[hfo-fast] server failed to become ready on :${PORT}"
+  if [[ -f "$SERVER_LOG" ]]; then
+    echo "[hfo-fast] server log tail:"
+    tail -n 80 "$SERVER_LOG" || true
+  fi
+  exit 1
+fi
+
+PLAYWRIGHT_COMMON_ARGS=(
+  --project=chromium
+  --workers=1
+  --reporter=line
+  --output="$TEST_OUTPUT"
+  --timeout=15000
+  --global-timeout=180000
+)
+
 npx playwright test \
   scripts/omega_gen5_readiness_drain.spec.ts \
   scripts/omega_gen5_excalidraw_ready.spec.ts \
-  --project=chromium \
-  --output="$TEST_OUTPUT"
+  "${PLAYWRIGHT_COMMON_ARGS[@]}"

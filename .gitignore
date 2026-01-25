@@ -65,6 +65,8 @@ yarn-error.log*
 .env
 .hfo_secret
 
+.hfo_runtime/
+
 # Large Binary Persistance (HFO Shards)
 *.zim
 *.parquet
