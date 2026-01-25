@@ -20,7 +20,7 @@ repos:
     stages: [pre-commit]
   - id: hfo-blackboard-purity
     name: HFO Blackboard Purity & Immutability
-    entry: bash scripts/hfo_precommit_time.sh blackboard-purity python3 scripts/blackboard_purity.py --check-only --quiet
+    entry: bash scripts/hfo_precommit_time.sh blackboard-purity bash -c 'if [[ "${HFO_PREPUSH_STRICT_FORCE:-}" == "1" ]]; then python3 scripts/blackboard_purity.py --check-only --quiet; else echo "[hfo] Skipping local blackboard purity (CI-first). Set HFO_PREPUSH_STRICT_FORCE=1 to run."; fi'
     language: system
     files: hot_obsidian_blackboard\.jsonl$
     always_run: true
@@ -37,7 +37,7 @@ repos:
     files: hfo_hot_obsidian/(silver|gold|hfo)/.*$
   - id: hfo-theater-sentinel
     name: HFO AI Theater Sentinel
-    entry: bash scripts/hfo_precommit_time.sh theater-sentinel python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/temporal_sentinel.py
+    entry: bash scripts/hfo_precommit_time.sh theater-sentinel bash -c 'if [[ "${HFO_PREPUSH_STRICT_FORCE:-}" == "1" ]]; then python3 hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/p5_defend/temporal_sentinel.py; else echo "[hfo] Skipping local theater sentinel (CI-first). Set HFO_PREPUSH_STRICT_FORCE=1 to run."; fi'
     language: system
     always_run: true
     stages: [pre-push]

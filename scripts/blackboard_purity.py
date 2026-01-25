@@ -9,10 +9,16 @@ import sys
 import argparse
 from datetime import datetime
 
-BLACKBOARD_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
-QUARANTINE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/1_projects/blackboard_quarantine.jsonl"
-MANIFEST_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/blackboard_manifest.json"
-SECRET_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.hfo_secret"
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+BLACKBOARD_PATH = str(REPO_ROOT / "hfo_hot_obsidian" / "hot_obsidian_blackboard.jsonl")
+QUARANTINE_PATH = str(
+    REPO_ROOT / "hfo_hot_obsidian" / "bronze" / "1_projects" / "blackboard_quarantine.jsonl"
+)
+MANIFEST_PATH = str(REPO_ROOT / "hfo_hot_obsidian" / "blackboard_manifest.json")
+SECRET_PATH = str(REPO_ROOT / ".hfo_secret")
 
 
 def _compute_sha256(path: str):
