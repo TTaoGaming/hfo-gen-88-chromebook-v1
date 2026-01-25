@@ -36,7 +36,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install pre-commit
-          HUSKY=0 npm ci
+          HUSKY=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci
 
       # NOTE: pre-commit hooks that depend on git staged files should not assume staging in CI.
       # We still run the suite fail-closed across the repo.
@@ -61,7 +61,10 @@ jobs:
           node-version: '20'
 
       - name: Install deps
-        run: HUSKY=0 npm ci
+        run: HUSKY=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Compute changed files
         id: changes
