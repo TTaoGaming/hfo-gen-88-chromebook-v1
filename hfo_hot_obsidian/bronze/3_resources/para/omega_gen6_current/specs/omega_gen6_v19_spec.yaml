@@ -1,0 +1,93 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v19 Spec: Dual Tripwires (Static Screen + Knuckle Anchored) — TDD scaffold
+# Timestamp: 2026-01-23
+
+version: 19
+name: omega_gen6
+intent:
+  - Preserve the Tripwire primitive as a shared P2 event surface (p2/tripwire_cross).
+  - Support two mission-fit uses of the same primitive:
+      1) static_screen_tripwires: world/screen anchored bands in uiNorm space.
+      2) knuckle_tripwires: hand-anchored tripwires derived from landmarks (index_mcp→pinky_mcp).
+  - Keep fail-closed posture and strict gating: tripwires may be visible in READY/IDLE, but effects/injection must be COMMIT-gated.
+  - Avoid cross-mode coupling: each tripwire source is independently flag-gated and can be routed to different P3 injectors per mission.
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v18.html
+  target:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v19.html
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    # P2 sources
+    p2-tripwire-static: true
+    p2-tripwire-knuckle: true
+
+    # P3 routing (fail-closed)
+    p3-tripwire-injector-static: true
+    p3-tripwire-injector-knuckle: false
+
+    # Optional UI affordances
+    ui-tripwire-debug: false
+    ui-knuckle-tripwire-panel: true
+  overrides:
+    url_query:
+      - "?flag-p2-tripwire-static=true|false"
+      - "?flag-p2-tripwire-knuckle=true|false"
+      - "?flag-p3-tripwire-injector-static=true|false"
+      - "?flag-p3-tripwire-injector-knuckle=true|false"
+
+ports:
+  p2_detect:
+    primitive:
+      event_bus: "Ports Effects (window.hfoPortsEffects)"
+      event_type: p2/tripwire_cross
+      payload_common:
+        - sensorId: "static|knuckle"
+        - handIndex
+        - pointerId
+        - fsmState
+        - readiness
+        - timestampMs
+
+    static_screen_tripwires:
+      description: "Existing v14–v18 Planck sensor-band in uiNorm space. Default center y=0.5."
+      gating:
+        - "commitOnly: true by default (COMMIT-only emission)"
+
+    knuckle_tripwires:
+      description: "Hand-anchored tripwire derived from landmarks: line between index_mcp(5) and pinky_mcp(17)."
+      detection:
+        - "Use signed-line feature of index_tip(8) vs knuckle line (5→17) with hysteresis to emit begin/end or a cross event."
+      gating:
+        - "COMMIT-only emission (defense-in-depth)."
+
+  p3_inject:
+    routing:
+      intent: "Route injection based on payload.sensorId. Prevent accidental double injection when both sources are enabled."
+      default_policy:
+        - "Allow static by default; deny knuckle until explicitly enabled."
+
+validation:
+  posture: "RED-first: add Playwright spec that drives both sources deterministically via tick() and asserts distinct sensorId emissions."
+  suggested_specs:
+    - scripts/omega_gen6_v19_tripwire_dual_sources.spec.ts
+    - scripts/omega_gen6_v19_knuckle_tripwire_panel_colors_red.spec.ts
+    - scripts/omega_gen6_v19_knuckle_tripwire_payload_velocity_red.spec.ts
+
+ui:
+  golden_layout:
+    components:
+      - id: tripwire-debug
+        title: "Tripwire Debug (P2)"
+        note: "Static screen tripwire visualization; shows cursor dot, band, and last tripwire_cross pulse."
+      - id: knuckle-tripwire-debug
+        title: "Knuckle Tripwire (P2)"
+        note: "Knuckle/palm anchored sensor tripwire panel; shows FSM→color, last knuckle tripwire_cross payload, velocity and zone classification."
+    fsm_color_tokens:
+      IDLE: "#9E9E9E"
+      READY: "#FFB300"
+      COMMIT: "#00BCD4"
+      COAST: "#FFEB3B"

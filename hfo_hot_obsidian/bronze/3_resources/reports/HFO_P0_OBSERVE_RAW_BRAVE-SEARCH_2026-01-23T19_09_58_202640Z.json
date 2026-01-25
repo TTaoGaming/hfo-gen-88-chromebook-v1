@@ -1,0 +1,258 @@
+{
+  "query": {
+    "original": "What is currently the canonical MCP tool inventory, and is it 8 tool shards plus pointers entryway?",
+    "show_strict_warning": false,
+    "is_navigational": false,
+    "is_news_breaking": false,
+    "spellcheck_off": true,
+    "country": "us",
+    "bad_results": false,
+    "should_fallback": false,
+    "postal_code": "",
+    "city": "",
+    "header_country": "",
+    "more_results_available": true,
+    "state": ""
+  },
+  "mixed": {
+    "type": "mixed",
+    "main": [
+      {
+        "type": "web",
+        "index": 0,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 1,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 2,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 3,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 4,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 5,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 6,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 7,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 8,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 9,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 10,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 11,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 12,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 13,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 14,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 15,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 16,
+        "all": false
+      }
+    ],
+    "top": [],
+    "side": []
+  },
+  "type": "search",
+  "web": {
+    "type": "search",
+    "results": [
+      {
+        "title": "Tools - Model Context Protocol",
+        "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "The Model Context Protocol (MCP) allows servers to expose tools that can be invoked by language models. Tools enable models to interact with external systems, such as querying databases, calling APIs, or performing computations. Each tool is uniquely identified by a name and includes metadata ...",
+        "profile": {
+          "name": "Model Context Protocol",
+          "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools",
+          "long_name": "modelcontextprotocol.io",
+          "img": "https://imgs.search.brave.com/fUla7eyz7-xywwv6AJK4QtbFmMtyYgqwO09TeMWI2sg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWVhZDc1YzI5/ZjIxYWY0ODlmMzMy/NDM4MTc1OWI2YzFk/OWEzYzQ4Mzg0NmQ5/YzE1NDc1NjU4OWNk/N2YzZTkyYi9tb2Rl/bGNvbnRleHRwcm90/b2NvbC5pby8"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "modelcontextprotocol.io",
+          "hostname": "modelcontextprotocol.io",
+          "favicon": "https://imgs.search.brave.com/fUla7eyz7-xywwv6AJK4QtbFmMtyYgqwO09TeMWI2sg/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYWVhZDc1YzI5/ZjIxYWY0ODlmMzMy/NDM4MTc1OWI2YzFk/OWEzYzQ4Mzg0NmQ5/YzE1NDc1NjU4OWNk/N2YzZTkyYi9tb2Rl/bGNvbnRleHRwcm90/b2NvbC5pby8",
+          "path": "› specification  › 2025-06-18  › server  › tools"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/h8O_1v3W80N-5TlzgCDaSDOCRiIlLEChYKDWQn_rxPc/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9yYXcu/Z2l0aHVidXNlcmNv/bnRlbnQuY29tL21v/ZGVsY29udGV4dHBy/b3RvY29sL2RvY3Mv/MmViNjE3MWRkYmZl/ZWZkZTM0OWRjM2I4/ZDVlMmI4NzQxNGMy/NjI1MC9pbWFnZXMv/b2ctaW1hZ2UucG5n",
+          "original": "https://raw.githubusercontent.com/modelcontextprotocol/docs/2eb6171ddbfeefde349dc3b8d5e2b87414c26250/images/og-image.png",
+          "logo": false
+        }
+      },
+      {
+        "title": "Understanding MCP features: Tools, Resources, Prompts, Sampling, Roots, and Elicitation — WorkOS",
+        "url": "https://workos.com/blog/mcp-features-guide",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "This guide walks you through the six core MCP features—<strong>Tools, Resources, Prompts, Sampling, Roots, and Elicitation</strong>—and explains how and when to use each.",
+        "page_age": "2025-08-06T00:00:00",
+        "profile": {
+          "name": "WorkOS",
+          "url": "https://workos.com/blog/mcp-features-guide",
+          "long_name": "workos.com",
+          "img": "https://imgs.search.brave.com/eUPlbNkMwtbkA06uEf-PSyxyoXwquC4xPFfX7HBnJdk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOGIzNGM3MTll/ODIzNjZmZjBhMTQ4/NGU1YTIyYmM4NDNl/NzhjZmIxOGRmOGIz/ZjAwNmExNDUxYjUw/YWZmYzMwMS93b3Jr/b3MuY29tLw"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "article",
+        "is_live": false,
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "workos.com",
+          "hostname": "workos.com",
+          "favicon": "https://imgs.search.brave.com/eUPlbNkMwtbkA06uEf-PSyxyoXwquC4xPFfX7HBnJdk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOGIzNGM3MTll/ODIzNjZmZjBhMTQ4/NGU1YTIyYmM4NDNl/NzhjZmIxOGRmOGIz/ZjAwNmExNDUxYjUw/YWZmYzMwMS93b3Jr/b3MuY29tLw",
+          "path": "› blog  › mcp-features-guide"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/3PYiMtJZjnwEWuPVexMK1fW2tkWIxqCOkktfyp24XX4/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMud29ya29zY2Ru/LmNvbS9pbWFnZXMv/OTJjMGQxNDEtNjAw/ZC00NDkwLTg5Y2Yt/MGRkYzkxYzVhNmQx/LnBuZz9hdXRvPWZv/cm1hdCZhbXA7Zml0/PWNsaXAmYW1wO3E9/ODA",
+          "original": "https://images.workoscdn.com/images/92c0d141-600d-4490-89cf-0ddc91c5a6d1.png?auto=format&amp;fit=clip&amp;q=80",
+          "logo": false
+        },
+        "age": "August 6, 2025"
+      },
+      {
+        "title": "List of all 51 MCP tools available (as of June 23 2025) on GitHub official Remote MCP (via streamable http) server at https://api.githubcopilot.com/mcp/ · GitHub",
+        "url": "https://gist.github.com/didier-durand/2970be82fec6c84d522f7953ac7881b4",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "List of all 51 MCP tools available (as of June 23 2025) on GitHub official Remote MCP (via streamable http) server at https://api.githubcopilot.com/mcp/ - github-mcp-tools.json",
+        "profile": {
+          "name": "GitHub",
+          "url": "https://gist.github.com/didier-durand/2970be82fec6c84d522f7953ac7881b4",
+          "long_name": "gist.github.com",
+          "img": "https://imgs.search.brave.com/xZ1QeMRUaD4Rb2PRlguFbHNXkQKQJMGrNr6XEBVeFkc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNzdmZjEzNDE3/NDlmMDc4NDRlMGJl/YTdmYzUxNGNkNDdk/OGE5YmRiOWQ0NGVl/NDU4MzZlNzg3OTYy/M2YzOTZiMS9naXN0/LmdpdGh1Yi5jb20v"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "gist.github.com",
+          "hostname": "gist.github.com",
+          "favicon": "https://imgs.search.brave.com/xZ1QeMRUaD4Rb2PRlguFbHNXkQKQJMGrNr6XEBVeFkc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNzdmZjEzNDE3/NDlmMDc4NDRlMGJl/YTdmYzUxNGNkNDdk/OGE5YmRiOWQ0NGVl/NDU4MzZlNzg3OTYy/M2YzOTZiMS9naXN0/LmdpdGh1Yi5jb20v",
+          "path": "› didier-durand  › 2970be82fec6c84d522f7953ac7881b4"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/xibc_mhoVZOIJZ8WpN5zLmMhFjHG43_6n7CZ-4y25kI/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9naXRo/dWIuZ2l0aHViYXNz/ZXRzLmNvbS9hc3Nl/dHMvZ2lzdC1vZy1p/bWFnZS01NGZkN2Rj/MDcxM2UucG5n",
+          "original": "https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png",
+          "logo": false
+        }
+      },
+      {
+        "title": "Exploring MCP Primitives: Tools, Resources, and Prompts",
+        "url": "https://codesignal.com/learn/courses/developing-and-integrating-a-mcp-server-in-python/lessons/exploring-and-exposing-mcp-server-capabilities-tools-resources-and-prompts",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "In this lesson, we will build on that foundation by exploring how to define and expose your server’s capabilities. Specifically, you will learn how to add tools, resources, and prompts to your MCP server. These are the core building blocks that allow your server to provide useful functions, share data, and guide AI interactions.",
+        "profile": {
+          "name": "CodeSignal",
+          "url": "https://codesignal.com/learn/courses/developing-and-integrating-a-mcp-server-in-python/lessons/exploring-and-exposing-mcp-server-capabilities-tools-resources-and-prompts",
+          "long_name": "codesignal.com",
+          "img": "https://imgs.search.brave.com/g0Q27sPhN50Ls58-7e8oGzQZHj0q-0m-qB1U5G7RVKc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTFlMzVkZjEw/NzRjYmIxNWM0MmI1/YmE3ZWU3ODZjNTgy/ODEzYTlhMDRiM2U1/YTZhYTQxOTQwOWZl/NjExMzY2MC9jb2Rl/c2lnbmFsLmNvbS8"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "codesignal.com",
+          "hostname": "codesignal.com",
+          "favicon": "https://imgs.search.brave.com/g0Q27sPhN50Ls58-7e8oGzQZHj0q-0m-qB1U5G7RVKc/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTFlMzVkZjEw/NzRjYmIxNWM0MmI1/YmE3ZWU3ODZjNTgy/ODEzYTlhMDRiM2U1/YTZhYTQxOTQwOWZl/NjExMzY2MC9jb2Rl/c2lnbmFsLmNvbS8",
+          "path": "› learn  › courses  › developing-and-integrating-a-mcp-server-in-python  › lessons  › exploring-and-exposing-mcp-server-capabilities-tools-resources-and-prompts"
+        }
+      },
+      {
+        "title": "MCP tools - Agent Development Kit - Google",
+        "url": "https://google.github.io/adk-docs/tools/mcp-tools/",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "You&#x27;re being redirected to a new destination",
+        "profile": {
+          "name": "Google",
+          "url": "https://google.github.io/adk-docs/tools/mcp-tools/",
+          "long_name": "google.github.io",
+          "img": "https://imgs.search.brave.com/K-dwa2enBNqgEPCeG-NMphGAJl0ep_3DyLscXIIfn1A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMzc4MGI2MTQw/NDRiM2QzYzg0YzA5/YTM4NjZjYzdjMzU2/YTQyNGI2YjVlZTJj/N2E5YjFmMzIzMWZi/NzIyMGQyMS9nb29n/bGUuZ2l0aHViLmlv/Lw"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "google.github.io",
+          "hostname": "google.github.io",
+          "favicon": "https://imgs.search.brave.com/K-dwa2enBNqgEPCeG-NMphGAJl0ep_3DyLscXIIfn1A/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvMzc4MGI2MTQw/NDRiM2QzYzg0YzA5/YTM4NjZjYzdjMzU2/YTQyNGI2YjVlZTJj/N2E5YjFmMzIzMWZi/NzIyMGQyMS9nb29n/bGUuZ2l0aHViLmlv/Lw",
+          "path": "› adk-docs  › tools  › mcp-tools"
+        }
+      }
+    ],
+    "family_friendly": true
+  }
+}

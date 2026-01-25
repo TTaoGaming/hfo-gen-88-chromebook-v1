@@ -1,0 +1,89 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: V -->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Active HFO Omega Entrypoint</title>
+    <meta http-equiv="cache-control" content="no-store" />
+</head>
+
+<body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 16px;">
+    <h1 style="margin: 0 0 8px;">Active HFO Omega Entrypoint</h1>
+    <p style="margin: 0 0 12px; max-width: 78ch;">
+        Pattern: <code>active_hfo_omega_entrypoint</code>. This is a stable launcher that forwards to the current Omega
+        baseline (default: Gen5 v11). Append any <code>flag-*</code> query params here and they will be forwarded.
+    </p>
+
+    <noscript>
+        <p><strong>JavaScript required.</strong></p>
+    </noscript>
+
+    <p style="margin: 0;">Forwarding…</p>
+
+    <script>
+        (function () {
+            const DEFAULT_TARGET_PATH = '/hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11.html';
+            const DEFAULT_FLAGS = {
+                'flag-engine-babylon': 'false',
+                'flag-engine-canvas': 'true',
+                'flag-disable-camera': 'true'
+            };
+
+            const currentUrl = new URL(window.location.href);
+
+            function sanitizeTargetPath(maybePath) {
+                if (!maybePath) return null;
+                const s = String(maybePath).trim();
+                if (!s.startsWith('/')) return null;
+                if (s.includes('..') || s.includes('\\')) return null;
+                if (!s.toLowerCase().endsWith('.html')) return null;
+                return s;
+            }
+
+            function buildTarget(targetPath, flags) {
+                const origin = currentUrl.origin;
+                const targetUrl = new URL(origin + targetPath);
+
+                // Start with entrypoint defaults.
+                Object.entries(flags || {}).forEach(([k, v]) => {
+                    targetUrl.searchParams.set(k, String(v));
+                });
+
+                // Forward all query params from entrypoint.
+                // NOTE: incoming params override defaults.
+                currentUrl.searchParams.forEach((v, k) => {
+                    if (k === 'target') return;
+                    targetUrl.searchParams.set(k, v);
+                });
+
+                return targetUrl.toString();
+            }
+
+            async function resolveConfig() {
+                try {
+                    const res = await fetch('./active_hfo_omega_entrypoint.json', { cache: 'no-store' });
+                    if (!res.ok) throw new Error('config fetch failed');
+                    const cfg = await res.json();
+                    const path = cfg?.active?.baseline?.path || DEFAULT_TARGET_PATH;
+                    const defaultFlags = cfg?.active?.baseline?.defaultFlags || DEFAULT_FLAGS;
+                    return { path, defaultFlags };
+                } catch (_) {
+                    return { path: DEFAULT_TARGET_PATH, defaultFlags: DEFAULT_FLAGS };
+                }
+            }
+
+            (async () => {
+                const overrideTarget = sanitizeTargetPath(currentUrl.searchParams.get('target'));
+                const cfg = await resolveConfig();
+                const cfgPath = sanitizeTargetPath(cfg.path) || DEFAULT_TARGET_PATH;
+                const path = overrideTarget || cfgPath;
+                const target = buildTarget(path, cfg.defaultFlags);
+                window.location.replace(target);
+            })();
+        })();
+    </script>
+</body>
+
+</html>

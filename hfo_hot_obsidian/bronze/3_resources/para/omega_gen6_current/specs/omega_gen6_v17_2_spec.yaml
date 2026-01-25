@@ -1,0 +1,80 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v17.2 Spec: Tripwire Lookahead Window (Prediction Gate) — Experimental
+# Timestamp: 2026-01-22
+#
+# Goal: evaluate whether a small prediction horizon (lookaheadWindowMs) can make
+# crossings *feel* lower-latency using analytic time-to-cross (TTC) vs the existing
+# crossing detector, without claiming true "negative latency".
+
+version: 17.2
+name: omega_gen6
+intent:
+  - Add an experimental prediction/measurement layer for tripwire crossings.
+  - Provide a single user-facing knob (lookaheadWindowMs) expressed in milliseconds.
+  - Keep fail-closed posture: prediction never replaces actual crossing; it is advisory unless explicitly enabled.
+  - Use golden JSONL fixtures to quantify how prediction behaves under slow vs fast crossings.
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v17_1.html
+  target:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v17_2.html
+  note: "v17.2 is a v17.1 clone for experimentation + tests; behavior remains stable unless a future flag adds predicted events."
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    p2-tripwire-lookahead: false
+    p2-tripwire-lookahead-window-ms: 100
+  overrides:
+    url_query:
+      - "?flag-p2-tripwire-lookahead=true|false"
+      - "?flag-p2-tripwire-lookahead-window-ms=0..500"
+
+prediction:
+  definition:
+    lookaheadWindowMs: "Prediction horizon. If a crossing is predicted within this window, the system may pre-arm downstream effects."
+    semantics:
+      - "This is not true negative latency; it is a prediction that can be wrong."
+      - "Prediction must be confirmable by a real crossing event (p2/tripwire_cross) or expire/cancel."
+
+  algorithm_mvp:
+    inputs:
+      - "Per-cursor state: uiNormX/uiNormY and velocity estimate (vxUiNormPerS/vyUiNormPerS or derived from frame deltas)."
+      - "Tripwire band center: dbg.band.centerUiNormY (default 0.5)."
+      - "FSM gating: COMMIT-only by default (consistent with existing tripwire posture)."
+    compute:
+      - "For downcross: if vy>0 and y<bandY, compute ttcMs=(bandY - y)/vy*1000."
+      - "If 0 < ttcMs <= lookaheadWindowMs, mark predicted crossing candidate."
+    output_options:
+      - "Phase 0 (measurement-only): compute predicted times in test harness; no runtime event emission."
+      - "Phase 1 (advisory): emit p2/tripwire_lookahead events (new type) with ttcMs + bandY, but do not inject."
+      - "Phase 2 (pre-arm): allow P3 injector to schedule early injection, but require confirm/cancel semantics."
+
+risks:
+  - "Sparse or jittery samples can make velocity estimates noisy; a filter (e.g., Kalman/EMA) improves state but is not mandatory for MVP measurement."
+  - "Planck TOI/CCD is not a free win when cursor state is externally driven; keep TOI as a later upgrade."
+  - "Prediction without confirm/cancel can cause false positives (unwanted keypresses)."
+
+fixtures:
+  purpose: "Quantify prediction lead time under controlled slow vs fast crossings."
+  files:
+    slow_cross:
+      path: hfo_hot_obsidian/bronze/3_resources/fixtures/touch2d/gen6_v17_2_tripwire_slow_cross_golden.jsonl
+      expectation:
+        - "With lookaheadWindowMs=200, predicted trigger should occur >=100ms before actual crossing."
+        - "With lookaheadWindowMs=100, predicted trigger should occur close to the last pre-cross frame."
+    fast_cross:
+      path: hfo_hot_obsidian/bronze/3_resources/fixtures/touch2d/gen6_v17_2_tripwire_fast_cross_golden.jsonl
+      expectation:
+        - "Prediction depends on having at least one velocity estimate before crossing; 3 frames provides that."
+        - "With lookaheadWindowMs=50, predicted trigger should occur before the crossing frame."
+
+validation:
+  posture: "RED-first TDD, but for v17.2 the first step is an evaluation test that prints lead-time stats and asserts coarse invariants."
+  tests:
+    - file: scripts/omega_gen6_v17_2_p2_tripwire_lookahead_eval.spec.ts
+      intent:
+        - "Load v17.2 entrypoint, tick TripwireThread with golden fixtures, capture p2/tripwire_cross, and compute predicted lead time for multiple lookaheadWindowMs values."
+      notes:
+        - "This test is measurement-first; it does not require new runtime event types or contract changes."

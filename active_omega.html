@@ -1,0 +1,33 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: V -->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HFO Active Omega (Legacy Entrypoint)</title>
+    <meta http-equiv="cache-control" content="no-store" />
+</head>
+
+<body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 16px;">
+    <h1 style="margin: 0 0 8px;">HFO Active Omega</h1>
+    <p style="margin: 0 0 12px; max-width: 78ch;">
+        Legacy entrypoint kept for backward compatibility.
+        Forwarding to <code>active_hfo_omega_entrypoint.html</code>…
+    </p>
+
+    <noscript>
+        <p><strong>JavaScript required.</strong></p>
+    </noscript>
+
+    <script>
+        (function () {
+            const currentUrl = new URL(window.location.href);
+            const next = new URL(currentUrl.origin + '/active_hfo_omega_entrypoint.html');
+            currentUrl.searchParams.forEach((v, k) => next.searchParams.set(k, v));
+            window.location.replace(next.toString());
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v22 Spec: Knuckle TripPlane (Extended) + Predictive Lookahead — RED TDD/BDD scaffold
+# Timestamp: 2026-01-23
+# NOTE: This spec is intentionally RED-first; do NOT treat any GREEN as success until v22 primitives are implemented.
+
+version: 22
+name: omega_gen6
+intent:
+  # User words / requirements (verbatim; typos preserved; 2026-01-23):
+  user_requirements_raw:
+    - "extend the plane out to the side… .5 extended in 1 direction, 1 in the middle .5 in the extension other direction."
+    - "Make sure any of these magic numbers can be easily tuned… microkernel settings port 7… extend 1 side more… sensor tripplane like a sword… physics object with sensors… later physics and babylon… port 2 sensor anchored on my knuckles in certain FSM states."
+    - "reliable fingertip crossing plane of knuckles triggering key with predictive lookahead and velocity"
+    - "reliable fintertip crossing plane of knuckles triggering key with predictive lookahead and velocity"
+    - "Please continue until you are fully done with RED TDD… create a v22 spec yaml… reliable fingertip crossing plane… predictive lookahead and velocity… extension tunable… note down v23 aspirational goals… markdown, spec, and red TDD only (any green needs to be flagged as hallucination)."
+    - "Further improve the red TDD… golden master testing… simulate slow COMMIT crossing… test if it crosses the extension… check timestamps for lookahead correctness… start fuzzing later."
+    - "set up markdown, spec, and red TDD only (any green needs ot be flagged as hallucination)"
+    - "Just crashed error code 9, please log that and retry… use the hub py… entryway to all our tools."
+    - "we just crashed again, please log that and retry. is my task too large? can yiou make sure it's documented in the gen6 vX spec yaml and let's really go heads down and focus"
+    - "crashed again, free resources"
+    - "Probe what’s going on… focus on mission thread omega… if infra is stalling let me know."
+    - "Ok please proceed… focus is on latest omega specs v22 and v23… you keep freezing. let’s focus on omega."
+    - "we just crashed again, please log that and retry. is my task too large? can yiou make sure it's documented in the gen6 vX spec yaml and let's really go heads down and focus"
+
+  normalized:
+    - "What I want is a reliable fingertip crossing plane of knuckles triggering key with predictive lookahead and velocity."
+    - "Extend the plane out to the side so it's easier to trigger: 0.5 extension + 1 middle + 0.5 extension (default symmetric)."
+    - "I should have a sensor tripplane/tripwire like a sword: extend 1 side more (asymmetric)."
+    - "Proprioception-first: mono camera tolerant — even if the user isn't perfectly lined up, as long as they can pass fingertip past knuckle plane it should trigger."
+    - "This is a really important primitive: later we need physics + Babylon; Port 2 sensor anchored on knuckles in certain FSM states."
+  system_intent:
+    - "Primary user story: in COMMIT, a fingertip crossing the plane of the knuckles triggers a key (Space) with press/release semantics."
+    - "Responsiveness goal: predictive lookahead using distance + velocity (TTC) so keydown can lead the real crossing while remaining COMMIT-gated (anti-Midas)."
+    - "Port boundaries: P2 SHAPE owns sensor geometry + metadata; P3 DELIVER owns key injection + safety policy; P7 NAVIGATE provides microkernel tuning knobs."
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v21.html
+  target:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v22.html
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    # P2 sources
+    p2-tripwire-static: false
+    p2-tripwire-knuckle: true
+
+    # P3 routing (fail-closed)
+    p3-tripwire-injector: false
+    p3-tripwire-injector-static: false
+    p3-tripwire-injector-knuckle: true
+
+    # UI
+    ui-knuckle-tripwire-panel: true
+
+ports:
+  p2_shape:
+    event_bus: "Ports Effects (window.hfoPortsEffects)"
+
+    knuckle_tripplane:
+      description: "Hand-anchored trip-plane proxy derived from landmarks: index_mcp(5) → pinky_mcp(17) defines the bar; index_tip(8) crosses the plane; COMMIT-only emission."
+      sensor_id: knuckle
+      extension:
+        posture: "Make lateral aiming easier; support asymmetric sword-like extension."
+        knobs_microkernel:
+          parameters:
+            - "systemState.parameters.p2.knuckleTripwire.barExtensionFracA"
+            - "systemState.parameters.p2.knuckleTripwire.barExtensionFracB"
+          url_overrides:
+            - "?flag-p2-knuckle-tripwire-ext-a-frac=<number>"
+            - "?flag-p2-knuckle-tripwire-ext-b-frac=<number>"
+        defaults:
+          barExtensionFracA: 0.5
+          barExtensionFracB: 0.5
+          note: "0.5 + 1.0 + 0.5 total segment span (each side extended by 0.5*barLen)."
+
+    predictive_lookahead_v22:
+      description: "COMMIT-gated predictive primitive emitted before the crossing when TTC is within a window."
+      event_type: p2/tripplane_lookahead
+      contract:
+        zod_schema: TripplaneLookaheadV22Schema
+        file: contracts/hfo_tripwire_events.zod.ts
+      required_fields:
+        - ttcMs
+        - lookaheadWindowMs
+        - orientedDistanceUiNorm
+        - orientedDistanceVelUiNormPerS
+        - enterDistanceUiNorm
+        - exitDistanceUiNorm
+      optional_fields:
+        - barExtensionUiNormA
+        - barExtensionUiNormB
+        - bandThicknessUiNorm
+
+  p3_deliver:
+    description: "Map P2 tripplane primitives to key effects (fail-closed)."
+    mapping_v22_target:
+      dino_runner:
+        adapterId: dino-v1
+        predictive_press:
+          when:
+            - "p2:tripplane_lookahead present"
+            - "fsmState == COMMIT"
+            - "0 <= ttcMs <= lookaheadWindowMs"
+          action:
+            - "keyboard Space keydown (predictive)"
+        release:
+          when:
+            - "p2:tripwire_cross sensorId==knuckle phase==end"
+            - "fsmState == COMMIT"
+          action:
+            - "keyboard Space keyup"
+
+validation:
+  posture: "RED-first (contract-first + BDD)."
+  notes:
+    - "Any GREEN behavior prior to implementing tripplane_lookahead and predictive P3 should be treated as a false positive / hallucination."
+  suggested_specs:
+    - scripts/omega_gen6_v22_p2_tripplane_lookahead_red.spec.ts
+    - scripts/omega_gen6_v22_p3_tripplane_predictive_space_red.spec.ts
+
+future_intent:
+  posture: "v23 aspirational, non-binding"
+  v23_user_requirements_raw:
+    - "make sure any of these magic numbers can be easily tuned… microkernal settings port 7… extend 1 side more… sensor tripplane like a sword… physics object with sensors… later physics and babylon…"
+    - "sensor tripplane like a sword… physics object with sensors… later physics and babylon…"
+    - "port 2 sensor anchored on my knuckles in certain FSM states"
+  notes:
+    - "v23: create a flaming sword in Babylon — should be easy once v22 primitive is set up."
+    - "Promote the tripplane into a Babylon-rendered tool anchored on knuckles (plane/rod/capsule)."
+    - "Back the tool with physics sensors (Planck/Rapier) and emit contact begin/end as authoritative events."
+    - "Unify fallback (distance/velocity plane-crossing) with physics contact mode under one Port2 primitive family."

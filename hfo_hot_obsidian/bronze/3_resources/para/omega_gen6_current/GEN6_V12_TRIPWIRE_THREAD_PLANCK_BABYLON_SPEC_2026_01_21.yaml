@@ -1,0 +1,159 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# GEN6 V12 — Tripwire Thread (PlanckJS + Babylon) Spec
+# Date: 2026-01-21
+# Layer: Bronze (incubation)
+
+spec_version: 0.1.0
+id: gen6-v12-tripwire-thread-planck-babylon
+status: draft
+
+intent:
+  summary: >-
+    Introduce a Port2 “Tripwire Thread” primitive: a physical web strand in touch2d space with
+    PlanckJS-based collision and time-to-impact (TTI) prediction, Babylon-based visualization,
+    and COMMIT-gated direction+velocity triggers that can be mapped to Port3 payloads.
+
+scope:
+  runtime:
+    base: omega_gen6_v11
+    target: omega_gen6_v12
+  ports:
+    p1:
+      uses:
+        - DataFabric.cursors[*].fsmState
+        - DataFabric.cursors[*].uiNormX/uiNormY
+        - DataFabric.cursors[*].handIndex
+        - DataFabric.cursors[*].pointerId
+    p2:
+      owns:
+        - physics_world_planck
+        - tripwire_thread_geometry
+        - collision_and_direction_classification
+        - time_to_impact_prediction
+        - intent_synthesis_and_telemetry
+    p3:
+      owns:
+        - effect_delivery_only
+        - mapping_intents_to_keyboard_or_pointer_payloads
+
+invariants:
+  - name: p2_semantics_p3_injection_separation
+    statement: >-
+      Port2 computes physics/contact/TTI and emits intents. Port3 remains the sole injector.
+      Tripwire defaults to telemetry-only unless explicitly enabled.
+  - name: commit_gated
+    statement: >-
+      Tripwire triggers only when fsmState == COMMIT.
+  - name: deterministic_test_path
+    statement: >-
+      Must be testable without camera: provide a deterministic probe that accepts synthetic cursor
+      frames and returns emitted P2 events.
+
+feature:
+  tripwire_thread:
+    geometry:
+      space: touch2d
+      default_thread:
+        kind: band
+        orientation: horizontal
+        center_ui_norm_y: 0.50
+        thickness_ui_norm: 0.06
+        span_ui_norm_x: [0.05, 0.95]
+      note: >-
+        In PlanckJS, model as a thin AABB sensor fixture (stability) rather than a single segment.
+        Maintain explicit transform mapping: uiNorm (0..1) -> Planck meters.
+
+    triggers:
+      gating:
+        required_fsm_state: COMMIT
+      classify_direction:
+        rule: >-
+          Determine direction by the sign of (uiNormY - threadCenterY) at entry vs prior frame.
+          up-cross: below->above; down-cross: above->below.
+      velocity:
+        source: >-
+          Cursor kinematics derived from consecutive uiNorm positions (P2 maintains per-pointer state).
+      mapping_example:
+        up_cross_intent: key_up
+        down_cross_intent: key_down
+
+    prediction:
+      tti:
+        required: true
+        mvp_method: >-
+          Compute time-to-impact against the thread band using relative distance divided by the
+          velocity component toward the band (clamped; fail-soft if speed ~0).
+        upgrade_path: >-
+          Replace mvp_method with Planck swept test / TOI query against sensor band to handle
+          oblique/high-speed crossings robustly.
+
+telemetry:
+  events:
+    - type: p2:tripwire:proximity
+      when: cursor is within a proximity radius of the thread band
+      fields: [handIndex, pointerId, uiNormX, uiNormY, speed, ttiMs]
+    - type: p2:tripwire:cross
+      when: cursor crosses the band while COMMIT-gated
+      fields: [handIndex, pointerId, direction, speed, ttiMs, traceId, targetId]
+
+ui:
+  golden_layout:
+    component:
+      name: Tripwire Web
+      purpose: >-
+        Visualize the mid-screen thread/web, highlight proximity, animate tension/pulse on crossing.
+      implementation_options:
+        - babylon_overlay_layer
+        - canvas2d_overlay
+      must:
+        - not_block_pointer_injection
+        - render_when_enabled_only
+
+configuration:
+  flags:
+    - id: p2-tripwire-thread
+      default: false
+    - id: p2-tripwire-thread-emit-p3
+      default: false
+  parameters:
+    p2:
+      tripwireThread:
+        enabled: false
+        emitTelemetry: true
+        emitP3: false
+        band:
+          centerUiNormY: 0.50
+          thicknessUiNorm: 0.06
+          spanUiNormXMin: 0.05
+          spanUiNormXMax: 0.95
+        tti:
+          maxMs: 500
+          minSpeedUiNormPerS: 0.02
+
+acceptance_criteria:
+  - id: ac1_commit_gated
+    statement: >-
+      In READY/IDLE/COAST, crossing does not emit p2:tripwire:cross (may emit proximity).
+  - id: ac2_directional_cross
+    statement: >-
+      In COMMIT, up-cross emits direction=up and down-cross emits direction=down.
+  - id: ac3_tti_present
+    statement: >-
+      p2:tripwire:cross includes a ttiMs number (>=0) when speed threshold met.
+  - id: ac4_visual_present
+    statement: >-
+      When enabled, the Tripwire Web visualization is visible and pulses on crossing.
+
+validation:
+  tests:
+    - name: playwright_smoke_tripwire_crossing
+      idea: >-
+        Load Gen6 v12, feed synthetic cursor frames in COMMIT that cross midline up then down.
+        Assert 2 p2:tripwire:cross events with correct direction and non-null ttiMs.
+      notes:
+        - Use debugEvaluate/probe path; avoid camera dependencies.
+
+notes:
+  - >-
+    This spec intentionally keeps Port3 unchanged: the first milestone is reliable Port2 intent/telemetry.
+    Mapping to actual keyboard injection is a follow-on once the tripwire semantics are stable.

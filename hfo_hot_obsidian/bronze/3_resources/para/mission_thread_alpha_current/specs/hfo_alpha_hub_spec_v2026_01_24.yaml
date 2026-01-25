@@ -1,0 +1,124 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Mission Thread: Alpha (Infrastructure)
+# Spec: HFO Alpha Hub + Gateway (Root Shims + Fail-Close Observability)
+# Version: v2026_01_24
+# Created: 2026-01-24
+# Derived From:
+#   - hfo_hot_obsidian/bronze/3_resources/projects_archive_2026_01_18/hfo_mcp_gateway_hub/hfo_mcp_gateway_hub_spec.yaml
+#
+# Alpha definition (SSOT): any infrastructure task is Mission Thread Alpha,
+# even if an agent does not remember it as "Alpha".
+
+mission_thread_alpha:
+  id: THREAD_ALPHA
+  name: Integrated Cognitive Symbiosis
+  doctrine: JADC2 C2 Node
+  scope_rule: "Infrastructure == Alpha. Product/gesture/UI payload == Omega. If ambiguous, treat as Alpha."
+
+project:
+  name: hfo_alpha_hub
+  layer: hot_bronze
+  created: 2026-01-24
+  purpose: >-
+    Provide a single fail-close entryway for infrastructure work: stable root shims,
+    MCP gateway tooling, contracts, receipts, and audit-grade observability.
+
+entry_surfaces:
+  root_shims:
+    - hfo_hub.py
+    - hfo_mcp_gateway_hub.py
+  alpha_gateway_impl:
+    - hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/hfo_mcp_gateway_hub.py
+
+constraints:
+  - all tool actions should flow through a blessed entry surface (root shim or gateway)
+  - fail-close boundaries: missing contracts/receipts must block progress (no silent bypass)
+  - blackboard is append-only audit log (chained signatures + monotonic timestamps)
+  - contracts are the interface: cross-port data must be schema-validated
+  - observability must be default: emit invoke/result signals on every wrapper use
+
+observability:
+  audit_bus:
+    file: hfo_hot_obsidian/hot_obsidian_blackboard.jsonl
+    envelope: CloudEvents-ish
+    required_fields:
+      - type
+      - time
+      - source
+      - data
+      - signature
+      - timestamp
+    tracing:
+      w3c_traceparent: true
+      required_fields:
+        - trace_id
+        - span_id
+        - traceparent
+    taxonomy:
+      required_pairs:
+        - invoke
+        - result
+      examples:
+        - hfo.hub.invoke
+        - hfo.hub.result
+        - hfo.playwright.invoke
+        - hfo.playwright.result
+
+interfaces:
+  ports:
+    p0_observe: "External sensing + search + context retrieval"
+    p1_bridge: "Schema/contract bridge + tool routing"
+    p2_shape: "Physics/geometry shaping and validation"
+    p3_inject: "Controlled effect delivery and dispatch"
+    p4_disrupt: "Adversarial checks + fuzzing gates"
+    p5_immunize: "Audits, receipts, integrity gates"
+    p6_assimilate: "Storage/journal queries/rollups"
+    p7_navigate: "Orchestration + sequential reasoning"
+
+contracts:
+  zod_contracts_dir: contracts/
+  rule: "All cross-port payloads must be validated by Zod (TS) or equivalent checks (Py)"
+  current_contracts:
+    - contracts/hfo_pointer_command.zod.ts
+    - contracts/hfo_tripwire_events.zod.ts
+    - contracts/hfo_adapter_manifest.zod.ts
+    - contracts/hfo_data_fabric.zod.ts
+    - contracts/hfo_replay_manifest.zod.ts
+    - contracts/hfo_ui_markers.zod.ts
+
+fail_close_gates:
+  blackboard:
+    check_only_gate: scripts/blackboard_purity.py --check-only
+    invariants:
+      - chained_signature
+      - monotonic_timestamp
+      - jsonl_well_formed
+  p5_forensics:
+    command: hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py p5
+  precommit:
+    command: scripts/hfo_precommit_gate.sh
+
+acceptance:
+  - "Every run of hfo_hub.py emits invoke+result events to the hot blackboard"
+  - "Every run of scripts/hfo_playwright_safe_run.py emits invoke+result events to the hot blackboard"
+  - "Blackboard purity check-only passes when writers are stopped and manifest is fresh"
+  - "P5 forensics passes (warnings allowed for legacy archives, but no BREACH)"
+  - "Contracts in contracts/ remain the SSOT for cross-port payloads"
+
+red_tests_plan:
+  - "Tamper with a blackboard line -> purity gate detects breach"
+  - "Remove a required receipt -> gateway blocks commit"
+  - "Emit malformed event -> schema validator fails (future hardening)"
+
+non_goals:
+  - refactor omega gesture logic
+  - change blackboard signature rules
+  - bypass contracts/receipts enforcement
+
+references:
+  - AGENTS.md
+  - hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/README.md
+  - hfo_hot_obsidian/bronze/3_resources/projects_archive_2026_01_18/hfo_mcp_gateway_hub/hfo_mcp_gateway_hub_spec.yaml
+  - scripts/blackboard_purity.py
+  - hfo_blackboard_events.py
+  - scripts/hfo_playwright_safe_run.py

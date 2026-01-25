@@ -1,0 +1,60 @@
+{
+  "schema": "hfo.touch2d.golden.v1",
+  "description": "Gen6 v12: COMMIT fingertip crosses horizontal split (top->bottom) in uiNorm touch2d space",
+  "meta": {
+    "handIndex": 0,
+    "pointerId": 10,
+    "split": "horizontal",
+    "thresholdY": 0.5
+  },
+  "frames": [
+    {
+      "now": 1000,
+      "dt": 16,
+      "cursor": {
+        "handIndex": 0,
+        "pointerId": 10,
+        "fsmState": "COMMIT",
+        "readinessScore": 0.95,
+        "uiNormX": 0.5,
+        "uiNormY": 0.25
+      }
+    },
+    {
+      "now": 1016,
+      "dt": 16,
+      "cursor": {
+        "handIndex": 0,
+        "pointerId": 10,
+        "fsmState": "COMMIT",
+        "readinessScore": 0.95,
+        "uiNormX": 0.5,
+        "uiNormY": 0.45
+      }
+    },
+    {
+      "now": 1032,
+      "dt": 16,
+      "cursor": {
+        "handIndex": 0,
+        "pointerId": 10,
+        "fsmState": "COMMIT",
+        "readinessScore": 0.95,
+        "uiNormX": 0.5,
+        "uiNormY": 0.55
+      }
+    },
+    {
+      "now": 1048,
+      "dt": 16,
+      "cursor": {
+        "handIndex": 0,
+        "pointerId": 10,
+        "fsmState": "COMMIT",
+        "readinessScore": 0.95,
+        "uiNormX": 0.5,
+        "uiNormY": 0.75
+      }
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v24 Spec: Multi-Hand (N) + Per-Hand Knuckle TripPlane + 4 Fingertips/Hand + Piano Genie — RED scaffold
+# Timestamp: 2026-01-23
+# NOTE: Spec-first. v24 introduces UI composition + mapping policy; keep P2 sensing and P3 delivery fail-closed.
+
+version: 24
+name: omega_gen6
+intent:
+  user_requirements_raw:
+    - "for v24 I want per HAND instance knuckle_triplane and per HAND instance 4x fingertips (index, middle, ring, pinky)."
+    - "for v24 I want to add piano genie as a goldenlayout component… split the screen into half vertically… 4 keys per hand."
+  normalized:
+    - "Refactor Gen6 runtime to be multi-hand (N hands), not hard-coded to 1 hand."
+    - "For each detected hand: maintain a knuckle TripPlane (trip-lane) geometry instance."
+    - "For each detected hand: track 4 fingertip points (index/middle/ring/pinky) as independent sensors against the hand's knuckle TripPlane."
+    - "Map each fingertip sensor to a discrete key identity (4 keys per hand) and deliver keydown/keyup edges on begin/end crossings."
+    - "Apply an orientation-based key-bank modifier derived from the knuckle TripPlane direction (e.g., horizontal bank vs vertical bank)."
+    - "Add Piano Genie as a GoldenLayout component/pane inside the Gen6 single-HTML runtime."
+    - "Split screen vertically into two panes (Piano Genie + Omega visual)."
+    - "Preserve COMMIT gating posture; deliver only when user is in COMMIT (fail-closed by default)."
+
+entrypoint:
+  base:
+    # NOTE: v23.10 is the closest-feel baseline for v24 work; v23.11 is higher-churn.
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v23_10.html
+  target:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v24.html
+
+assets:
+  piano_genie:
+    description: "Use local, repo-hosted Piano Genie artifact as the embedded instrument surface."
+    recommended_entrypoints:
+      # Intended stable location (may require restore/move if absent).
+      - hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/piano_genie_official/index.html
+      # Current known-good location in this workspace (archived thread).
+      - hfo_hot_obsidian/bronze/4_archive/mission_thread_omega_gen_1_RED_reward_hacking_death_spiral/piano_genie_official/index.html
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    # Layout
+    ui-goldenlayout: true
+    ui-gen6-v24-vertical-split: true
+
+    # App panes
+    ui-pane-piano-genie: true
+    ui-pane-omega-visual: true
+
+    # Mapping policy
+    p3-piano-fingertip-mapper: false
+    p3-piano-fingertip-mapper-commit-only: true
+
+    # Debug
+    ui-piano-zone-debug: false
+    ui-fingertip-sensors-debug: false
+  overrides:
+    url_query:
+      - "?flag-ui-pane-piano-genie=true|false"
+      - "?flag-ui-gen6-v24-vertical-split=true|false"
+      - "?flag-p3-piano-fingertip-mapper=true|false"
+      - "?flag-ui-piano-zone-debug=true|false"
+      - "?flag-ui-fingertip-sensors-debug=true|false"
+
+ui_layout_goldenlayout:
+  posture:
+    - "v24 uses GoldenLayout as the compositor; panes are single-responsibility and communicate via ports/contracts."
+  vertical_split:
+    ratio_default: 0.5
+    left_pane:
+      id: piano_genie
+      title: "Piano Genie"
+      mount:
+        strategy: iframe_same_origin
+        src: hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/piano_genie_official/index.html
+    right_pane:
+      id: omega_visual
+      title: "Omega"
+      mount:
+        strategy: in_page
+        contains:
+          - "Touch2D overlay"
+          - "Babylon overlay (optional)"
+
+ports:
+  p1_fuse:
+    multi_hand_cursor_source:
+      description: "Multi-hand fused pointer state in uiNorm space; single authority for validated fused hand states."
+      required_fields:
+        - hands
+      hands:
+        posture:
+          - "hands is a list (or map) of detected hands; do not assume 1 hand."
+          - "handIndex is stable within a session where possible; handId is a globally-unique string if available."
+        required_fields:
+          - handIndex
+          - fsmState
+          - readiness
+          - uiNormX
+          - uiNormY
+        optional_fields:
+          - handId
+          - confidence
+          - fingertips
+        fingertips:
+          description: "Per-hand fingertip sensors (4) in uiNorm space."
+          required_fields:
+            - fingerId
+            - uiNormX
+            - uiNormY
+          fingerId_enum:
+            - index
+            - middle
+            - ring
+            - pinky
+
+    hand_identity_abstraction_v24:
+      description: "Stabilize hand identity across frames to prevent random swapping/teleporting; provide durable keys for downstream ports."
+      note:
+        - "Provenance: this stability mitigation (coast + snaplock) was engineered starting in Gen1 (fought/validated over ~8 months)."
+        - "Gen6 v23.x already reflects these working patterns; v24 records them explicitly as a guardrail to prevent drift and regression."
+      posture:
+        - "Do not assume the upstream detector's order (handIndex) is stable."
+        - "Assign each detected hand to a stable slot key (handKey) with inertial persistence + anchoring."
+        - "Target foundation: handle 2 slots cleanly (HAND_1_RIGHT, HAND_2_LEFT) but design for extension to many slots later."
+      slots:
+        # Foundation slots (v24): the system should be correct and stable here.
+        v24_primary:
+          - handKey: HAND_1_RIGHT
+            side: Right
+            slotIndex: 1
+          - handKey: HAND_2_LEFT
+            side: Left
+            slotIndex: 2
+        # Future extension examples (v25+): add more slots without breaking v24 consumers.
+        future_examples:
+          - handKey: HAND_3_RIGHT
+            side: Right
+            slotIndex: 3
+          - handKey: HAND_4_LEFT
+            side: Left
+            slotIndex: 4
+      assignment_policy:
+        side_detection:
+          posture:
+            - "Prefer explicit left/right classification from upstream if available."
+            - "If not available: infer side from uiNormX relative to 0.5 as a heuristic (flag as weaker)."
+        anchoring:
+          description: "Anchor each slot to a stable region + expected motion to reduce swaps."
+          suggested_features:
+            - "Use a per-hand anchor point in uiNorm (e.g., palm center or wrist proxy)."
+            - "Use a cost function combining distance-to-last, velocity continuity, and side consistency."
+        inertial_persistence:
+          description: "Prevent identity teleporting when detections flicker or cross; when uncertain, coast first and snaplock when detections return close."
+          knobs:
+            hold_ms_default: 250
+            max_jump_uiNorm_default: 0.20
+            swap_hysteresis_ms_default: 350
+            snaplock_radius_uiNorm_default: 0.06
+          rules:
+            - "Once a slot is assigned, keep it unless an alternative assignment beats it by a clear margin for >= swap_hysteresis_ms."
+            - "If a detection disappears briefly (< hold_ms_default), keep the slot alive and continue predicting position (coast) rather than reassigning immediately."
+            - "Coast behavior: when in doubt, prefer continuity (predicted stableAnchor) over switching identities."
+            - "Snaplock behavior: if a detection appears within snaplock_radius_uiNorm_default of a slot's predicted stableAnchor (and side matches), snap it back to that slot (do not create/swap identities)."
+            - "If a reassignment would cause a jump > max_jump_uiNorm_default without evidence, reject and keep prior slot assignment (fail-stable)."
+      required_outputs_per_hand:
+        - handKey
+        - side
+        - slotIndex
+        - stableAnchorUiNormX
+        - stableAnchorUiNormY
+
+  p2_shape:
+    per_hand_knuckle_triplane:
+      description: "For each hand: compute and maintain a knuckle TripPlane (trip-lane) axis/segment used for fingertip tripwire sensing."
+      inputs:
+        - "P1 fused hand state (per-hand)."
+      outputs:
+        - "Per-hand knuckleTripplane geometry (segment endpoints A/B in uiNorm or uiNorm+depth)."
+        - "Per-hand per-fingertip tripwire_cross events (begin/end) against that knuckleTripplane."
+      posture:
+        - "A single hand can have 0..4 fingertips present; do not fail if some fingertips are missing."
+        - "TripPlane instances are keyed by handIndex/handId."
+        - "Use the same knuckle span anchor as prior Gen6 knuckle sensing (17→5), with slight outward extension beyond endpoints (sword-like)."
+      parameters:
+        extension:
+          posture:
+            - "Prefer asymmetric per-end extension knobs (A/B) when available; otherwise a symmetric extension is acceptable for MVP."
+          suggested_defaults:
+            barExtensionFracA: 0.15
+            barExtensionFracB: 0.05
+      fingertip_sensors:
+        - index
+        - middle
+        - ring
+        - pinky
+
+  p3_deliver:
+    piano_genie_routing:
+      description: "Deliver discrete note events (keydown/keyup) to Piano Genie surface when enabled."
+      posture:
+        - "Fail-closed: disabled unless p3-piano-fingertip-mapper flag enabled."
+        - "COMMIT-only by default to prevent accidental notes (anti-Midas)."
+      target_policy:
+        - "If Piano Genie is mounted in an iframe, resolve target as iframe content window (same-origin only)."
+        - "Never deliver to non-active panes when active-app-only policy is enabled."
+
+    fingertip_to_key_mapping_v24:
+      posture:
+        - "Per-hand mapping: each fingertip is an independent tripwire sensor (begin/end edges)."
+        - "Per-hand keys: 4 keys per hand, one per fingertip."
+        - "Supports N hands; key identity is derived from (handIndex, fingerId)."
+        - "Key labels are arbitrary; the important invariant is deterministic, reversible mapping for tests and replays."
+      mapping_rule:
+        - "If P2 emits tripwire_cross begin for (handIndex, fingerId), send keydown for that key if not already down."
+        - "If P2 emits tripwire_cross end for (handIndex, fingerId), send keyup for that key if currently down."
+        - "No repeats while stable; only edges cause delivery."
+        - "Apply an orientation-based key-bank modifier derived from the knuckleTripplane direction for that hand (horizontal bank vs vertical bank)."
+      key_identity:
+        by_finger_id_fixed:
+          index: "K0"
+          middle: "K1"
+          ring: "K2"
+          pinky: "K3"
+        orientation_bank:
+          description: "Modifier bank chosen per hand based on knuckleTripplane direction in uiNorm space."
+          classifier:
+            - "Let dir = normalize(B - A) in uiNorm coordinates."
+            - "If abs(dir.x) >= abs(dir.y) => bank=HORIZONTAL else bank=VERTICAL."
+          bank_labels_example_numeric:
+            horizontal:
+              K0: "1"
+              K1: "2"
+              K2: "3"
+              K3: "4"
+            vertical:
+              K0: "5"
+              K1: "6"
+              K2: "7"
+              K3: "8"
+          bank_labels_example_alpha:
+            horizontal:
+              K0: "A"
+              K1: "B"
+              K2: "C"
+              K3: "D"
+            vertical:
+              K0: "E"
+              K1: "F"
+              K2: "G"
+              K3: "H"
+        composition:
+          - "Final key identity should be encoded as `${handKey}:${bankLabel}` where handKey defaults to Left/Right and bankLabel derives from (fingerId, bank)."
+          - "Prefer handKey in {Left,Right} for v24; reserve suffix expansion (Left1/Right1) for v25+ without breaking v24 replay parsing."
+      velocity_optional:
+        posture:
+          - "Optional: map readiness or oriented distance velocity to velocity/accent; do not block MVP on this."
+        default_strategy: "velocity = 1.0 (fixed)"
+
+    gating:
+      when:
+        - "feature flag p3-piano-fingertip-mapper == true"
+        - "fsmState == COMMIT (unless commit-only override disabled)"
+      effects:
+        - "keydown/keyup note events delivered to Piano Genie surface"
+
+validation:
+  posture: "RED-first (UI composition + mapping smoke tests)."
+  acceptance_criteria:
+    - "GoldenLayout loads with a vertical split: left pane Piano Genie, right pane Omega visual."
+    - "With p3-piano-fingertip-mapper=false, no notes are produced even if fingers cross (fail-closed)."
+    - "With p3-piano-fingertip-mapper=true and fsmState!=COMMIT, no notes are produced (COMMIT-only default)."
+    - "With p3-piano-fingertip-mapper=true and fsmState==COMMIT, each hand has up to 4 independent fingertip sensors and each fingertip maps to a stable key identity (4 keys/hand)."
+    - "For each (handIndex, fingerId), begin crossing produces keydown and end crossing produces keyup (no repeats while stable)."
+    - "System does not assume a single hand; Left/Right hands can produce concurrent notes without key identity collisions."
+    - "Orientation modifier: the same fingerId produces a different bank label when the knuckleTripplane direction classification changes (horizontal vs vertical)."
+    - "Hand identity stability: HAND_1_RIGHT and HAND_2_LEFT do not randomly swap under normal motion; brief detector dropouts (< hold_ms_default) do not cause key identity churn."
+    - "Coast + snaplock: during ambiguity, slots coast; when detections return close to the predicted stableAnchor (<= snaplock_radius_uiNorm_default), they snap back to the prior slot without swapping."
+    - "Extensibility: the handKey format supports adding HAND_3_RIGHT/HAND_4_LEFT later without changing v24 key parsing rules."
+  suggested_specs:
+    - scripts/omega_gen6_v24_piano_genie_goldenlayout_split_red.spec.ts
+    - scripts/omega_gen6_v24_multi_hand_fingertip_mapping_edges_red.spec.ts
+    - scripts/omega_gen6_v24_no_one_hand_assumption_red.spec.ts
+    - scripts/omega_gen6_v4_substrate_split.spec.ts
+
+future_intent:
+  notes:
+    - "v25+: Add scale/mode controls (major/minor, pentatonic) and persist mapping profiles via P7 microkernel settings."
+    - "v25+: Make key-bank labels user-configurable (numeric, alpha, MIDI note numbers) without changing core contracts."
+    - "v25+: Optional: add spatial zoning within each hand's knuckle tripplane (e.g., 4 zones along the bar) in addition to finger-identity mapping, for alternate play styles."

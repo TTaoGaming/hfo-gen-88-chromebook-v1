@@ -1,0 +1,501 @@
+{
+  "version": "gen6_v9_dino_readiness_replay_v1",
+  "sequences": [
+    {
+      "id": "seq01_basic_fill_then_drain",
+      "description": "Palm towards (fill to READY once) then palm away (drain to IDLE).",
+      "config": {
+        "numHands": 1,
+        "chargeTimeMs": 900,
+        "releaseTimeMs": 900,
+        "coastDrainTimeMs": 900,
+        "tensionMs": 0,
+        "hysteresisHigh": 0.88,
+        "hysteresisLow": 0.52,
+        "readyTriggerCooldownMs": 200
+      },
+      "expect": {
+        "minNematocyst": 1,
+        "maxNematocyst": 1,
+        "minPostMessageOk": 1
+      },
+      "steps": [
+        {
+          "ms": 1200,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 1200,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seq02_short_fill_no_trigger",
+      "description": "Short fill burst should not reach hysteresisHigh; expect no nematocyst.",
+      "config": {
+        "numHands": 1,
+        "chargeTimeMs": 2000,
+        "releaseTimeMs": 800,
+        "coastDrainTimeMs": 800,
+        "tensionMs": 0,
+        "hysteresisHigh": 0.88,
+        "hysteresisLow": 0.52,
+        "readyTriggerCooldownMs": 200
+      },
+      "expect": {
+        "minNematocyst": 0,
+        "maxNematocyst": 0,
+        "minPostMessageOk": 0
+      },
+      "steps": [
+        {
+          "ms": 400,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 1200,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seq03_fill_hold_ready_no_repeat",
+      "description": "Fill to READY then hold facing; should not retrigger while staying READY.",
+      "config": {
+        "numHands": 1,
+        "chargeTimeMs": 700,
+        "releaseTimeMs": 1200,
+        "coastDrainTimeMs": 1200,
+        "tensionMs": 0,
+        "hysteresisHigh": 0.86,
+        "hysteresisLow": 0.52,
+        "readyTriggerCooldownMs": 200
+      },
+      "expect": {
+        "minNematocyst": 1,
+        "maxNematocyst": 1,
+        "minPostMessageOk": 1
+      },
+      "steps": [
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 1400,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seq04_two_triggers_two_cycles",
+      "description": "Fill→drain below low→fill again; expect two nematocysts.",
+      "config": {
+        "numHands": 1,
+        "chargeTimeMs": 650,
+        "releaseTimeMs": 650,
+        "coastDrainTimeMs": 650,
+        "tensionMs": 0,
+        "hysteresisHigh": 0.86,
+        "hysteresisLow": 0.52,
+        "readyTriggerCooldownMs": 200
+      },
+      "expect": {
+        "minNematocyst": 2,
+        "maxNematocyst": 2,
+        "minPostMessageOk": 2
+      },
+      "steps": [
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        },
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seq05_confidence_drop_causes_coast",
+      "description": "Fill then drop confidence (COAST/drain), then recover and fill again.",
+      "config": {
+        "numHands": 1,
+        "chargeTimeMs": 800,
+        "releaseTimeMs": 800,
+        "coastDrainTimeMs": 500,
+        "tensionMs": 0,
+        "hysteresisHigh": 0.88,
+        "hysteresisLow": 0.52,
+        "readyTriggerCooldownMs": 200
+      },
+      "expect": {
+        "minNematocyst": 2,
+        "maxNematocyst": 2,
+        "minPostMessageOk": 2
+      },
+      "steps": [
+        {
+          "ms": 1100,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 700,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": false,
+              "shouldFill": false
+            }
+          ]
+        },
+        {
+          "ms": 1100,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 1000,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seq06_tension_holds_charge",
+      "description": "Uses tensionMs to keep charging briefly after palm away.",
+      "config": {
+        "numHands": 1,
+        "chargeTimeMs": 900,
+        "releaseTimeMs": 900,
+        "coastDrainTimeMs": 900,
+        "tensionMs": 500,
+        "hysteresisHigh": 0.86,
+        "hysteresisLow": 0.52,
+        "readyTriggerCooldownMs": 200
+      },
+      "expect": {
+        "minNematocyst": 1,
+        "maxNematocyst": 1,
+        "minPostMessageOk": 1
+      },
+      "steps": [
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 300,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 1200,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seq07_multi_hand_seat_isolation",
+      "description": "Two-hand smoke: hand0 triggers, drains, then hand1 triggers (verifies per-hand readiness + FSM isolation under numHands=2).",
+      "config": {
+        "numHands": 2,
+        "chargeTimeMs": 750,
+        "releaseTimeMs": 750,
+        "coastDrainTimeMs": 750,
+        "tensionMs": 0,
+        "hysteresisHigh": 0.86,
+        "hysteresisLow": 0.52,
+        "readyTriggerCooldownMs": 200
+      },
+      "expect": {
+        "minNematocyst": 2,
+        "maxNematocyst": 2,
+        "minPostMessageOk": 2
+      },
+      "steps": [
+        {
+          "ms": 1100,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            },
+            {
+              "handIndex": 1,
+              "present": false
+            }
+          ]
+        },
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            },
+            {
+              "handIndex": 1,
+              "present": false
+            }
+          ]
+        },
+        {
+          "ms": 1100,
+          "hands": [
+            {
+              "handIndex": 0,
+              "present": false
+            },
+            {
+              "handIndex": 1,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 900,
+          "hands": [
+            {
+              "handIndex": 0,
+              "present": false
+            },
+            {
+              "handIndex": 1,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seq08_cooldown_suppression",
+      "description": "Rapid double fill attempts within cooldown should suppress second trigger.",
+      "config": {
+        "numHands": 1,
+        "chargeTimeMs": 400,
+        "releaseTimeMs": 600,
+        "coastDrainTimeMs": 600,
+        "tensionMs": 0,
+        "hysteresisHigh": 0.8,
+        "hysteresisLow": 0.52,
+        "readyTriggerCooldownMs": 900
+      },
+      "expect": {
+        "minNematocyst": 1,
+        "maxNematocyst": 1,
+        "minPostMessageOk": 1
+      },
+      "steps": [
+        {
+          "ms": 650,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 250,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        },
+        {
+          "ms": 650,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": true,
+              "isCharging": true,
+              "hasConfidence": true,
+              "shouldFill": true
+            }
+          ]
+        },
+        {
+          "ms": 1200,
+          "hands": [
+            {
+              "handIndex": 0,
+              "isFacingCamera": false,
+              "isCharging": false,
+              "hasConfidence": true,
+              "shouldFill": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

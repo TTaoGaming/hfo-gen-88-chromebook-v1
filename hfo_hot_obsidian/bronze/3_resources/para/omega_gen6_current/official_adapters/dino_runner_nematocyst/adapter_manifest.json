@@ -1,0 +1,35 @@
+{
+  "medallion": "Bronze",
+  "mutation": "0%",
+  "hive": "V",
+  "adapterId": "dino_runner_nematocyst",
+  "title": "Dino Runner Nematocyst Adapter",
+  "version": "2026-01-21",
+  "target": {
+    "kind": "iframe",
+    "entrypoint": "../../dino_v1_wrapper.html",
+    "vendor": "vendor/t-rex-runner",
+    "sameOriginRequired": true
+  },
+  "capabilities": {
+    "inputs": [
+      {
+        "kind": "keyboard",
+        "action": "keypress",
+        "keys": [
+          "Space"
+        ],
+        "notes": "Primary action: jump (Space)."
+      }
+    ]
+  },
+  "nematocyst": {
+    "messageType": "hfo:nematocyst",
+    "payloadSchema": {
+      "kind": "keyboard",
+      "action": "keypress",
+      "key": "Space",
+      "code": "Space"
+    }
+  }
+}

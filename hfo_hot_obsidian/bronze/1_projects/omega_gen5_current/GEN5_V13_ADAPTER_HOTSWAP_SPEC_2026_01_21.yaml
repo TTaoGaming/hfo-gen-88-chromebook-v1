@@ -1,0 +1,157 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Gen5 v13 Adapter Hot-Swap Spec (single-HTML)
+# Date: 2026-01-21
+# Purpose: Harden “swap consumer software on-the-fly” (Excalidraw ↔ Brick Breaker) on the stable W3C pointer substrate.
+# Scope: Spec-only (no promotion). v13 is a targeted clone of v12 with stricter hot-swap semantics + optional dual-HERO experiment.
+
+spec:
+  id: gen5_v13_adapter_hotswap
+  version: "2026-01-21"
+  status: draft
+  base:
+    artifacts:
+      v12_baseline:
+        - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v12.html
+      v11_3_reference:
+        - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11_3.html
+    note: "v13 is a minimal clone-and-replace on top of v12. No architecture rewrite."
+
+references:
+  prior_specs:
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/GEN5_V12_MULTIAPP_SHARED_SUBSTRATE_SPEC_2026_01_20.yaml
+  official_adapter_intake:
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/official_adapters/PROVENANCE_TEMPLATE.md
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/official_adapters/OFFICIAL_ADAPTER_SOURCES_2026_01_21.md
+  web_candidates_same_origin_required:
+    - url: https://github.com/pixelsquare/brick-breaker-html5
+      note: "MIT-licensed Brick Breaker demo; candidate to vendor locally for same-origin adapter use."
+    - url: https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
+      note: "MDN Breakout tutorial; MDN states code samples are CC0 (public domain dedication). Prefer vendoring only if we keep provenance + minimal needed code."
+
+vision:
+  north_star: "Mission Thread OMEGA: Total Tool Virtualization"
+  v13_goal: "Switch between different adapter apps (Excalidraw vs Brick Breaker) live, without restarting substrate ports, while preserving deterministic target routing and touch/pointer emulation."
+  definition_of_done:
+    - "From the same running session, user can switch active adapter from 'excalidraw' to 'game-bricks' and back (dropdown or GoldenLayout tab)."
+    - "P3 target routing resolves into the currently active adapter iframe (same-origin) under ACTIVE_APP_ONLY policy."
+    - "Adapter-specific behavior (e.g., Excalidraw click synthesis) is selected only by adapter manifest metadata, never by hardcoded app IDs in the injector."
+    - "Hot-swap is no-reload: no page refresh and no port restarts (P0/P1/P2/P3/P7 remain alive)."
+    - "Touchscreen emulation is validated on Brick Breaker (or another non-Excalidraw adapter)."
+
+clarification:
+  hero_is_substrate:
+    statement: "HERO tactical view is the stable substrate; apps are swappable adapters mounted into HERO."
+  hotswap_is_primary:
+    statement: "If an adapter cannot be swapped in cleanly, treat it as injector/package weakness (not a reason to specialize HERO)."
+
+constraints:
+  build_unit: single_html
+  same_origin_only: true
+  no_cross_port_coupling: true
+  fail_closed_when_enabled: true
+
+architecture:
+  substrate_unchanged:
+    statement: "Camera capture, DataFabric authority, physics/render, and pointer injection remain single-authority and independent of adapter choice."
+  adapter_isolation:
+    recommended: same_origin_iframe
+    rationale:
+      - "Deterministic elementFromPoint and injection into iframe document"
+      - "Clear mount/unmount boundaries"
+      - "CSS and event isolation"
+
+hotswap_surface:
+  required:
+    dropdown:
+      element_id: hfo-app-dropdown
+      behavior:
+        - "List adapters from AppHost registry"
+        - "Selecting an adapter activates it immediately"
+        - "Dropdown stays in sync with GoldenLayout active app tab"
+    goldenlayout_tabs:
+      behavior:
+        - "App:* tabs (e.g., App: Excalidraw, App: Brick Breaker) can also change active adapter"
+        - "Tab selection must delegate to AppHost activation only (no direct DOM toggles)"
+  optional_experiment_dual_hero_tabs:
+    intent: "Allow two HERO tabs (stacked) showing the same substrate with different mounted adapters (for rapid A/B)."
+    status: "optional; behind a flag"
+    requirements:
+      - "Introduce heroSlotId (e.g., 'heroA' | 'heroB')"
+      - "Maintain per-slot active adapter state"
+      - "P3 routing chooses slot by active GoldenLayout content item (active stack tab wins)"
+
+contracts:
+  owner_port: P1
+  v13_additions:
+    - name: HeroSlotId
+      purpose: "Identify which HERO surface is active (for optional dual-HERO)."
+    - name: AdapterSwitchEvent
+      purpose: "Typed event emitted when active adapter changes (including reason: dropdown|tab|api)."
+    - name: ActiveAdapterState
+      purpose: "Tracks active adapter per heroSlotId (or global if single slot)."
+
+apphost:
+  owner_port: P7
+  required_behaviors:
+    - "Activation is idempotent (activating same adapter twice is a no-op)."
+    - "Activation waits for iframe readiness signal before marking active (prevents racey routing)."
+    - "Overlay visibility toggles are centralized in AppHost (single authority)."
+  per_adapter_tuning:
+    - "Persist overlay tuning per adapterId (opacity, overscan/zoom)"
+    - "Restore tuning on re-activation"
+
+p3_target_routing:
+  owner_port: P3
+  policies:
+    - ACTIVE_APP_ONLY
+    - ACTIVE_APP_OR_FALLBACK
+    - GLOBAL
+  hotswap_requirements:
+    - "When ACTIVE_APP_ONLY enabled, P3 must always query AppHost for active target root"
+    - "No adapter-specific DOM probing in injector; only use AppHost-provided root/metadata"
+
+touch_emulation:
+  target:
+    primary: game-bricks
+    fallback: "Any same-origin adapter with pointer/touch handlers"
+  acceptance:
+    - "Pointer events delivered through injector cause visible in-app response (paddle movement / click / drag)."
+
+flags:
+  proposed:
+    - flag-ui-multiapp: "Enable AppHost registry + activation surfaces (tabs + dropdown)."
+    - flag-p3-target-active-app: "Enable TargetRouter ACTIVE_APP_ONLY routing."
+    - flag-v13-hotswap-strict: "Fail-closed if adapters required for hot-swap are missing."
+    - flag-v13-dual-hero: "Enable dual-HERO stacked tabs (optional experiment)."
+
+acceptance_tests:
+  playwright_required:
+    - name: v13_switch_excalidraw_to_brickbreaker_dropdown
+      asserts:
+        - "Dropdown can select 'game-bricks'"
+        - "Active adapter becomes 'game-bricks'"
+        - "Target routing resolves inside Brick Breaker iframe"
+    - name: v13_switch_brickbreaker_to_excalidraw_dropdown
+      asserts:
+        - "Dropdown can select 'excalidraw'"
+        - "Active adapter becomes 'excalidraw'"
+        - "If adapter kind is 'excalidraw', click synthesis is enabled only via metadata"
+  optional:
+    - name: v13_dual_hero_tabs_independent_state
+      gated_by: flag-v13-dual-hero
+      asserts:
+        - "heroA and heroB can have different active adapters"
+        - "Active GoldenLayout tab determines injection routing slot"
+
+migration_plan:
+  from_v12:
+    - step: "Clone v12 artifact → v13 artifact (rename only)."
+      evidence: "File exists and boots."
+    - step: "Confirm Excalidraw and Brick Breaker are both registered as adapters in AppHost."
+    - step: "Harden readiness gating: activation must wait for iframe loaded + adapter ready signal."
+    - step: "Add Playwright v13 hot-swap gates."
+
+risks:
+  - "UI timing: dropdown options population races AppHost registration. Mitigation: populate from AppHost list + delayed refresh."
+  - "Iframe readiness: active routing before iframe is loaded. Mitigation: activation waits on ready signal."
+  - "Cross-origin demos: cannot be routed/injected deterministically. Mitigation: vendor locally or build minimal internal demo."

@@ -1,0 +1,252 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v23 Spec: Flaming Sword Visualization (Touch2D + Babylon) — RED TDD/BDD scaffold
+# Timestamp: 2026-01-23
+# NOTE: Spec-first. v23 is additive visualization tied to v22 knuckle tripplane geometry; do not change P2/P3 trigger semantics here.
+
+version: 23
+name: omega_gen6
+intent:
+  user_requirements_raw:
+    - "for v23 I want to add a flaming sword to my touch2d and babylon visualizations using asymetrical knuckle triplane."
+    - "sensor tripplane like a sword… extend 1 side more (asymmetric)."
+    - "be in READY (palm facing camera fill READINESS meter) and then do different COMMIT - GESTURES for different effects"
+    - "rename in v23 the current COMMIT gesture to become COMMIT_POINTER_UP or a relevant name"
+    - "when READY, if user holds thumb up pose then we should have the sword extend up from pinky towards index and then out like a sword, and then it should lock on"
+    - "it only deactivates on READY -> Gesture (thumbs down hold for example) it should be user tunable"
+    - "add thumbs up and thumbs down, with a high confidence dwell leaky bucket"
+  normalized:
+    - "Render the knuckle tripplane as a sword-like tool anchored on the hand (asymmetric extension supported)."
+    - "Visualize it in both Touch2D (2D overlay) and Babylon (3D overlay) with a flame effect."
+    - "Do not alter COMMIT gating or injection behavior; this is a visualization layer tied to existing geometry outputs."
+    - "Introduce specialized COMMIT variants (base FSM remains IDLE/READY/COMMIT/COAST): COMMIT_POINTER_UP, COMMIT_THUMBS_UP (locks sword), COMMIT_THUMBS_DOWN (drains/unlocks sword)."
+    - "Use a high-confidence dwell leaky-bucket meter for sword lock/unlock. Thumbs Up fills and locks; Thumbs Down drains and unlocks."
+
+fsm_model_v23:
+  base_fsm_states:
+    - IDLE
+    - READY
+    - COMMIT
+    - COAST
+  posture:
+    - "v23 keeps the base FSM stable for compatibility. Specialized COMMIT is represented as a second-layer field (commitVariant)."
+  commit_variants:
+    description: "Specialized COMMIT gestures mapped from MediaPipe gesture categories while in READY/COMMIT context."
+    values:
+      - COMMIT_POINTER_UP
+      - COMMIT_THUMBS_UP
+      - COMMIT_THUMBS_DOWN
+    mapping_from_mediapipe_category:
+      COMMIT_POINTER_UP: "Pointing_Up"
+      COMMIT_THUMBS_UP: "Thumb_Up"
+      COMMIT_THUMBS_DOWN: "Thumb_Down"
+    invariants:
+      - "commitVariant is orthogonal to base fsmState; sword lock persists even if base fsmState changes."
+      - "READY remains the readiness leaky-bucket (palm-facing) pre-arm state; specialized COMMIT gestures are effects on top."
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v22.html
+  target:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v23.html
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    # Geometry source
+    p2-tripwire-knuckle: true
+
+    # UI overlays
+    ui-knuckle-sword-touch2d: true
+    ui-knuckle-sword-babylon: true
+    ui-knuckle-sword-flames: true
+    ui-knuckle-sword-debug: false
+
+    # v23 gesture/meter layer (fail-closed)
+    p2-commit-variants: false
+    p2-sword-meter: false
+  overrides:
+    url_query:
+      - "?flag-ui-knuckle-sword-touch2d=true|false"
+      - "?flag-ui-knuckle-sword-babylon=true|false"
+      - "?flag-ui-knuckle-sword-flames=true|false"
+      - "?flag-ui-knuckle-sword-debug=true|false"
+      - "?flag-p2-commit-variants=true|false"
+      - "?flag-p2-sword-meter=true|false"
+
+ports:
+  p2_shape:
+    commit_variants_v23 (proposed):
+      description: "Derive commitVariant (COMMIT_POINTER_UP/THUMBS_UP/THUMBS_DOWN) from MediaPipe gesture category + confidence while respecting READY gating."
+      event_type: p2/commit_variant
+      posture:
+        - "Fail-closed: disabled unless flag-p2-commit-variants=true."
+        - "Does not change base FSM math; only annotates the current intent lane for downstream effects."
+      snapshot:
+        path: systemState.p2.commitVariantByHand
+        example:
+          hand0: COMMIT_POINTER_UP
+      required_fields:
+        - handIndex
+        - commitVariant
+        - sourceCategory
+        - confidence
+
+    sword_meter_v23 (proposed):
+      description: "Sticky sword lock meter (leaky bucket) controlled by COMMIT_THUMBS_UP (fill) and COMMIT_THUMBS_DOWN (drain)."
+      snapshot:
+        path: systemState.p2.swordMeter
+        required_fields:
+          - active
+          - locked
+          - meter01
+          - lockedBy
+          - lastCommitVariant
+      event_types:
+        - p2/sword_meter
+        - p2/sword_lock
+        - p2/sword_unlock
+      invariants:
+        - "Thumbs Up fill can only accumulate when base fsmState==READY (pre-arm) and confidence>=minConfidence."
+        - "Once locked, sword remains active across IDLE/READY/COMMIT/COAST (sticky), until drained/unlocked."
+        - "Unlock requires base fsmState==READY and sustained Thumbs Down dwell to drain meter to 0."
+    knuckle_tripplane_source:
+      description: "v23 consumes v22 knuckle bar + extension parameters; it does not author new trigger logic."
+      depends_on:
+        - "p2/tripwire_cross sensorId==knuckle (for bar endpoints + phases)"
+        - "Optional: p2/tripplane_lookahead (for predictive highlight)"
+      contract:
+        zod_schema: TripwireCrossEventSchema
+        file: contracts/hfo_tripwire_events.zod.ts
+      required_metadata:
+        - "sensor.bar.{a,b} in uiNorm"
+        - "sensor.phase begin|end"
+
+    knuckle_sword_pose_v23_proposed:
+      description: "Derived pose payload for rendering a sword tool anchored to the knuckle bar (visual-only)."
+      event_type: p2/knuckle_sword_pose
+      posture:
+        - "Optional emission: can be computed in P2 for shared use by Touch2D + Babylon."
+        - "If not emitted, UI layers compute equivalent pose from knuckle bar endpoints."
+      required_fields:
+        - barAUiNorm
+        - barBUiNorm
+        - extensionFracA
+        - extensionFracB
+        - swordCenterUiNorm
+        - swordAxisUiNorm
+        - swordLengthUiNorm
+      optional_fields:
+        - swordThicknessUiNorm
+        - smoothingAlpha
+        - flameIntensity01
+
+  ui_touch2d:
+    knuckle_sword_overlay:
+      description: "2D overlay: render sword as a glowing line/capsule along the extended knuckle bar, with optional flame animation."
+      pose_source_priority:
+        - "p2/knuckle_sword_pose"
+        - "fallback: derive from knuckle bar endpoints + extension knobs"
+      render_rules:
+        geometry:
+          semantics:
+            - "User intent: in READY, Thumb_Up locks a sword that extends from pinky→index and out like a held blade."
+            - "Map the blade axis to the knuckle bar axis: pinky_mcp(17) ↔ index_mcp(5)."
+            - "Define a consistent endpoint convention for visuals: endpointPinky and endpointIndex (mirror-aware)."
+            - "Treat asymmetric extension as the primary 'sword' affordance: extend further past the index side by default."
+          rules:
+            - "Compute base bar vector from barA→barB (uiNorm)."
+            - "Extend A-side by extensionFracA*barLen; extend B-side by extensionFracB*barLen."
+            - "Render as capsule/rounded line (thickness tunable)."
+            - "When swordMeter.locked==true, render in 'PHOENIX_CORE sword' style: cyan core + orange flames (debuggable)."
+          debug_registry:
+            - "Expose an inspectable marker object for tests: window.__hfoSwordTouch2dMarker = { active, locked, endpointPinkyUiNorm, endpointIndexUiNorm, endpointAUiNorm, endpointBUiNorm, axisUiNorm, thicknessUiNorm, baseEndpointAUiNorm?, baseEndpointBUiNorm? }."
+        flame_fx:
+          posture:
+            - "Flames are cosmetic: never used for detection."
+          parameters:
+            color_gradient:
+              hot: "#ffcc33"
+              mid: "#ff6600"
+              cold: "#cc0000"
+            flicker_hz_default: 6
+            particle_count_default: 64
+
+  ui_babylon:
+    knuckle_sword_mesh:
+      description: "3D overlay: render sword mesh aligned to the knuckle bar; optional flame particles/trail."
+      posture:
+        - "Phase 0 (v23): camera-aligned plane for UI-only mode; prioritize 2D correctness first."
+        - "Phase 1 (v23+): compute a 3D sword orientation quaternion from hand landmarks; render a 3D mesh aligned to the knuckle bar and normal."
+        - "Phase 2 (v23+): add a physics sensor capsule/rod aligned with the sword (Planck/Rapier), emitting contact begin/end as authoritative events."
+      quaternion_math_roadmap:
+        inputs:
+          - "Landmarks in 3D (index_mcp=5, pinky_mcp=17, wrist=0)"
+        derived_axes:
+          - "xAxis = normalize(pinky_mcp - index_mcp) (blade axis)"
+          - "palmNormal = normalize(cross(index_mcp - wrist, pinky_mcp - wrist))"
+          - "zAxis = palmNormal (or camera-facing adjusted)"
+          - "yAxis = normalize(cross(zAxis, xAxis))"
+        orientation:
+          - "Build rotation matrix [xAxis yAxis zAxis] then convert to quaternion (BABYLON.Quaternion.FromRotationMatrix)."
+        invariants:
+          - "Quaternion must be continuous (avoid flips); apply smoothing (EMA or slerp)."
+          - "Mirror-aware: when camera mirror is on, axes must be flipped consistently."
+      mesh_primitives:
+        - "rod/capsule along sword axis"
+        - "optional hilt marker near index_mcp side"
+      flame_fx:
+        strategy:
+          - "particle system attached to sword mesh"
+          - "optional ribbon/trail mesh for flame streak"
+
+microkernel_parameters_p7_navigate:
+  knobs:
+    - path: systemState.parameters.p2.knuckleTripwire.barExtensionFracA
+      description: "A-side extension fraction (asymmetric sword length)."
+    - path: systemState.parameters.p2.knuckleTripwire.barExtensionFracB
+      description: "B-side extension fraction (asymmetric sword length)."
+    - path: systemState.parameters.ui.knuckleSword.thicknessUiNorm
+      description: "Visual thickness of sword overlay (uiNorm)."
+    - path: systemState.parameters.ui.knuckleSword.smoothingAlpha
+      description: "EMA smoothing for pose jitter suppression."
+    - path: systemState.parameters.ui.knuckleSword.flameIntensity01
+      description: "Flame brightness/intensity (0..1)."
+    - path: systemState.parameters.gestures.thumbsSword.minConfidence
+      description: "Minimum gesture confidence to count toward sword meter fill/drain."
+    - path: systemState.parameters.gestures.thumbsSword.fillTimeMs
+      description: "Time (ms) of sustained Thumbs Up required to fill meter to lock."
+    - path: systemState.parameters.gestures.thumbsSword.drainTimeMs
+      description: "Time (ms) of sustained Thumbs Down required to drain meter to unlock."
+    - path: systemState.parameters.gestures.thumbsSword.hysteresisOn01
+      description: "Meter threshold to consider sword locked (0..1)."
+    - path: systemState.parameters.gestures.thumbsSword.hysteresisOff01
+      description: "Meter threshold to consider sword unlocked (0..1)."
+
+telemetry:
+  posture: "Visualization observability: measure pose stability and render toggles without touching trigger semantics."
+  suggested_events:
+    - "ui/knuckle_sword_pose_rendered (per frame or throttled)"
+    - "ui/knuckle_sword_flag_state (on change)"
+    - "ui/knuckle_sword_pose_jitter_metrics (throttled)"
+    - "p2/sword_meter (state changes + meter01)"
+    - "p2/commit_variant (state changes + confidence)"
+
+validation:
+  posture: "RED-first (visual contracts + smoke tests)."
+  acceptance_criteria:
+    - "Phase 0: With ui-knuckle-sword-touch2d=true, a sword overlay is visible and tracks the knuckle bar in COMMIT_POINTER_UP and/or when swordMeter.locked==true."
+    - "Phase 0: Visual-first: Touch2D sword correctness is validated before Babylon 3D quaternion work begins."
+    - "Phase 0: Touch2D exposes window.__hfoSwordTouch2dMarker for deterministic RED testing."
+    - "With ui-knuckle-sword-babylon=true, a sword mesh (or placeholder) is visible and tracks the same pose as Touch2D."
+    - "When extensionFracA != extensionFracB, the sword is visually asymmetric (one side longer)."
+    - "In READY, sustained Thumb_Up fills meter and locks sword; sword stays active across base FSM states until drained."
+    - "In READY, sustained Thumb_Down drains meter and unlocks sword; leaving COMMIT does not unlock it by itself."
+    - "Toggling flames on/off does not affect any P2 trigger emissions or P3 injection (visual-only)."
+  suggested_specs:
+    - scripts/omega_gen6_v23_sword_thumbs_meter_red.spec.ts
+    - scripts/omega_gen6_v23_commit_variants_red.spec.ts
+    - scripts/omega_gen6_v23_knuckle_sword_touch2d_geometry_red.spec.ts
+
+future_intent:
+  notes:
+    - "v24 aspirational: Promote Piano Genie into a GoldenLayout component (vertical split, spatial zone→key mapping)."

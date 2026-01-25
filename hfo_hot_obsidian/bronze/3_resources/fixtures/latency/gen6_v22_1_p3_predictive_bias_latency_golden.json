@@ -1,0 +1,41 @@
+{
+    "schema": "hfo.gen6.v22_1.p3_predictive_bias_latency_golden.v1",
+    "fixtureFrames": "hfo_hot_obsidian/bronze/3_resources/fixtures/touch2d/gen6_v17_tripwire_lookahead_slow_cross_golden.jsonl",
+    "notes": "Deterministic replay to expose delayed lookahead scheduling (schedule->fire->inject vs cross). Uses P2 lookahead window larger than P3 lead so P3 can schedule before crossing. Wallclock ts is intentionally excluded.",
+    "config": {
+        "sensorId": "static",
+        "p2LookaheadWindowMs": 400,
+        "p3LookaheadWindowMs": 200,
+        "p3LookaheadBiasMs": -100
+    },
+    "expect": {
+        "schedule": {
+            "now": 100,
+            "ttcMs": 500,
+            "windowMs": 200,
+            "biasMs": -100,
+            "delayMsUnbiased": 300,
+            "delayMs": 200,
+            "injectAtNow": 300
+        },
+        "fire": {
+            "now": 300,
+            "injectAtNow": 300,
+            "driftMs": 0
+        },
+        "inject": {
+            "now": 300,
+            "sensorId": "static",
+            "phase": "begin",
+            "action": "keypress"
+        },
+        "cross": {
+            "now": 600,
+            "sensorId": "static",
+            "phase": "begin"
+        },
+        "derived": {
+            "leadMs": 300
+        }
+    }
+}

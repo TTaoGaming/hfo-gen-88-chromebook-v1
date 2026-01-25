@@ -1,0 +1,69 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Gen6 v9 Spec (Dino Readiness Telemetry + Golden Replay)
+# Date: 2026-01-21
+
+id: gen6_v9
+name: "Omega Gen6 v9: Dino Readiness Replay Harness"
+status: draft
+
+why:
+  - Dino runner behavior is inconsistent; we need deterministic replay + telemetry to isolate failures.
+  - A single gesture should produce observable port effects; replay gives a stable substrate to debug P1→P3→P7 delivery.
+
+goals:
+  short:
+    - Provide a deterministic "palm toward (fill readiness) → palm away (drain readiness)" replay runner.
+    - Run 8 golden sequences and assert expected telemetry signals (FSM edge + nematocyst deliver + dino postMessage).
+  long:
+    - Promote replay manifests to P6 persistence (JSONL/DuckDB) so regressions are replayable and gateable.
+
+artifacts:
+  html:
+    entrypoint: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v9.html
+  golden_manifest_json:
+    path: hfo_hot_obsidian/bronze/3_resources/fixtures/replay/gen6_v9_dino_readiness_golden.json
+  contract:
+    path: contracts/hfo_replay_manifest.zod.ts
+  gate:
+    playwright_spec: scripts/omega_gen6_v9_dino_replay.spec.ts
+
+telemetry:
+  bus: window.hfoPortsEffects
+  key_events:
+    - { port: p1, type: fsm_edge }
+    - { port: p1, type: cooldown_suppressed }
+    - { port: p3, type: nematocyst_deliver }
+    - { port: p7, type: dino_queue }
+    - { port: p7, type: dino_flush_queue }
+    - { port: p7, type: dino_postMessage }
+
+replay:
+  api:
+    - window.hfoReplay.loadManifestUrl(url)
+    - window.hfoReplay.runSequence(id)
+    - window.hfoReplay.runAll()
+  injection_layer:
+    - Uses existing window.hfoMockResults hook in predictLoop (no camera required)
+    - Uses results.__hfoReplayHands[handIndex] overrides inside P1Bridger.fuse
+
+sequences:
+  source: hfo_hot_obsidian/bronze/3_resources/fixtures/replay/gen6_v9_dino_readiness_golden.json
+  overview:
+    - seq01_basic_fill_then_drain
+    - seq02_short_fill_no_trigger
+    - seq03_fill_hold_ready_no_repeat
+    - seq04_two_triggers_two_cycles
+    - seq05_confidence_drop_causes_coast
+    - seq06_tension_holds_charge
+    - seq07_multi_hand_seat_isolation
+    - seq08_cooldown_suppression
+
+acceptance:
+  - "\"seq01\" emits exactly 1 nematocyst_deliver and >= 1 dino_postMessage ok."
+  - "\"seq02\" emits 0 nematocyst_deliver."
+  - "\"seq04\" emits exactly 2 nematocyst_deliver and >= 2 dino_postMessage ok."
+  - "All sequences: no pageerror, no console:error, and dino_postMessage errors stay 0."
+
+next_steps:
+  - Add iframe-level ACK (optional): if dino_v1_wrapper can post back an ack, assert jump acknowledged.
+  - Export replay runs into JSONL for P6 assimilation.

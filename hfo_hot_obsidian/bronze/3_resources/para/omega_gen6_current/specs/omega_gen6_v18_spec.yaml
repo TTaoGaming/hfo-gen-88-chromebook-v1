@@ -1,0 +1,288 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v18 Spec: COMMIT Knuckle Sensor Bar (Keybar) — RED-first TDD
+# Timestamp: 2026-01-22
+
+version: 18
+name: omega_gen6
+intent:
+  - Add a COMMIT-only embodied input primitive: a per-hand "Knuckle Sensor Bar" (Keybar) that turns finger curls/presses into deterministic keypress effects.
+  - Preserve fail-closed posture: when confidence drops (palm turns away past hysteresis, readiness decays, COAST), the keybar disables and produces no keyboard effects.
+  - Keep Hexagonal core seams: P2 detects (semantics/events), P3 injects (effects), UI is an adapter overlay plugin (GoldenLayout/microkernel per v17).
+  - Provide a Dino Runner demo target first (Space jump), then scale to 4 fingers/hand and orientation-dependent ("knob") directional keymapping.
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v16.html
+  target:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v18.html
+  note: "v18 HTML is not created by this spec; this spec defines behavior, contracts, and RED-first gates. It can be implemented as a v16 clone + additive P2/P3 + UI overlay plugin."
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    p2-knuckle-keybar: true
+    p2-knuckle-keybar-orientation-knob: false
+    p3-knuckle-key-injector: true
+    ui-knuckle-keybar-overlay: true
+  overrides:
+    url_query:
+      - "?flag-p2-knuckle-keybar=true|false"
+      - "?flag-p2-knuckle-keybar-orientation-knob=true|false"
+      - "?flag-p3-knuckle-key-injector=true|false"
+      - "?flag-ui-knuckle-keybar-overlay=true|false"
+
+ui:
+  design_system:
+    state_colors:
+      requirement: "Reuse the consolidated token mapping from v17 across the keybar overlay."
+      mapping:
+        IDLE: { name: gray, hex: "#8E8E93" }
+        READY: { name: amber, hex: "#FFB300" }
+        COMMIT: { name: cyan, hex: "#00BCD4" }
+        COAST: { name: yellow, hex: "#FFEB3B" }
+    guidance:
+      - "Apple HIG: clarity (simple shape+legend), deference (overlay is subtle), depth (only in COMMIT)."
+      - "Material 3: token-driven color roles and restrained motion; overlay must be legible and low-latency."
+
+ports:
+  p1_fuse_inputs:
+    grounding_evidence:
+      - "P1Bridger already computes per-hand: fsmState, readinessScore, isPalmFacing (with enter/exit hysteresis), normalZ/palmConeAngle, and per-finger curls."
+      - "P1Bridger already mirrors landmarks for fabric parity (camera.mirror)."
+    required_fields:
+      - "cursors[i].fsmState (IDLE/READY/COMMIT/COAST)"
+      - "cursors[i].readinessScore (0..1)"
+      - "cursors[i].isPalmFacing (hysteresis state)"
+      - "cursors[i].curls.{index,middle,ring,pinky} (0..1)"
+      - "cursors[i].landmarks[] (for MCP points)"
+
+  p2_detect:
+    name: "KnuckleKeybarThread (P2)"
+    purpose: "Derive a COMMIT-only knuckle bar and per-finger press events from fused hand landmarks + curls."
+    anatomy_model:
+      landmarks:
+        mcp_points:
+          index_mcp: 5
+          middle_mcp: 9
+          ring_mcp: 13
+          pinky_mcp: 17
+        fingertips:
+          index_tip: 8
+          middle_tip: 12
+          ring_tip: 16
+          pinky_tip: 20
+      knuckle_line:
+        definition: "Line segment from index_mcp to pinky_mcp in mirrored landmark space."
+        derived:
+          angle_deg_screen: "atan2((pinky.y-index.y),(pinky.x-index.x)) * 180/pi"
+          length_ui_norm: "distance(index_mcp, pinky_mcp)"
+
+    gating:
+      arm_condition:
+        - "cursor.fsmState == COMMIT"
+        - "cursor.readinessScore >= systemState.parameters.fsm.hysteresisHigh (default ~0.88)"
+        - "cursor.isPalmFacing == true (already hysteresis-filtered via palm.enterThreshold/exitThreshold)"
+      disarm_condition:
+        - "cursor.fsmState != COMMIT (including COAST)"
+        - "cursor.readinessScore <= systemState.parameters.fsm.hysteresisLow (default ~0.64)"
+        - "cursor.isPalmFacing == false for palmAwayTimeoutMs"
+      parameters:
+        palmAwayTimeoutMs: 120
+        pressCooldownMs: 80
+
+    finger_press_detection:
+      primary_signal: "Per-finger curl hysteresis using cursor.curls (0..1)."
+      press_hysteresis:
+        enter: 0.72
+        exit: 0.55
+      optional_secondary_signals:
+        - "Tip proximity to knuckle line (2D distance) to reject non-knuckle curls."
+        - "Tip forward motion along palm normal (3D) when available; keep optional to avoid replay brittleness."
+
+    outputs:
+      event_bus: "Ports Effects (window.hfoPortsEffects)"
+      events:
+        - type: p2/knuckle_keypress
+          phase: [begin, end]
+          payload_fields:
+            - handIndex
+            - pointerId
+            - finger: [index, middle, ring, pinky]
+            - fsmState
+            - readinessScore
+            - isPalmFacing
+            - curl
+            - knuckleAngleDeg
+            - timestampMs
+          notes:
+            - "Emit begin on press enter; emit end on press exit."
+            - "Suppress events when not armed (fail-closed)."
+
+  p3_inject:
+    name: "KnuckleKeyInjector (P3)"
+    purpose: "Map P2 knuckle_keypress events to keyboard effects (Dino jump demo)."
+    outputs:
+      event_bus: "Ports Effects (window.hfoPortsEffects)"
+      events:
+        - type: p3/knuckle_key_inject
+          payload_fields:
+            - adapterId
+            - handIndex
+            - pointerId
+            - finger
+            - payload: { kind: keyboard, action: keypress, key, code }
+          note: "Emit once per accepted press-begin; fail-closed cases emit nothing."
+    policy:
+      fail_closed:
+        - "Ignore any event unless event.payload.fsmState == COMMIT."
+        - "Ignore when COAST is active (COMMIT-only defense-in-depth)."
+      cooldown:
+        scope: "per finger per hand"
+        ms: 120
+      delivery:
+        target_policy: "ACTIVE_APP_OR_FALLBACK"
+        preferred_adapter_id: dino-v1
+        capability_required: "nematocyst:keyboard"
+
+    mapping:
+      v18_demo_default:
+        intent: "Any finger press (begin) injects Space to Dino Runner."
+        keypress:
+          kind: keyboard
+          action: keypress
+          key: " "
+          code: Space
+      future_layers:
+        multi_finger_map:
+          note: "Map 4 fingers per hand to distinct keys only after v18 demo is stable."
+          suggested_default:
+            left_hand: { index: KeyA, middle: KeyS, ring: KeyD, pinky: KeyF }
+            right_hand: { index: KeyJ, middle: KeyK, ring: KeyL, pinky: Semicolon }
+        orientation_knob:
+          flag: p2-knuckle-keybar-orientation-knob
+          note: "Quantize knuckleAngleDeg into sectors; select mapping layer (e.g., arrows vs WASD) per sector."
+          sectors:
+            - name: up
+              range_deg: "-45..45"
+            - name: right
+              range_deg: "45..135"
+            - name: down
+              range_deg: "135..225"
+            - name: left
+              range_deg: "225..315"
+
+ui_overlay:
+  ownership: "UI adapter (microkernel plugin per v17); must not affect P2/P3 determinism."
+  behavior:
+    show_when:
+      - "cursor.fsmState == COMMIT"
+      - "cursor.readinessScore >= hysteresisHigh"
+      - "cursor.isPalmFacing == true"
+    render:
+      - "Draw knuckle line as a bar (cyan COMMIT token)."
+      - "Draw 4 segments/markers at MCP points (index/middle/ring/pinky)."
+      - "When a finger is pressed, highlight that segment and optionally pulse (bounded motion)."
+      - "When readiness drops or palm turns away (disarm), fade out quickly and deterministically."
+
+validation:
+  posture: "RED-first TDD: deterministic golden replays before UI polish."
+
+  test_harness_pattern:
+    source_of_truth: "Mirror existing Gen6 Playwright patterns (v14–v16): safeGoto + safeEvaluate + hfoPortsEffects.subscribe + (optional) JSONL fixture loop."
+    references:
+      - scripts/omega_gen6_test_guards.ts
+      - scripts/omega_gen6_v16_p3_tripwire_contact_only_inband_injects_space_with_velocity_red.spec.ts
+      - scripts/omega_gen6_v16_coast_fail_closed_suppresses_p3_inject.spec.ts
+    guidance:
+      - "Prefer 'light' URLs (disable camera/engines/UI) to keep timing deterministic; enable only flags under test."
+      - "Use hfoPortsEffects.subscribe to observe events; avoid monkey-patching emit (runtime may freeze it)."
+      - "For fail-closed tests, directly emit synthetic P2 events into hfoPortsEffects.emit (injector-only) just like v16 COAST tests."
+      - "For P2 detector tests, drive the thread via tick({ now, dt, dataFabric }) with fixture frames once KnuckleKeybarThread exists."
+  fixtures_to_add:
+    - hfo_hot_obsidian/bronze/3_resources/fixtures/touch2d/gen6_v18_knuckle_keybar_press_space_golden.jsonl
+    - hfo_hot_obsidian/bronze/3_resources/fixtures/touch2d/gen6_v18_knuckle_keybar_disarm_on_palm_away_golden.jsonl
+
+  fixture_min_shape:
+    note: "Minimal replay frame shape to keep P2 deterministic. This mirrors the v16 TripwireThread fixture strategy."
+    per_line_json:
+      required:
+        - now
+        - dt
+        - cursor:
+            - handIndex
+            - pointerId
+            - fsmState
+            - readinessScore
+            - isPalmFacing
+            - curls
+            - landmarks
+      optional:
+        - seq
+
+  tests_to_add_red_first:
+    - name: gen6_v18_p2_knuckle_keybar_emits_begin_end
+      intent: "In COMMIT + high readiness + palm facing, an index finger curl press emits begin then end."
+      asserts:
+        - "Observe Ports Effects: p2/knuckle_keypress phases [begin,end]"
+        - "Payload finger=index and fsmState=COMMIT"
+      suggested_spec:
+        file: scripts/omega_gen6_v18_p2_knuckle_keybar_begin_end.spec.ts
+        command_example: "HFO_GEN6_URL='http://localhost:8889/.../omega_gen6_v18.html?flag-disable-camera=true&flag-ui-lil-gui=false&flag-p2-knuckle-keybar=true&mode=dev' npx playwright test scripts/omega_gen6_v18_p2_knuckle_keybar_begin_end.spec.ts --project=chromium --workers=1"
+        asserts_detail:
+          - "Load JSONL fixture frames; safeEvaluate: subscribe to hfoPortsEffects; call w.hfoP2KnuckleKeybarThread.tick(...) per frame"
+          - "Assert captured contains p2/knuckle_keypress begin then end for finger=index"
+
+    - name: gen6_v18_p2_knuckle_keybar_fail_closed_on_not_commit
+      intent: "No emissions in IDLE/READY/COAST regardless of curls."
+      asserts:
+        - "Observe Ports Effects: 0 p2/knuckle_keypress"
+      suggested_spec:
+        file: scripts/omega_gen6_v18_p2_knuckle_keybar_fail_closed.spec.ts
+        asserts_detail:
+          - "Drive the same curl fixture but force fsmState=IDLE/READY/COAST in dataFabric"
+          - "Assert zero p2/knuckle_keypress"
+
+    - name: gen6_v18_p2_knuckle_keybar_disarms_on_palm_away
+      intent: "If isPalmFacing flips false beyond palmAwayTimeoutMs, keybar disarms and stops emitting."
+      asserts:
+        - "No events after disarm"
+      suggested_spec:
+        file: scripts/omega_gen6_v18_p2_knuckle_keybar_disarm_on_palm_away.spec.ts
+        asserts_detail:
+          - "Fixture should include a COMMIT/armed segment then a sustained isPalmFacing=false segment"
+          - "Assert that no further p2/knuckle_keypress events occur after disarm timestamp"
+
+    - name: gen6_v18_p3_injects_space_on_knuckle_press
+      intent: "P3 maps p2/knuckle_keypress begin to a Space keypress effect targeting dino-v1."
+      asserts:
+        - "Observe Ports Effects: p3/knuckle_key_inject with code=Space"
+        - "Fail-closed: if fsmState!=COMMIT, do not inject"
+      suggested_spec:
+        file: scripts/omega_gen6_v18_p3_knuckle_keybar_inject_space.spec.ts
+        asserts_detail:
+          - "safeEvaluate: subscribe to hfoPortsEffects for p3 events"
+          - "Emit a synthetic p2/knuckle_keypress begin with fsmState=COMMIT and verify a p3/knuckle_key_inject payload appears"
+          - "Emit the same event with fsmState=COAST and verify NO p3/knuckle_key_inject appears"
+
+  suggested_playwright_specs:
+    note: "Spec names only; implement in scripts/ as separate step. Prefer the existing serial+retries=1 pattern used by v16 specs."
+    list:
+      - scripts/omega_gen6_v18_p2_knuckle_keybar_begin_end.spec.ts
+      - scripts/omega_gen6_v18_p2_knuckle_keybar_fail_closed.spec.ts
+      - scripts/omega_gen6_v18_p3_knuckle_keybar_inject_space.spec.ts
+      - scripts/omega_gen6_v18_p2_knuckle_keybar_disarm_on_palm_away.spec.ts
+
+contracts:
+  note: "Define Zod contracts for cross-port payloads; v18 spec describes payload fields."
+  planned_files:
+    - contracts/hfo_knuckle_keybar_events.zod.ts
+
+risks:
+  - "Using only curl can false-trigger during non-press curls; mitigate with tip-proximity signal once stable."
+  - "Replay brittleness if 3D tip motion becomes mandatory; keep 3D optional and prefer 2D/curl + proximity."
+  - "UI overlay must not add per-frame heavy work; keep event-driven updates (microkernel plugin)."
+
+next_actions:
+  - "Clone v16 → v18 entrypoint; implement P2 KnuckleKeybarThread and emit p2/knuckle_keypress."
+  - "Implement P3 KnuckleKeyInjector and map to Space keypress for Dino demo (fail-closed)."
+  - "Add RED-first Playwright replay fixtures/specs; only then add UI overlay polish."

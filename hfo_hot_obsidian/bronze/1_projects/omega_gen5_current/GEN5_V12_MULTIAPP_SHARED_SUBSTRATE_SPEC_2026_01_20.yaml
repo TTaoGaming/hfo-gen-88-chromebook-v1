@@ -1,0 +1,262 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Gen5 v12 Multi-App Shared Substrate Spec (single-HTML)
+# Date: 2026-01-20
+# Purpose: Define the v12 target state: one sensing/physics/injection substrate powering multiple UI/apps.
+#          Build directly on v11.1 AppHost + target routing + GoldenLayout activation wiring.
+# Scope: Focus on multi-app + shared substrate + “1 FSM drives multiple shell apps”, while preserving hex boundaries.
+
+spec:
+  id: gen5_v12_multiapp_shared_substrate
+  version: "2026-01-20"
+  status: draft
+  base:
+    artifacts:
+      v11_baseline:
+        - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11.html
+      v11_1_stepping_stone:
+        - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/omega_gen5_v11_1.html
+    note: "v12 should be a consolidation/hardening of the v11.1 stepping-stone, not a rewrite."
+
+references:
+  reports:
+    - hfo_hot_obsidian/bronze/3_resources/reports/GEN5_MULTIAPP_V12_READINESS_2026_01_20.md
+  prior_specs:
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/GEN5_V10_HEX_MODULAR_MONOLITH_SPEC_2026_01_20.yaml
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/GEN5_V11_1_APPHOST_MULTIAPP_SPEC_2026_01_20.yaml
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/GEN5_SPEC.yaml
+  harness:
+    entrypoint:
+      - active_hfo_omega_entrypoint.html
+      - active_hfo_omega_entrypoint.json
+
+vision:
+  north_star: "Mission Thread OMEGA: Total Tool Virtualization"
+  v12_goal: "Multiple apps/views (tabs/panels) share one substrate (the HERO tactical view): camera → DataFabric → physics/render → W3C pointer injection, coordinated by a single FSM. Apps are swappable adapters mounted into the hero as overlays."
+  v12_definition_of_done:
+    - "At least 2 apps can be activated as tabs/panels without restarting P0/P1/P2/P3."
+    - "Pointer injection routes deterministically to the active app per policy."
+    - "One FSM state transition fans out to multiple UI surfaces/apps in a typed way (no ad-hoc strings)."
+    - "Shared webcam stream supports multiple GoldenLayout views (multi-view) without multi-capture."
+    - "Touchscreen emulation works against at least one non-Excalidraw adapter surface; failures indicate P3 injector package weakness (not substrate fragility)."
+
+clarification_2026_01_20:
+  hero_is_substrate:
+    statement: "The current Tactical View is the HERO. v12 must treat HERO as the stable substrate, not a specific app like Excalidraw."
+    implications:
+      - "Clone the HERO tactical view and remove Excalidraw from the v12 baseline."
+      - "Anything mounted into the HERO is an adapter (simple → very complex)."
+  adapter_swap_principle:
+    statement: "Swap out anything for anything else by changing only an adapter manifest/registration. The substrate must remain unchanged."
+    success_criterion: "If an adapter cannot be swapped in cleanly, the injector package is too weak."
+  near_term_goal:
+    statement: "Touchscreen emulation unlocks the next phase of tool virtualization; v12 should optimize for rapid touch validation."
+
+non_goals:
+  - "No bundler or multi-file build pipeline required for v12 (keep single-HTML artifact)."
+  - "No cross-origin apps in v12 baseline (same-origin iframes only)."
+  - "No full permissions model beyond capability declaration + deny-by-default."
+  - "No change to the semantics of DataFabric unless contracts + gates are updated together."
+  - "No Excalidraw dependency in the v12 baseline clone; Excalidraw becomes an optional adapter only."
+
+invariants:
+  single_authority:
+    rule: "A symbol must have exactly one authority within the build unit."
+    enforcement:
+      - "Contracts are SSOT (owned by P1)."
+      - "Adapters register once; facades are the only cross-port API surface."
+  hex_boundaries:
+    rule: "Cross-port calls go through Ports facades only."
+    enforcement:
+      - "P3 target selection must query AppHost/TargetRouter when multi-app routing is enabled."
+      - "UI (GoldenLayout) must activate apps only via Ports.p7.apps.* (never directly poking internals)."
+  shared_substrate:
+    rule: "P0 camera capture happens exactly once; all views are mirrors of the same stream and shared state."
+  fail_closed:
+    rule: "If v12 flags are enabled, missing required adapters/contracts must throw early."
+
+architecture:
+  build_unit:
+    type: single_html
+    script_style: "<script type=\"module\">"
+  sections_order:
+    - contracts
+    - tokens_and_registry
+    - adapters
+    - ports_facades
+    - composition_root
+    - ui_shell
+    - boot
+    - p5_defend_checks
+
+shared_substrate:
+  intent: "Make the sensing/physics/injection pipeline independent of which app is currently visible."
+  hero_definition:
+    name: HERO
+    description: "The Tactical View: the stable rendering + sensing + injection substrate that hosts adapters as overlays."
+    invariants:
+      - "HERO always exists (even if zero adapters are mounted)."
+      - "Adapters never own camera capture, DataFabric authority, or injection authority."
+      - "Adapters may be removed/added without restarting the substrate."
+  canonical_state:
+    data_fabric:
+      owner_port: P1
+      description: "Validated fused state consumed by P2/P3/P6 and apps (read-only)."
+    fsm:
+      owner_port: P3 (execution) / P7 (orchestration)
+      description: "Single FSM emits typed transitions/events used by multiple apps."
+  services:
+    p0_camera_stream:
+      owner_port: P0
+      api:
+        - "getStream(): MediaStream | null"
+        - "subscribe(fn): unsubscribe"
+      invariants:
+        - "Only one getUserMedia call per session."
+        - "Multiple video elements may mirror stream via srcObject."
+    p3_pointer_injection:
+      owner_port: P3
+      api:
+        - "deliver(pointerEnvelope)"
+      invariants:
+        - "Routing policy comes from AppHost/TargetRouter when enabled."
+    p7_event_bus:
+      owner_port: P7
+      api:
+        - "emit(type, payload)"
+        - "subscribe(type, handler): unsubscribe"
+      invariants:
+        - "Payloads validate via Contracts (no untyped app coupling)."
+
+multi_app:
+  isolation_strategy:
+    recommended: same_origin_iframe
+    rationale:
+      - "Clear mount/unmount boundaries"
+      - "Reduced CSS/event collisions"
+      - "Compatible with same-origin elementFromPoint / injection"
+  app_host:
+    owner_port: P7
+    responsibilities:
+      - "Registry of apps (AppManifest)"
+      - "Activation/deactivation + lifecycle"
+      - "Provide active target root for P3"
+      - "Expose app events into stigmergy (optional)"
+      - "Provide overlay tuning (opacity + overscan zoom) per active adapter"
+    required_api:
+      - "register(manifest)"
+      - "list()"
+      - "activate(appId)"
+      - "deactivate()"
+      - "getActive()"
+      - "getActiveTargetRootElement()"
+  target_routing:
+    owner_port: P3
+    mechanism: "TargetRouter adapter queries AppHost for active app + target policy."
+    policies:
+      - ACTIVE_APP_ONLY
+      - ACTIVE_APP_OR_FALLBACK
+      - GLOBAL
+
+multi_view:
+  intent: "Multiple GoldenLayout panels render different views of the same webcam/state."
+  examples:
+    - viewId: camera_raw
+      description: "Video-only mirror of P0 stream."
+    - viewId: camera_overlay
+      description: "Video with overlay canvas (diagnostics / bounding boxes)."
+    - viewId: gesture_panel
+      description: "Text/graphs derived from DataFabric (no video)."
+  performance_budget:
+    chromebook_note: "Multi-view should degrade gracefully (lower fps tiers, reduce effects)."
+    constraints:
+      - "Avoid duplicating heavy renderers per view (prefer shared canvas or lightweight overlays)."
+      - "Use adaptive performance governor tiers (15/30/60) per GEN5_SPEC.yaml."
+
+fsm_to_apps:
+  intent: "One FSM drives multiple shell apps consistently."
+  rule: "FSM is a single authority state machine; apps are observers/renderers plus optional intent producers."
+  fanout:
+    - "FSM emits typed transition events (Contracts.FsmEvent)."
+    - "Apps subscribe via Ports.p7.bus (or equivalent) and render their slice."
+  app_writes:
+    allowed:
+      - "Apps may emit intent requests (Contracts.IntentManifest)"
+    forbidden:
+      - "Apps must not mutate DataFabric directly"
+      - "Apps must not call other apps directly (must go through bus/AppHost)"
+
+contracts:
+  owner_port: P1
+  ssot_location:
+    preferred_path: "contracts/ (single source), imported into the artifact"
+    fallback: "window.Contracts inside single-HTML until extraction is ready"
+  new_schemas_v12:
+    - name: AppManifest
+      purpose: "Describes an app mountable by AppHost."
+    - name: AdapterManifest
+      purpose: "Describes a swappable adapter mounted into HERO (kind, entrypoint, overlay keys, target policy, capabilities)."
+    - name: AppCapability
+      purpose: "Declares requested services (pointer_injection, camera_stream, telemetry, etc)."
+    - name: FsmEvent
+      purpose: "Typed FSM transition/event fanout for multi-app observers."
+    - name: AppEvent
+      purpose: "Typed app-local events emitted to bus/stigmergy."
+    - name: IntentManifest
+      purpose: "Typed intent payload owned by P7 (no ad-hoc strings)."
+
+flags:
+  v12_default:
+    - "All new v12 behaviors should be gated and default-off until promoted."
+  proposed:
+    - flag-ui-multiapp: "Enable AppHost + app activation surfaces."
+    - flag-p3-target-active-app: "Route injection through active app policy (TargetRouter)."
+    - flag-ui-multiview: "Enable additional camera/state views in GoldenLayout."
+    - flag-ui-adapter-overlay-tuning: "Enable per-adapter overlay tuning sliders (opacity + overscan zoom)."
+    - flag-p5-defend-strict-v12: "Fail-closed if v12-required tokens/contracts missing."
+
+migration_plan:
+  from_v11_1:
+    - step: "Confirm v11.1 surfaces remain stable (AppHost + TargetRouter + tab wiring)."
+      evidence:
+        - scripts/omega_gen5_v11_1_multiapp.spec.ts
+    - step: "Refactor shared substrate into explicit services (camera stream provider + event bus)."
+      notes:
+        - "Hero component becomes a host/mirror, not the owner of capture."
+    - step: "Add multiview GoldenLayout components as mirrors (video + overlays)."
+    - step: "Introduce typed FSM fanout contract + bus."
+    - step: "Add v12 gates (multiapp + multiview + fsm fanout)."
+
+testing:
+  gates:
+    - name: v12_multiapp_activation
+      purpose: "Tabs/panels switch active app deterministically."
+      pass_criteria:
+        - "Active appId changes when selecting tab"
+    - name: v12_pointer_routes_to_active_app
+      purpose: "W3C injection routes to active app only when enabled."
+      pass_criteria:
+        - "App A receives no pointer events while App B active (ACTIVE_APP_ONLY)"
+    - name: v12_adapter_overlay_tuning
+      purpose: "Active adapter overlay responds to opacity + overscan zoom (and can remember per-adapter if enabled)."
+      pass_criteria:
+        - "Opacity slider changes overlay.style.opacity"
+        - "Overscan zoom > 1 expands overlay box while keeping iframe full-bleed"
+    - name: v12_touchscreen_emulation_smoke
+      purpose: "Touchscreen emulation can drive pointer events into a non-Excalidraw adapter surface."
+      pass_criteria:
+        - "Injected pointer events resolve inside the active adapter iframe/document"
+        - "Failure indicates injector weakness; substrate remains unchanged"
+    - name: v12_multiview_single_camera
+      purpose: "Multiple views render from one webcam stream without multiple getUserMedia calls."
+      pass_criteria:
+        - "At least 2 video mirrors show frames"
+        - "Only one active MediaStream exists"
+    - name: v12_fsm_fanout
+      purpose: "One FSM transition updates multiple app/view observers."
+      pass_criteria:
+        - "Two observers receive the same typed FsmEvent"
+
+risks:
+  - "Chromebook thermal/FPS constraints: multi-view may require aggressive degradation tiers."
+  - "Same-origin iframe requirement for deep target resolution; cross-origin apps need message-based injection instead."
+  - "Contract drift if schemas are copied; must keep P1 as SSOT authority."

@@ -1,0 +1,133 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v20 Spec: Touch2D Cursor + Tripwires (Static + Knuckle) — TDD scaffold
+# Timestamp: 2026-01-23
+
+version: 20
+name: omega_gen6
+intent:
+  - "Compose primitives: Touch2D cursor visualization + multiple tripwire sensors rendered together."
+  - "Immediate milestone (v20): 1×1 key mapping — index fingertip in COMMIT crosses knuckle_tripwire with velocity and press/release semantics."
+  - "Anti-midas posture: user is already locked in COMMIT (high readiness + explicit gesture), so v20 focuses on press/release semantics driven by fingertip crossing geometry (not 'accidental' READY activity)."
+  - "Port boundaries: P2 SHAPE owns geometry + metadata; P3 DELIVER owns injection/routing to consumers."
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v19.html
+  target:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v20.html
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    # P2 sources
+    p2-tripwire-static: true
+    p2-tripwire-knuckle: true
+    p2-tripwire-palm-triangle: false
+
+    # P3 routing (fail-closed)
+    p3-tripwire-injector-static: true
+    p3-tripwire-injector-knuckle: false
+    p3-tripwire-injector-palm-triangle: false
+
+    # UI
+    ui-tripwire-debug: false
+    ui-knuckle-tripwire-panel: false
+    ui-touch2d-cursor-tripwires: true
+  overrides:
+    url_query:
+      - "?flag-p2-tripwire-palm-triangle=true|false"
+      - "?flag-p3-tripwire-injector-palm-triangle=true|false"
+      - "?flag-ui-touch2d-cursor-tripwires=true|false"
+
+ports:
+  p2_shape:
+    primitive:
+      event_bus: "Ports Effects (window.hfoPortsEffects)"
+      event_type: p2/tripwire_cross
+      posture:
+        - "Emit rich metadata about geometry crossing in uiNorm space."
+        - "Emit begin/end (press/release) phases for consumers; do not emit uncontrolled repeats."
+
+    touch2d_cursor:
+      description: "Render the fingertip cursor in a 2D grid. In COMMIT, render the cursor as cyan (COMMIT token) with an internal dot for state visualization."
+      source:
+        - "P1 DataFabric cursor fields (uiNormX/uiNormY + fsmState + readiness)"
+
+    static_screen_tripwires:
+      description: "Render the screen-middle (and any other configured) static tripwire(s) in uiNorm space."
+      sensor_id: "static"
+
+    knuckle_tripwire:
+      description: "Hand-anchored knuckle bar derived from landmarks: index_mcp(5) → pinky_mcp(17), with index_tip(8) crossing. Emits begin/end edges only in COMMIT."
+      sensor_id: "knuckle"
+      inputs:
+        - "Cursor.landmarks in uiNorm space (at least 21 landmarks)."
+        - "Cursor point in uiNorm space (uiNormX/uiNormY) for velocity derivation."
+      output_metadata:
+        - "sensor.phase: begin|end"
+        - "sensor.bar.{a,b} and sensor.tip"
+        - "vxUiNormPerS/vyUiNormPerS/speedUiNormPerS"
+
+    palm_triangle_tripwire:
+      description: "Hand-anchored triangle plane derived from landmarks: wrist(0) → index_mcp(5) → pinky_mcp(17) → wrist. Rotates with the hand."
+      sensor_id_template: "palm_triangle_hand{handIndex}"
+      inputs:
+        - "Hand landmarks in uiNorm space (wrist/index_mcp/pinky_mcp)."
+        - "Cursor point in uiNorm space (index fingertip cursor)."
+      detection:
+        - "Compute triangle vertices (A=wrist, B=index_mcp, C=pinky_mcp)."
+        - "Compute point-in-triangle and crossing edge (outside→inside = begin/press; inside→outside = end/release)."
+        - "Compute per-frame velocity from cursor deltas (vx/vy/speed in uiNorm/s)."
+        - "Attach palm orientation metadata (coarse facing: up|right|down|left; yawDeg) for future rotation-based key maps."
+      output_metadata:
+        - "triangleVerticesUiNorm: [A,B,C]"
+        - "insideBefore/insideAfter"
+        - "phase: begin|end"
+        - "edgeCrossed (optional)"
+        - "vxUiNormPerS/vyUiNormPerS/speedUiNormPerS"
+        - "palmFacing/palmYawDeg (optional)"
+
+  p3_deliver:
+    description: "Map P2 crossing events into consumer actions (fail-closed)."
+    mapping_v20:
+      dino_runner:
+        adapterId: dino-v1
+        enter_knuckle:
+          when:
+            - "sensorId == knuckle"
+            - "phase == begin"
+            - "finger == index_tip (v20 scope)"
+          action:
+            - "keyboard Space keydown"
+        exit_knuckle:
+          when:
+            - "sensorId == knuckle"
+            - "phase == end"
+            - "finger == index_tip (v20 scope)"
+          action:
+            - "keyboard Space keyup"
+      notes:
+        - "In v20, press/release must preserve velocity metadata for later lookahead gating."
+
+ui:
+  golden_layout:
+    microkernel_stack:
+      id: touch2d-cursor-tripwires
+      title: "Touch2D Cursor + Tripwires"
+      requirement:
+        - "New stacked microkernel GoldenLayout component (single panel) that renders a 2D grid."
+        - "Visualize: fingertip cursor, palm triangle(s) per hand, and static screen-middle tripwire."
+
+validation:
+  posture: "RED-first: add new Playwright tests driven by deterministic golden JSONL fixtures."
+  suggested_fixtures:
+    - hfo_hot_obsidian/bronze/3_resources/fixtures/touch2d/gen6_v20_knuckle_tripwire_press_release_space_golden.jsonl
+  suggested_specs:
+    - scripts/omega_gen6_v20_p2_knuckle_tripwire_press_release_metadata_red.spec.ts
+    - scripts/omega_gen6_v20_p3_knuckle_tripwire_space_press_release_red.spec.ts
+
+future_intent (non-binding):
+  - "Extend from single index cursor to 4 fingertips."
+  - "Chord semantics: multi-finger crossings with per-finger velocity and lookahead."
+  - "Rotation-based key mapping: identical chord under different palmFacing should map to different keys."
+  - "Add a hand-anchored 'palm triangle' tripwire that moves and rotates with the user hand."

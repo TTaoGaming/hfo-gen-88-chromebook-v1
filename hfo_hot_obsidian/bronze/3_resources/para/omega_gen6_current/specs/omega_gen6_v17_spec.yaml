@@ -1,0 +1,230 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v17 Spec: Microkernel UI Shell (GoldenLayout + lil-gui) — RED-first TDD
+# Timestamp: 2026-01-22
+
+version: 17
+name: omega_gen6
+intent:
+  - Reduce UI flakiness by converting GoldenLayout + lil-gui integration into a microkernel UI shell with explicit plugin lifecycle.
+  - Keep Hexagonal architecture intact: HFO P0–P7 remain the stable core seams; UI is an adapter layer.
+  - Eliminate bespoke glue by enforcing a single UI shell seam (registration + manifest + deny-by-default capabilities).
+  - Align visual language to Apple HIG and Material 3 principles: clear hierarchy, consistent tokens, progressive disclosure, and predictable states.
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v16.html
+  target:
+    html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v17.html
+  note: "v17 HTML is not created by this spec; this spec defines the RED-first gates and the shell/plugin boundary to implement."
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    ui-golden-layout: true
+    ui-lil-gui: true
+    ui-microkernel: true
+    ui-plugins: true
+    ui-theme-tokens: true
+    ui-density: comfortable
+    ui-test-plugin: false
+  overrides:
+    url_query:
+      - "?flag-ui-microkernel=true|false"
+      - "?flag-ui-plugins=true|false"
+      - "?flag-ui-lil-gui=true|false"
+      - "?flag-ui-golden-layout=true|false"
+      - "?flag-ui-density=comfortable|compact"
+      - "?flag-ui-test-plugin=true|false"
+
+ui:
+  goals:
+    - "GoldenLayout panels must mount/unmount deterministically with proper disposal."
+    - "lil-gui folders are plugin-owned, created once, and cleaned up on plugin dispose."
+    - "Per-frame UI work is minimized; panels update via events or coarse throttling."
+
+  design_system:
+    alignment:
+      - "Apple HIG: clarity (hierarchy), deference (content-first), depth (layering only when needed)."
+      - "Material 3: tokens, role-based colors, state overlays, motion restraint, accessible contrast."
+    tokens:
+      state_colors:
+        requirement: "Consolidate and reuse globally across all panels and overlays."
+        mapping:
+          IDLE: { name: gray, hex: "#8E8E93" }
+          READY: { name: amber, hex: "#FFB300" }
+          COMMIT: { name: cyan, hex: "#00BCD4" }
+          COAST: { name: yellow, hex: "#FFEB3B" }
+        notes:
+          - "Hex values are initial tokens; tune later but do not change the mapping."
+          - "Do not allow plugins to introduce alternate state palettes."
+      surfaces:
+        background: { hex: "#0B0B0F" }
+        surface: { hex: "#141420" }
+        surfaceVariant: { hex: "#1C1C2A" }
+        outline: { hex: "#2C2C3A" }
+      typography:
+        font_family: "system-ui"
+        scale: [label, body, title]
+      spacing:
+        scale_px: [4, 8, 12, 16, 24]
+
+microkernel:
+  pattern: "Microkernel (Plug-in Architecture) at UI edge; Hexagonal core unchanged."
+  shell:
+    name: HFOUiShell
+    ownership:
+      - "Owns GoldenLayout instance and layout-container."
+      - "Owns lil-gui root creation when enabled."
+      - "Owns plugin lifecycle and enforces cleanup."
+      - "Owns theme tokens + density + global keyboard shortcuts for the shell."
+    provides_services:
+      - name: events
+        purpose: "Subscribe to port observability/events without direct coupling to window globals."
+        source: "Bridge to Ports Effects bus (currently window.hfoPortsEffects)."
+        contract:
+          subscribe: "(filter?) => unsubscribe"
+          publishCommand: "(command) => result"
+      - name: storage
+        purpose: "Persist layout + plugin settings (localStorage or in-memory)."
+      - name: theming
+        purpose: "Provide tokens (colors/spacing/typography/density) to plugins."
+      - name: lifecycle
+        purpose: "Uniform mount/show/hide/resize/dispose hooks for all panels."
+
+  plugin_manifest:
+    name: UIShellPluginManifest
+    posture: "Validated at registration time; deny-by-default."
+    required_fields:
+      - id
+      - title
+      - version
+      - contributes
+      - consumes
+    contributes:
+      panels:
+        purpose: "GoldenLayout components (panel factories)"
+        fields: [panelId, title, defaultDock, factory]
+      gui_folders:
+        purpose: "lil-gui folders and controls (debug + tuning)"
+        fields: [folderId, title, build]
+    consumes:
+      ports_effects:
+        purpose: "Declare which port events the plugin may subscribe to"
+        fields: [port, eventTypes]
+      commands:
+        purpose: "Declare which shell commands this plugin may publish"
+        fields: [commandIds]
+
+ports:
+  invariant:
+    - "UI plugins must not import or call port internals directly. They observe via shell services and request actions via commands."
+    - "Cross-port messages validate via Zod schemas; deny-by-default (see Gen6 composition spec contracts list)."
+
+validation:
+  posture: "RED-first TDD: add failing tests first for UI microkernel invariants, then implement to turn GREEN."
+
+  test_harness_pattern:
+    source_of_truth: "Follow existing Gen6 Playwright patterns: safeGoto + safeEvaluate + hfoPortsEffects.subscribe (see scripts/omega_gen6_test_guards.ts and v16 specs)."
+    guidance:
+      - "Prefer a 'light' URL for determinism: disable camera + engines + heavy UI by default, then selectively enable flags under test."
+      - "Avoid monkey-patching hfoPortsEffects.emit in UI tests; prefer shell-owned counters/hooks exposed under window.__hfoUiShellTest when ui-test-plugin=true."
+      - "Every UI plugin lifecycle test must assert cleanup: no leaked DOM nodes, event listeners, or intervals (expose counters in test mode)."
+
+  tests_to_add_red_first:
+    - name: gen6_v17_ui_shell_boots_without_plugins
+      intent: "Shell starts with plugins disabled; no panels registered; no errors."
+      setup:
+        url_flags:
+          - "flag-ui-microkernel=true"
+          - "flag-ui-plugins=false"
+          - "flag-ui-test-plugin=false"
+      asserts:
+        - "No uncaught exceptions"
+        - "GoldenLayout container exists (if ui-golden-layout=true)"
+        - "No plugin panels present"
+      suggested_spec:
+        file: scripts/omega_gen6_v17_ui_shell_boot.spec.ts
+        command_example: "HFO_GEN6_URL='http://localhost:8889/.../omega_gen6_v17.html?flag-disable-camera=true&flag-ui-microkernel=true&flag-ui-plugins=false&mode=dev' npx playwright test scripts/omega_gen6_v17_ui_shell_boot.spec.ts --project=chromium --workers=1"
+        asserts_detail:
+          - "safeEvaluate: expect window.hfoUiShell (or window.HFOUiShell) to exist when ui-microkernel=true"
+          - "safeEvaluate: expect shell.services.theming.tokens.state_colors mapping to match v17 tokens"
+
+    - name: gen6_v17_plugin_lifecycle_mount_dispose_is_idempotent
+      intent: "Installing/uninstalling a plugin does not leak listeners, intervals, or DOM nodes."
+      asserts:
+        - "Panel mounts once"
+        - "Panel dispose called once"
+        - "Subscriptions removed"
+      setup:
+        url_flags:
+          - "flag-ui-microkernel=true"
+          - "flag-ui-plugins=true"
+          - "flag-ui-test-plugin=true"
+      suggested_spec:
+        file: scripts/omega_gen6_v17_ui_plugin_lifecycle.spec.ts
+        asserts_detail:
+          - "safeEvaluate: enable a built-in test plugin that increments mount/dispose counters"
+          - "safeEvaluate: toggle plugin enablement twice; counters remain (mount=1, dispose=1)"
+          - "safeEvaluate: verify shell reports 0 active subscriptions/intervals after dispose"
+        note: "ui-test-plugin is intentionally deny-by-default; it exists only to make lifecycle testing deterministic under Playwright."
+
+    - name: gen6_v17_panel_resize_activation_contract
+      intent: "Panels receive resize + activation hooks and adapt canvases accordingly."
+      asserts:
+        - "onResize called after layout ready"
+        - "onShow/onHide invoked when tab changes"
+      suggested_spec:
+        file: scripts/omega_gen6_v17_ui_panel_resize_activation.spec.ts
+        asserts_detail:
+          - "Use a small test panel that records onResize/onShow/onHide invocations"
+          - "Switch GoldenLayout tab focus in safeEvaluate; assert show/hide sequence"
+          - "Trigger a container resize; assert at least one onResize invocation"
+
+    - name: gen6_v17_lil_gui_progressive_disclosure
+      intent: "Default UI is minimal; advanced controls are hidden behind an 'Advanced' folder and require explicit enable."
+      asserts:
+        - "Only baseline folders exist by default"
+        - "Advanced folder appears only when flag or toggle enabled"
+      suggested_spec:
+        file: scripts/omega_gen6_v17_ui_lil_gui_progressive_disclosure.spec.ts
+        asserts_detail:
+          - "safeEvaluate: query the shell-owned gui registry (not DOM scraping)"
+          - "Assert that advanced folder is absent unless explicit enable"
+
+    - name: gen6_v17_state_color_tokens_are_global
+      intent: "All visual state indicators use the consolidated token mapping (IDLE/READY/COMMIT/COAST)."
+      asserts:
+        - "When FSM transitions, UI indicator uses correct token color"
+        - "Plugins read tokens from shell theming service"
+      suggested_spec:
+        file: scripts/omega_gen6_v17_ui_state_color_tokens.spec.ts
+        asserts_detail:
+          - "safeEvaluate: read shell.services.theming.tokens.state_colors and compare to spec mapping"
+          - "safeEvaluate: render a test indicator in each state and assert computed style matches token (shell-provided)"
+
+  suggested_playwright_specs:
+    note: "Spec names only; implement in scripts/ as separate step. Build them on the existing safeGoto/safeEvaluate harness."
+    list:
+      - scripts/omega_gen6_v17_ui_shell_boot.spec.ts
+      - scripts/omega_gen6_v17_ui_plugin_lifecycle.spec.ts
+      - scripts/omega_gen6_v17_ui_state_color_tokens.spec.ts
+      - scripts/omega_gen6_v17_ui_panel_resize_activation.spec.ts
+      - scripts/omega_gen6_v17_ui_lil_gui_progressive_disclosure.spec.ts
+
+migration_notes:
+  from_v16:
+    evidence:
+      - "v16 updates panels per-frame when ui-lil-gui=true (updateVisualPanels)."
+      - "v16 initializes window.hfoPortsEffects before GoldenLayout loads for debug panel subscriptions."
+    recommendation:
+      - "Keep Ports Effects bus as the underlying source, but hide it behind shell.services.events so plugins never touch window.hfoPortsEffects directly."
+      - "Convert updateVisualPanels to event-driven updates or throttled updates owned by the plugin that needs it."
+
+risks:
+  - "If plugins can still access globals, bespoke glue will persist; enforce manifest + capability deny-by-default."
+  - "GoldenLayout resize/visibility handling will remain a source of bugs unless lifecycle hooks are mandatory for every panel."
+
+next_actions:
+  - "Create omega_gen6_v17.html as a clone of v16 but with HFOUiShell + plugin registry extracted."
+  - "Add the RED-first Playwright specs listed above."
+  - "Implement shell theming tokens and replace all state color usages with token lookups."

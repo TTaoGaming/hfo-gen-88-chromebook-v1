@@ -1,0 +1,75 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Gen6 v11 Spec (P2 Mirror Magus Adapter Layer + Tracer Venom Disperse)
+# Date: 2026-01-21
+
+id: gen6_v11
+name: "Omega Gen6 v11: Port2 Mirror Magus + Tracer Venom"
+status: draft
+
+why:
+  - The current IDLE→READY arm/palm readiness gesture is laggy/unreliable for interactive control.
+  - We need an explicit abstraction layer to swap gesture semantics without rewriting ports.
+  - We need tracer bullets that can disperse across the pipeline and reveal which subsystems are exercised.
+
+goals:
+  short:
+    - Clone v10→v11 so v10 gates remain stable.
+    - Consolidate readiness FSM transitions and Dino IDLE→READY trigger under Port 2 as adapter-owned semantics.
+    - Provide tracer venom dispersion across P2 and P3 to reveal coverage gaps (ad-hoc logic).
+  long:
+    - Move all non-trivial effect synthesis + data transformation behind P2 adapters.
+    - Make gesture experiments (new readiness signals / hysteresis strategies) opt-in and gateable.
+
+artifacts:
+  html:
+    runtime: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v11.html
+  prior_runtime:
+    base: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html
+  tracer_api:
+    - window.diagnosticTracerBulletVenom.fire({ traceId?, targetId?, sequenceId? })
+    - window.diagnosticTracerBulletVenom.strikeP3({ traceId?, targetId? })
+    - window.diagnosticTracerBulletVenom.disperse({ traceId?, sequenceId? })
+
+port2:
+  commander: "Mirror Magus"
+  responsibility:
+    - Own FSM transition semantics (IDLE/READY/COMMIT/COAST).
+    - Own effect synthesis triggers (e.g., Dino ready-edge triggers).
+    - Own data transformation adapters (future: gesture semantics, smoothing, intent models).
+  adapters:
+    - id: p2.sovereign_fsm
+      emits:
+        - { port: p2, type: fsm_transition }
+    - id: p2.dino_ready_edge
+      emits:
+        - { port: p2, type: dino_ready_edge }
+
+port3:
+  commander: "Harmonic Hydra"
+  responsibility:
+    - Inject effects into substrates and/or deliver nematocysts to app wrappers.
+  tracer_targets:
+    - p3.direct
+
+telemetry:
+  bus: window.hfoPortsEffects
+  correlation:
+    - traceId: systemState.trace.traceId
+    - targetId: systemState.trace.targetId
+  key_events:
+    - { port: p2, type: fsm_transition }
+    - { port: p2, type: dino_ready_edge }
+    - { port: p1, type: fsm_edge }
+    - { port: p3, type: nematocyst_deliver }
+    - { port: p7, type: dino_postMessage }
+    - { type: hfo:nematocyst:ack }
+
+acceptance:
+  - tracer.disperse returns 3 shots: p2.fsm, p2.dino, p3.direct.
+  - p2.fsm shot emits >= 1 {port:p2,type:fsm_transition} when the replay hits a state edge.
+  - p2.dino shot emits >= 1 {port:p2,type:dino_ready_edge} and >= 1 wrapper ack ok.
+  - p3.direct shot emits >= 1 nematocyst deliver and >= 1 wrapper ack ok.
+
+notes:
+  - v11 keeps v10 behavior but adds Port2 observability + adapter indirection.
+  - Next experiments: replace readiness fill driver (palm/back) with alternative gestures behind p2 adapters.

@@ -1,0 +1,229 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Gen6 v1 Tactical View Composition Spec (single-HTML, layout-first)
+# Date: 2026-01-21
+# Purpose: Reduce Tactical View mess by enforcing single-responsibility via GoldenLayout composition.
+#          Preserve Gen5 substrate logic and golden masters; change is primarily UI composition (new panes).
+# North Star: Mission Thread OMEGA — Total Tool Virtualization.
+
+spec:
+  id: gen6_v1_tactical_view_composition
+  version: "2026-01-21"
+  status: draft
+  layer: bronze
+  mutation_score_target_zone: "80-99"
+  base:
+    artifacts:
+      gen6_staging_clone:
+        - hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen5_v12.html
+        - hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen5_v12_1_dino_v1.html
+    note: "Gen6 v1 is a layout/composition refactor. Do not change P0/P1/P2/P3 logic for v1; keep existing golden masters behaviorally equivalent."
+
+references:
+  mission_context:
+    - AGENTS.md
+  prior_specs:
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/GEN5_V12_MULTIAPP_SHARED_SUBSTRATE_SPEC_2026_01_20.yaml
+    - hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/GEN5_V13_ADAPTER_HOTSWAP_SPEC_2026_01_21.yaml
+  gen6_notes:
+    - hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/OMEGA_GEN6_MULTIAPP_READINESS_SYNTHESIS_2026_01_21.md
+  harness:
+    entrypoint:
+      - active_hfo_omega_entrypoint.html
+      - active_hfo_omega_entrypoint.json
+
+vision:
+  north_star: "Mission Thread OMEGA: Total Tool Virtualization"
+  grounded_definition:
+    - "Total Tool Virtualization means: one stable gesture substrate (webcam → fused state → pointer envelopes → W3C events) can control many tools (adapters) without bespoke coupling."
+    - "The Tactical View is a composable ensemble (APEX ENSEMBLE) of exemplar layers that share a single DataFabric (state-plane) and a single pointer output fabric (control-plane)."
+  v1_goal:
+    - "De-mess the Tactical View by enforcing single-responsibility panels in GoldenLayout."
+    - "Keep existing Gen5 logic intact: P0 capture, P1 DataFabric, P2 rendering/physics, P3 injection/routing, P7 AppHost."
+    - "Add sidecar debug/inspection windows (multi-view) without rewriting the HERO substrate."
+
+core_principle:
+  single_responsibility:
+    statement: "Each view/layer has one job and a strict contract. Composition wires views together; views do not directly reach into each other or into tool DOM internals."
+  composability:
+    statement: "GoldenLayout composes layers at runtime; adding a layer should not require modifying substrate logic."
+  non_disruptive_migration:
+    statement: "Keep the original Tactical HERO panel as-is initially; add additional panels to the side. Later, the HERO can be split into smaller layers once the sidecar panes prove stable."
+
+constraints:
+  build_unit: single_html
+  same_origin_only: true
+  no_cross_port_coupling: true
+  preserve_golden_master_behavior: true
+  forbidden_for_v1:
+    - "No changes to gesture→FSM semantics used by existing golden replays (clip replay, readiness drains)."
+    - "No changes to P3 injector semantics beyond routing/target selection required to respect the active tool target root."
+    - "No adapter-specific hacks inside P3 (behavior selected via manifest metadata only)."
+
+architecture:
+  layers_are_views:
+    definition: "A layer is a GoldenLayout component (or nested layout) with a single responsibility."
+  shared_substrate:
+    hero:
+      name: HERO (Tactical)
+      statement: "The HERO Tactical substrate stays stable; tools mount as adapters."
+    state_plane:
+      name: DataFabric
+      owner_port: P1
+      statement: "P1 is the single authority for validated fused state."
+    control_plane:
+      name: W3C Pointer Output
+      owner_port: P3
+      statement: "P3 is the single authority for synthesizing and delivering W3C pointer events (routed by policy)."
+
+composition:
+  ui_shell:
+    owner: ui.layout
+    recommended: GoldenLayout
+  default_layout_strategy:
+    keep_existing_panel:
+      statement: "Preserve the existing HERO panel behavior and DOM structure."
+      benefit: "Existing tests remain valid; v1 becomes additive."
+    add_sidecar_panels:
+      statement: "Add small panes to the side for debug/inspection and controlled layer experimentation."
+  v1_layout_panels:
+    - id: tactical_hero
+      title: "HERO Tactical"
+      role: "Primary substrate view (unchanged)"
+    - id: background_video
+      title: "Background Video"
+      role: "P0 stream mirror only"
+    - id: babylon_viz
+      title: "Babylon Viz"
+      role: "3D visualization only (read-only consumer of DataFabric)"
+    - id: touch2d_input
+      title: "Touch 2D"
+      role: "Cursor + simple state; emits pointer envelopes/intents (no direct injection)"
+    - id: tool_excalidraw
+      title: "Tool: Excalidraw"
+      role: "Tool adapter consumer (same-origin iframe)"
+
+layers:
+  background_video:
+    purpose: "Show camera/video background as a standalone view."
+    responsibilities:
+      - "Mirror P0 MediaStream (srcObject)"
+      - "Expose minimal controls (mute, mirror toggle)"
+    forbidden:
+      - "No pointer injection"
+      - "No DataFabric mutation"
+    inputs:
+      - "P0.getStream()"
+    outputs: []
+
+  babylon_visualization:
+    purpose: "Render a 3D visualization derived from DataFabric (reticle, rays, cursors, anchors)."
+    responsibilities:
+      - "Consume DataFabric snapshot stream (read-only)"
+      - "Render 3D scene; optional debug overlays"
+    forbidden:
+      - "No direct DOM interaction with tool adapters"
+      - "No pointer injection"
+    inputs:
+      - "Contracts.DataFabricEnvelope (P1-owned)"
+    outputs:
+      - "Optional: Contracts.VizTelemetry (P6 consumer)"
+
+  touch2d_tactical_input:
+    purpose: "A 2D touchscreen emulation layer: shows cursor and small state changes, and emits pointer envelopes/intents."
+    responsibilities:
+      - "Render 2D cursor + contact indicator"
+      - "Maintain a tiny local state machine (Idle→Hover→Commit)"
+      - "Emit pointer envelopes to P3 deliver via Ports (not direct DOM dispatch)"
+      - "Optionally emit P7 intent events (typed)"
+    forbidden:
+      - "No direct event dispatch into tool DOM"
+      - "No adapter-specific logic"
+    inputs:
+      - "P1 DataFabric (cursor pos / hand pose / gesture classifications)"
+      - "Calibration config (camera→touch mapping)"
+    outputs:
+      - "Contracts.PointerEnvelope (to P3.deliver)"
+      - "Contracts.IntentManifest (to P7.navigate)"
+
+  excalidraw_tool_adapter:
+    purpose: "Provide Excalidraw as a tool consumer inside an iframe adapter."
+    responsibilities:
+      - "Same-origin iframe adapter mounted by AppHost"
+      - "Expose readiness signal (postMessage or DOM event)"
+    forbidden:
+      - "No dependence on substrate internals"
+    inputs:
+      - "W3C pointer events delivered by P3"
+    outputs:
+      - "Optional: tool-local events via bus (typed)"
+
+contracts:
+  owner_port: P1
+  principle: "All cross-layer and cross-port messages validate via Zod schemas; deny-by-default."
+  required_schemas_v1:
+    - name: LayerManifest
+      purpose: "Describe a GoldenLayout layer and its dependencies/capabilities."
+    - name: CompositionManifest
+      purpose: "Describe which layers are active and the GoldenLayout layout tree."
+    - name: VirtualTouchCalibration
+      purpose: "Map camera space into touchscreen space (viewport sizing, offsets, scaling)."
+    - name: PointerEnvelope
+      purpose: "Control-plane pointer event payload (delivered by P3)."
+    - name: AdapterManifest
+      purpose: "Same-origin iframe tool adapter description (entrypoint, targetPolicy, pointerAdapter, capabilities)."
+
+routing:
+  p3_target_policy:
+    statement: "Routing remains policy-driven (ACTIVE_APP_ONLY etc) and queries AppHost for the active tool target root."
+    policies:
+      - ACTIVE_APP_ONLY
+      - ACTIVE_APP_OR_FALLBACK
+      - GLOBAL
+  v1_requirement:
+    - "Touch2D layer never chooses a target DOM; it emits envelopes only."
+    - "AppHost owns active tool; P3 resolves routing using AppHost state."
+
+tests:
+  posture: "Behavior-preserving: existing golden masters should behave almost the same; composition changes are additive."
+  keep_existing_gates:
+    statement: "Do not delete or rewrite existing Gen5 gates; they are the behavioral SSOT."
+    recommended_to_run_against_gen6_clone:
+      - "scripts/omega_gen5_entrypoint_smoke.spec.ts"
+      - "scripts/omega_gen5_v12_multiapp_intent_pointerlab.spec.ts"
+      - "scripts/omega_gen5_excalidraw_ready.spec.ts"
+      - "scripts/omega_gen5_readiness_drain.spec.ts (if still applicable)"
+      - "scripts/omega_clip_fsm_replay.spec.ts (if gen6 targets v11/v10.x clips)"
+  new_minimal_gates_v1:
+    - name: gen6_v1_layout_sidecar_panels_exist
+      intent: "Ensure new GoldenLayout panes exist without changing HERO behavior."
+      asserts:
+        - "HERO panel still loads"
+        - "Background Video pane exists"
+        - "Touch2D pane exists"
+    - name: gen6_v1_touch2d_emits_pointer_envelope
+      intent: "Touch2D emits an envelope on COMMIT edge (no direct DOM dispatch)."
+      asserts:
+        - "Envelope observed at Ports.p3.deliver boundary"
+    - name: gen6_v1_active_app_only_routing_unchanged
+      intent: "P3 target routing still constrains injection to active adapter when enabled."
+      asserts:
+        - "elementFromPoint / routing resolves inside active iframe"
+
+migration_plan:
+  v1_additive_steps:
+    - step: "Clone or reuse Gen6 staging artifact as baseline (no logic changes)."
+      evidence: "Gen6 clone boots and passes existing v12 gates."
+    - step: "Add GoldenLayout components for sidecar panes (video mirror, Touch2D, Babylon)."
+      evidence: "Sidecar panes render; HERO unchanged."
+    - step: "Wire Touch2D → P3 deliver via PointerEnvelope (contract-first)."
+      evidence: "Envelope observed; no adapter-specific logic."
+    - step: "Register Excalidraw as tool adapter (already in Gen5 patterns)."
+      evidence: "Adapter activates; P3 routing works under ACTIVE_APP_ONLY."
+  later_optional:
+    - step: "Split HERO into pure layers (video behind, 2D overlay, 3D viz) once sidecar panes prove stable."
+      note: "Not required for v1; keep changes incremental."
+
+risks:
+  - "Accidental behavior drift: moving DOM around can break tests. Mitigation: keep HERO DOM stable; add panes adjacent, not replacing."
+  - "Performance on Chromebook: extra panes add load. Mitigation: panes default collapsed/minimized and degrade gracefully."
+  - "Layer coupling creep: Touch2D tries to inject directly. Mitigation: forbid direct DOM dispatch; enforce Ports boundary checks."

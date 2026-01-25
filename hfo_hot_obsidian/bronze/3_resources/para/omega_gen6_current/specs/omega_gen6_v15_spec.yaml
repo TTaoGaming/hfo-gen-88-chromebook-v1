@@ -1,0 +1,69 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v15 Spec: Tripwire Planck Metadata + Contract Hardening
+# Timestamp: 2026-01-22
+
+version: 15
+name: omega_gen6
+intent:
+  - Refactor Tripwire (P2) to emit richer Planck sensor metadata while preserving reliable down-cross behavior.
+  - Add contract hardening via Zod (node-side contracts + replay tests).
+  - Keep Port3 injector stable (Dino Space) while guarding against double-trigger when sensor phases exist.
+
+entrypoint:
+  html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v15.html
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    p2-tripwire-planck-contact: true
+    p3-tripwire-injector: true
+    p3-dino-ready-edge: false
+  overrides:
+    url_query:
+      - "?flag-p2-tripwire-planck-contact=true|false"
+      - "?flag-p3-tripwire-injector=true|false"
+      - "?flag-p3-dino-ready-edge=true|false"
+
+contracts:
+  node_zod:
+    tripwire_events: contracts/hfo_tripwire_events.zod.ts
+
+ports:
+  p2:
+    tripwire_thread:
+      event_type: tripwire_cross
+      trigger_policy:
+        v15_default: geometric_crossing
+        note: "Crossing still detected by uiNormY edge (works with sparse replay frames). Planck contact callbacks are used for metadata; true contact-driven triggering needs CCD/TOI or intermediate samples."
+      payload_additions:
+        sensor:
+          engine: planck
+          phase: begin
+          cursor: { role: cursor, bodyId: string, fixtureId: string }
+          band: { role: tripwire_band, bodyId: string, fixtureId: string, bandKey: string }
+          manifold:
+            note: "Optional: present only when Planck exposes world manifold data."
+            normal: { x: number, y: number }
+            points: [{ x: number, y: number }]
+  p3:
+    tripwire_injector:
+      listens_to:
+        port: p2
+        type: tripwire_cross
+      policy:
+        direction: down
+        phase: begin
+        cooldownMs: 220
+      effect:
+        adapterId: dino-v1
+        payload: { kind: keyboard, action: keypress, key: " ", code: Space }
+
+validation:
+  tests:
+    - "RED-first then GREEN: scripts/omega_gen6_v15_p2_tripwire_planck_contact_metadata_red.spec.ts"
+    - "Compatibility: scripts/omega_gen6_v14_p3_tripwire_downcross_inject_space.spec.ts (run with HFO_GEN6_URL pointed at v15)"
+
+missing_major_pieces:
+  - "True contact-driven triggering: current golden replay has no in-band samples (0.45 -> 0.55), so Planck begin-contact may not fire unless CCD/TOI or additional sampling is added."
+  - "Richer manifold/impulse metadata: currently best-effort (if Planck exposes getWorldManifold); no stable impulse/time-of-impact fields."
+  - "Runtime contract enforcement: Zod contracts are node-side; runtime could optionally validate emitted payloads using the in-browser zod import."

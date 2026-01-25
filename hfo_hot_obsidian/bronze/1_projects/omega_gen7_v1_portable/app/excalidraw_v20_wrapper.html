@@ -1,0 +1,84 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: V -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HFO Excalidraw Wrapper</title>
+    <!-- 📦 React & Excalidraw UMD -->
+    <script crossorigin src="./lib/js/react.min.js"></script>
+    <script crossorigin src="./lib/js/react-dom.min.js"></script>
+    <script crossorigin src="./lib/js/excalidraw.min.js"></script>
+    <style>
+        body,
+        html,
+        #app {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #0d0d0d;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script>
+        window.EXCALIDRAW_ASSET_PATH = "./lib/excalidraw-assets/";
+
+        const render = () => {
+            const lib = window.ExcalidrawLib || window.Excalidraw;
+            if (!lib) { setTimeout(render, 100); return; }
+
+            const App = () => {
+                return React.createElement(lib.Excalidraw, {
+                    theme: "dark",
+                    autoFocus: true, // V21.3: Force autofocus on component mount
+                    UIOptions: { canvasActions: { loadScene: false, export: false, saveAsScene: false } },
+                    excalidrawAPI: (api) => {
+                        window.excalidrawAPI = api;
+                        if (window.pendingTool) {
+                            api.setActiveTool({ type: window.pendingTool });
+                        }
+                        window.parent.postMessage({ type: "EXCALIDRAW_READY" }, "*");
+                    }
+                });
+            };
+
+            // � V21.3: Focus Interlock for Synthetic Interaction (HFO Shards)
+            // Ensures React state machines recognize the "Focus" event during pointer down
+            document.addEventListener("pointerdown", (e) => {
+                if (!e.isTrusted) {
+                    const canvas = document.querySelector("canvas.upper-canvas");
+                    if (canvas && canvas.focus) canvas.focus();
+
+                    // Also try focusing the container
+                    const container = document.querySelector(".excalidraw-container");
+                    if (container && container.focus) container.focus();
+                }
+            }, true);
+
+            // �🌉 HFO Bridge: Listen for programmatic commands from parent
+            window.addEventListener("message", (event) => {
+                const { type, data } = event.data;
+                if (type === "SET_TOOL") {
+                    if (window.excalidrawAPI) {
+                        window.excalidrawAPI.setActiveTool({ type: data.tool });
+                    } else {
+                        window.pendingTool = data.tool;
+                    }
+                } else if (type === "UPDATE_SCENE") {
+                    if (window.excalidrawAPI) window.excalidrawAPI.updateScene(data);
+                }
+            });
+
+            const root = ReactDOM.createRoot(document.getElementById('app'));
+            root.render(React.createElement(App));
+        };
+        render();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Gen6 v14 Spec: Tripwire→Dino (Port3 Planck Sensor Injector)
+# Timestamp: 2026-01-22
+
+version: 14
+name: omega_gen6
+intent:
+  - Make Dino Runner the primary interaction surface (tab-first over Excalidraw).
+  - Replace legacy FSM IDLE→READY edge trigger with a tripwire sensor down-cross event.
+  - Inject Space keypress reliably into Dino via Port 3 (adapter host first, P3 fallback).
+
+entrypoint:
+  html: hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v14.html
+
+contracts:
+  p2_event:
+    type: tripwire_cross
+    payload:
+      pointerId: number
+      handIndex: number
+      direction: { enum: [down, up] }
+      now: number
+      readiness: number
+      xUiNorm: number
+      yUiNorm: number
+      note: "Emitted by P2 tripwire thread on band crossing; v14 defaults to down-only and cooldown-based repeatability."
+  p3_effect:
+    adapterId: dino-v1
+    kind: keyboard
+    action: keypress
+    key: " "
+    code: Space
+
+feature_flags:
+  provider: openfeature
+  overrides:
+    url_query:
+      - "?flag-p3-tripwire-injector=true|false"
+      - "?flag-p3-dino-ready-edge=true|false"
+  defaults:
+    p3-tripwire-injector: true
+    p3-dino-ready-edge: false
+
+ports:
+  p2:
+    tripwire_thread:
+      purpose: "Detect pointer crossing through a horizontal band centered at y=0.5 (UI-norm)"
+      config_path: systemState.parameters.p2.tripwireThread
+      defaults:
+        emitDownOnly: true
+        commitOnly: true
+        cooldownMs: 250
+      notes:
+        - "commitOnly keeps legacy COMMIT-gating: only fires when hand FSM is COMMIT."
+        - "cooldownMs allows repeated down-cross events for repeated jumps."
+  p3:
+    planck_sensor_injector:
+      global: window.hfoP3PlanckSensorInjector
+      enabled_flag: p3-tripwire-injector
+      policy:
+        direction: down
+        cooldownMs: 220
+      delivery:
+        - "Primary: window.hfoAdapterHost.deliverEffect('dino-v1', payload)"
+        - "Fallback: P3InjectorPort.sendNematocystToDino(payload)"
+      telemetry:
+        emits:
+          - port: p3
+            type: tripwire_inject
+            fields: [adapterId, ok, direction, payload, reason]
+        state:
+          key: p3_tripwire_injector
+
+ui:
+  layout:
+    change:
+      - "Dino Runner tab is first in the Excalidraw/Dino stack."
+
+legacy_behavior:
+  fsm_idle_to_ready_trigger:
+    status: gated
+    enabled_flag: p3-dino-ready-edge
+    default: false
+    note: "Legacy IDLE→READY trigger for Dino jump is disabled by default in v14."
+
+validation:
+  manual:
+    - "Open v14 and confirm Dino tab is first."
+    - "Ensure ?flag-p3-dino-ready-edge=false; down-cross tripwire triggers Space jump in Dino."
+  automated:
+    existing_tests:
+      - scripts/omega_gen6_v12_p2_tripwire_sensor_band_commit_only_red.spec.ts
+    next_test_to_add:
+      - "A v14 replay asserting a 'p3/tripwire_inject' event with Space on down-cross."

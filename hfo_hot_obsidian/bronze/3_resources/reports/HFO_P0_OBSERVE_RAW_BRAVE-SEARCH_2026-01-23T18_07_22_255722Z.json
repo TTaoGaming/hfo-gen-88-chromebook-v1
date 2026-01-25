@@ -1,0 +1,500 @@
+{
+  "query": {
+    "original": "ping",
+    "show_strict_warning": false,
+    "is_navigational": true,
+    "is_news_breaking": false,
+    "spellcheck_off": true,
+    "country": "us",
+    "bad_results": false,
+    "should_fallback": false,
+    "postal_code": "",
+    "city": "",
+    "header_country": "",
+    "more_results_available": true,
+    "state": ""
+  },
+  "mixed": {
+    "type": "mixed",
+    "main": [
+      {
+        "type": "web",
+        "index": 0,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 1,
+        "all": false
+      },
+      {
+        "type": "videos",
+        "all": true
+      },
+      {
+        "type": "web",
+        "index": 2,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 3,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 4,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 5,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 6,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 7,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 8,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 9,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 10,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 11,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 12,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 13,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 14,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 15,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 16,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 17,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 18,
+        "all": false
+      },
+      {
+        "type": "web",
+        "index": 19,
+        "all": false
+      }
+    ],
+    "top": [],
+    "side": []
+  },
+  "type": "search",
+  "videos": {
+    "type": "videos",
+    "results": [
+      {
+        "type": "video_result",
+        "url": "https://www.youtube.com/watch?v=1GIbWNOlzPA",
+        "title": "Pingping Fox Reveals her True Identity - Black Myth: Wukong - YouTube",
+        "description": "#BlackMythWukong #Wukong #BlackMythBlack Myth: Wukong - Demon King Boss Fight (Red Boy/Yaksha King) 4K GeForce RTX 4090 + i9-14900KScereBro: • Twitter: http...",
+        "age": "August 22, 2024",
+        "page_age": "2024-08-22T06:55:26",
+        "fetched_content_timestamp": 1737520544,
+        "video": {
+          "duration": "04:30",
+          "views": 6579,
+          "creator": "ScereBro PSNU",
+          "publisher": "YouTube"
+        },
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "youtube.com",
+          "hostname": "www.youtube.com",
+          "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+          "path": "› watch"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/31pGKXZyeLu1WhG3E6PRY6ZqJTVAm-imMzp1uYndzYE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS8x/R0liV05PbHpQQS9t/YXhyZXNkZWZhdWx0/LmpwZw",
+          "original": "https://i.ytimg.com/vi/1GIbWNOlzPA/maxresdefault.jpg"
+        }
+      },
+      {
+        "type": "video_result",
+        "url": "https://www.youtube.com/watch?v=lkyUO09n06s",
+        "title": "A Closer Look at Pingping - Black Myth Wukong - YouTube",
+        "description": "If you like my videos Please subscribe.I appreciate all of you!SUBSCRIBE: https://www.youtube.com/c/TribbianiJoseph/videosBackup channel:https://www.youtube",
+        "age": "September 11, 2024",
+        "page_age": "2024-09-11T17:00:40",
+        "fetched_content_timestamp": 1728731329,
+        "video": {
+          "duration": "00:52",
+          "views": 121811,
+          "creator": "Prizzaa Gaming Channel",
+          "publisher": "YouTube"
+        },
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "youtube.com",
+          "hostname": "www.youtube.com",
+          "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+          "path": "› watch"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/_veJWqB9arD17ziwVtbN7vWCD8RRSNvZYUds-xTx2_I/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9s/a3lVTzA5bjA2cy9t/YXhyZXNkZWZhdWx0/LmpwZw",
+          "original": "https://i.ytimg.com/vi/lkyUO09n06s/maxresdefault.jpg"
+        }
+      },
+      {
+        "type": "video_result",
+        "url": "https://www.youtube.com/watch?v=1Y5aVThPZCY",
+        "title": "Black Myth Wukong All Pingping Cutscenes - The Story of Pingping ...",
+        "description": "Black Myth Wukong All Pingping Cutscenes - The Story of Pingping the Trickster Fox Spirit https://youtu.be/1Y5aVThPZCYBlack Myth Wukong - All Scenes + Secre...",
+        "age": "September 1, 2024",
+        "page_age": "2024-09-01T04:58:27",
+        "fetched_content_timestamp": 1768541878,
+        "video": {
+          "duration": "25:53",
+          "creator": "VGS - Video Game Sophistry",
+          "publisher": "YouTube"
+        },
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "youtube.com",
+          "hostname": "www.youtube.com",
+          "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+          "path": "› watch"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/Q7uTlM3MzrjsSS2zBMZlwVLOpTdoepqrQ4JlfQgCBqQ/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS8x/WTVhVlRoUFpDWS9t/YXhyZXNkZWZhdWx0/LmpwZw",
+          "original": "https://i.ytimg.com/vi/1Y5aVThPZCY/maxresdefault.jpg"
+        }
+      },
+      {
+        "type": "video_result",
+        "url": "https://www.youtube.com/watch?v=hp_Pxmvuc3A",
+        "title": "Black Myth: Wukong - All Pingping Fox Cutscenes",
+        "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
+        "fetched_content_timestamp": 1768745616,
+        "video": {},
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "youtube.com",
+          "hostname": "www.youtube.com",
+          "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+          "path": "› watch"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/D7KOD6maOcqC2XP8OJwAclmX-VF-AredRyvSWXvEaEA/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9o/cF9QeG12dWMzQS9o/cWRlZmF1bHQuanBn",
+          "original": "https://i.ytimg.com/vi/hp_Pxmvuc3A/hqdefault.jpg"
+        }
+      },
+      {
+        "type": "video_result",
+        "url": "https://www.youtube.com/watch?v=Wk_Sr9mGrEI",
+        "title": "✅ Команда PING ✅ Как пропинговать ...",
+        "description": "✅ В этом видео мы рассмотрим как использовать команду Ping. С помощью команды пинг вы можете в любое время проверить доступность любого компьютера или сайта...",
+        "age": "January 20, 2024",
+        "page_age": "2024-01-20T11:00:02",
+        "fetched_content_timestamp": 1719573771,
+        "video": {
+          "duration": "02:52",
+          "views": 473,
+          "creator": "Академия компьютерной грамотности",
+          "publisher": "YouTube"
+        },
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "youtube.com",
+          "hostname": "www.youtube.com",
+          "favicon": "https://imgs.search.brave.com/Wg4wjE5SHAargkzePU3eSLmWgVz84BEZk1SjSglJK_U/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvOTkyZTZiMWU3/YzU3Nzc5YjExYzUy/N2VhZTIxOWNlYjM5/ZGVjN2MyZDY4Nzdh/ZDYzMTYxNmI5N2Rk/Y2Q3N2FkNy93d3cu/eW91dHViZS5jb20v",
+          "path": "› watch"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/aCpMhy-JQG-qxw0wcgvKOwnAKnhSNArT1a3odccGGYw/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS9X/a19TcjltR3JFSS9t/YXhyZXNkZWZhdWx0/LmpwZw",
+          "original": "https://i.ytimg.com/vi/Wk_Sr9mGrEI/maxresdefault.jpg"
+        }
+      }
+    ],
+    "mutated_by_goggles": false
+  },
+  "web": {
+    "type": "search",
+    "results": [
+      {
+        "title": "Home Page - PING",
+        "url": "https://ping.com/en-us",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "Introducing Moonlander, designated for the walking purist who favors a simpler, cleaner design with only enough pockets for essentials. It is light, only 4 ½ lbs., and has six pockets · New colorways and lively patterns are offered in this long-popular carry bag.",
+        "profile": {
+          "name": "PING",
+          "url": "https://ping.com/en-us",
+          "long_name": "ping.com",
+          "img": "https://imgs.search.brave.com/3HTFN7xcTyHdhbb1UICtQMbCmBBEfdsN4qVG8DDwmxs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmU4MDIxN2Qw/MTY4OGIwNzM1NGQ2/YWI2NzZmODE5ZTI0/NDdjODhlYjllYWUx/YWUyZWFlMzY3ZjNm/ZjgxNDEyYS9waW5n/LmNvbS8"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "ping.com",
+          "hostname": "ping.com",
+          "favicon": "https://imgs.search.brave.com/3HTFN7xcTyHdhbb1UICtQMbCmBBEfdsN4qVG8DDwmxs/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvZmU4MDIxN2Qw/MTY4OGIwNzM1NGQ2/YWI2NzZmODE5ZTI0/NDdjODhlYjllYWUx/YWUyZWFlMzY3ZjNm/ZjgxNDEyYS9waW5n/LmNvbS8",
+          "path": "› en-us"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/FukAqCJR9dmVHXFXhnUA-JLJNioRhXvlnonKCHXtqGE/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG5l/LXByb2QtbWVkaWEt/cGluZy5henVyZWVk/Z2UubmV0L21lZGlh/c3RvcmFnZS9tZWRp/YXN0b3JhZ2UvcGlu/Zy1uYS9tZWRpYWxp/YnJhcnkvcGluZy1s/b2dvX2JsYWNrLXdo/aXRlXzM1MHgxMzAu/anBn",
+          "original": "https://cdne-prod-media-ping.azureedge.net/mediastorage/mediastorage/ping-na/medialibrary/ping-logo_black-white_350x130.jpg",
+          "logo": true
+        },
+        "cluster_type": "generic",
+        "cluster": [
+          {
+            "title": "Clubs",
+            "url": "https://ping.com/en-us/clubs",
+            "is_source_local": false,
+            "is_source_both": false,
+            "description": "Introducing Moonlander, designated for the walking purist who favors a simpler, cleaner design with only enough pockets for essentials. It is light, only 4 ½ lbs., and has six pockets · New colorways and lively patterns are offered in this long-popular carry bag.",
+            "family_friendly": true
+          },
+          {
+            "title": "Irons",
+            "url": "https://ping.com/en-us/clubs/irons",
+            "is_source_local": false,
+            "is_source_both": false,
+            "description": "<strong>PING</strong>’s irons are engineered to achieve higher and farther ball flight with incredible stopping power, made even better by a pleasing sound and feel.",
+            "family_friendly": true
+          },
+          {
+            "title": "Drivers",
+            "url": "https://ping.com/en-us/clubs/drivers",
+            "is_source_local": false,
+            "is_source_both": false,
+            "description": "<strong>PING</strong> offers the longest, most forgiving drivers in the game. Whether you’re looking for forgiveness or speed, <strong>PING</strong> has a driver for every golfer.",
+            "family_friendly": true
+          },
+          {
+            "title": "Putters",
+            "url": "https://ping.com/en-us/clubs/putters",
+            "is_source_local": false,
+            "is_source_both": false,
+            "description": "<strong>PING</strong>’s putters come in a variety of shapes and styles, ensuring that any golfer will be able to find the perfect putter to enhance their game on the greens.",
+            "family_friendly": true
+          }
+        ]
+      },
+      {
+        "title": "Ping Identity: Identity Security for the Digital Enterprise",
+        "url": "https://www.pingidentity.com/en.html",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "Con Ping, obtendrá soluciones seguras, escalables y perfectamente adaptadas a sus necesidades. La gestion des identités est fondamentale pour la croissance numérique. Grâce à Ping, les solutions sont fluides, sécurisées, évolutives et répondent à votre vision A identidade é a base do crescimento digital.",
+        "profile": {
+          "name": "Ping Identity",
+          "url": "https://www.pingidentity.com/en.html",
+          "long_name": "pingidentity.com",
+          "img": "https://imgs.search.brave.com/p_EjM6okyiht72QGumEWZ0Q6cUkMkvUqFB5G5WN6QHw/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTVjMWViZjY1/ZDhhMmUxMWU2NTlj/NjBlYzI2YmFmYTE4/OWJkZTViMTU2NmYx/MWJiZWI5NjJiNGIx/YmEzZTdkOC93d3cu/cGluZ2lkZW50aXR5/LmNvbS8"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "pingidentity.com",
+          "hostname": "www.pingidentity.com",
+          "favicon": "https://imgs.search.brave.com/p_EjM6okyiht72QGumEWZ0Q6cUkMkvUqFB5G5WN6QHw/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNTVjMWViZjY1/ZDhhMmUxMWU2NTlj/NjBlYzI2YmFmYTE4/OWJkZTViMTU2NmYx/MWJiZWI5NjJiNGIx/YmEzZTdkOC93d3cu/cGluZ2lkZW50aXR5/LmNvbS8",
+          "path": "› en.html"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/DXGH9VHW0NqmErnTkZ7C-locsBj4hrr8yLSQwUkGzCU/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly93d3cu/cGluZ2lkZW50aXR5/LmNvbS9jb250ZW50/L2RhbS9waWNyL29n/L3NwL0ltZy1PRy1I/b21lUGFnZS0xMjAw/eDYzMC5wbmc",
+          "original": "https://www.pingidentity.com/content/dam/picr/og/sp/Img-OG-HomePage-1200x630.png",
+          "logo": false
+        }
+      },
+      {
+        "title": "Ping (networking utility) - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Ping_(networking_utility)",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "Ping is <strong>a computer network administration software utility used to test the reachability of a host on an Internet Protocol (IP) network</strong>. It is available in a wide range of operating systems – including most embedded network administration software. Ping measures the round-trip time for messages ...",
+        "page_age": "2025-12-28T23:38:15",
+        "profile": {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Ping_(networking_utility)",
+          "long_name": "en.wikipedia.org",
+          "img": "https://imgs.search.brave.com/m6XxME4ek8DGIUcEPCqjRoDjf2e54EwL9pQzyzogLYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQwNGZhZWY0/ZTQ1YWUzYzQ3MDUw/MmMzMGY3NTQ0ZjNj/NDUwMDk5ZTI3MWRk/NWYyNTM4N2UwOTE0/NTI3ZDQzNy9lbi53/aWtpcGVkaWEub3Jn/Lw"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "deep_results": {
+          "buttons": [
+            {
+              "type": "button_result",
+              "title": "History",
+              "url": "https://en.wikipedia.org/wiki/Ping_(networking_utility)#History"
+            },
+            {
+              "type": "button_result",
+              "title": "Invocation example",
+              "url": "https://en.wikipedia.org/wiki/Ping_(networking_utility)#Invocation_example"
+            },
+            {
+              "type": "button_result",
+              "title": "Error indications",
+              "url": "https://en.wikipedia.org/wiki/Ping_(networking_utility)#Error_indications"
+            },
+            {
+              "type": "button_result",
+              "title": "Message format",
+              "url": "https://en.wikipedia.org/wiki/Ping_(networking_utility)#Message_format"
+            },
+            {
+              "type": "button_result",
+              "title": "Security loopholes",
+              "url": "https://en.wikipedia.org/wiki/Ping_(networking_utility)#Security_loopholes"
+            },
+            {
+              "type": "button_result",
+              "title": "Further reading",
+              "url": "https://en.wikipedia.org/wiki/Ping_(networking_utility)#Further_reading"
+            }
+          ]
+        },
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "en.wikipedia.org",
+          "hostname": "en.wikipedia.org",
+          "favicon": "https://imgs.search.brave.com/m6XxME4ek8DGIUcEPCqjRoDjf2e54EwL9pQzyzogLYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQwNGZhZWY0/ZTQ1YWUzYzQ3MDUw/MmMzMGY3NTQ0ZjNj/NDUwMDk5ZTI3MWRk/NWYyNTM4N2UwOTE0/NTI3ZDQzNy9lbi53/aWtpcGVkaWEub3Jn/Lw",
+          "path": "› wiki  › Ping_(networking_utility)"
+        },
+        "age": "1 month ago"
+      },
+      {
+        "title": "Home Page - PING",
+        "url": "https://eu.ping.com/en-gb/",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "Official web site for PING, Inc. manufacturer of PING Golf Clubs",
+        "profile": {
+          "name": "PING",
+          "url": "https://eu.ping.com/en-gb/",
+          "long_name": "eu.ping.com",
+          "img": "https://imgs.search.brave.com/fGAyyPMvjBeEAfmttt758HDIhCs3kht_15IQfwquad4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODhhZTU4OGRl/MzhiOGU3Y2I3NGYz/ODM1MTkxZmM2Mjdm/ZTA1ODJkN2ZmZTg1/MWRiYmMyOTMwYTYz/MDhkNDBmNi9ldS5w/aW5nLmNvbS8"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "eu.ping.com",
+          "hostname": "eu.ping.com",
+          "favicon": "https://imgs.search.brave.com/fGAyyPMvjBeEAfmttt758HDIhCs3kht_15IQfwquad4/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvODhhZTU4OGRl/MzhiOGU3Y2I3NGYz/ODM1MTkxZmM2Mjdm/ZTA1ODJkN2ZmZTg1/MWRiYmMyOTMwYTYz/MDhkNDBmNi9ldS5w/aW5nLmNvbS8",
+          "path": "› en-gb"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/J2nAEagNK9xg3uOs5Z_4EcNF4hUkngWA34nrRNBDBR8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9jZG5l/LXByb2QtbWVkaWEt/cGluZy5henVyZWVk/Z2UubmV0L21lZGlh/c3RvcmFnZS9tZWRp/YXN0b3JhZ2UvcGlu/Zy1ldS9tZWRpYWxp/YnJhcnkvcGluZy1s/b2dvX2JsYWNrLXdo/aXRlXzM1MHgxMzAu/anBn",
+          "original": "https://cdne-prod-media-ping.azureedge.net/mediastorage/mediastorage/ping-eu/medialibrary/ping-logo_black-white_350x130.jpg",
+          "logo": true
+        }
+      },
+      {
+        "title": "He Pingping - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/He_Pingping",
+        "is_source_local": false,
+        "is_source_both": false,
+        "description": "He Ping<strong>ping</strong> (Chinese: 何平平; pinyin: Hé Píngpíng; 13 July 1988 – 13 March 2010) was a Chinese man who, according to the Guinness World Records, was the world&#x27;s shortest mobile man from 2007 until his death in March 2010.",
+        "page_age": "2025-10-22T19:59:12",
+        "profile": {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/He_Pingping",
+          "long_name": "en.wikipedia.org",
+          "img": "https://imgs.search.brave.com/m6XxME4ek8DGIUcEPCqjRoDjf2e54EwL9pQzyzogLYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQwNGZhZWY0/ZTQ1YWUzYzQ3MDUw/MmMzMGY3NTQ0ZjNj/NDUwMDk5ZTI3MWRk/NWYyNTM4N2UwOTE0/NTI3ZDQzNy9lbi53/aWtpcGVkaWEub3Jn/Lw"
+        },
+        "language": "en",
+        "family_friendly": true,
+        "type": "search_result",
+        "subtype": "generic",
+        "is_live": false,
+        "deep_results": {
+          "buttons": [
+            {
+              "type": "button_result",
+              "title": "Early and personal life",
+              "url": "https://en.wikipedia.org/wiki/He_Pingping#Early_and_personal_life"
+            },
+            {
+              "type": "button_result",
+              "title": "Recognition of size",
+              "url": "https://en.wikipedia.org/wiki/He_Pingping#Recognition_of_size"
+            },
+            {
+              "type": "button_result",
+              "title": "Death",
+              "url": "https://en.wikipedia.org/wiki/He_Pingping#Death"
+            }
+          ]
+        },
+        "meta_url": {
+          "scheme": "https",
+          "netloc": "en.wikipedia.org",
+          "hostname": "en.wikipedia.org",
+          "favicon": "https://imgs.search.brave.com/m6XxME4ek8DGIUcEPCqjRoDjf2e54EwL9pQzyzogLYk/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvNjQwNGZhZWY0/ZTQ1YWUzYzQ3MDUw/MmMzMGY3NTQ0ZjNj/NDUwMDk5ZTI3MWRk/NWYyNTM4N2UwOTE0/NTI3ZDQzNy9lbi53/aWtpcGVkaWEub3Jn/Lw",
+          "path": "› wiki  › He_Pingping"
+        },
+        "thumbnail": {
+          "src": "https://imgs.search.brave.com/l7Bz1KBMOOQfb1WFPXTIJoc0yK2oc1WJ2P_Eh7aLrmM/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy85/Lzk0L0hlX1Bpbmdw/aW5nLkpQRw",
+          "original": "https://upload.wikimedia.org/wikipedia/commons/9/94/He_Pingping.JPG",
+          "logo": false
+        },
+        "age": "October 22, 2025"
+      }
+    ],
+    "family_friendly": true
+  }
+}

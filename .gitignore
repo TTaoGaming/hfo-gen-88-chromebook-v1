@@ -105,5 +105,19 @@ hfo_cold_obsidian/bronze/3_resources/projects_archive_2026_01_18/
 hfo_cold_obsidian/bronze/4_archive/
 hfo_cold_obsidian/bronze/4_archive/obsidian2025_moved/
 
+# Embedded vendor repos (keep local; avoid accidental submodules)
+hfo_hot_obsidian/bronze/1_projects/hfo_omega_assimillation_touchscreen_targets/vendor/
+hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/vendor/
+hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/vendor/
+
+# Generated HTML artifacts (often >500KB; blocked by large-file gate)
+hfo_hot_obsidian/**/omega_gen*.html
+hfo_hot_obsidian/bronze/4_archive/ai_slop/**/*.html
+
+# Derived Hot Silver/Gold outputs (require receipts; keep local unless promoted)
+hfo_hot_obsidian/silver/3_resources/reports/
+hfo_hot_obsidian/silver/4_archive/
+hfo_hot_obsidian/gold/3_resources/reports/
+
 # Local Drive vault link
 Obsidian2025
