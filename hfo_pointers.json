@@ -1,0 +1,15 @@
+{
+    "medallion": "bronze",
+    "mutation_score": 0,
+    "hive": "V",
+    "generated_utc": "2026-01-22T00:00:00Z",
+    "targets": {
+        "mcp_gateway_impl": "hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/hfo_mcp_gateway_hub.py"
+    },
+    "paths": {
+        "blackboard": "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl",
+        "mcp_memory": "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl",
+        "duckdb_unified": "hfo_gen_88_cb_v2/hfo_unified_v88.duckdb",
+        "duckdb_file_index": "hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/hfo_unified_v88_merged.duckdb"
+    }
+}
