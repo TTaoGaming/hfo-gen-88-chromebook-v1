@@ -1,0 +1,103 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# CI Tripwires: lightweight fail-closed gates + bounded browser checks on relevant changes.
+
+name: tripwires
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+concurrency:
+  group: tripwires-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  precommit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pre-commit
+          npm ci
+
+      # NOTE: pre-commit hooks that depend on git staged files should not assume staging in CI.
+      # We still run the suite fail-closed across the repo.
+      - name: Run pre-commit (all files)
+        env:
+          PRE_COMMIT_COLOR: always
+        run: |
+          pre-commit run --all-files --show-diff-on-failure
+
+  playwright_fast_tripwire:
+    # Only run browser checks when changes are likely to affect runtime.
+    if: |
+      github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Compute changed files
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+          fi
+          echo "base=$BASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "head=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+          git diff --name-only "$BASE_SHA".."$HEAD_SHA" > /tmp/changed_files.txt
+          echo "changed_count=$(wc -l < /tmp/changed_files.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: "Gate: skip when irrelevant"
+        id: gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -Eqi '^(active_.*\.(html|json)$|playwright\.config\.ts$|package\.json$|scripts/|tests/|contracts/|hfo_hub\.py$|hfo_mcp_gateway_hub\.py$|hfo_pointers\.(py|json)$|hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/|hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/)' /tmp/changed_files.txt; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "[tripwire] No relevant changes; skipping Playwright fast tripwire."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "[tripwire] Relevant changes detected; running Playwright fast tripwire."
+          fi
+
+      - name: Run Playwright fast tripwire
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          CI: 'true'
+        run: |
+          npm run -s test:fast

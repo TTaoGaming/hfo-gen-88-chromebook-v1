@@ -16,11 +16,27 @@ if [[ -z "$STAGED_FILES" ]]; then
 fi
 
 # Only run the expensive browser-based fast suite when staged changes could affect runtime behavior.
-# This keeps commits strict while preventing unrelated docs/spec commits from triggering Playwright.
-if ! echo "$STAGED_FILES" | grep -Eqi '^(active_.*\.(html|json)$|playwright\.config\.ts$|package\.json$|scripts/|tests/|contracts/|hfo_hub\.py$|hfo_mcp_gateway_hub\.py$|hfo_pointers\.(py|json)$|hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/|hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/)' ; then
-  echo "[hfo] Pre-commit: skipping HFO fast suite (no relevant staged files)."
-  exit 0
+# Keep this conservative on low-RAM Chromebooks: prefer CI tripwires for broad browser coverage.
+
+HEAVY_REGEX='^(
+  active_.*\.(html|json)$
+| playwright\.config\.ts$
+| package\.json$
+| tests/
+| contracts/
+| hfo_hub\.py$
+| hfo_mcp_gateway_hub\.py$
+| hfo_pointers\.(py|json)$
+| hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/
+| hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/
+| scripts/.*\.spec\.ts$
+| scripts/hfo_fast_check\.sh$
+)'
+
+if echo "$STAGED_FILES" | grep -Eqi "$HEAVY_REGEX"; then
+  echo "[hfo] Pre-commit: running HFO fast suite (runtime-relevant staged files detected)."
+  exec npm run -s test:fast
 fi
 
-echo "[hfo] Pre-commit: running HFO fast suite (relevant staged files detected)."
-exec npm run -s test:fast
+echo "[hfo] Pre-commit: skipping HFO fast suite (no runtime-relevant staged files)."
+exit 0
