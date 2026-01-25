@@ -1,0 +1,16 @@
+{
+    "golden_id": "gen6_v23_2_sword_commit_thumbs_down_drains",
+    "artifact": "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v23_2.html",
+    "notes": "Golden master for v23.2: COMMIT+Thumb_Up locks sword; COMMIT+Thumb_Down drains meter and unlocks.",
+    "expect": {
+        "hasBabylonLayer": true,
+        "locked": {
+            "locked": true,
+            "minMeter01": 0.99
+        },
+        "drained": {
+            "locked": false,
+            "maxMeter01": 0.05
+        }
+    }
+}

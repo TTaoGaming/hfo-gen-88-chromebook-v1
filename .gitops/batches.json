@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "defaults": {
+    "push": false,
+    "remote": "origin",
+    "branch": "master",
+    "showUntracked": false
+  },
+  "batches": [
+    {
+      "id": "tracked-only",
+      "type": "tracked",
+      "message": "chore(gitops): tracked updates",
+      "paths": ["."]
+    },
+    {
+      "id": "gitops-tools",
+      "type": "untracked",
+      "message": "chore(gitops): add safe batcher + resource shepherd",
+      "paths": [
+        ".gitops/batches.json",
+        "scripts/hfo_gitops_batcher.py",
+        "scripts/hfo_resource_shepherd_daemon.py"
+      ]
+    },
+    {
+      "id": "root-entrypoints",
+      "type": "untracked",
+      "message": "chore(entrypoint): add active omega entrypoints",
+      "paths": [
+        "active_hfo_omega_entrypoint.html",
+        "active_hfo_omega_entrypoint.json",
+        "active_omega.html",
+        "active_omega.json"
+      ]
+    },
+    {
+      "id": "contracts",
+      "type": "untracked",
+      "message": "contracts: add zod schemas",
+      "paths": ["contracts/"]
+    },
+    {
+      "id": "gen6-core",
+      "type": "untracked",
+      "message": "gen6: add omega_gen6_current artifacts (v10/v11 + specs)",
+      "paths": [
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v11.html",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/GEN6_V11_PORT2_MIRROR_MAGUS_TRACER_SPEC_2026_01_21.yaml",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/GEN6_TRIPWIRE_THREAD_PLANCK_BABYLON_TRADE_STUDY_2026_01_21.md",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/GEN6_V12_TRIPWIRE_THREAD_PLANCK_BABYLON_SPEC_2026_01_21.yaml",
+        "scripts/omega_gen6_v10_diagnostic_tracer_bullet_venom.spec.ts",
+        "scripts/omega_gen6_v11_port2_tracer_venom.spec.ts",
+        "scripts/omega_gen6_v11_p2_gesture_language_base.spec.ts"
+      ]
+    },
+    {
+      "id": "root-notes",
+      "type": "untracked",
+      "message": "chore(notes): add omega chat note",
+      "paths": ["ai-chat-omega-gen6-2026-1-20.md"]
+    },
+    {
+      "id": "cold-playbooks",
+      "type": "untracked",
+      "message": "docs(playbooks): add cold obsidian playbooks",
+      "paths": [
+        "hfo_cold_obsidian/bronze/3_resources/playbooks/",
+        "hfo_cold_obsidian/gold/3_resources/playbooks/"
+      ]
+    },
+    {
+      "id": "hot-forensics",
+      "type": "untracked",
+      "message": "docs(forensics): add monthly deep dives",
+      "paths": [
+        "hfo_hot_obsidian/bronze/1_projects/forensics_ttao_dev_work_monthly_deep_dive_v1_2025_01_to_2026_01/",
+        "hfo_hot_obsidian/bronze/1_projects/forensics_ttao_tooling_forensics_v1_2025_01_to_2026_01/"
+      ]
+    },
+    {
+      "id": "hot-touch-targets",
+      "type": "untracked",
+      "message": "docs(touch): add touchscreen targets + vendor",
+      "paths": [
+        "hfo_hot_obsidian/bronze/1_projects/hfo_omega_assimillation_touchscreen_targets/"
+      ]
+    },
+    {
+      "id": "hot-omega-gen5",
+      "type": "untracked",
+      "message": "gen5: add omega gen5 current artifacts",
+      "paths": ["hfo_hot_obsidian/bronze/1_projects/omega_gen5_current/"]
+    },
+    {
+      "id": "hot-resources",
+      "type": "untracked",
+      "message": "resources: add fixtures, para, reports",
+      "paths": [
+        "hfo_hot_obsidian/bronze/3_resources/fixtures/",
+        "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/",
+        "hfo_hot_obsidian/bronze/3_resources/reports/"
+      ]
+    },
+    {
+      "id": "scripts-specs",
+      "type": "untracked",
+      "message": "test(scripts): add omega specs and gates",
+      "paths": ["scripts/"]
+    }
+  ]
+}

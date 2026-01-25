@@ -1,0 +1,32 @@
+{
+    "golden_id": "gen6_v23_3_sword_knuckle_span_multiplier",
+    "artifact": "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v23_3.html",
+    "notes": "Golden master for v23.3: sword marker extends asymmetrically beyond the knuckle span using knuckleSpanMultiplierA/B when live landmarks (17→5) are present.",
+    "expect": {
+        "hasBabylonLayer": false,
+        "marker": {
+            "endpointPinkyUiNorm": {
+                "x": 0.45,
+                "y": 0.6
+            },
+            "endpointIndexUiNorm": {
+                "x": 0.55,
+                "y": 0.6
+            },
+            "endpointAUiNorm": {
+                "x": 1.35,
+                "y": 0.6
+            },
+            "endpointBUiNorm": {
+                "x": 0.425,
+                "y": 0.6
+            }
+        },
+        "locked": {
+            "locked": true
+        },
+        "babylonMarker": {
+            "meshName": "HFO_SWORD_V23"
+        }
+    }
+}

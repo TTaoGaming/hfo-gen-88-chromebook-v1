@@ -1,0 +1,25 @@
+{
+    "golden_id": "gen6_v23_1_sword_babylon_vfx",
+    "artifact": "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v23_1.html",
+    "notes": "Golden master for Babylon sword VFX driven by v23 sword meter + markers. Values are asserted with rounding/tolerance in the spec.",
+    "expect": {
+        "hasBabylonLayer": true,
+        "charge": {
+            "meter01": 0.375,
+            "locked": false,
+            "swordRootEnabled": true
+        },
+        "locked": {
+            "meter01": 1.0,
+            "locked": true,
+            "swordRootEnabled": true
+        },
+        "postMove": {
+            "locked": true,
+            "swordRootEnabled": true
+        },
+        "babylonMarker": {
+            "meshName": "HFO_SWORD_V23"
+        }
+    }
+}
