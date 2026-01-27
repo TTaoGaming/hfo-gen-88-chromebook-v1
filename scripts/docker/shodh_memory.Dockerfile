@@ -29,11 +29,11 @@ RUN apt-get update && apt-get install -y \
 # Without this library present, the server can panic at startup.
 ARG ORT_VERSION=1.23.0
 RUN curl -fsSL -o /tmp/onnxruntime.tgz \
-            "https://github.com/microsoft/onnxruntime/releases/download/v${ORT_VERSION}/onnxruntime-linux-x64-${ORT_VERSION}.tgz" \
-        && tar -xzf /tmp/onnxruntime.tgz -C /tmp \
-        && cp -a "/tmp/onnxruntime-linux-x64-${ORT_VERSION}/lib/libonnxruntime.so"* /usr/local/lib/ \
-        && ldconfig \
-        && rm -rf /tmp/onnxruntime.tgz "/tmp/onnxruntime-linux-x64-${ORT_VERSION}"
+    "https://github.com/microsoft/onnxruntime/releases/download/v${ORT_VERSION}/onnxruntime-linux-x64-${ORT_VERSION}.tgz" \
+    && tar -xzf /tmp/onnxruntime.tgz -C /tmp \
+    && cp -a "/tmp/onnxruntime-linux-x64-${ORT_VERSION}/lib/libonnxruntime.so"* /usr/local/lib/ \
+    && ldconfig \
+    && rm -rf /tmp/onnxruntime.tgz "/tmp/onnxruntime-linux-x64-${ORT_VERSION}"
 
 RUN useradd -m -u 1000 shodh && \
     mkdir -p /data && \

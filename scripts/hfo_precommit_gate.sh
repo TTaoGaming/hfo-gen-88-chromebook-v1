@@ -14,7 +14,10 @@ STAGED_FILES="$(git diff --cached --name-only)"
 should_run_dino_classifier() {
   # Only run when staging changes likely to impact the Gen6 v9 Dino diagnostic path.
   # Intentionally avoid a bare "dino" match (e.g. Gen7 wrappers) to prevent false positives.
-  echo "$STAGED_FILES" | grep -Eqi '(^|/)(omega_gen6|gen6_v9|gen6_v10|omega_gen6_current|omega_gen6_v9|omega_gen6_v10|omega_gen6_v9_dino_diagnostics\.spec\.ts|hfo_gen6_v9_dino_classify\.sh)'
+  # Also ignore reference assets (e.g. Gen7 reference images that include "omega_gen6" in filenames).
+  echo "$STAGED_FILES" \
+    | grep -Evi '/references/' \
+    | grep -Eqi '(^|/)(gen6_v9|gen6_v10|omega_gen6_current|omega_gen6_v9|omega_gen6_v10|omega_gen6_v9_dino_diagnostics\.spec\.ts|hfo_gen6_v9_dino_classify\.sh)'
 }
 
 is_port_open() {
