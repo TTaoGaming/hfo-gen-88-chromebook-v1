@@ -1,0 +1,70 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Alpha Gen1 Infrastructure Spec (v1)
+# Date: 2026-01-25
+# Purpose: Canonical bootstrap for Mission Thread Alpha generations/versioning.
+
+id: ALPHA_GEN1_INFRA_V1_SPEC_2026_01_25
+thread: alpha
+medallion: bronze
+mutation_score: 0
+hive: V
+
+lineage:
+  fork_rule: FORK_AND_EVOLVE
+  parent_spec: hfo_hot_obsidian/bronze/3_resources/para/mission_thread_alpha_current/specs/hfo_alpha_hub_spec_v2026_01_24.yaml
+  intent: >-
+    Establish a canonical Alpha project root and versioned spec so Alpha can evolve
+    with the same generation/version discipline as Omega.
+
+non_negotiables:
+  - Fail-closed boundaries: cross-port data must flow through explicit contracts.
+  - Immutable provenance: every action emits append-only receipts (MCP memory + blackboard).
+  - Pointers are the stable entry surface; no hidden coupling.
+
+interfaces:
+  p7_strategic_c2:
+    role: navigator
+    output: context_capsule_strategic
+    horizons:
+      - epoch
+      - year
+      - quarter
+      - month
+  p1_tactical_c2:
+    role: bridger
+    output: context_capsule_tactical
+    horizons:
+      - session
+      - hour
+      - day
+
+bootstrap_next_step:
+  single_best_next_step: >-
+    Make a deterministic capsule+receipt preflight mandatory for every agent run:
+    (1) resolve objective pointer, (2) compile role-scoped capsule (P7 or P1),
+    (3) validate contracts, (4) write receipt.
+  why: >-
+    You already have stores (DuckDB/FTS/vectors/graphs); brittleness comes from missing
+    compilation+governance. Mandatory capsules+receipts prevent drift across roles and horizons.
+
+phase_plan:
+  phase_0_invariants:
+    - Define Objective Pointer (single source of truth) and require it at start of every run.
+    - Define Receipt schema and require it at end of every run.
+  phase_1_alpha_generation_bootstrap:
+    - Use this Alpha Gen1 spec as canonical.
+    - Add pointers to Alpha Gen1 project root + spec.
+  phase_2_capsule_compiler:
+    - Implement a capsule compiler over existing JSONL + DuckDB.
+    - Emit P7 strategic capsule and P1 tactical capsule deterministically.
+  phase_3_drift_firewall:
+    - Add invariant checks: stale pointers, missing receipts, contract failures, contradictions.
+  phase_4_memory_delegation:
+    - Introduce a memory curator daemon/agent that maintains summaries/graphs off the hot path.
+
+sources:
+  - AGENTS.md
+  - hfo_pointers.json
+  - contracts/
+  - hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl
+  - hfo_hot_obsidian/hot_obsidian_blackboard.jsonl

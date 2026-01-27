@@ -1,0 +1,47 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# HFO Phase 0 Infrastructure Bootstrap (v0.1)
+# Date: 2026-01-25
+
+id: HFO_PHASE0_INFRA_BOOTSTRAP_V0_1_2026_01_25
+medallion: bronze
+mutation_score: 0
+hive: V
+phase_id: phase0_infra_bootstrap
+
+purpose: >-
+  Make phases explicit and lock in the workflow so agents stop drifting:
+  Spec (YAML) -> Contract (Zod) -> RED tests (TDD/BDD/CDD) -> Implementation -> Receipts.
+
+non_negotiables:
+  - Always write the spec YAML first.
+  - Always write or update contracts next.
+  - Always write RED tests next (TDD + BDD + CDD).
+  - Only then implement.
+  - Every run must emit a receipt with sources.
+
+phase0_deliverables:
+  contracts:
+    - contracts/hfo_phase_receipt.zod.ts
+  tests:
+    - contracts/__tests__/hfo_phase_receipt.test.ts
+  pointers:
+    - hfo_pointers.json targets.hfo_phase0_infra_spec_v0_1
+
+bdd_promises (human-readable behavior):
+  - Given an agent run starts, when it begins, then it MUST resolve the objective pointer.
+  - Given an agent completes a run, when it ends, then it MUST append a phase receipt with sources.
+
+cdd_promises (contract-driven behavior):
+  - All phase receipts MUST validate against PhaseReceiptSchema.
+
+objective_pointer_policy:
+  ssot: >-
+    A single objective pointer MUST exist that states "what matters now" for Alpha+Omega.
+  note: >-
+    This spec defines the policy, but does not yet implement the pointer storage.
+
+sources:
+  - AGENTS.md
+  - hfo_pointers.json
+  - contracts/
+  - hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl

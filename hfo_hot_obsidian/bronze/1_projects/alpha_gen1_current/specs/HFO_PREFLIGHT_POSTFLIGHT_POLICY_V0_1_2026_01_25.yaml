@@ -1,0 +1,53 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# HFO Preflight/Postflight Policy (v0.1)
+# Date: 2026-01-25
+
+id: HFO_PREFLIGHT_POSTFLIGHT_POLICY_V0_1_2026_01_25
+medallion: bronze
+mutation_score: 0
+hive: V
+
+purpose: >-
+  Consolidate HFO around a universal invariant: every run has a preflight and a postflight.
+  This applies at every zoom level: unified hub -> port -> subshard -> tool.
+
+invariant:
+  - Every run MUST emit a preflight receipt.
+  - Every run MUST emit a postflight receipt.
+  - Receipts MUST include objective_pointer and sources.
+  - Receipts MUST be append-only.
+
+contract:
+  receipt_schema: contracts/hfo_flight_receipt.zod.ts
+
+zoom_levels:
+  hub:
+    description: Unified HFO Hub (root process / orchestration entry).
+  port:
+    description: Ports P0-P7.
+  subshard:
+    description: Subsystems within a port (e.g., a runner, compiler, judge, or adapter).
+  tool:
+    description: A concrete tool shard (e.g., web search, db query, playwright, filesystem).
+
+phase0_alignment:
+  workflow_non_negotiables:
+    - Spec YAML first
+    - Contract (Zod) second
+    - RED tests third (TDD + BDD + CDD)
+    - Only then implementation
+    - Always emit receipts with sources
+
+bdd_examples:
+  - Given a run starts, when preflight executes, then objective_pointer MUST be resolved and recorded.
+  - Given a run ends, when postflight executes, then outcomes MUST be recorded (PASS/FAIL) with sources.
+
+notes:
+  - This policy does not require any particular storage backend; it only requires receipts.
+  - Receipts can be mirrored into MCP memory JSONL, blackboard JSONL, and/or DuckDB.
+
+sources:
+  - contracts/hfo_flight_receipt.zod.ts
+  - hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl
+  - hfo_hot_obsidian/hot_obsidian_blackboard.jsonl
+  - hfo_pointers.json
