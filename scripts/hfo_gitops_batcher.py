@@ -131,6 +131,26 @@ def _current_branch() -> str:
     return _git(["symbolic-ref", "--short", "-q", "HEAD"], check=False)
 
 
+def _resolve_branch(configured_branch: str) -> str:
+    """Resolve branch target.
+
+    Priority:
+    1) env HFO_GITOPS_BRANCH (if set)
+    2) config defaults.branch
+
+    Special values:
+    - CURRENT / AUTO: use the currently checked-out branch.
+    """
+
+    env_branch = os.environ.get("HFO_GITOPS_BRANCH", "").strip()
+    branch = env_branch or (configured_branch or "").strip()
+
+    if branch.upper() in {"CURRENT", "AUTO"}:
+        return _current_branch()
+
+    return branch
+
+
 def _ensure_remote_exists(remote: str) -> None:
     _git(["remote", "get-url", remote], check=True)
 
@@ -150,7 +170,17 @@ def run_once(
 
     show_untracked = bool(defaults.get("showUntracked", False))
     remote = str(defaults.get("remote", "origin"))
-    branch = str(defaults.get("branch", "master"))
+    configured_branch = str(defaults.get("branch", "master"))
+    branch = _resolve_branch(configured_branch)
+    if not branch:
+        _log(
+            "branch resolution failed (detached HEAD or empty branch); "
+            "set defaults.branch or HFO_GITOPS_BRANCH to push"
+        )
+        if (os.environ.get("HFO_GITOPS_PUSH", "").strip() in {"1", "true", "TRUE", "yes", "YES"}) or (
+            push is True
+        ):
+            return 1
 
     env_push = os.environ.get("HFO_GITOPS_PUSH", "").strip() in {"1", "true", "TRUE", "yes", "YES"}
     do_push = env_push if push is None else bool(push)
@@ -173,7 +203,10 @@ def run_once(
     _set_show_untracked(show_untracked)
 
     # Keep status cheap.
-    _log(f"start push={do_push} remote={remote} branch={branch} showUntracked={show_untracked}")
+    _log(
+        f"start push={do_push} remote={remote} branch={branch} "
+        f"showUntracked={show_untracked} (defaults.branch={configured_branch!r})"
+    )
 
     any_commits = False
 

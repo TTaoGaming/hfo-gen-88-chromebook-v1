@@ -3,7 +3,7 @@
   "defaults": {
     "push": false,
     "remote": "origin",
-    "branch": "master",
+    "branch": "CURRENT",
     "showUntracked": false
   },
   "batches": [
