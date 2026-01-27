@@ -1,0 +1,311 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Spec: HFO Alpha Folder Structure V1
+# Date: 2026-01-26
+# Status: draft
+# Non-destructive migration spec + checklist (fail-closed validation target)
+
+spec:
+  id: HFO_ALPHA_FOLDER_STRUCTURE_V1
+  version: "1.1"
+  created_utc: "2026-01-26T00:00:00Z"
+  owner: "Alpha (MCP Gateway Hub)"
+  repo_root: "."
+  intent:
+    - "Consolidate repo under two canonical forge roots: hot + cold."
+    - "Enforce temperature → medallion → PARA structure everywhere."
+    - "Keep behavior stable via regression + golden-master style checks."
+    - "Migrate non-destructively: no breaking moves; use pointers + aliases."
+
+principles:
+  fail_closed: true
+  non_destructive:
+    - "No deletes during migration; only move+alias (or copy+prove) until cutover."
+    - "All stable entrypoints remain reachable throughout migration."
+  stable_root_contracts:
+    - "Root shim remains small and stable for agents/tools."
+    - "All agent-facing targets are resolved via a pointer registry."
+  naming:
+    temperature_axis:
+      hot: "active / volatile / operational"
+      cold: "reference / long-term / archival"
+    medallion_axis:
+      "0_bronze": "incubation / raw / experimental"
+      "1_silver": "integrated / verified"
+      "2_gold": "hardened / mission-ready"
+      "3_hfo": "curated canon; intentionally small"
+    para_axis:
+      "0_projects": "things you execute/build/ship"
+      "1_areas": "ongoing responsibilities + operating docs"
+      "2_resources": "shared references, templates, libs, contracts"
+      "3_archive": "frozen snapshots, quarantines, receipts"
+
+canonical_layout:
+  forges:
+    - "hfo_hot_obsidian_forge"
+    - "hfo_cold_obsidian_forge"
+
+  medallion_layers:
+    - "0_bronze"
+    - "1_silver"
+    - "2_gold"
+    - "3_hfo"
+
+  para_folders:
+    - "0_projects"
+    - "1_areas"
+    - "2_resources"
+    - "3_archive"
+
+  rule:
+    - "Every forge MUST contain all 4 medallion layers."
+    - "Every medallion layer MUST contain all 4 PARA folders."
+    - "3_hfo MUST remain curated/small; default work lands in 0_bronze/1_silver."
+
+  canonical_paths:
+    # The full canonical skeleton is the cartesian product:
+    #   <forge>/<layer>/<para>/
+    # This list is illustrative; validators should generate/verify all combinations.
+    examples:
+      - "hfo_hot_obsidian_forge/0_bronze/0_projects"
+      - "hfo_hot_obsidian_forge/0_bronze/2_resources"
+      - "hfo_hot_obsidian_forge/1_silver/2_resources"
+      - "hfo_hot_obsidian_forge/3_hfo/2_resources"
+      - "hfo_cold_obsidian_forge/0_bronze/3_archive"
+      - "hfo_cold_obsidian_forge/2_gold/2_resources"
+
+root_shim:
+  # Goal: keep root minimal and stable for agents.
+  # During migration, these paths are permitted at root.
+  allowed_root_items:
+    - "hfo_pointers.json"          # canonical pointer registry (agent-safe)
+    - "hfo_pointers.py"            # helper utilities (may migrate later)
+    - "hfo_mcp_gateway_hub.py"     # stable delegator entrypoint
+    - "hfo_hub.py"                 # stable delegator entrypoint (if used)
+    - "contracts"                  # cross-port schemas (may migrate later)
+    - "scripts"                    # tooling/automation (may migrate later)
+    - "tests"                      # regression harness (may migrate later)
+    - "package.json"               # build/tooling (may migrate later)
+    - "tsconfig.json"              # build/tooling (may migrate later)
+    - ".github"                    # governance and copilot instructions
+    - "AGENTS.md"                  # mission context
+
+pointers:
+  registry_file: "hfo_pointers.json"
+  schema:
+    schema_version: "0.1"
+    pointer_id_format: "snake_case"
+    target_path_format: "repo-relative posix"
+    required_fields:
+      - "id"
+      - "target"
+    allowed_target_prefixes_by_phase:
+      P0:
+        - "./"
+        - "hfo_hot_obsidian/"
+        - "hfo_cold_obsidian/"
+        - "hfo_hot_obsidian_forge/"
+        - "hfo_cold_obsidian_forge/"
+        - "hfo_gen_88_cb_v2/"
+        - "contracts/"
+        - "scripts/"
+        - "tests/"
+      P2:
+        - "hfo_hot_obsidian_forge/"
+        - "hfo_cold_obsidian_forge/"
+        - "contracts/"
+        - "scripts/"
+        - "tests/"
+      P3:
+        - "hfo_hot_obsidian_forge/"
+        - "hfo_cold_obsidian_forge/"
+        - "contracts/"
+        - "scripts/"
+        - "tests/"
+  requirements:
+    - "All agent-critical paths MUST be represented as pointers (no hard-coded deep paths)."
+    - "Pointer targets SHOULD migrate into the appropriate forge as early as possible."
+    - "Validators MUST fail if any pointer target does not exist."
+  current_known_critical_pointers:
+    - "mcp_gateway_impl"
+    - "duckdb_unified"
+    - "blackboard"
+    - "mcp_memory"
+
+aliases_and_compat:
+  # Non-destructive migration requires temporary compatibility.
+  # Prefer symlinks for directories; prefer thin Python shim modules for code entrypoints.
+  policy:
+    - "Old paths MAY exist as aliases pointing to new canonical locations."
+    - "Each alias MUST have a sunset date and removal criteria."
+  alias_table:
+    # Each row is a governed contract.
+    # If alias_table is non-empty, validator MUST enforce sunset/removal criteria.
+    # alias_mechanism:
+    #   - symlink_dir: directory symlink at old_path -> new_path
+    #   - shim_module: thin Python module at old_path importing/dispatching to new
+    #   - stub_readme: placeholder doc pointing to new canonical location
+    - id: "example_alias_row_do_not_enable"
+      enabled: false
+      old_path: "legacy/path"
+      new_path: "hfo_hot_obsidian_forge/0_bronze/0_projects/example"
+      alias_mechanism: "symlink_dir"
+      sunset_utc: "2026-02-28T00:00:00Z"
+      removal_criteria:
+        - "no_runtime_reads_of_old_path"
+        - "no_pointer_targets_use_old_path"
+      owner: "Alpha"
+
+path_mapping:
+  # Explicit, non-destructive mapping from current repo roots to target policy.
+  # This removes ambiguity in P2 capsule moves.
+  entries:
+    - current_path: "hfo_hot_obsidian/"
+      target_policy: "migrate_into_forge"
+      canonical_target_root: "hfo_hot_obsidian_forge/"
+      alias_policy: "keep_temp_alias_during_P2"
+      notes: "Primary hot operational vault + receipts; migrate by capsule."
+    - current_path: "hfo_cold_obsidian/"
+      target_policy: "migrate_into_forge"
+      canonical_target_root: "hfo_cold_obsidian_forge/"
+      alias_policy: "keep_temp_alias_during_P2"
+      notes: "Primary cold reference vault; migrate by capsule."
+    - current_path: "hfo_gen_88_cb_v2/"
+      target_policy: "temporary_keep_as_root"
+      canonical_target_root: "(tbd)"
+      alias_policy: "n/a"
+      notes: "DuckDB SSOT currently lives here via pointer duckdb_unified; defer until validator exists."
+    - current_path: "artifacts/"
+      target_policy: "keep_as_root"
+      canonical_target_root: "artifacts/"
+      alias_policy: "n/a"
+      notes: "Proof logs + run outputs; referenced by docs like WHERE_ARE_MY_LOGS_AND_QUARANTINE.md."
+    - current_path: "contracts/"
+      target_policy: "keep_as_root"
+      canonical_target_root: "contracts/"
+      alias_policy: "n/a"
+      notes: "Cross-port contracts are load-bearing for TS tooling; treat as stable root for now."
+    - current_path: "scripts/"
+      target_policy: "keep_as_root"
+      canonical_target_root: "scripts/"
+      alias_policy: "n/a"
+      notes: "Tooling/automation is load-bearing; moving requires explicit compatibility plan."
+    - current_path: "tests/"
+      target_policy: "keep_as_root"
+      canonical_target_root: "tests/"
+      alias_policy: "n/a"
+      notes: "Regression harness; keep stable during migration."
+
+    - current_path: "hfo_ports/"
+      target_policy: "temporary_keep_as_root"
+      canonical_target_root: "(tbd)"
+      alias_policy: "n/a"
+      notes: "Port implementations; defer relocation until validator + pointer imports are stable."
+
+migration_plan:
+  phases:
+    - id: P0
+      name: "Scaffold"
+      goal:
+        - "Create forge skeleton directories (empty)"
+        - "Introduce this YAML spec as SSOT checklist"
+      non_destructive: true
+      exit_criteria:
+        - "Both forge roots exist"
+        - "All layer/PARA directories exist (or are generated by tooling)"
+
+    - id: P1
+      name: "Enforce"
+      goal:
+        - "Add validator that checks skeleton + pointers + forbidden paths"
+        - "Wire validator into pre-commit and CI (fail-closed)"
+      exit_criteria:
+        - "Validation runs locally and in CI"
+        - "Validation fails on drift"
+
+    - id: P2
+      name: "Capsule Migrations"
+      goal:
+        - "Move one bounded capsule at a time (project/root) into forge"
+        - "Update pointer registry; add aliases to preserve behavior"
+        - "Run regression suite after each capsule move"
+      capsule_unit_examples:
+        - "alpha gateway impl"
+        - "omega microkernel"
+        - "docker + infra scripts"
+        - "contracts + tests harness"
+      exit_criteria:
+        - "All critical pointers resolve to canonical forge paths"
+
+    - id: P3
+      name: "Cutover"
+      goal:
+        - "Flip policy: legacy roots become forbidden"
+        - "Remove aliases after a stability window"
+      enforcement:
+        forbidden_new_files_outside:
+          - "hfo_hot_obsidian_forge/"
+          - "hfo_cold_obsidian_forge/"
+          - "contracts/"
+          - "scripts/"
+          - "tests/"
+          - "artifacts/"
+          - ".github/"
+          - ".vscode/"
+        forbidden_pointer_target_prefixes:
+          - "hfo_hot_obsidian/"
+          - "hfo_cold_obsidian/"
+          - "hfo_gen_88_cb_v2/"  # only if duckdb_unified is migrated; otherwise exempt explicitly
+      exit_criteria:
+        - "No runtime uses legacy paths"
+        - "Aliases removed"
+
+skeleton_generation:
+  generator:
+    desired_location: "scripts/hfo_structure_scaffold.py"
+    contract:
+      - "Generator is the owner of creating the 2x4x4 skeleton; humans should not hand-create 32+ dirs."
+      - "Validator checks: (a) required dirs exist, (b) no unexpected drift, (c) pointers + aliases compliance."
+      - "Generator must be idempotent and safe to re-run."
+
+validation_and_testing:
+  validator:
+    desired_location: "scripts/hfo_structure_validator.py"
+    inputs:
+      - "HFO_ALPHA_FOLDER_STRUCTURE_V1_SPEC_2026_01_26.yaml"
+      - "hfo_pointers.json"
+    checks:
+      - id: skeleton_exists
+        description: "Forge roots and required layer/PARA folders exist"
+        fail_closed: true
+      - id: pointers_resolve
+        description: "All pointer targets exist; no dangling paths"
+        fail_closed: true
+      - id: enforce_canonical_targets
+        description: "Critical pointers must target forge paths (after P2)"
+        fail_closed: true
+      - id: legacy_path_drift
+        description: "New/modified files should not land in deprecated roots"
+        fail_closed: true
+
+      - id: alias_lifecycle_enforced
+        description: "Enabled aliases must not be past sunset_utc and must satisfy removal_criteria when attempting removal"
+        fail_closed: true
+
+  regression_strategy:
+    - "Golden-master snapshots for key receipts/outputs (flight receipts, audit outputs)."
+    - "Contract validation (Zod) remains green across ports."
+    - "Minimal smoke runs for hub + critical scripts after each capsule move."
+
+checklist:
+  now:
+    - "[ ] Create forge skeleton folders"
+    - "[x] Add root folder-structure spec (this file)"
+    - "[ ] Decide canonical locations for: contracts/, scripts/, tests/"
+    - "[ ] Implement validator + wire to pre-commit/CI"
+
+  next_capsule_candidate:
+    - "Move current hot/cold obsidian roots into *_forge with aliases"
+
+notes:
+  - "This spec intentionally does NOT move files; it defines the target and the safety rails."
+  - "All moves must be staged, pointer-driven, and regression-verified."
