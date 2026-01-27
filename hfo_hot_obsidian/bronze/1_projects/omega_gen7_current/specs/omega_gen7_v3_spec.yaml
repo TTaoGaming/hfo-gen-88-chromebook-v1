@@ -1,0 +1,191 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Mission Thread — Gen7 v3 Spec: Per-Hand Knuckle TripPlane + 4 Fingertips/Hand → ASDF
+# Timestamp: 2026-01-24
+# Provenance: Ported/adapted from Gen6 v24 spec and Gen7 v1 starting-point spec.
+# Posture: Spec-first. This file is a fail-closed contract of intent; implementation may be RED until wired.
+
+meta:
+  generation: 7
+  version: 3
+  status: "bronze-spec-red"
+  theme: "v3 = 4-fingertip triplane + new COMMIT"
+  theme_one_liner: "Per-hand 4-fingertip knuckle-TripPlane mapping with COMMIT_OPEN_PALM_DWELL (~1s leaky-bucket)."
+  intent:
+    - "Evolve Gen7 from knuckle-only tripplane to per-hand 4-fingertip tripplane sensing."
+    - "Preserve identity stability (coast + snaplock) to prevent hand swapping/teleporting regressions."
+    - "Expose mapping knobs in the P7 Navigator microkernel so ASDF mapping is hot-swappable."
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v1.html
+  target:
+    planned_html: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v3.html
+    note: "Spec-only: Gen7 v2+ HTML entrypoints are intentionally absent until promoted."
+
+commit:
+  posture: "triplane-4finger"
+  requirement:
+    - "Pointer-up MUST NOT be the COMMIT gesture for triplane-4finger mode."
+    - "COMMIT uses a leaky-bucket dwell hysteresis meter with Open_Palm as the commit gesture (target dwell ~= 1s)."
+  variants:
+    legacy:
+      - COMMIT_POINTER_UP
+      - COMMIT_THUMBS_UP
+      - COMMIT_THUMBS_DOWN
+    gen7_v3_triplane_4finger:
+      primary: COMMIT_OPEN_PALM_DWELL
+      meter: "leaky_bucket_dwell_hysteresis"
+      dwell_ms_default: 1000
+  gating:
+    - "All COMMIT transitions are gated by readiness meter (anti-midas / anti-mitus)."
+
+feature_flags:
+  provider: openfeature
+  defaults:
+    # Sensing + Mapping
+    p2-tripwire-fingertips: true
+    p3-tripwire-injector-fingertips: true
+    # Debug
+    ui-fingertip-sensors-debug: false
+    ui-hand-identity-debug: false
+  overrides:
+    url_query:
+      - "?flag-p2-tripwire-fingertips=true|false"
+      - "?flag-p3-tripwire-injector-fingertips=true|false"
+      - "?flag-ui-fingertip-sensors-debug=true|false"
+      - "?flag-ui-hand-identity-debug=true|false"
+
+ports:
+  p1_fuse:
+    multi_hand_cursor_source:
+      description: "Multi-hand fused pointer/hand state in uiNorm space; single authority for validated fused hand states."
+      required_fields:
+        - hands
+      hands:
+        posture:
+          - "hands is a list (or map) of detected hands; do not assume 1 hand."
+          - "handIndex is not stable; use stable handKey downstream once available."
+        required_fields:
+          - handIndex
+          - fsmState
+          - readiness
+          - uiNormX
+          - uiNormY
+        optional_fields:
+          - handId
+          - confidence
+          - fingertips
+        fingertips:
+          description: "Per-hand fingertip sensors (4) in uiNorm space."
+          required_fields:
+            - fingerId
+            - uiNormX
+            - uiNormY
+          fingerId_enum:
+            - index
+            - middle
+            - ring
+            - pinky
+
+    hand_identity_abstraction:
+      description: "Stabilize hand identity across frames (coast + snaplock + anchoring) to prevent random swapping/teleporting."
+      posture:
+        - "Do not assume upstream detector ordering is stable."
+        - "Assign each detected hand to a stable slot key (handKey) with inertial persistence and anchoring."
+        - "Fail-stable: reject swaps/teleports without evidence."
+      slots:
+        v3_primary:
+          - handKey: HAND_1_RIGHT
+            side: Right
+            slotIndex: 1
+          - handKey: HAND_2_LEFT
+            side: Left
+            slotIndex: 2
+      knobs:
+        hold_ms_default: 250
+        max_jump_uiNorm_default: 0.20
+        swap_hysteresis_ms_default: 350
+        snaplock_radius_uiNorm_default: 0.06
+      rules:
+        - "If a detection disappears briefly (< hold_ms_default), keep slot alive and coast predicted stableAnchor."
+        - "Snaplock: if detection returns within snaplock_radius_uiNorm_default of predicted stableAnchor (and side matches), snap back to prior slot."
+        - "Reject reassignment that causes a jump > max_jump_uiNorm_default without strong evidence (fail-stable)."
+      required_outputs_per_hand:
+        - handKey
+        - side
+        - slotIndex
+        - stableAnchorUiNormX
+        - stableAnchorUiNormY
+
+  p2_shape:
+    per_hand_knuckle_triplane:
+      description: "For each hand: compute/maintain a knuckle TripPlane used for fingertip tripwire sensing."
+      posture:
+        - "TripPlane instances are keyed by handKey (preferred) or handId/handIndex fallback."
+        - "A hand can have 0..4 fingertips present; do not fail if some fingertips are missing."
+      parameters:
+        extension_defaults:
+          barExtensionFracA: 0.15
+          barExtensionFracB: 0.05
+      fingertip_sensors:
+        - index
+        - middle
+        - ring
+        - pinky
+      outputs:
+        tripwire_cross_event:
+          type: "p2/tripwire_cross"
+          payload_fields:
+            - handKey
+            - fingerId
+            - sensor.phase: "begin|end"
+            - direction: "down|up"
+            - speedUiNormPerS
+            - sensor.distance.orientedDistanceVelUiNormPerS
+
+  p3_deliver:
+    fingertip_to_key_mapping_v3_asdf:
+      description: "Map fingertip tripwire edges to ASDF keys."
+      posture:
+        - "Fail-closed: disabled unless flag p3-tripwire-injector-fingertips is true."
+        - "COMMIT-only by default to prevent accidental key spam."
+        - "Per-hand mapping: each fingertip is independent; begin -> keydown, end -> keyup."
+      mapping:
+        per_hand_default:
+          pinky: "KeyA"
+          ring: "KeyS"
+          middle: "KeyD"
+          index: "KeyF"
+      invariants:
+        - "No repeats while key is held; only edges cause delivery."
+        - "Key identity must be deterministic and reversible for tests/replays: `${handKey}:${fingerId}` (or `${handKey}:${code}` if preferred)."
+      gating:
+        when:
+          - "feature flag p3-tripwire-injector-fingertips == true"
+          - "fsmState == COMMIT"
+        effects:
+          - "keydown/keyup KeyboardEvent.code injected to the active target surface"
+
+  p7_navigate:
+    navigator_microkernel:
+      description: "Hot-swap tuning surface for Gen7 v3 fingertip→ASDF behavior."
+      required_controls:
+        - "enable/disable fingertip-asdf mapper"
+        - "commit-only gating toggle"
+        - "hand identity knobs (hold_ms, swap_hysteresis_ms, max_jump_uiNorm, snaplock_radius_uiNorm)"
+        - "per-hand per-finger key mapping override (handKey×fingerId→KeyboardEvent.code)"
+        - "optional min speed thresholds per finger begin/end"
+
+validation:
+  posture: "RED-first (mapping + identity stability)."
+  acceptance_criteria:
+    - "With p3-tripwire-injector-fingertips=false, no key events are produced (fail-closed)."
+    - "With p3-tripwire-injector-fingertips=true and fsmState!=COMMIT, no key events are produced."
+    - "With mapper enabled and in COMMIT, each (handKey,fingerId) begin produces keydown and end produces keyup (no repeats)."
+    - "System does not assume a single hand; Left/Right hands can produce concurrent key events without identity collision."
+    - "Hand identity stability: HAND_1_RIGHT and HAND_2_LEFT do not randomly swap; brief detector dropouts (< hold_ms_default) do not churn identities."
+    - "Coast + snaplock: during ambiguity, slots coast; when detections return close to predicted anchor, they snap back without swapping."
+
+sources:
+  - hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/omega_gen7_v1_spec.yaml
+  - hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/specs/omega_gen6_v24_spec.yaml

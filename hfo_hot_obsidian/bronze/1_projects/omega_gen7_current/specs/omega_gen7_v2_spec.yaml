@@ -1,0 +1,205 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Mission Thread — Gen7 v2 (Hydra Bud)
+# Focus: Refactor Gen7 portability + Port7 tuning surfaces without changing default behavior.
+# Provenance: forked from Gen7 v1 (itself migrated from Gen6 v23.10 baseline).
+
+meta:
+  generation: 7
+  version: 2
+  status: "bronze-refactor-no-regression"
+  mission_thread: "omega"
+  theme: "v2 = refactor/cleanup (no regression)"
+  theme_one_liner: "Portability + governance cleanup; default behavior unchanged."
+  bootstrap_step: "gen7_proof_spine"
+  intent:
+    - "Preserve the Gen6 v23.10 offline-ready posture (OpenFeature + local libs) inside a portable project directory."
+    - "Formalize fork-and-evolve (hydra budding): new HTML/spec artifacts are additive and keep lineage."
+    - "Keep default runtime behavior identical to Gen7 v1 unless explicitly enabled by flags."
+    - "Make Port7 tuning surfaces (lil-gui) the canonical knobs; enable external control via same-origin messages only."
+
+notes:
+  - "This version is explicitly refactor-only: do not introduce new interaction semantics or mapping behaviors in v2."
+  - "Feature expansion is deferred to v3+ (4-fingertip triplane + new COMMIT), v4 (coast/snapback), v5 (zones), v6 (orientation mapping)."
+
+bootstrap:
+  gen7_proof_spine:
+    theme_one_liner: "Instrumentation-first proof spine: trace_id + replay hook + metrics artifacts (no behavior change by default)."
+    posture:
+      - "Allowed in v2 only if it is strictly additive, gated, and does not change default runtime behavior."
+      - "All emitted telemetry must be local/offline by default; no external network dependencies in v2."
+    minimal_acceptance_criteria:
+      - "Every interaction episode has a stable trace_id (propagated through contract envelopes where applicable)."
+      - "Playwright can export a local artifact bundle (JSONL/CSV) containing at least: gesture→actuation latency p50/p95, false_commit_rate, replay_fidelity, crash-free proxy."
+      - "A single fail-closed gate can be added later (v7/v8) without rewriting the pipeline."
+    links:
+      - "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl (topic: omega_bootstrap_single_best_step_enables_all_2026_01_25)"
+
+phases_p0_p7:
+  overview: "8-phase OBSIDIAN port rollout (P0–P7). In v2 we only do refactor-safe scaffolding; behavior changes land in v3+."
+  p0_observe:
+    verb: "OBSERVE"
+    focus: "Input capture + episode boundaries"
+    v2_deliverables:
+      - "Define 'episode' start/stop semantics (purely observational; no behavior change)."
+      - "Gate any capture behind flags; default off."
+    deferred:
+      - "High-fidelity capture (coalesced/predicted/pointerrawupdate) scoring (v7+ / adapter-specific)."
+  p1_bridge:
+    verb: "BRIDGE"
+    focus: "Contracts + envelopes"
+    v2_deliverables:
+      - "Document/normalize envelope fields needed for trace_id propagation (no behavior change)."
+      - "Identify required Zod contracts for telemetry/replay artifacts (implementation can be v7)."
+    deferred:
+      - "Full contract hardening + property tests (Silver+)."
+  p2_shape:
+    verb: "SHAPE"
+    focus: "Derived signals (tripplane)"
+    v2_deliverables:
+      - "Refactor tripplane computation code paths without changing outputs."
+      - "Add trace_id tagging to p2 outputs (gated)."
+    deferred:
+      - "New mappings/semantics (v3+)."
+  p3_inject:
+    verb: "INJECT"
+    focus: "Event/keystroke injection"
+    v2_deliverables:
+      - "Refactor injector boundaries and fail-closed behavior; no default semantic changes."
+      - "Optional: emit 'actuation timestamp' for latency measurement (gated)."
+    deferred:
+      - "Predictive scheduling changes beyond current behavior (v3+/v7)."
+  p4_disrupt:
+    verb: "DISRUPT"
+    focus: "Regression detection"
+    v2_deliverables:
+      - "Add/maintain Playwright smoke coverage for GoldenLayout + lil-gui presence."
+      - "Keep UI conformance spec opt-in (env-gated)."
+    deferred:
+      - "Quantitative regression thresholds (v7/v8)."
+  p5_immunize:
+    verb: "IMMUNIZE"
+    focus: "Fail-closed governance"
+    v2_deliverables:
+      - "Same-origin tuning messages only; schema-like allowlist for parameters."
+      - "No external network in default posture."
+    deferred:
+      - "Forensic/attestation receipts + full integrity loops (Silver/Gold)."
+  p6_assimilate:
+    verb: "ASSIMILATE"
+    focus: "Storage + analysis (SSOT)"
+    v2_deliverables:
+      - "Write artifacts locally in a stable folder layout (for later DuckDB ingestion)."
+    deferred:
+      - "DuckDB SSOT ingestion + dashboards (v7+)."
+  p7_navigate:
+    verb: "NAVIGATE"
+    focus: "Orchestration + tuning"
+    v2_deliverables:
+      - "Keep lil-gui as canonical tuning surface (no default behavior change)."
+      - "Expose trace_id in debug UI when enabled (gated)."
+    deferred:
+      - "Full kernel/plugin SDK stabilization + exemplar packs (v7/v8)."
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v1.html
+  target:
+    planned_html: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v2.html
+    note: "Spec-only: Gen7 v2+ HTML entrypoints are intentionally absent until promoted."
+
+scope:
+  in_scope:
+    - "Refactor/cleanup only: improve portability, readability, and governance boundaries without changing default behavior."
+    - "Maintain GoldenLayout composition + Port7 lil-gui wiring, but keep existing UX semantics."
+    - "Governance: refuse cross-origin tuning messages; accept only a small, schema-like allowlist of parameter updates."
+  out_of_scope:
+    - "Gen7 v3: multi-fingertip (index/middle/ring/pinky) triplane mapping + new COMMIT gesture (open-palm leaky-bucket dwell)."
+    - "Gen7 v4: hand identity coast/snapback + multi-hand stability hardening."
+    - "Gen7 v5: spatial zones → key mapping."
+    - "Gen7 v6: knuckle-triplane orientation → key mapping."
+    - "Silver promotion: contract hardening across Zod ports + property tests."
+
+ports:
+  p1_data_fabric:
+    cursors:
+      description: "Fused cursor streams; each cursor maps to a hand instance for tripplane evaluation."
+      required_fields:
+        - handIndex
+        - pointerId
+        - fsmState
+        - readinessScore
+        - uiNormX
+        - uiNormY
+        - landmarks
+
+  p2_shape:
+    knuckle_tripplane:
+      description: "Per-cursor knuckle tripplane and predictive TTC estimation (TOI/TTC)."
+      per_cursor_inputs:
+        - landmarks[0]  # wrist
+        - landmarks[5]  # index knuckle
+        - landmarks[17] # pinky knuckle
+        - landmarks[8]  # index fingertip
+      outputs:
+        tripwire_cross_event:
+          type: "p2/tripwire_cross"
+          payload_fields:
+            - sensorId: "knuckle"
+            - sensor.phase: "begin|end"
+            - direction: "down|up"
+            - speedUiNormPerS
+            - sensor.distance.orientedDistanceVelUiNormPerS
+        tripplane_lookahead_event:
+          type: "p2/tripplane_lookahead"
+          payload_fields:
+            - sensorId: "knuckle"
+            - ttcMs
+            - lookaheadWindowMs
+            - orientedDistanceVelUiNormPerS
+
+  p3_deliver:
+    tripplane_key_injector:
+      description: "Consumes p2 tripplane events and injects keyboard edges (keydown/keyup) gated by COMMIT and deadman; supports predictive early keydown scheduling."
+      key_mapping_policy:
+        - "Key mapping is configurable per-handIndex (and later per handKey once stable identity lands)."
+        - "Default mapping may be identical for all hands (Space), but must be overrideable."
+      velocity_policy:
+        - "Press/release may optionally require minimum velocity thresholds to reduce jitter."
+
+  p7_navigate:
+    navigator_microkernel:
+      description: "Hot-swap tuning surface (lil-gui) for Gen7 v2 tripplane→key behavior."
+      required_controls:
+        - "predictiveLookaheadMs / lookaheadWindowMs (ms)"
+        - "predictive scheduling bias (ms)"
+        - "enable/disable predictive scheduling"
+        - "per-hand key code mapping (handIndex→KeyboardEvent.code)"
+        - "optional min speed thresholds for begin/end edges"
+
+lineage:
+  artifact_kind: "spec"
+  artifact_id: "omega_gen7_v2_spec"
+  parents:
+    - artifact_id: "omega_gen7_v1_spec"
+      path: "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/omega_gen7_v1_spec.yaml"
+  notes:
+    - "Non-destructive evolution: v1 remains the baseline; v2 is a refactor bud."
+    - "Hard constraint: no regression. If any existing Gen7 smoke/regression test fails, v2 must not ship; fix by refactor-only changes or revert."
+
+migration_notes:
+  carry_forward:
+    - "Offline-ready OpenFeature + local module map is already present in Gen6 v23.10; Gen7 v1 must preserve that posture."
+    - "Hand identity stability (coast + snaplock + anchoring) remains a known pain point; v24 notes remain relevant as guidance for future Gen7 multi-hand identity hardening."
+
+validation:
+  posture: "Bronze smoke checks only."
+  acceptance_criteria:
+    - "Gen7 v2 loads and behaves identically to Gen7 v1 by default (no flags changed)."
+    - "Port7 Navigator can change predictiveLookaheadMs (lookaheadWindowMs) live and affect scheduling behavior."
+    - "Port7 Navigator can change injected key code (at least handIndex 0/1) live without reload."
+    - "Tripplane begin emits keydown and end emits keyup (COMMIT-gated + deadman fail-closed)."
+    - "If (and only if) proof-spine flags are enabled, the system exports local metrics artifacts without altering default semantics."
+
+sources:
+  - hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v1.html
+  - hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/specs/omega_gen6_v24_spec.yaml

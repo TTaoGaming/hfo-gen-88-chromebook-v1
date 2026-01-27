@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "activeTool": "freedraw",
+  "elementCount": 1,
+  "counts": {
+    "freedraw": 1
+  },
+  "freedraw": {
+    "x": 360,
+    "y": 265,
+    "width": 298,
+    "height": 168,
+    "pointsLen": 22
+  }
+}

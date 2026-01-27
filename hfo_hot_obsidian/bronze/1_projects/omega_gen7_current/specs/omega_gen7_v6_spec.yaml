@@ -1,0 +1,48 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Mission Thread — Gen7 v6 Spec: Knuckle TripPlane Orientation → Key Mapping
+# Timestamp: 2026-01-25
+# Provenance: fork/evolve from Gen7 v5 spec.
+# Posture: Draft spec (future work).
+
+meta:
+  generation: 7
+  version: 6
+  status: "bronze-spec-draft"
+  theme: "v6 = knuckle-TripPlane orientation → key mapping"
+  theme_one_liner: "Orientation-bucketed mappings (yaw/roll/axis) layered on v5 zones without breaking v4 invariants."
+  intent:
+    - "Use knuckle tripplane orientation (axis + normal) as an input to key mapping."
+    - "Support orientation-conditioned mappings (e.g., rotate mapping based on hand yaw/roll)."
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v1.html
+  target:
+    planned_html: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v6.html
+    note: "Spec-only: Gen7 v2+ HTML entrypoints are intentionally absent until promoted."
+
+lineage:
+  artifact_kind: "spec"
+  artifact_id: "omega_gen7_v6_spec"
+  parents:
+    - artifact_id: "omega_gen7_v5_spec"
+      path: "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/omega_gen7_v5_spec.yaml"
+
+orientation_mapping:
+  inputs:
+    - "TripPlane axisUiNorm (2D) or axisWorld (3D)"
+    - "TripPlane normal (optional)"
+    - "hand side (Left/Right)"
+  policies:
+    - "Fail-closed unless explicitly enabled by flag."
+    - "Orientation is bucketed into a small number of discrete states (e.g., 4 quadrants) for deterministic mapping."
+
+validation:
+  posture: "TDD-first"
+  acceptance_criteria:
+    - "Orientation buckets are stable under small noise (hysteresis)."
+    - "Mapping remains deterministic per handKey and reversible for replay."
+    - "Does not weaken v4 identity stability or v5 zone mapping invariants."
+
+sources:
+  - hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/omega_gen7_v5_spec.yaml
