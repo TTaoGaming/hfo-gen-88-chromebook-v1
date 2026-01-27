@@ -96,8 +96,29 @@ except Exception:
     pass
 
 if __name__ == "__main__":
+    # Single blessed entryway (CLI dispatch) for Port 7 rituals.
+    # Default behavior remains: forward to the active hub implementation.
+    if len(sys.argv) >= 2 and sys.argv[1] in {"p7:s3-turn", "p7:turn", "p7:s3"}:
+        sys.argv[0] = "scripts/p7_s3_turn.py"
+        sys.argv.pop(1)
+        runpy.run_path(str(Path(BASE) / "scripts/p7_s3_turn.py"), run_name="__main__")
+        raise SystemExit(0)
+
+    if len(sys.argv) >= 2 and sys.argv[1] in {"p7:s3-validate", "p7:validate", "p7:s3_validate"}:
+        sys.argv[0] = "scripts/s3_v2_1_validate.py"
+        sys.argv.pop(1)
+        runpy.run_path(str(Path(BASE) / "scripts/s3_v2_1_validate.py"), run_name="__main__")
+        raise SystemExit(0)
+
     if len(sys.argv) >= 2 and sys.argv[1] in {"vision", "omega:vision", "gen5:v10_1:vision"}:
         _print_vision()
+        raise SystemExit(0)
+
+    # Port 6 (Kraken Keeper) — Bronze-level progressive rollup (non-destructive).
+    if len(sys.argv) >= 2 and sys.argv[1] in {"p6:bronze-rollup", "p6:rollup:bronze", "p6:bronze"}:
+        sys.argv[0] = "scripts/p6_bronze_progressive_rollup.py"
+        sys.argv.pop(1)
+        runpy.run_path(str(Path(BASE) / "scripts/p6_bronze_progressive_rollup.py"), run_name="__main__")
         raise SystemExit(0)
 
     sys.argv[0] = TARGET

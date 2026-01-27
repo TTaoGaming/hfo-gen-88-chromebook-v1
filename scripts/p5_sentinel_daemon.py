@@ -11,6 +11,14 @@ import sys
 import urllib.request
 import urllib.error
 
+try:
+    from hfo_env import load_repo_env
+
+    load_repo_env()
+except Exception:
+    # Fail-open: sentinel should still run even if dotenv parsing breaks.
+    pass
+
 # HFO: Add port path to sys.path for base imports
 PORTS_PATH = os.path.join(
     os.path.dirname(__file__),
@@ -161,7 +169,7 @@ class P5SentinelHandler(FileSystemEventHandler):
         try:
             # Hub P5 command executes all registered Port 5 tools with file context
             result = subprocess.run(
-                ["python3", HUB_PATH, "p5", file_path],
+                [sys.executable, HUB_PATH, "p5", file_path],
                 capture_output=True,
                 text=True
             )

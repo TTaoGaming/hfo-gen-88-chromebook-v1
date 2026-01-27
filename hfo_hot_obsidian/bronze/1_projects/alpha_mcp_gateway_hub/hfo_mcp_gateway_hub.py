@@ -11,6 +11,7 @@ import sys
 import json
 import datetime
 import hashlib
+import uuid
 import subprocess
 import re
 import urllib.request
@@ -34,7 +35,7 @@ try:
                 sys.path.insert(0, str(_parent))
             break
 except Exception:
-    pass
+    _BOOTSTRAP_PATH_RESOLUTION_ERROR = True
 
 BASE_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
 BLACKBOARD_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl")
@@ -63,6 +64,8 @@ BATON_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/bronze/3_resources/receip
 MCP_MEMORY_PATH = os.path.join(BASE_PATH, "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl")
 SERENA_MEMORY_DIR = os.path.join(BASE_PATH, ".serena/memories")
 
+SILVER_REPORTS_DIR = os.path.join(BASE_PATH, "hfo_hot_obsidian/silver/3_resources/reports")
+
 server = Server("hfo-mcp-gateway-hub")
 
 
@@ -87,13 +90,16 @@ def _append_receipt(receipt_type: str, payload: dict) -> str:
 def _last_receipt_type() -> str | None:
     if not os.path.exists(RECEIPTS_PATH):
         return None
-    with open(RECEIPTS_PATH, "r") as f:
-        lines = [line for line in f.read().splitlines() if line.strip()]
-    if not lines:
-        return None
     try:
-        return json.loads(lines[-1]).get("type")
-    except json.JSONDecodeError:
+        tail = _read_jsonl_tail(RECEIPTS_PATH, limit=1)
+        if not tail:
+            return None
+        last = tail[-1]
+        if isinstance(last, dict):
+            t = last.get("type")
+            return str(t) if t is not None else None
+        return None
+    except Exception:
         return None
 
 
@@ -125,18 +131,70 @@ def _file_info(path: str) -> dict:
 
 
 def _read_jsonl_tail(path: str, limit: int) -> list[dict]:
+    """Read the last N JSONL records without loading the entire file.
+
+    This is intentionally bounded to prevent OOM when JSONL logs grow large
+    (e.g. MCP working memory). We read from the end of the file in chunks.
+    """
     if not os.path.exists(path):
         return []
-    limit = max(1, min(limit, 2000))
-    with open(path, "r") as f:
-        lines = [line for line in f.read().splitlines() if line.strip()]
+
+    limit = max(1, min(int(limit or 0), 2000))
+
+    max_bytes_env = os.environ.get("HFO_JSONL_TAIL_MAX_BYTES", "")
+    try:
+        max_bytes = int(max_bytes_env) if max_bytes_env.strip() else 4 * 1024 * 1024
+    except Exception:
+        max_bytes = 4 * 1024 * 1024
+    max_bytes = max(64 * 1024, min(max_bytes, 64 * 1024 * 1024))
+
+    block_size = 64 * 1024
+    data = b""
+    bytes_read = 0
+    file_size = 0
+    try:
+        with open(path, "rb") as f:
+            f.seek(0, os.SEEK_END)
+            file_size = f.tell()
+
+            while bytes_read < file_size and bytes_read < max_bytes:
+                read_size = min(block_size, file_size - bytes_read, max_bytes - bytes_read)
+                if read_size <= 0:
+                    break
+                bytes_read += read_size
+                f.seek(file_size - bytes_read)
+                chunk = f.read(read_size)
+                if not chunk:
+                    break
+                data = chunk + data
+
+                # If we have enough newlines for the requested tail, stop early.
+                if data.count(b"\n") >= (limit + 1):
+                    break
+    except Exception as e:
+        if os.environ.get("HFO_DEBUG_JSONL_TAIL") == "1":
+            raise
+        return []
+
+    # Split into lines; drop the first line if it may be a partial line.
+    lines = [ln for ln in data.splitlines() if ln.strip()]
+    # If we didn't read the full file, the first line may be partial. Drop it only
+    # if we still have enough lines to satisfy the requested tail; otherwise keep
+    # it (and it may parse as a parse_error record).
+    if bytes_read < file_size and len(lines) > limit:
+        lines = lines[1:]
+
     tail = lines[-limit:]
-    parsed = []
-    for line in tail:
+    parsed: list[dict] = []
+    for raw in tail:
         try:
-            parsed.append(json.loads(line))
-        except json.JSONDecodeError:
-            parsed.append({"parse_error": True, "raw": line})
+            text = raw.decode("utf-8", errors="replace")
+            parsed.append(json.loads(text))
+        except Exception:
+            try:
+                parsed.append({"parse_error": True, "raw": raw.decode("utf-8", errors="replace")})
+            except Exception:
+                parsed.append({"parse_error": True, "raw": "(un-decodable)"})
     return parsed
 
 
@@ -144,6 +202,88 @@ def _append_jsonl(path: str, entry: dict) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "a") as f:
         f.write(json.dumps(entry) + "\n")
+
+
+def _read_pointers_subset() -> dict:
+    path = os.path.join(BASE_PATH, "hfo_pointers.json")
+    if not os.path.exists(path):
+        return {"path": path, "exists": False}
+    try:
+        with open(path, "r") as f:
+            data = json.load(f)
+        return {
+            "path": path,
+            "exists": True,
+            "targets": data.get("targets", {}),
+            "paths": data.get("paths", {}),
+        }
+    except Exception as e:
+        return {"path": path, "exists": True, "error": str(e)}
+
+
+def _list_recent_silver_reports(limit: int) -> list[dict]:
+    limit = max(0, min(int(limit or 0), 50))
+    if limit == 0:
+        return []
+    if not os.path.isdir(SILVER_REPORTS_DIR):
+        return [{"path": SILVER_REPORTS_DIR, "exists": False}]
+    items: list[dict] = []
+    for name in os.listdir(SILVER_REPORTS_DIR):
+        if not name.endswith(".md"):
+            continue
+        path = os.path.join(SILVER_REPORTS_DIR, name)
+        if not os.path.isfile(path):
+            continue
+        items.append(_file_info(path))
+    items.sort(key=lambda x: x.get("modified", ""), reverse=True)
+    return items[:limit]
+
+
+def _enforce_resource_limits(snapshot: dict, arguments: dict) -> str | None:
+    try:
+        min_mem_kb = arguments.get("min_mem_available_kb")
+        max_load_1m = arguments.get("max_load_1m")
+        if min_mem_kb is not None:
+            min_mem_kb = int(min_mem_kb)
+            avail = int(snapshot.get("memory_kb", {}).get("available", 0))
+            if avail < min_mem_kb:
+                return f"Resource gate: MemAvailable {avail}KB < {min_mem_kb}KB"
+        if max_load_1m is not None:
+            max_load_1m = float(max_load_1m)
+            load_1m = float(snapshot.get("load_avg", {}).get("1m", 0.0))
+            if load_1m > max_load_1m:
+                return f"Resource gate: load_1m {load_1m} > {max_load_1m}"
+    except Exception as e:
+        return f"Resource gate: invalid thresholds ({e})"
+    return None
+
+
+def _build_context_capsule(port: str, role: str, system_health: dict, arguments: dict) -> dict:
+    blackboard_tail = int(arguments.get("blackboard_tail", 10))
+    mcp_memory_tail = int(arguments.get("mcp_memory_tail", 20))
+    recent_reports = int(arguments.get("recent_reports", 10))
+    scope = arguments.get("scope")
+    subshard_path = arguments.get("subshard_path")
+    capsule = {
+        "timestamp": _now_iso(),
+        "scope": scope or port,
+        "subshard_path": subshard_path,
+        "port": port,
+        "role": role,
+        "note": arguments.get("note", ""),
+        "system_health": system_health,
+        "pointers": _read_pointers_subset(),
+        "short_term_blackboard": {
+            "info": _file_info(BLACKBOARD_PATH),
+            "tail": _read_jsonl_tail(BLACKBOARD_PATH, blackboard_tail),
+        },
+        "working_memory_mcp": {
+            "info": _file_info(MCP_MEMORY_PATH),
+            "tail": _read_jsonl_tail(MCP_MEMORY_PATH, mcp_memory_tail),
+        },
+        "silver_reports_recent": _list_recent_silver_reports(recent_reports),
+    }
+    return capsule
 
 
 def _list_serena_memories() -> list[str]:
@@ -243,10 +383,12 @@ def _log_handoff_baton(role_from: str, role_to: str, receipt_id: str, payload: d
 def _log_duckdb(event_type: str, payload: dict) -> None:
     try:
         conn = duckdb.connect(DUCKDB_PATH)
+        # Existing DuckDB files may already have a mission_journal schema.
+        # Fail-open on schema differences (never break tool execution).
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS mission_journal (
-                id INTEGER PRIMARY KEY,
+                event_id VARCHAR PRIMARY KEY,
                 actor_id VARCHAR,
                 event_type VARCHAR,
                 payload VARCHAR,
@@ -254,11 +396,31 @@ def _log_duckdb(event_type: str, payload: dict) -> None:
             )
             """
         )
-        conn.execute("CREATE SEQUENCE IF NOT EXISTS mission_journal_id_seq")
-        conn.execute(
-            "INSERT INTO mission_journal (id, actor_id, event_type, payload) VALUES (nextval('mission_journal_id_seq'), ?, ?, ?)",
-            ("HFO_MCP_GATEWAY", event_type, json.dumps(payload)),
-        )
+
+        columns = set()
+        try:
+            rows = conn.execute("PRAGMA table_info('mission_journal')").fetchall()
+            # rows: (cid, name, type, notnull, dflt_value, pk)
+            columns = {r[1] for r in rows}
+        except Exception:
+            columns = set()
+
+        if "event_id" in columns:
+            conn.execute(
+                "INSERT INTO mission_journal (event_id, actor_id, event_type, payload) VALUES (?, ?, ?, ?)",
+                (uuid.uuid4().hex, "HFO_MCP_GATEWAY", event_type, json.dumps(payload)),
+            )
+        elif "id" in columns:
+            conn.execute("CREATE SEQUENCE IF NOT EXISTS mission_journal_id_seq")
+            conn.execute(
+                "INSERT INTO mission_journal (id, actor_id, event_type, payload) VALUES (nextval('mission_journal_id_seq'), ?, ?, ?)",
+                ("HFO_MCP_GATEWAY", event_type, json.dumps(payload)),
+            )
+        else:
+            conn.execute(
+                "INSERT INTO mission_journal (actor_id, event_type, payload) VALUES (?, ?, ?)",
+                ("HFO_MCP_GATEWAY", event_type, json.dumps(payload)),
+            )
         conn.close()
     except Exception as e:
         print(f"Error logging to DuckDB: {e}", file=sys.stderr)
@@ -697,6 +859,128 @@ async def handle_list_tools() -> list[types.Tool]:
             },
         ),
         types.Tool(
+            name="port6_preflight",
+            description=(
+                "Port 6 preflight: compile a bounded context capsule (SSOT inputs + resource snapshot). "
+                "Designed to be called at the start of every agent run."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "role": {"type": "string", "default": "agent"},
+                    "note": {"type": "string"},
+                    "blackboard_tail": {"type": "integer", "default": 10},
+                    "mcp_memory_tail": {"type": "integer", "default": 20},
+                    "recent_reports": {"type": "integer", "default": 10},
+                    "min_mem_available_kb": {"type": "integer"},
+                    "max_load_1m": {"type": "number"},
+                    "write_memory": {"type": "boolean", "default": True},
+                },
+            },
+        ),
+        types.Tool(
+            name="port6_postflight",
+            description=(
+                "Port 6 postflight: write an append-only receipt + (optional) memory entry summarizing outcomes and proof. "
+                "Designed to be called at the end of every agent run."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "preflight_receipt_id": {"type": "string"},
+                    "outcome": {"type": "string", "enum": ["ok", "partial", "error"], "default": "ok"},
+                    "summary": {"type": "string"},
+                    "changes": {"type": "array", "items": {"type": "string"}, "default": []},
+                    "sources": {"type": "array", "items": {"type": "string"}, "default": []},
+                    "write_memory": {"type": "boolean", "default": True},
+                },
+                "required": ["summary"],
+            },
+        ),
+        types.Tool(
+            name="hfo_preflight",
+            description=(
+                "HFO unified preflight: compile the canonical context capsule (hub-level SSOT) with resource snapshot. "
+                "Use this when a run spans multiple ports or needs a single consolidated start-state."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "role": {"type": "string", "default": "hub"},
+                    "note": {"type": "string"},
+                    "blackboard_tail": {"type": "integer", "default": 10},
+                    "mcp_memory_tail": {"type": "integer", "default": 20},
+                    "recent_reports": {"type": "integer", "default": 10},
+                    "min_mem_available_kb": {"type": "integer"},
+                    "max_load_1m": {"type": "number"},
+                    "write_memory": {"type": "boolean", "default": True},
+                },
+            },
+        ),
+        types.Tool(
+            name="hfo_postflight",
+            description=(
+                "HFO unified postflight: write an append-only hub-level receipt + (optional) memory entry summarizing outcomes and proof."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "preflight_receipt_id": {"type": "string"},
+                    "outcome": {"type": "string", "enum": ["ok", "partial", "error"], "default": "ok"},
+                    "summary": {"type": "string"},
+                    "changes": {"type": "array", "items": {"type": "string"}, "default": []},
+                    "sources": {"type": "array", "items": {"type": "string"}, "default": []},
+                    "write_memory": {"type": "boolean", "default": True},
+                },
+                "required": ["summary"],
+            },
+        ),
+        types.Tool(
+            name="port_preflight",
+            description=(
+                "Port preflight (P0..P7): compile a bounded context capsule for a specific port and optional subshard scope. "
+                "Use scope like 'P0' or 'P0.3.5.7.1' to align with the fractal octree holonarchy."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "port": {"type": "integer", "minimum": 0, "maximum": 7},
+                    "scope": {"type": "string"},
+                    "subshard_path": {"type": ["array", "string"], "items": {"type": "integer"}},
+                    "role": {"type": "string", "default": "agent"},
+                    "note": {"type": "string"},
+                    "blackboard_tail": {"type": "integer", "default": 10},
+                    "mcp_memory_tail": {"type": "integer", "default": 20},
+                    "recent_reports": {"type": "integer", "default": 10},
+                    "min_mem_available_kb": {"type": "integer"},
+                    "max_load_1m": {"type": "number"},
+                    "write_memory": {"type": "boolean", "default": True}
+                },
+                "required": ["port"],
+            },
+        ),
+        types.Tool(
+            name="port_postflight",
+            description=(
+                "Port postflight (P0..P7): write an append-only receipt + (optional) memory entry summarizing outcomes and proof for a port/subshard run."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "port": {"type": "integer", "minimum": 0, "maximum": 7},
+                    "scope": {"type": "string"},
+                    "subshard_path": {"type": ["array", "string"], "items": {"type": "integer"}},
+                    "preflight_receipt_id": {"type": "string"},
+                    "outcome": {"type": "string", "enum": ["ok", "partial", "error"], "default": "ok"},
+                    "summary": {"type": "string"},
+                    "changes": {"type": "array", "items": {"type": "string"}, "default": []},
+                    "sources": {"type": "array", "items": {"type": "string"}, "default": []},
+                    "write_memory": {"type": "boolean", "default": True}
+                },
+                "required": ["port", "summary"],
+            },
+        ),
+        types.Tool(
             name="p0_observe_compile",
             description=(
                 "P0 Observe → Tavily + DuckDB search → LLM synthesis. Returns Phase-1 H handoff baton for P7."
@@ -901,6 +1185,186 @@ async def handle_call_tool(name: str, arguments: dict | None):
         _log_blackboard({"phase": "P6", "action": "port6_assimilate", "input": arguments})
         _log_duckdb("port6_assimilate", {"input": arguments})
         return _respond([types.TextContent(type="text", text=json.dumps(payload, indent=2))])
+
+    if name == "port_preflight":
+        port_num = arguments.get("port")
+        try:
+            port_num = int(port_num)
+        except Exception:
+            return _respond([types.TextContent(type="text", text="Error: port must be an integer 0..7")])
+        if port_num < 0 or port_num > 7:
+            return _respond([types.TextContent(type="text", text="Error: port must be in range 0..7")])
+
+        port = f"P{port_num}"
+        role = str(arguments.get("role", "agent"))
+        gate_err = _enforce_resource_limits(system_health, arguments)
+        if gate_err:
+            return _respond([types.TextContent(type="text", text=f"Error: {gate_err}")])
+
+        capsule = _build_context_capsule(port, role, system_health, arguments)
+        receipt_type = f"{port.lower()}_preflight_receipt"
+        receipt_id = _append_receipt(receipt_type, {"port": port, "role": role, "scope": arguments.get("scope")})
+        _log_blackboard({"phase": port, "action": "preflight", "receipt_id": receipt_id, "input": arguments})
+        _log_duckdb(f"{port.lower()}_preflight", {"receipt_id": receipt_id, "input": arguments})
+
+        if bool(arguments.get("write_memory", True)):
+            _append_jsonl(
+                MCP_MEMORY_PATH,
+                {
+                    "type": "flight_pre",
+                    "timestamp": _now_iso(),
+                    "port": port,
+                    "role": role,
+                    "scope": arguments.get("scope"),
+                    "subshard_path": arguments.get("subshard_path"),
+                    "receipt_id": receipt_id,
+                    "capsule": capsule,
+                },
+            )
+
+        return _respond([types.TextContent(type="text", text=json.dumps({"receipt_id": receipt_id, "capsule": capsule}, indent=2))])
+
+    if name == "port_postflight":
+        port_num = arguments.get("port")
+        try:
+            port_num = int(port_num)
+        except Exception:
+            return _respond([types.TextContent(type="text", text="Error: port must be an integer 0..7")])
+        if port_num < 0 or port_num > 7:
+            return _respond([types.TextContent(type="text", text="Error: port must be in range 0..7")])
+
+        port = f"P{port_num}"
+        outcome = str(arguments.get("outcome", "ok"))
+        preflight_receipt_id = str(arguments.get("preflight_receipt_id", ""))
+        summary = str(arguments.get("summary", ""))
+        changes = arguments.get("changes", [])
+        sources = arguments.get("sources", [])
+        if not isinstance(changes, list):
+            changes = [str(changes)]
+        if not isinstance(sources, list):
+            sources = [str(sources)]
+
+        receipt_type = f"{port.lower()}_postflight_receipt"
+        receipt_id = _append_receipt(
+            receipt_type,
+            {
+                "port": port,
+                "scope": arguments.get("scope"),
+                "subshard_path": arguments.get("subshard_path"),
+                "outcome": outcome,
+                "preflight_receipt_id": preflight_receipt_id,
+                "summary": summary,
+            },
+        )
+        _log_blackboard(
+            {
+                "phase": port,
+                "action": "postflight",
+                "receipt_id": receipt_id,
+                "preflight_receipt_id": preflight_receipt_id,
+                "outcome": outcome,
+                "scope": arguments.get("scope"),
+            }
+        )
+        _log_duckdb(f"{port.lower()}_postflight", {"receipt_id": receipt_id, "outcome": outcome})
+
+        if bool(arguments.get("write_memory", True)):
+            _append_jsonl(
+                MCP_MEMORY_PATH,
+                {
+                    "type": "flight_post",
+                    "timestamp": _now_iso(),
+                    "port": port,
+                    "scope": arguments.get("scope"),
+                    "subshard_path": arguments.get("subshard_path"),
+                    "receipt_id": receipt_id,
+                    "preflight_receipt_id": preflight_receipt_id,
+                    "outcome": outcome,
+                    "summary": summary,
+                    "changes": [str(x) for x in changes],
+                    "sources": [str(x) for x in sources],
+                },
+            )
+
+        return _respond([types.TextContent(type="text", text=json.dumps({"receipt_id": receipt_id}, indent=2))])
+
+    if name in {"port6_preflight", "hfo_preflight"}:
+        port = "P6" if name == "port6_preflight" else "HFO"
+        role = str(arguments.get("role", "agent" if port == "P6" else "hub"))
+        gate_err = _enforce_resource_limits(system_health, arguments)
+        if gate_err:
+            return _respond([types.TextContent(type="text", text=f"Error: {gate_err}")])
+        capsule = _build_context_capsule(port, role, system_health, arguments)
+        receipt_type = "p6_preflight_receipt" if port == "P6" else "hfo_preflight_receipt"
+        receipt_id = _append_receipt(receipt_type, {"port": port, "role": role})
+        _log_blackboard({"phase": port, "action": "preflight", "receipt_id": receipt_id, "input": arguments})
+        _log_duckdb(f"{port.lower()}_preflight", {"receipt_id": receipt_id, "input": arguments})
+
+        if bool(arguments.get("write_memory", True)):
+            _append_jsonl(
+                MCP_MEMORY_PATH,
+                {
+                    "type": "flight_pre",
+                    "timestamp": _now_iso(),
+                    "port": port,
+                    "role": role,
+                    "receipt_id": receipt_id,
+                    "capsule": capsule,
+                },
+            )
+
+        return _respond([types.TextContent(type="text", text=json.dumps({"receipt_id": receipt_id, "capsule": capsule}, indent=2))])
+
+    if name in {"port6_postflight", "hfo_postflight"}:
+        port = "P6" if name == "port6_postflight" else "HFO"
+        outcome = str(arguments.get("outcome", "ok"))
+        preflight_receipt_id = str(arguments.get("preflight_receipt_id", ""))
+        summary = str(arguments.get("summary", ""))
+        changes = arguments.get("changes", [])
+        sources = arguments.get("sources", [])
+        if not isinstance(changes, list):
+            changes = [str(changes)]
+        if not isinstance(sources, list):
+            sources = [str(sources)]
+
+        receipt_type = "p6_postflight_receipt" if port == "P6" else "hfo_postflight_receipt"
+        receipt_id = _append_receipt(
+            receipt_type,
+            {
+                "port": port,
+                "outcome": outcome,
+                "preflight_receipt_id": preflight_receipt_id,
+                "summary": summary,
+            },
+        )
+        _log_blackboard(
+            {
+                "phase": port,
+                "action": "postflight",
+                "receipt_id": receipt_id,
+                "preflight_receipt_id": preflight_receipt_id,
+                "outcome": outcome,
+            }
+        )
+        _log_duckdb(f"{port.lower()}_postflight", {"receipt_id": receipt_id, "outcome": outcome})
+
+        if bool(arguments.get("write_memory", True)):
+            _append_jsonl(
+                MCP_MEMORY_PATH,
+                {
+                    "type": "flight_post",
+                    "timestamp": _now_iso(),
+                    "port": port,
+                    "receipt_id": receipt_id,
+                    "preflight_receipt_id": preflight_receipt_id,
+                    "outcome": outcome,
+                    "summary": summary,
+                    "changes": [str(x) for x in changes],
+                    "sources": [str(x) for x in sources],
+                },
+            )
+
+        return _respond([types.TextContent(type="text", text=json.dumps({"receipt_id": receipt_id}, indent=2))])
 
     if name == "local_code_search":
         query = arguments.get("query", "").strip()

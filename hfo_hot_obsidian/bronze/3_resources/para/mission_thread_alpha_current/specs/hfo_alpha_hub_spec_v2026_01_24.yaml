@@ -105,6 +105,32 @@ acceptance:
   - "P5 forensics passes (warnings allowed for legacy archives, but no BREACH)"
   - "Contracts in contracts/ remain the SSOT for cross-port payloads"
 
+findings:
+  - id: ALPHA_FINDING_ENV_NORMALIZATION_2026_01_25
+    date: 2026-01-25
+    title: "Daemon/task env drift caused false TOOL_TRIPWIRE FAIL noise"
+    impact: >-
+      Background daemons (VS Code tasks) can run with a different environment than
+      interactive shells/agents. This led to repeated TOOL_TRIPWIRE FAIL events
+      (missing keys) even when keys were present in other contexts.
+    resolution: >-
+      Standardize daemon/task launches through scripts/mcp_env_wrap.sh and restart
+      long-running daemons after task changes so they reload .env.
+    evidence:
+      - "Repo root .env contains TAVILY_API_KEY and OPENROUTER_API_KEY (values not logged)."
+      - "Clean env validation: env -i + scripts/mcp_env_wrap.sh + venv python => Tavily /search HTTP 200; OpenRouter /models HTTP 200."
+      - "Runtime validation: running P5 Sentinel process environment contains both keys (checked via /proc/<pid>/environ presence-only)."
+      - "Behavioral validation: after daemon restart + env wrapping, no new TOOL_TRIPWIRE entries were appended for at least one tripwire interval."
+    follow_ups:
+      - "Optional hardening: log explicit PASS tripwire events so success is visible (success is currently silent)."
+      - "Add .env.example (no secrets) to document required variables and reduce onboarding drift."
+    sources:
+      - .vscode/tasks.json
+      - scripts/mcp_env_wrap.sh
+      - scripts/p5_sentinel_daemon.py
+      - hfo_hot_obsidian/hot_obsidian_blackboard.jsonl
+      - hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl
+
 red_tests_plan:
   - "Tamper with a blackboard line -> purity gate detects breach"
   - "Remove a required receipt -> gateway blocks commit"

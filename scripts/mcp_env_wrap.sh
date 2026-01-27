@@ -9,6 +9,16 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${script_dir}/.." && pwd)"
 env_file="${repo_root}/.env"
 
+flag_name=""
+if [[ "${1:-}" == "--if-enabled" ]]; then
+  flag_name="${2:-}"
+  if [[ -z "$flag_name" ]]; then
+    echo "mcp_env_wrap.sh: --if-enabled requires a flag name" >&2
+    exit 2
+  fi
+  shift 2
+fi
+
 load_env_file() {
   local file="$1"
   [[ -f "$file" ]] || return 0
@@ -58,5 +68,15 @@ load_env_file() {
 }
 
 load_env_file "$env_file"
+
+if [[ -n "$flag_name" ]]; then
+  flag_val="${!flag_name:-}"
+  shopt -s nocasematch
+  if [[ ! "$flag_val" =~ ^(1|true|yes|on)$ ]]; then
+    echo "mcp_env_wrap.sh: skipping (flag not enabled): $flag_name" >&2
+    exit 0
+  fi
+  shopt -u nocasematch
+fi
 
 exec "$@"

@@ -25,7 +25,12 @@ const projectUse = {
 };
 
 export default defineConfig({
-  testDir: './scripts',
+  testDir: '.',
+  testMatch: [
+    'scripts/**/*.spec.ts',
+    'hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/tests/playwright/**/*.spec.ts',
+  ],
+  testIgnore: ['**/scripts/_disabled/**'],
   fullyParallel: true,
   reporter: 'list',
   timeout: 60_000,

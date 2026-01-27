@@ -8,6 +8,7 @@
     "launch": "npm run p5:preflight && xdg-open http://localhost:8889/active_hfo_omega_entrypoint.html",
     "hfo:health": "python3 scripts/hfo_healthcheck.py --mode=soft --format=human",
     "hfo:health:strict": "python3 scripts/hfo_healthcheck.py --mode=hard --format=human",
+    "hfo:structure": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python scripts/hfo_structure_validator.py",
     "p5:preflight": "npm run hfo:health:strict && python3 scripts/p5_preflight_audit.py && npx eslint active_hfo_omega_entrypoint.html active_omega.html",
     "p5:gate": "npx playwright test scripts/p5_health_gate.spec.ts",
     "p4:regression": "npx playwright test tests/p4_visual_regression.spec.ts",
@@ -59,6 +60,7 @@
     "test:omega:e2e": "npm run test:omega",
     "test:fast": "npm run test:omega:fast:git",
     "test:e2e": "npm run test:omega:e2e",
+    "test:contracts": "HUSKY=0 mocha -r ts-node/register contracts/__tests__/**/*.test.ts",
     "cleanup:omega": "bash scripts/omega_gen5_cleanup.sh",
     "prepare": "husky"
   },
@@ -78,7 +80,8 @@
     "mocha": "^11.7.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "ws": "^8.19.0"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.2",

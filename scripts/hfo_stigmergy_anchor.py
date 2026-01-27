@@ -14,9 +14,18 @@ import datetime
 import json
 import subprocess
 from subprocess import TimeoutExpired
+from pathlib import Path
+
+try:
+    from hfo_env import load_repo_env
+
+    load_repo_env()
+except Exception:
+    # Fail-open: anchor should still perform backups even if env parsing breaks.
+    pass
 
 # Paths
-ROOT_DIR = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
+ROOT_DIR = str(Path(__file__).resolve().parents[1])
 HOT_DIR = os.path.join(ROOT_DIR, "hfo_hot_obsidian")
 BACKUP_DIR = os.path.join(ROOT_DIR, "hfo_hot_obsidian/4_archive/stigmergy_anchors")
 BLACKBOARD_PATH = os.path.join(HOT_DIR, "hot_obsidian_blackboard.jsonl")

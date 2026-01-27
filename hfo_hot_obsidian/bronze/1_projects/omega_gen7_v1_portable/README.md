@@ -8,8 +8,6 @@ Goal: a self-contained, cloneable baseline for evolving from Gen6 v23.10 toward 
 
 - `app/omega_gen6_v23_10.html`: known-good Gen6 v23.10 baseline.
 - `app/omega_gen7_v1.html`: Gen7 v1 starting point (currently a clone baseline).
-- `app/omega_gen7_v2.html`: Gen7 v2 hydra-bud (refactor posture; v1-identical defaults).
-- `app/omega_gen7_v3.html`: Gen7 v3 hydra-bud (4 fingertip tripwires → ASDF; COMMIT+deadman fail-closed).
 - `app/lib/`: local JS/CSS/WASM/model assets required by the HTML.
 - `specs/omega_gen7_v1_spec.yaml`: SSOT notes/spec for Gen7 v1.
 - `specs/omega_gen7_v2_spec.yaml`: v2 spec (refactor + fork-and-evolve posture).
@@ -23,8 +21,8 @@ Goal: a self-contained, cloneable baseline for evolving from Gen6 v23.10 toward 
 
 - `http://localhost:8889/hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/omega_gen6_v23_10.html`
 - or `http://localhost:8889/hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/omega_gen7_v1.html`
-- or `http://localhost:8889/hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/omega_gen7_v2.html`
-- or `http://localhost:8889/hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/omega_gen7_v3.html`
+
+Gen7 v2+ are currently **spec-only** (YAML) and do not ship HTML entrypoints yet.
 
 ## Regression tests
 

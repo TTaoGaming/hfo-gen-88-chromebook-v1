@@ -4,11 +4,23 @@
     "hive": "V",
     "generated_utc": "2026-01-22T00:00:00Z",
     "targets": {
-        "mcp_gateway_impl": "hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/hfo_mcp_gateway_hub.py"
+        "mcp_gateway_impl": "hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/hfo_mcp_gateway_hub.py",
+        "alpha_gen1_infra_spec_v1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/ALPHA_GEN1_INFRA_V1_SPEC_2026_01_25.yaml",
+        "hfo_phase0_infra_spec_v0_1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/HFO_PHASE0_INFRA_BOOTSTRAP_V0_1_2026_01_25.yaml",
+        "hfo_preflight_postflight_policy_v0_1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/HFO_PREFLIGHT_POSTFLIGHT_POLICY_V0_1_2026_01_25.yaml",
+        "omega_gen7_microkernel_spec_v4": "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/OMEGA_GEN7_MICROKERNEL_V4_SPEC_2026_01_25.yaml"
     },
     "paths": {
-        "blackboard": "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl",
+            "blackboard": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v4.jsonl",
+            "blackboard_legacy": "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl",
+            "blackboard_hot_forge": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v4.jsonl",
+            "blackboard_hot_forge_legacy": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard.jsonl",
+        "blackboard_cold_forge": "hfo_cold_obsidian_forge/0_bronze/2_resources/blackboards/cold_obsidian_blackboard.jsonl",
+            "gen88_v4_hot_forge_root": "hfo_hot_obsidian_forge/",
+            "gen88_v4_cold_forge_root": "hfo_cold_obsidian_forge/",
         "mcp_memory": "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl",
+        "alpha_gen1_current_project_root": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current",
+        "omega_gen7_current_project_root": "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current",
         "duckdb_unified": "hfo_gen_88_cb_v2/hfo_unified_v88.duckdb",
         "duckdb_file_index": "hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/hfo_unified_v88_merged.duckdb"
     }

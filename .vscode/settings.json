@@ -11,5 +11,58 @@
         "*.jsonl": "jsono",
         "*.md": "markdown"
     },
+    // Hygiene: avoid VS Code auto-indexing/watching huge ledgers & binary artifacts.
+    // Keep paths discoverable for agents (don’t exclude entire bronze trees).
+    "files.exclude": {
+        "**/.git/objects/**": true,
+        "**/artifacts/**": true,
+        "**/hfo_hot_obsidian/4_archive/**": true,
+        "**/hfo_hot_obsidian/bronze/4_archive/**": true,
+        "**/hfo_cold_obsidian/bronze/4_archive/**": true,
+        "**/*.duckdb": true,
+        "**/*.zim": true,
+        "**/*.parquet": true
+    },
+    // Guardrails: prevent VS Code from trying to fully load giant files into memory.
+    "files.maxMemoryForLargeFilesMB": 64,
+    "editor.largeFileOptimizations": true,
+    // Language server pressure controls (Chromebook-safe defaults).
+    "typescript.disableAutomaticTypeAcquisition": true,
+    "typescript.tsserver.maxTsServerMemory": 1024,
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.indexing": false,
+    "python.analysis.typeCheckingMode": "basic",
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/hfo_hot_obsidian/4_archive/**": true,
+        "**/hfo_hot_obsidian/bronze/4_archive/**": true,
+        "**/hfo_hot_obsidian/bronze/3_resources/memory/**": true,
+        "**/hfo_cold_obsidian/bronze/4_archive/**": true,
+        "**/hfo_cold_obsidian/bronze/3_resources/memory/**": true,
+        "**/artifacts/**": true,
+        "**/hfo_gen_88_cb_v2/**": true,
+        "**/node_modules/**": true,
+        "**/.venv/**": true,
+        "**/*.jsonl": true,
+        "**/*.duckdb": true,
+        "**/*.zim": true,
+        "**/*.parquet": true
+    },
+    "search.exclude": {
+        "**/.git/objects/**": true,
+        "**/hfo_hot_obsidian/4_archive/**": true,
+        "**/hfo_hot_obsidian/bronze/4_archive/**": true,
+        "**/hfo_hot_obsidian/bronze/3_resources/memory/**": true,
+        "**/hfo_cold_obsidian/bronze/4_archive/**": true,
+        "**/hfo_cold_obsidian/bronze/3_resources/memory/**": true,
+        "**/artifacts/**": true,
+        "**/hfo_gen_88_cb_v2/**": true,
+        "**/node_modules/**": true,
+        "**/.venv/**": true,
+        "**/*.jsonl": true,
+        "**/*.duckdb": true,
+        "**/*.zim": true,
+        "**/*.parquet": true
+    },
     "markdown.links.openLocation": "currentGroup"
 }

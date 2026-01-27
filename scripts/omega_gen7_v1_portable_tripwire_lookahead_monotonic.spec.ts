@@ -7,10 +7,10 @@ import { P3TripwireInjectV1Schema, P3TripwireInjectV2Schema, TripwireLookaheadV1
 test.describe.configure({ mode: 'serial', retries: 1 });
 
 const FIXTURE_PATH =
-    'hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/tests/fixtures/touch2d/gen6_v17_tripwire_lookahead_slow_cross_golden.jsonl';
+    'hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/tests/fixtures/touch2d/gen6_v17_tripwire_lookahead_slow_cross_golden.jsonl';
 
 const GEN7_V1_PORTABLE_V23_10_URL_BASE =
-    'http://localhost:8889/hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/omega_gen6_v23_10.html';
+    'http://localhost:8889/hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen6_v23_10.html';
 
 test('Gen7 portable v23.10: raising lookahead window increases inject lead time', async ({ hfoPage }) => {
     const frames = fs

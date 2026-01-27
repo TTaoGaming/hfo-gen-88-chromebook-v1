@@ -18,7 +18,11 @@ test('V55: Gesture FSM (Direct Unit Test)', async ({ page }) => {
 
   const results = await page.evaluate(() => {
     // @ts-ignore
-    const fsm = new window.hfoState.hands[0]?.fsm.constructor() || { update: () => 'IDLE' };
+    const maybeFsm = window.hfoState?.hands?.[0]?.fsm;
+    // @ts-ignore
+    const FsmCtor = maybeFsm?.constructor;
+    // @ts-ignore
+    const fsm = typeof FsmCtor === 'function' ? new FsmCtor() : { update: () => 'IDLE' };
     const now = Date.now();
 
     // 1. Initial

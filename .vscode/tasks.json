@@ -1,10 +1,101 @@
 {
 	"version": "2.0.0",
+	"inputs": [
+		{
+			"id": "flightScope",
+			"type": "promptString",
+			"description": "Flight scope (HFO, P6, P0, or fractal like P0.3.5.7.1)",
+			"default": "P6"
+		},
+		{
+			"id": "krakenProvider",
+			"type": "pickString",
+			"description": "Kraken Keeper provider mode (manual paste-in OR OpenRouter API)",
+			"options": [
+				"manual",
+				"openrouter"
+			],
+			"default": "manual"
+		},
+		{
+			"id": "krakenModel",
+			"type": "promptString",
+			"description": "Model name (only used for OpenRouter API mode)",
+			"default": "openai/gpt-4o-mini"
+		},
+		{
+			"id": "krakenPrompt",
+			"type": "promptString",
+			"description": "Your message to Kraken Keeper (kept short; for longer prompts use terminal + paste)",
+			"default": "What is the next smallest step?"
+		},
+		{
+			"id": "flightSummary",
+			"type": "promptString",
+			"description": "Postflight summary (proof-only, 1-2 sentences)",
+			"default": "completed"
+		},
+		{
+			"id": "preflightReceiptId",
+			"type": "promptString",
+			"description": "Preflight receipt_id to close out",
+			"default": ""
+		}
+	],
 	"tasks": [
+		{
+			"label": "Shodh Memory: Server (3030)",
+			"type": "shell",
+			"command": "bash scripts/shodh_memory_server.sh",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Kraken Keeper: Turn (Auto Preflight+Postflight)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python scripts/kraken_keeper_turn.py --scope P6 --mode chat --provider '${input:krakenProvider}' --model '${input:krakenModel}' --prompt '${input:krakenPrompt}' --write-memory true",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-kraken-keeper",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Flight: Preflight (Scope → Capsule)",
+			"type": "shell",
+			"command": "bash scripts/hfo_flight.sh preflight --scope '${input:flightScope}' --note 'vscode task preflight' --out artifacts/flight/preflight_${input:flightScope}.json",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-flight",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Flight: Postflight (Scope → Receipt)",
+			"type": "shell",
+			"command": "bash scripts/hfo_flight.sh postflight --scope '${input:flightScope}' --preflight-receipt-id '${input:preflightReceiptId}' --summary '${input:flightSummary}' --out artifacts/flight/postflight_${input:flightScope}.json",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-flight",
+				"showReuseMessage": false
+			}
+		},
 		{
 			"label": "P5 Sentinel Daemon",
 			"type": "shell",
-			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/p5_sentinel_daemon.py",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/p5_sentinel_daemon.py",
 			"isBackground": true,
 			"problemMatcher": [],
 			"presentation": {
@@ -12,15 +103,12 @@
 				"panel": "new",
 				"group": "hfo-defense",
 				"showReuseMessage": false
-			},
-			"runOptions": {
-				"runOn": "folderOpen"
 			}
 		},
 		{
 			"label": "Stigmergy Anchor Daemon",
 			"type": "shell",
-			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_stigmergy_anchor.py",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_stigmergy_anchor.py",
 			"isBackground": true,
 			"problemMatcher": [],
 			"presentation": {
@@ -28,9 +116,6 @@
 				"panel": "new",
 				"group": "hfo-defense",
 				"showReuseMessage": false
-			},
-			"runOptions": {
-				"runOn": "folderOpen"
 			}
 		},
 		{
@@ -64,8 +149,10 @@
 		{
 			"label": "Gen5 Local Server",
 			"type": "shell",
-			"command": "python3",
+			"command": "bash",
 			"args": [
+				"scripts/mcp_env_wrap.sh",
+				"python3",
 				"scripts/hfo_threaded_server.py"
 			],
 			"isBackground": true,
@@ -75,7 +162,7 @@
 		{
 			"label": "Resource Shepherd Daemon",
 			"type": "shell",
-			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_resource_shepherd_daemon.py --interval-sec 300",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_resource_shepherd_daemon.py --interval-sec 300",
 			"isBackground": true,
 			"problemMatcher": [],
 			"presentation": {
@@ -84,15 +171,12 @@
 				"group": "hfo-defense",
 				"showReuseMessage": false,
 				"clear": false
-			},
-			"runOptions": {
-				"runOn": "folderOpen"
 			}
 		},
 		{
 			"label": "GitOps Batcher Daemon (No Push)",
 			"type": "shell",
-			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --interval-sec 600 --no-push",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --interval-sec 600 --no-push",
 			"isBackground": true,
 			"problemMatcher": [],
 			"presentation": {
@@ -106,7 +190,7 @@
 		{
 			"label": "GitOps Batcher Once (No Push)",
 			"type": "shell",
-			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --no-push",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --no-push",
 			"problemMatcher": [],
 			"presentation": {
 				"reveal": "always",
@@ -118,7 +202,7 @@
 		{
 			"label": "GitOps Batcher Once (Push End)",
 			"type": "shell",
-			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --push --push-mode end",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --push --push-mode end",
 			"problemMatcher": [],
 			"presentation": {
 				"reveal": "always",

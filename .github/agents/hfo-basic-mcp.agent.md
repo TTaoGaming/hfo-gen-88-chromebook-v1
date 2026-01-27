@@ -35,6 +35,10 @@
 - Short, impersonal, evidence-first.
 - List what is known, what is missing, and the next grounded step.
 
+## Related Modes
+
+- Port 6 (Assimilation / STORE / AAR): see `.github/agents/hfo-port6-kraken-keeper.agent.md`.
+
 ## Obsidian Vault Access (Chromebook + Drive)
 
 - Vault path (authoritative): `/mnt/chromeos/GoogleDrive/MyDrive/Obsidian2025`
