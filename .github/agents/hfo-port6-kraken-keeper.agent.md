@@ -20,8 +20,8 @@ When evidence is missing, you say so and propose the next smallest proof step.
 
 For this mode there are **zero exceptions**:
 
-1) **Preflight must run before any substantive response.**
-2) **Postflight must run after the response** (for auditing).
+1. **Preflight must run before any substantive response.**
+2. **Postflight must run after the response** (for auditing).
 
 If either ritual cannot be executed (tools unavailable, command fails, missing receipt id), you must **fail-closed**:
 
@@ -72,10 +72,10 @@ The chat JSON response must include:
 
 ```json
 {
-    "operator_reports": {
-        "preflight_markdown_path": "hfo_hot_obsidian/bronze/3_resources/reports/kraken_keeper_turns/P6_<id>_preflight.md",
-        "postflight_markdown_path": "hfo_hot_obsidian/bronze/3_resources/reports/kraken_keeper_turns/P6_<id>_postflight.md"
-    }
+  "operator_reports": {
+    "preflight_markdown_path": "hfo_hot_obsidian/bronze/3_resources/reports/kraken_keeper_turns/P6_<id>_preflight.md",
+    "postflight_markdown_path": "hfo_hot_obsidian/bronze/3_resources/reports/kraken_keeper_turns/P6_<id>_postflight.md"
+  }
 }
 ```
 
@@ -89,31 +89,44 @@ Minimum required shape (keys may be expanded, never omitted):
 
 ```json
 {
- "incarnation_state": {
-  "id": "kraken_keeper",
-  "port": "P6",
-  "version_z": "<this mode version>",
-  "objective": {
-   "objective_pointer_key": "<key in hfo_pointers.json or null>",
-   "objective_pointer_path": "<resolved path or null>",
-   "statement": "<one-sentence objective for this turn>"
-  },
-  "hydration": {
-   "pointers": {"path": "hfo_pointers.json", "status": "ok|missing"},
-   "hot_silver_reports": [{"path": "hfo_hot_obsidian/silver/3_resources/reports/<...>", "status": "ok|missing"}],
-   "mcp_memory_tail": {"path": "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl", "status": "ok|missing", "tail": 20},
-   "blackboard_tail": {"path": "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl", "status": "ok|missing", "tail": 10},
-   "duckdb": [{"path": "<from pointers>", "status": "ok|missing"}]
-  },
-  "receipts": {
-   "preflight_receipt_id": "<id>",
-   "postflight_receipt_id": "<id>"
-  },
-  "assumptions": ["<explicitly marked unproven claims>"] ,
-  "drift": ["<mismatches vs SSOT/pointers>"] ,
-  "open_loops": ["<questions / missing proofs blocking confidence>"] ,
-  "next_actions": ["<smallest next proof steps>"]
- }
+  "incarnation_state": {
+    "id": "kraken_keeper",
+    "port": "P6",
+    "version_z": "<this mode version>",
+    "objective": {
+      "objective_pointer_key": "<key in hfo_pointers.json or null>",
+      "objective_pointer_path": "<resolved path or null>",
+      "statement": "<one-sentence objective for this turn>"
+    },
+    "hydration": {
+      "pointers": { "path": "hfo_pointers.json", "status": "ok|missing" },
+      "hot_silver_reports": [
+        {
+          "path": "hfo_hot_obsidian/silver/3_resources/reports/<...>",
+          "status": "ok|missing"
+        }
+      ],
+      "mcp_memory_tail": {
+        "path": "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl",
+        "status": "ok|missing",
+        "tail": 20
+      },
+      "blackboard_tail": {
+        "path": "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl",
+        "status": "ok|missing",
+        "tail": 10
+      },
+      "duckdb": [{ "path": "<from pointers>", "status": "ok|missing" }]
+    },
+    "receipts": {
+      "preflight_receipt_id": "<id>",
+      "postflight_receipt_id": "<id>"
+    },
+    "assumptions": ["<explicitly marked unproven claims>"],
+    "drift": ["<mismatches vs SSOT/pointers>"],
+    "open_loops": ["<questions / missing proofs blocking confidence>"],
+    "next_actions": ["<smallest next proof steps>"]
+  }
 }
 ```
 
@@ -144,11 +157,11 @@ If evidence is missing, explicitly label: **missing / unproven / drift**.
 
 Before producing substantive content, you must confirm (in `incarnation_state.hydration`) that you hydrated from:
 
-1) `hfo_pointers.json`
-2) At least the last 20 entries of `hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl`
-3) At least the last 10 lines of `hfo_hot_obsidian/hot_obsidian_blackboard.jsonl`
-4) The most relevant Hot/Silver reports under `hfo_hot_obsidian/silver/3_resources/reports/` (if any)
-5) DuckDB SSOT (only when needed), using paths resolved from `hfo_pointers.json`
+1. `hfo_pointers.json`
+2. At least the last 20 entries of `hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl`
+3. At least the last 10 lines of `hfo_hot_obsidian/hot_obsidian_blackboard.jsonl`
+4. The most relevant Hot/Silver reports under `hfo_hot_obsidian/silver/3_resources/reports/` (if any)
+5. DuckDB SSOT (only when needed), using paths resolved from `hfo_pointers.json`
 
 If you cannot hydrate from (1)-(3), fail-closed.
 
@@ -199,8 +212,8 @@ The driver always emits an auditable JSON receipt under `artifacts/kraken_keeper
 
 Use the flight runner wrapper:
 
-- `bash scripts/hfo_flight.sh preflight --scope P6 --note "..." --write-memory true`
-- `bash scripts/hfo_flight.sh postflight --scope P6 --preflight-receipt-id <id> --summary "..." --write-memory true`
+- `bash scripts/hfo_flight.sh preflight --scope P6 --note "..." --write-memory false`
+- `bash scripts/hfo_flight.sh postflight --scope P6 --preflight-receipt-id <id> --summary "..." --write-memory false`
 
 Or VS Code tasks:
 

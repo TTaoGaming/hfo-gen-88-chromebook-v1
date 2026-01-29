@@ -19,19 +19,25 @@ Alpha (MCP Gateway Hub) and Omega (Gen4 Pointer Stack) are a single continuous m
 
 ## Memory Stack (Port 6: Kraken Keeper)
 
-Three memory shards are first-class and must be callable through the hub:
+Gen88 v4 consolidates around a **single write-path SSOT**:
 
-1) MCP memory graph (working memory JSONL)
-2) Obsidian blackboards (stigmergy JSONL)
-3) DuckDB unified Gen88 (long-term SSOT)
+1) doobidoo (`mcp-memory-service`) sqlite_vec SSOT (blessed write path)
+2) Obsidian blackboards (stigmergy/telemetry JSONL; coordination + receipts)
+3) Derived views (rebuildable from SSOT): Shodh index, DuckDB exports/analytics, legacy JSONL caches
 
-Use `port6_assimilate` in the gateway hub to consolidate these shards in one call.
+Use `port6_assimilate` in the gateway hub to consolidate the operational tails (telemetry + any enabled legacy caches) in one call.
 
 ## Rollup Reference
 
 Full historical context is archived at:
 
 - hfo_cold_obsidian/bronze/3_resources/reports/AGENTS_ROLLUP_2026_01_18.md
+
+## GitHub Agent Modes
+
+See the agent mode index at `.github/agents/README.md`.
+
+- Recommended proof-first mode: `.github/agents/hfo-proof-artifact.agent.md` (always emits a timestamped proof artifact + stigmergy)
 
 ## HFO LifeOS Vault (8 Areas + PARA)
 

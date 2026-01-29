@@ -5,6 +5,8 @@ This folder defines the available GitHub agent modes for the HFO workspace.
 ## Modes
 
 - **Baseline (MCP grounded):** [hfo-basic-mcp.agent.md](hfo-basic-mcp.agent.md)
+- **Proof Artifact (always produce timestamped proof):** [hfo-proof-artifact.agent.md](hfo-proof-artifact.agent.md)
+- **HIVE-8 Gen88 v4 (Phase 0 Hindsight scatter→gather P0→P7):** [hfo_hive_8_agent_gen_88_v_4.agent.md](hfo_hive_8_agent_gen_88_v_4.agent.md)
 - **Port 6 (Assimilation / STORE / AAR):** [hfo-port6-kraken-keeper.agent.md](hfo-port6-kraken-keeper.agent.md)
 - **Port 7 (Navigation / Sensemaking / S3 Protocol):** [hfo-port7-spider-sovereign.agent.md](hfo-port7-spider-sovereign.agent.md)
 - **HIVE8 doctrine:** [HFO-Hive8.agent.md](HFO-Hive8.agent.md)

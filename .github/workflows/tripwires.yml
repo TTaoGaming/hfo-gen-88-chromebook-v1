@@ -16,6 +16,66 @@ permissions:
   contents: read
 
 jobs:
+  lint_router:
+    name: lint-router (changed files)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: |
+          set -euo pipefail
+          if [[ -f package-lock.json ]]; then
+            HUSKY=0 npm ci
+          else
+            HUSKY=0 npm install
+          fi
+
+      - name: Compute changed files
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+          fi
+
+          git diff --name-only "$BASE_SHA".."$HEAD_SHA" > /tmp/changed_files.txt
+          grep -E '\.(md|mdx|mmd|mermaid|jsonl|json|jsonc|ya?ml)$' /tmp/changed_files.txt > /tmp/lint_files.txt || true
+
+          echo "[lint-router] total changed: $(wc -l < /tmp/changed_files.txt)"
+          echo "[lint-router] lint targets:  $(wc -l < /tmp/lint_files.txt || echo 0)"
+
+      - name: Run lint router (staged-style)
+        shell: bash
+        env:
+          # CI should be strict on Markdown syntax/style for changed files.
+          HFO_FLAG_LINT_ENABLED: '1'
+          HFO_FLAG_LINT_MERMAID: '1'
+          HFO_FLAG_LINT_JSONL: '1'
+          HFO_FLAG_LINT_MARKDOWNLINT: '1'
+          # Keep formatting checks opt-in to avoid unexpected churn.
+          HFO_FLAG_LINT_PRETTIER_CHECK: '0'
+          # Tripwire: warn-only in CI (time variance).
+          HFO_FLAG_LINT_TRIPWIRE_STRICT: '0'
+          HFO_FLAG_LINT_TRIPWIRE_SLOW_MS: '8000'
+        run: |
+          set -euo pipefail
+          if [[ ! -s /tmp/lint_files.txt ]]; then
+            echo "[lint-router] No lint-relevant file changes; skipping."
+            exit 0
+          fi
+          xargs -r node scripts/lint/hfo_lint_router.mjs < /tmp/lint_files.txt
+
   precommit:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -36,7 +96,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install pre-commit
-          HUSKY=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci
+          if [[ -f package-lock.json ]]; then
+            HUSKY=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci
+          else
+            HUSKY=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install
+          fi
 
       # NOTE: pre-commit hooks that depend on git staged files should not assume staging in CI.
       # We still run the suite fail-closed across the repo.
@@ -61,7 +125,13 @@ jobs:
           node-version: '20'
 
       - name: Install deps
-        run: HUSKY=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci
+        run: |
+          set -euo pipefail
+          if [[ -f package-lock.json ]]; then
+            HUSKY=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci
+          else
+            HUSKY=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install
+          fi
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium

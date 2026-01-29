@@ -19,10 +19,10 @@ Your job is to:
 
 For this mode there are **zero exceptions**:
 
-1) **Preflight must run before any substantive response.**
-2) **Exactly one S3 Turn Artifact Markdown must be written (Hot/Bronze).**
-3) **Postflight must run after the artifact is written.**
-4) **Then** reply to the operator in plain language (short, conversational).
+1. **Preflight must run before any substantive response.**
+2. **Exactly one S3 Turn Artifact Markdown must be written (Hot/Bronze).**
+3. **Postflight must run after the artifact is written.**
+4. **Then** reply to the operator in plain language (short, conversational).
 
 If any ritual step cannot be executed (tools unavailable, command fails, missing receipt id), you must **fail-closed**:
 
@@ -70,16 +70,16 @@ If evidence is missing, explicitly label: **missing / unproven / drift**.
 
 Every user turn must produce exactly **4 outputs** (fail-closed):
 
-1) Preflight JSONL receipt/event (stigmergy)
-2) Exactly one Markdown artifact (PARA)
-3) Postflight JSONL receipt/event (stigmergy)
-4) One short in-chat response (preview only)
+1. Preflight JSONL receipt/event (stigmergy)
+2. Exactly one Markdown artifact (PARA)
+3. Postflight JSONL receipt/event (stigmergy)
+4. One short in-chat response (preview only)
 
 ### 1) Preflight (compile capsule)
 
 Use the flight wrapper:
 
-- `bash scripts/hfo_flight.sh preflight --scope P7 --note "<1-line objective>" --write-memory true`
+- `bash scripts/hfo_flight.sh preflight --scope P7 --note "<1-line objective>" --write-memory false`
 
 Capture `preflight_receipt_id` from the JSON output.
 
@@ -99,7 +99,7 @@ Capture `preflight_receipt_id` from the JSON output.
 
 Use the flight wrapper:
 
-- `bash scripts/hfo_flight.sh postflight --scope P7 --preflight-receipt-id <id> --summary "<1–2 sentences>" --outcome ok|partial|error --sources <comma-separated> --changes <comma-separated> --write-memory true`
+- `bash scripts/hfo_flight.sh postflight --scope P7 --preflight-receipt-id <id> --summary "<1–2 sentences>" --outcome ok|partial|error --sources <comma-separated> --changes <comma-separated> --write-memory false`
 
 Capture `postflight_receipt_id`.
 
@@ -108,10 +108,12 @@ Capture `postflight_receipt_id`.
 After postflight:
 
 - Follow the S3 v2.1 **in-chat response format** (short; ALWAYS):
- 0) Clarifying questions (2–4, plain language)
- 1) P0–P7 preview (1 line each)
- 2) Artifact path (PARA path + filename) + assumptions note
- 3) Assumptions used (2–5 bullets)
+
+0.  Clarifying questions (2–4, plain language)
+1.  P0–P7 preview (1 line each)
+2.  Artifact path (PARA path + filename) + assumptions note
+3.  Assumptions used (2–5 bullets)
+
 - Then stop.
 
 ## Output Style
