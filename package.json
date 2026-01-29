@@ -63,6 +63,7 @@
     "test:fast": "npm run test:omega:fast:git",
     "test:e2e": "npm run test:omega:e2e",
     "test:contracts": "HUSKY=0 mocha -r ts-node/register contracts/__tests__/**/*.test.ts",
+    "verify:hive8:compendium": "node scripts/verify_hive8_compendium_manifest.mjs && node scripts/verify_hive8_compendium_frontmatter.mjs && node scripts/verify_hive8_compendium_portable_links.mjs && node scripts/verify_hive8_compendium_gate_index_parity.mjs && node scripts/verify_hive8_identity_invariants_table_drift.mjs && node scripts/verify_hive8_event_envelope_table_drift.mjs && node scripts/verify_hive8_p3_blast_radius_policy_drift.mjs && node scripts/verify_hive8_mtg_card_mappings.mjs",
     "verify:hive8:cards": "node scripts/verify_hive8_mtg_card_mappings.mjs",
     "cleanup:omega": "bash scripts/omega_gen5_cleanup.sh",
     "prepare": "husky"
