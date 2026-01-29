@@ -40,6 +40,19 @@ export SHODH_PORT="${SHODH_PORT:-3030}"
 export SHODH_MEMORY_PATH="${SHODH_MEMORY_PATH:-$data_dir}"
 run_mode="${HFO_SHODH_RUN_MODE:-docker}"
 
+# Optional Docker resource limits (tunable via repo .env)
+# Example:
+#   SHODH_DOCKER_MEMORY=1g
+#   SHODH_DOCKER_MEMORY_SWAP=2g
+#   SHODH_DOCKER_CPUS=1
+#   SHODH_DOCKER_PIDS_LIMIT=256
+#   SHODH_DOCKER_RESTART=unless-stopped
+shodh_docker_memory="${SHODH_DOCKER_MEMORY:-}"
+shodh_docker_memory_swap="${SHODH_DOCKER_MEMORY_SWAP:-}"
+shodh_docker_cpus="${SHODH_DOCKER_CPUS:-}"
+shodh_docker_pids_limit="${SHODH_DOCKER_PIDS_LIMIT:-}"
+shodh_docker_restart="${SHODH_DOCKER_RESTART:-unless-stopped}"
+
 if [[ "$run_mode" == "docker" ]]; then
   if ! command -v docker >/dev/null 2>&1; then
     echo "[shodh] WARN: docker not found; falling back to native binary (set HFO_SHODH_RUN_MODE=native to silence)" >&2
@@ -84,15 +97,36 @@ if [[ "$run_mode" == "docker" ]]; then
     fi
 
     echo "[shodh] Starting Docker container: $container_name ($image)" >&2
+
+    # Build docker run args with optional limits.
+    docker_args=(
+      -d
+      --name "$container_name"
+      -p "${host_port}:3030"
+      -e SHODH_HOST=0.0.0.0
+      -e SHODH_PORT=3030
+      -e "SHODH_MEMORY_PATH=/data"
+      -e "SHODH_DEV_API_KEY=${SHODH_DEV_API_KEY:-}"
+      -e "SHODH_API_KEYS=${SHODH_API_KEYS:-}"
+      -v "$data_dir:/data"
+      --restart "$shodh_docker_restart"
+    )
+
+    if [[ -n "$shodh_docker_memory" ]]; then
+      docker_args+=(--memory "$shodh_docker_memory")
+    fi
+    if [[ -n "$shodh_docker_memory_swap" ]]; then
+      docker_args+=(--memory-swap "$shodh_docker_memory_swap")
+    fi
+    if [[ -n "$shodh_docker_cpus" ]]; then
+      docker_args+=(--cpus "$shodh_docker_cpus")
+    fi
+    if [[ -n "$shodh_docker_pids_limit" ]]; then
+      docker_args+=(--pids-limit "$shodh_docker_pids_limit")
+    fi
+
     docker run -d \
-      --name "$container_name" \
-      -p "${host_port}:3030" \
-      -e SHODH_HOST=0.0.0.0 \
-      -e SHODH_PORT=3030 \
-      -e "SHODH_MEMORY_PATH=/data" \
-      -e "SHODH_DEV_API_KEY=${SHODH_DEV_API_KEY:-}" \
-      -e "SHODH_API_KEYS=${SHODH_API_KEYS:-}" \
-      -v "$data_dir:/data" \
+      "${docker_args[@]}" \
       "$image" >/dev/null
   fi
 
