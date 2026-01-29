@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T220922Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "010c4e0eb88a4f2b8130d93cde04a515",
+  "note": "Continue migration: fully move legacy hot bronze into hot obsidian forge PARA",
+  "preflight_receipt_id": "8396dc3d90a0",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T220922Z__P4__migrate_hot_bronze_forge_para_v1__010c4e0eb88a4f2b8130d93cde04a515.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T220922Z__P4__migrate_hot_bronze_forge_para_v1__010c4e0eb88a4f2b8130d93cde04a515.json"
+}

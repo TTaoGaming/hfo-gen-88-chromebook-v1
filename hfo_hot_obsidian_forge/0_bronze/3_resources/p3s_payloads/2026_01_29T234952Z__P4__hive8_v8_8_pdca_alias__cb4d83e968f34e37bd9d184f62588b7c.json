@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T234952Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "cb4d83e968f34e37bd9d184f62588b7c",
+  "note": "Add HIVE/8↔PDCA swarm-twist alias mapping to v8.8 + refresh Grimoire crypto receipts",
+  "preflight_receipt_id": "700b9fa4f40d",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T234952Z__P4__hive8_v8_8_pdca_alias__cb4d83e968f34e37bd9d184f62588b7c.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T234952Z__P4__hive8_v8_8_pdca_alias__cb4d83e968f34e37bd9d184f62588b7c.json"
+}

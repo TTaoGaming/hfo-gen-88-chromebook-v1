@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T222557Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "f9f3e2d5879a4676bd491f2223bf514f",
+  "note": "Promote v8.8 into hot resources as Grimoire + crypto receipt",
+  "preflight_receipt_id": "d3cf8f9ae07f",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T222557Z__P4__promote_grimoire_compendium_gen88_v8_8__f9f3e2d5879a4676bd491f2223bf514f.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T222557Z__P4__promote_grimoire_compendium_gen88_v8_8__f9f3e2d5879a4676bd491f2223bf514f.json"
+}

@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T221559Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "55e03038eccd442e9f735534ec606b03",
+  "note": "Final promotion rerun: verify compendium + contracts + mermaid lint (now non-noop)",
+  "preflight_receipt_id": "fff2e9a97c30",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T221559Z__P4__hive8_v8_8_final_rerun_gate_suite__55e03038eccd442e9f735534ec606b03.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T221559Z__P4__hive8_v8_8_final_rerun_gate_suite__55e03038eccd442e9f735534ec606b03.json"
+}

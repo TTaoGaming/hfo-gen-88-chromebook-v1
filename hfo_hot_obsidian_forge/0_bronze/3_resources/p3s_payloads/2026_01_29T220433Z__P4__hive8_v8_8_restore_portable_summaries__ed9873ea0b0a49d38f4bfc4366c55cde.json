@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T220433Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "ed9873ea0b0a49d38f4bfc4366c55cde",
+  "note": "Patch v8.8 with missing portable summaries; keep promotion-ready",
+  "preflight_receipt_id": "bd1cd6253ba1",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T220433Z__P4__hive8_v8_8_restore_portable_summaries__ed9873ea0b0a49d38f4bfc4366c55cde.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T220433Z__P4__hive8_v8_8_restore_portable_summaries__ed9873ea0b0a49d38f4bfc4366c55cde.json"
+}
