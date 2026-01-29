@@ -52,6 +52,7 @@ shodh_docker_memory_swap="${SHODH_DOCKER_MEMORY_SWAP:-}"
 shodh_docker_cpus="${SHODH_DOCKER_CPUS:-}"
 shodh_docker_pids_limit="${SHODH_DOCKER_PIDS_LIMIT:-}"
 shodh_docker_restart="${SHODH_DOCKER_RESTART:-unless-stopped}"
+shodh_docker_cache_dir="${SHODH_DOCKER_CACHE_DIR:-$repo_root/artifacts/shodh_memory/cache}"
 
 if [[ "$run_mode" == "docker" ]]; then
   if ! command -v docker >/dev/null 2>&1; then
@@ -67,6 +68,12 @@ if [[ "$run_mode" == "docker" ]]; then
 
   # Ensure data directory exists for bind mount
   mkdir -p "$data_dir"
+
+  # Persist model downloads / caches across container burns.
+  # This reduces cold-start spikes and makes Phoenix-style regenerate fast.
+  if [[ -n "$shodh_docker_cache_dir" ]]; then
+    mkdir -p "$shodh_docker_cache_dir"
+  fi
 
   if docker ps --format '{{.Names}}' | grep -qx "$container_name"; then
     echo "[shodh] Docker container already running: $container_name" >&2
@@ -111,6 +118,10 @@ if [[ "$run_mode" == "docker" ]]; then
       -v "$data_dir:/data"
       --restart "$shodh_docker_restart"
     )
+
+    if [[ -n "$shodh_docker_cache_dir" ]]; then
+      docker_args+=( -v "$shodh_docker_cache_dir:/home/shodh/.cache/shodh-memory" )
+    fi
 
     if [[ -n "$shodh_docker_memory" ]]; then
       docker_args+=(--memory "$shodh_docker_memory")

@@ -4,7 +4,8 @@ set -euo pipefail
 # Medallion: Bronze | Mutation: 0% | HIVE: V
 # Stop Shodh backend server (Docker container) to reduce background CPU.
 
-name="hfo-shodh-memory"
+# Keep consistent with scripts/shodh_memory_server.sh
+name="${SHODH_DOCKER_NAME:-hfo-shodh-memory}"
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "[shodh] docker not found; nothing to stop" >&2
