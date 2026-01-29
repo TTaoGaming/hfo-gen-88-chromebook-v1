@@ -348,6 +348,18 @@
       }
     },
     {
+      "label": "Serena: Doctor (Alpha/Omega)",
+      "type": "shell",
+      "command": "bash scripts/hfo_serena_doctor.sh --write --json",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "hfo-serena",
+        "showReuseMessage": false
+      }
+    },
+    {
       "label": "Memory: Mirror Catch-Up SSOT → Shodh (Safe)",
       "type": "shell",
       "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot mirror-catchup --max-runtime-sec 900 --timeout-sec 20 --retries 1 --retry-backoff-sec 1.0 --sleep-ms 25 --max-content-chars 2000",
