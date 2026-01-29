@@ -69,6 +69,6 @@ An option-generation tile: it creates many candidate instances and rapidly ampli
 
 Additional references to promote into Gold:
 
-- MTG reference mappings: contracts/hfo_mtg_port_card_mappings.v2.json
+- MTG reference mappings: contracts/hfo_mtg_port_card_mappings.v5.json
 - Trigram/element + JADC2 Mosaic tile invariants anchor:
   - hfo_hot_obsidian_forge/1_silver/2_resources/reports/hive8_doctrine/HFO_HIVE8_COMMANDER_INVARIANTS_OCTREE_V1_2026_01_27.md
