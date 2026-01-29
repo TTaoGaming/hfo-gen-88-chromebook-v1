@@ -42,9 +42,11 @@ run_mode="${HFO_SHODH_RUN_MODE:-docker}"
 
 if [[ "$run_mode" == "docker" ]]; then
   if ! command -v docker >/dev/null 2>&1; then
-    echo "[shodh] ERROR: docker not found; set HFO_SHODH_RUN_MODE=native to try native binary" >&2
-    exit 2
+    echo "[shodh] WARN: docker not found; falling back to native binary (set HFO_SHODH_RUN_MODE=native to silence)" >&2
+    run_mode="native"
   fi
+
+  if [[ "$run_mode" == "docker" ]]; then
 
   container_name="${SHODH_DOCKER_NAME:-hfo-shodh-memory}"
   image="${SHODH_DOCKER_IMAGE:-roshera/shodh-memory}"
@@ -96,6 +98,7 @@ if [[ "$run_mode" == "docker" ]]; then
 
   echo "[shodh] Server should be reachable at http://127.0.0.1:${host_port}/health" >&2
   exit 0
+  fi
 fi
 
 # If SHODH_API_KEY is set, ensure server accepts it in dev mode.

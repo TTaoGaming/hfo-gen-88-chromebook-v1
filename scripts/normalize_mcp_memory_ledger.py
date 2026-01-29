@@ -22,7 +22,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Tuple
 
 
 @dataclass
@@ -146,11 +146,25 @@ def main() -> int:
         default="artifacts/ledger_normalization/mcp_memory.normalized.receipt.json",
         help="Receipt JSON path.",
     )
+    parser.add_argument(
+        "--allow-jsonl-write",
+        action="store_true",
+        help=(
+            "Allow writing JSONL outputs. Default is deny-by-default to enforce sqlite-only memory policy; "
+            "use Doobidoo SSOT for durable writes."
+        ),
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input_path)
     output_path = Path(args.output_path)
     receipt_path = Path(args.receipt_path)
+
+    if not args.allow_jsonl_write:
+        raise SystemExit(
+            "Refusing to write JSONL output by default (sqlite-only memory policy). "
+            "Re-run with --allow-jsonl-write if you explicitly want a derived JSONL shadow file."
+        )
 
     raw = _read_bytes(input_path)
     input_sha256 = _sha256_bytes(raw)

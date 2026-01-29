@@ -30,7 +30,7 @@ summary=""
 outcome="ok"
 sources=""
 changes=""
-write_memory="true"
+write_memory="false"
 out_path=""
 
 while [[ $# -gt 0 ]]; do
@@ -49,6 +49,13 @@ while [[ $# -gt 0 ]]; do
     *) echo "Unknown arg: $1"; usage; exit 2;;
   esac
 done
+
+# Policy: JSONL MCP memory ledger writes are banned; SSOT sqlite is the only write path.
+# We keep the flag for backwards compatibility, but force-disable it.
+if [[ "${write_memory,,}" == "true" || "${write_memory,,}" == "1" || "${write_memory,,}" == "yes" ]]; then
+  echo "[hfo_flight] warn: --write-memory requested but is disabled by policy (SSOT sqlite only). For persistence, ingest to SSOT via scripts/hfo_memory_ingest_*." >&2
+  write_memory="false"
+fi
 
 if [[ -z "$cmd" || -z "$scope" ]]; then
   usage

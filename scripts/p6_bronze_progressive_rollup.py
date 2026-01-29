@@ -20,7 +20,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -67,7 +66,9 @@ def _path_stat(path: Path) -> dict[str, Any]:
             "path": str(path),
             "exists": True,
             "size_bytes": int(st.st_size),
-            "modified_utc": datetime.fromtimestamp(st.st_mtime, timezone.utc).isoformat().replace("+00:00", "Z"),
+            "modified_utc": datetime.fromtimestamp(st.st_mtime, timezone.utc)
+            .isoformat()
+            .replace("+00:00", "Z"),
         }
     except Exception as e:
         return {"path": str(path), "exists": True, "error": f"{type(e).__name__}: {e}"}
@@ -203,28 +204,40 @@ def render_markdown(rollup: dict[str, Any]) -> str:
     lines.append("## Inputs (non-destructive)")
     mem = inputs.get("mcp_memory") or {}
     bb = inputs.get("blackboard") or {}
-    lines.append(f"- MCP memory: {mem.get('path')} (exists={mem.get('exists')}, size={mem.get('size_bytes')})")
-    lines.append(f"- Blackboard: {bb.get('path')} (exists={bb.get('exists')}, size={bb.get('size_bytes')})")
+    lines.append(
+        f"- MCP memory: {mem.get('path')} (exists={mem.get('exists')}, size={mem.get('size_bytes')})"
+    )
+    lines.append(
+        f"- Blackboard: {bb.get('path')} (exists={bb.get('exists')}, size={bb.get('size_bytes')})"
+    )
     lines.append("")
 
     lines.append("## Lossy Compression Policy (managed)")
-    for note in (lossy.get("notes") or []):
+    for note in lossy.get("notes") or []:
         lines.append(f"- {note}")
-    lim = (lossy.get("limits") or {})
-    lines.append(f"- Limits: status_updates≤{lim.get('max_status_updates')} blackboard_events≤{lim.get('max_blackboard_events')}")
+    lim = lossy.get("limits") or {}
+    lines.append(
+        f"- Limits: status_updates≤{lim.get('max_status_updates')} blackboard_events≤{lim.get('max_blackboard_events')}"
+    )
     lines.append("")
 
     lines.append("## Scan Stats")
-    ms = (scan.get("mcp_memory") or {})
-    bs = (scan.get("blackboard") or {})
+    ms = scan.get("mcp_memory") or {}
+    bs = scan.get("blackboard") or {}
     lines.append(
         "- MCP memory: total_entries={total_entries} day_entries={day_entries} day_status_updates={day_status_updates}".format(
-            **{k: ms.get(k) for k in ("total_entries", "day_entries", "day_status_updates")}
+            **{
+                k: ms.get(k)
+                for k in ("total_entries", "day_entries", "day_status_updates")
+            }
         )
     )
     lines.append(
         "- Blackboard: total_entries={total_entries} day_entries={day_entries} day_high_signal={day_high_signal}".format(
-            **{k: bs.get(k) for k in ("total_entries", "day_entries", "day_high_signal")}
+            **{
+                k: bs.get(k)
+                for k in ("total_entries", "day_entries", "day_high_signal")
+            }
         )
     )
     phase_counts = bs.get("phase_counts") or {}
@@ -263,32 +276,38 @@ def render_markdown(rollup: dict[str, Any]) -> str:
     lines.append("")
 
     lines.append("## Next step (Bronze → Cold Bronze → Hot Silver)")
-    lines.append("- Freeze *inputs* (or their daily snapshots) into Cold Bronze with hash receipts.")
-    lines.append("- Use this rollup as the curated bridge: Cold Bronze is tamper-evident storage; Hot Silver is reusable narrative.")
+    lines.append(
+        "- Freeze *inputs* (or their daily snapshots) into Cold Bronze with hash receipts."
+    )
+    lines.append(
+        "- Use this rollup as the curated bridge: Cold Bronze is tamper-evident storage; Hot Silver is reusable narrative."
+    )
     lines.append("")
 
     return "\n".join(lines)
 
 
-def _append_status_update(memory_path: Path, *, topic: str, summary: dict[str, Any], sources: list[str]) -> None:
-    memory_path.parent.mkdir(parents=True, exist_ok=True)
-    entry = {
-        "type": "status_update",
-        "ts": _now_z(),
-        "topic": str(topic),
-        "summary": summary,
-        "sources": [str(s) for s in sources if str(s).strip()],
-    }
-    with memory_path.open("a", encoding="utf-8") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+def _append_status_update(
+    memory_path: Path, *, topic: str, summary: dict[str, Any], sources: list[str]
+) -> None:
+    raise RuntimeError(
+        "JSONL MCP memory writes are banned. Store status updates into the SSOT sqlite instead."
+    )
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="P6 Bronze progressive rollup (bounded, non-destructive)")
+    ap = argparse.ArgumentParser(
+        description="P6 Bronze progressive rollup (bounded, non-destructive)"
+    )
     ap.add_argument("--day", default="", help="YYYY-MM-DD (UTC). Default: today (UTC).")
     ap.add_argument("--repo-root", default=".")
-    ap.add_argument("--memory", default="hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl")
-    ap.add_argument("--blackboard", default="hfo_hot_obsidian/hot_obsidian_blackboard.jsonl")
+    ap.add_argument(
+        "--memory",
+        default="hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl",
+    )
+    ap.add_argument(
+        "--blackboard", default="hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
+    )
     ap.add_argument(
         "--out-dir",
         default="hfo_hot_obsidian/silver/3_resources/reports/rollups/daily",
@@ -296,7 +315,11 @@ def main(argv: list[str]) -> int:
     )
     ap.add_argument("--max-status-updates", type=int, default=40)
     ap.add_argument("--max-blackboard-events", type=int, default=40)
-    ap.add_argument("--write-memory", action="store_true", help="Append a small status_update proof entry to mcp_memory.jsonl")
+    ap.add_argument(
+        "--write-memory",
+        action="store_true",
+        help="DEPRECATED: writes to JSONL are banned; this now writes the proof entry into SSOT sqlite.",
+    )
     args = ap.parse_args(argv)
 
     repo_root = Path(args.repo_root).resolve()
@@ -308,7 +331,10 @@ def main(argv: list[str]) -> int:
     memory_path = (repo_root / args.memory).resolve()
     blackboard_path = (repo_root / args.blackboard).resolve()
 
-    limits = ScanLimits(max_status_updates=max(0, args.max_status_updates), max_blackboard_events=max(0, args.max_blackboard_events))
+    limits = ScanLimits(
+        max_status_updates=max(0, args.max_status_updates),
+        max_blackboard_events=max(0, args.max_blackboard_events),
+    )
 
     rollup = build_bronze_rollup(
         iso_day=iso_day,
@@ -328,29 +354,51 @@ def main(argv: list[str]) -> int:
 
     artifact_dir = repo_root / "artifacts" / "rollups" / "bronze_daily"
     artifact_dir.mkdir(parents=True, exist_ok=True)
-    artifact_json = artifact_dir / f"bronze_rollup_{iso_day.replace('-', '')}_{_sha256_text(md)[:12]}.json"
-    artifact_json.write_text(json.dumps(rollup, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    artifact_json = (
+        artifact_dir
+        / f"bronze_rollup_{iso_day.replace('-', '')}_{_sha256_text(md)[:12]}.json"
+    )
+    artifact_json.write_text(
+        json.dumps(rollup, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
 
     print(str(out_path))
     print(str(artifact_json))
 
     if args.write_memory:
-        _append_status_update(
-            memory_path,
-            topic=f"p6_bronze_progressive_rollup_{iso_day}",
-            summary={
+        # SSOT proof write (replaces legacy JSONL append).
+        import asyncio
+
+        from hfo_ssot_status_update import store_status_update
+
+        payload = {
+            "type": "status_update",
+            "ts": _now_z(),
+            "topic": f"p6_bronze_progressive_rollup_{iso_day}",
+            "summary": {
                 "rollup_markdown": str(out_path.relative_to(repo_root)),
                 "rollup_artifact": str(artifact_json.relative_to(repo_root)),
                 "day": iso_day,
             },
-            sources=[
+            "sources": [
                 "scripts/p6_bronze_progressive_rollup.py",
                 str(out_path.relative_to(repo_root)),
                 str(artifact_json.relative_to(repo_root)),
-                "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl",
                 "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl",
             ],
+        }
+
+        ok, msg = asyncio.run(
+            store_status_update(
+                topic=payload["topic"],
+                payload=payload,
+                tags=["gen88_v4", "ssot", "status_update", "p6"],
+                metadata={"source": "scripts/p6_bronze_progressive_rollup.py"},
+                dry_run=False,
+            )
         )
+        if not ok:
+            print(f"[rollup] warn: SSOT status_update write failed: {msg}")
 
     return 0
 

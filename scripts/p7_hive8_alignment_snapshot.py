@@ -5,7 +5,10 @@
 
 Purpose:
 - Capture a small, repeatable snapshot of the current hub surface area.
-- Append that snapshot to MCP memory JSONL for diffing over time.
+- Store that snapshot into the blessed Gen88 v4 SSOT (doobidoo sqlite_vec).
+
+Policy:
+- JSONL MCP memory ledgers (e.g. mcp_memory.jsonl) are legacy and must not be written.
 
 This is intentionally non-blocking: it logs observations and unknowns without
 requiring the "ideal" to be fully formalized.
@@ -13,25 +16,25 @@ requiring the "ideal" to be fully formalized.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import subprocess
+from argparse import ArgumentParser
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from hfo_ssot_status_update import store_status_update
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_MEMORY_PATH = (
-    REPO_ROOT / "hfo_hot_obsidian" / "bronze" / "3_resources" / "memory" / "mcp_memory.jsonl"
-)
 
 
 @dataclass(frozen=True)
 class SnapshotConfig:
     topic: str
-    memory_path: Path
+    dry_run: bool
 
 
 def _utc_now_iso() -> str:
@@ -101,7 +104,9 @@ def build_snapshot(config: SnapshotConfig) -> dict[str, Any]:
                 "command": t.get("command"),
                 "isBackground": t.get("isBackground"),
                 "group": t.get("group"),
-                "runOn": (t.get("runOptions") or {}).get("runOn") if isinstance(t.get("runOptions"), dict) else None,
+                "runOn": (t.get("runOptions") or {}).get("runOn")
+                if isinstance(t.get("runOptions"), dict)
+                else None,
             }
         )
 
@@ -109,9 +114,26 @@ def build_snapshot(config: SnapshotConfig) -> dict[str, Any]:
     if isinstance(pointers, dict) and isinstance(pointers.get("paths"), dict):
         pointer_paths = pointers["paths"]
 
-    blackboard_rel = pointer_paths.get("blackboard") if isinstance(pointer_paths.get("blackboard"), str) else None
-    mcp_memory_rel = pointer_paths.get("mcp_memory") if isinstance(pointer_paths.get("mcp_memory"), str) else None
-    duckdb_unified_rel = pointer_paths.get("duckdb_unified") if isinstance(pointer_paths.get("duckdb_unified"), str) else None
+    blackboard_rel = (
+        pointer_paths.get("blackboard")
+        if isinstance(pointer_paths.get("blackboard"), str)
+        else None
+    )
+    mcp_memory_rel = (
+        pointer_paths.get("mcp_memory")
+        if isinstance(pointer_paths.get("mcp_memory"), str)
+        else None
+    )
+    mcp_memory_ssot_sqlite_rel = (
+        pointer_paths.get("mcp_memory_ssot_sqlite")
+        if isinstance(pointer_paths.get("mcp_memory_ssot_sqlite"), str)
+        else None
+    )
+    duckdb_unified_rel = (
+        pointer_paths.get("duckdb_unified")
+        if isinstance(pointer_paths.get("duckdb_unified"), str)
+        else None
+    )
 
     observed: dict[str, Any] = {
         "repo": {
@@ -119,10 +141,7 @@ def build_snapshot(config: SnapshotConfig) -> dict[str, Any]:
             "head": _run(["git", "rev-parse", "HEAD"]),
             "status_porcelain": _run(["git", "status", "--porcelain"]),
         },
-        "hub_files": [
-            _file_meta(p)
-            for p in hub_files
-        ],
+        "hub_files": [_file_meta(p) for p in hub_files],
         "governance": [
             _file_meta(agents_path),
             _file_meta(root_governance_path),
@@ -130,14 +149,14 @@ def build_snapshot(config: SnapshotConfig) -> dict[str, Any]:
         "contracts": {
             "dir": _safe_rel(contracts_dir),
             "zod_files": sorted(
-                _safe_rel(p)
-                for p in contracts_dir.glob("*.zod.ts")
-                if p.is_file()
+                _safe_rel(p) for p in contracts_dir.glob("*.zod.ts") if p.is_file()
             ),
         },
         "ports_python": {
             "dir": _safe_rel(ports_dir),
-            "files": sorted(_safe_rel(p) for p in ports_dir.glob("*.py") if p.is_file()) if ports_dir.exists() else [],
+            "files": sorted(_safe_rel(p) for p in ports_dir.glob("*.py") if p.is_file())
+            if ports_dir.exists()
+            else [],
         },
         "pointers": {
             "path": _safe_rel(pointers_path),
@@ -150,9 +169,18 @@ def build_snapshot(config: SnapshotConfig) -> dict[str, Any]:
             "tasks": task_summaries,
         },
         "key_artifacts": {
-            "blackboard": _file_meta(REPO_ROOT / blackboard_rel) if blackboard_rel else None,
-            "mcp_memory": _file_meta(REPO_ROOT / mcp_memory_rel) if mcp_memory_rel else None,
-            "duckdb_unified": _file_meta(REPO_ROOT / duckdb_unified_rel) if duckdb_unified_rel else None,
+            "blackboard": _file_meta(REPO_ROOT / blackboard_rel)
+            if blackboard_rel
+            else None,
+            "mcp_memory_legacy_jsonl": _file_meta(REPO_ROOT / mcp_memory_rel)
+            if mcp_memory_rel
+            else None,
+            "mcp_memory_ssot_sqlite": _file_meta(REPO_ROOT / mcp_memory_ssot_sqlite_rel)
+            if mcp_memory_ssot_sqlite_rel
+            else None,
+            "duckdb_unified": _file_meta(REPO_ROOT / duckdb_unified_rel)
+            if duckdb_unified_rel
+            else None,
         },
     }
 
@@ -185,26 +213,39 @@ def build_snapshot(config: SnapshotConfig) -> dict[str, Any]:
             "AGENTS.md",
             "ROOT_GOVERNANCE.md",
             "contracts/",
-            "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl",
+            "artifacts/mcp_memory_service/gen88_v4/hfo_gen88_v4_ssot_sqlite_vec_2026_01_26.db",
         ],
     }
 
     return entry
 
 
-def append_jsonl(path: Path, obj: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as f:
-        f.write(json.dumps(obj, ensure_ascii=False) + "\n")
-
-
 def main() -> int:
     topic = os.environ.get("HFO_TOPIC") or "p7_hive8_alignment_snapshot"
-    memory_path = Path(os.environ.get("HFO_MCP_MEMORY", str(DEFAULT_MEMORY_PATH)))
+    dry_run = str(os.environ.get("HFO_SNAPSHOT_DRY_RUN", "false")).lower() in (
+        "1",
+        "true",
+        "yes",
+    )
 
-    entry = build_snapshot(SnapshotConfig(topic=topic, memory_path=memory_path))
-    append_jsonl(memory_path, entry)
-    print(f"Appended snapshot to {memory_path}")
+    ap = ArgumentParser(add_help=False)
+    ap.add_argument("--dry-run", action="store_true")
+    args, _ = ap.parse_known_args()
+    if args.dry_run:
+        dry_run = True
+
+    entry = build_snapshot(SnapshotConfig(topic=topic, dry_run=dry_run))
+
+    ok, msg = asyncio.run(
+        store_status_update(
+            topic=topic,
+            payload=entry,
+            tags=["gen88_v4", "ssot", "snapshot", "p7"],
+            metadata={"source": "scripts/p7_hive8_alignment_snapshot.py"},
+            dry_run=dry_run,
+        )
+    )
+    print(f"Stored snapshot to SSOT ok={ok} msg={msg}")
     return 0
 
 
