@@ -1,0 +1,13 @@
+{
+  "stub": true,
+  "tool": "brave-search",
+  "query": "Test stub-tools success path: should emit grounded baton without network",
+  "results": [
+    {
+      "url": "https://example.com/stub-1"
+    },
+    {
+      "url": "https://example.com/stub-2"
+    }
+  ]
+}

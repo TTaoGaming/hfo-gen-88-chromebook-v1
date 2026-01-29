@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T214040Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "80271718a8314f45b18da07f9c9349f4",
+  "note": "Restored explicit Confidence+BFT (LOW/MED/HIGH/BFT) doctrine section in v8.8 compendium; verified compendium gates green.",
+  "preflight_receipt_id": "68779bd22ee1",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T214040Z__P4__v8_8_confidence_bft_restore__80271718a8314f45b18da07f9c9349f4.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T214040Z__P4__v8_8_confidence_bft_restore__80271718a8314f45b18da07f9c9349f4.json"
+}

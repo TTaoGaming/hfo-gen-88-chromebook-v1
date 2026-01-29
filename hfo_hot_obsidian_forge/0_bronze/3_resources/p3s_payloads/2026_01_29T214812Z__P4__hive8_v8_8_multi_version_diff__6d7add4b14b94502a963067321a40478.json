@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T214812Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "6d7add4b14b94502a963067321a40478",
+  "note": "Diff v8.8 vs v8.5/v5/v1 for missing major doctrine",
+  "preflight_receipt_id": "21704d64d04e",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T214812Z__P4__hive8_v8_8_multi_version_diff__6d7add4b14b94502a963067321a40478.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T214812Z__P4__hive8_v8_8_multi_version_diff__6d7add4b14b94502a963067321a40478.json"
+}

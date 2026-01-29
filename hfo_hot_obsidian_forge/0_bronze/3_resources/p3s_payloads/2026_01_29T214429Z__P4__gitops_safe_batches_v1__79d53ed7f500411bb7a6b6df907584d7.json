@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T214429Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "79d53ed7f500411bb7a6b6df907584d7",
+  "note": "Run GitOps in safe batches: plan→commit (no-push), then push-end once gates are green; include new forge-first/blessed pointer changes and newly added forge legacy imports.",
+  "preflight_receipt_id": "a9b4312af5bf",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T214429Z__P4__gitops_safe_batches_v1__79d53ed7f500411bb7a6b6df907584d7.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T214429Z__P4__gitops_safe_batches_v1__79d53ed7f500411bb7a6b6df907584d7.json"
+}

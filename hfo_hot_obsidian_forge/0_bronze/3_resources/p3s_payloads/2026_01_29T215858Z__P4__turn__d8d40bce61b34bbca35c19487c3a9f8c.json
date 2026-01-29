@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T215858Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "d8d40bce61b34bbca35c19487c3a9f8c",
+  "note": "p4 basic payoff + proof",
+  "preflight_receipt_id": "7a5052927999",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T215858Z__P4__turn__d8d40bce61b34bbca35c19487c3a9f8c.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T215858Z__P4__turn__d8d40bce61b34bbca35c19487c3a9f8c.json"
+}

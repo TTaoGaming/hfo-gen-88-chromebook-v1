@@ -1,0 +1,13 @@
+{
+  "stub": true,
+  "tool": "brave-search",
+  "query": "verify baton output includes query + raw payload artifacts",
+  "results": [
+    {
+      "url": "https://example.com/stub-1"
+    },
+    {
+      "url": "https://example.com/stub-2"
+    }
+  ]
+}

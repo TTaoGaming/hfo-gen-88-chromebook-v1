@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_29T214245Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "cb6793a651e7457bbb25105c1d2b81d1",
+  "note": "Make blessed + forge-first first-class: move P3S/P4 payload root into hot forge; stop hardcoding hfo_pointers.json in P3S; add migration audit + report.",
+  "preflight_receipt_id": "e6239f3dd16f",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T214245Z__P4__forge_consolidation_blessed_first_class_v1__cb6793a651e7457bbb25105c1d2b81d1.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_29T214245Z__P4__forge_consolidation_blessed_first_class_v1__cb6793a651e7457bbb25105c1d2b81d1.json"
+}
