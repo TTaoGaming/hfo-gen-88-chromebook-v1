@@ -1,0 +1,13 @@
+// Medallion: Bronze | Mutation: 0% | HIVE: V
+// Minimal markdownlint config for low-friction, high-signal CI.
+{
+    "config": {
+        "default": true,
+        // Line length is noisy in docs-heavy repos.
+        "MD013": false,
+        // Duplicate headings can happen in templates/sections.
+        "MD024": false,
+        // Allow inline HTML (common with Mermaid/Obsidian embeds).
+        "MD033": false
+    }
+}
