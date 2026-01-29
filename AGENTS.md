@@ -1,70 +1,37 @@
-# Medallion: Bronze | Mutation: 0% | HIVE: V
+---
+medallion_layer: bronze
+mutation_score: 0
+hive: V
+---
 
-# HFO Agent Context (Short)
+# HFO Agent Context (Gen88 v5 — Anchors)
 
-## Mission Continuity (Alias Truth)
+This file is intentionally short. It is the stable “start here” for Gen88 v5.
 
-Alpha (MCP Gateway Hub) and Omega (Gen4 Pointer Stack) are a single continuous mission across 2025–present, evolving under different aliases.
+## Canonical roots
 
-## Strict Interfaces + Decoupling (Swarm Safety)
+- Pointers (single source of truth for paths): [hfo_pointers.json](hfo_pointers.json)
+- Root hub shim entrypoint: [hfo_mcp_gateway_hub.py](hfo_mcp_gateway_hub.py)
+- Hub CLI entrypoint: [hfo_hub.py](hfo_hub.py)
+- Forge hot blackboard (resolved via pointers): [hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl](hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl)
+- Omega Gen7 unified project root (resolved via pointers): [hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified](hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified)
 
-- All ports and hubs must expose strict interfaces and fail-closed boundaries.
-- No hidden cross-port coupling. All cross-port data must pass explicit schemas/contracts.
-- Anti-fragile posture: any single agent failure must not crash the system.
+## Operator workflow (GitHub Copilot)
 
-## Root Hub Shim (Stable Entry)
+- Copilot governance: [.github/copilot-instructions.md](.github/copilot-instructions.md)
+- P4 “Basic” agent mode: [.github/agents/hfo-basic-p4.agent.md](.github/agents/hfo-basic-p4.agent.md)
 
-- Root hub entrypoint: hfo_mcp_gateway_hub.py delegates to the current Alpha project implementation.
-- This keeps alias/version changes isolated behind a stable root interface.
+## Canonical doctrine anchors
 
-## Memory Stack (Port 6: Kraken Keeper)
+- Hive8 Compendium v8.6: [hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_6_2026_01_29.md](hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_6_2026_01_29.md)
+- Hive8 Compendium v8.7: [hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_7_2026_01_29.md](hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_7_2026_01_29.md)
 
-Gen88 v4 consolidates around a **single write-path SSOT**:
+## Hot Bronze consolidation index
 
-1) doobidoo (`mcp-memory-service`) sqlite_vec SSOT (blessed write path)
-2) Obsidian blackboards (stigmergy/telemetry JSONL; coordination + receipts)
-3) Derived views (rebuildable from SSOT): Shodh index, DuckDB exports/analytics, legacy JSONL caches
+- “What stays hot” and where everything else goes: [hfo_hot_obsidian_forge/0_bronze/2_resources/reports/consolidation/HFO_HOT_BRONZE_CONSOLIDATION_INDEX_GEN88_V5_V1_2026_01_29.md](hfo_hot_obsidian_forge/0_bronze/2_resources/reports/consolidation/HFO_HOT_BRONZE_CONSOLIDATION_INDEX_GEN88_V5_V1_2026_01_29.md)
 
-Use `port6_assimilate` in the gateway hub to consolidate the operational tails (telemetry + any enabled legacy caches) in one call.
+## Archive note
 
-## Rollup Reference
+The previous root agent context was archived at:
 
-Full historical context is archived at:
-
-- hfo_cold_obsidian/bronze/3_resources/reports/AGENTS_ROLLUP_2026_01_18.md
-
-## GitHub Agent Modes
-
-See the agent mode index at `.github/agents/README.md`.
-
-Active modes (only these are kept in `.github/agents/`):
-
-- `.github/agents/hfo-basic-p4.agent.md`
-- `.github/agents/hfo-gen88-p3s.agent.md`
-- `.github/agents/hfo_hive_8_agent_gen_88_v_4.agent.md`
-
-Archived historical modes live under `hfo_hot_obsidian_forge/1_silver/2_resources/agents_archive/`.
-
-## HFO LifeOS Vault (8 Areas + PARA)
-
-Consolidation target: a lean Obsidian vault for an 8-part HFO LifeOS energy/task system.
-
-Structure:
-
-- 00-inbox, 01-projects, 02-areas (8 areas), 03-resources (templates), 04-archive (short stubs only)
-
-Area mapping (snake_case):
-
-- p0_health, p1_work, p2_learning, p3_admin, p4_money, p5_home, p6_people, p7_play_meaning
-
-Templates live in:
-
-- /mnt/chromeos/GoogleDrive/MyDrive/Obsidian2025/03-resources
-
-Vault location (authoritative):
-
-- /mnt/chromeos/GoogleDrive/MyDrive/Obsidian2025
-
-Symlink note:
-
-- A workspace symlink named Obsidian2025 exists at repo root for local use, but some agents cannot follow symlinks. When interacting with the vault, prefer the absolute Drive path above.
+- [hfo_hot_obsidian_forge/0_bronze/3_archive/root_docs/AGENTS__ARCHIVED_PRE_GEN88V5__2026_01_29.md](hfo_hot_obsidian_forge/0_bronze/3_archive/root_docs/AGENTS__ARCHIVED_PRE_GEN88V5__2026_01_29.md)

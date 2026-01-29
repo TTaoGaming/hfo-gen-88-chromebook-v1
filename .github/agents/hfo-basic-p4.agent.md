@@ -45,3 +45,8 @@ Notes:
 - The wrapper is fail-closed and pointer-driven.
 - Payload root is resolved via `hfo_pointers.json` (`p3s_payload_root`).
 - Signals are signed CloudEvents appended to the pointer-blessed blackboard.
+
+## Gen88 v5 anchor discipline
+
+- Keep “hot” work anchored via [AGENTS.md](../../AGENTS.md) and the Hot Bronze consolidation index.
+- Prefer moving legacy/stale docs into forge (`hfo_hot_obsidian_forge/**`) rather than expanding root hot bronze surface area.
