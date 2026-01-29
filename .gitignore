@@ -141,8 +141,7 @@ hfo_cold_obsidian/bronze/4_archive/obsidian2025_moved/
 
 # Embedded vendor repos (keep local; avoid accidental submodules)
 hfo_hot_obsidian/bronze/1_projects/hfo_omega_assimillation_touchscreen_targets/vendor/
-hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/vendor/
-hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/vendor/
+hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified/app/vendor/
 hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/vendor/
 
 # Generated HTML artifacts (often >500KB; blocked by large-file gate)

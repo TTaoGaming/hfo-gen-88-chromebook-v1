@@ -4,8 +4,8 @@
   "description": "HFO Gen 88 Omega Workspace - Chromebook V-1",
   "scripts": {
     "start": "python3 scripts/hfo_threaded_server.py",
-    "start:omega": "python3 scripts/hfo_threaded_server.py & sleep 1 && xdg-open http://localhost:8889/active_hfo_omega_entrypoint.html",
-    "launch": "npm run p5:preflight && xdg-open http://localhost:8889/active_hfo_omega_entrypoint.html",
+    "start:omega": "python3 scripts/hfo_threaded_server.py & sleep 1 && bash scripts/open_host_url.sh http://localhost:8889/active_hfo_omega_entrypoint.html",
+    "launch": "npm run p5:preflight && bash scripts/open_host_url.sh http://localhost:8889/active_hfo_omega_entrypoint.html",
     "hfo:health": "python3 scripts/hfo_healthcheck.py --mode=soft --format=human",
     "hfo:health:strict": "python3 scripts/hfo_healthcheck.py --mode=hard --format=human",
     "hfo:structure": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python scripts/hfo_structure_validator.py",
@@ -63,6 +63,7 @@
     "test:fast": "npm run test:omega:fast:git",
     "test:e2e": "npm run test:omega:e2e",
     "test:contracts": "HUSKY=0 mocha -r ts-node/register contracts/__tests__/**/*.test.ts",
+    "verify:hive8:cards": "node scripts/verify_hive8_mtg_card_mappings.mjs",
     "cleanup:omega": "bash scripts/omega_gen5_cleanup.sh",
     "prepare": "husky"
   },
