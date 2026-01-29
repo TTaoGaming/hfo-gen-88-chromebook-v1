@@ -51,8 +51,16 @@ HALLUCINATION_EMOJIS=(
 )
 
 for emoji in "${HALLUCINATION_EMOJIS[@]}"; do
-    # Scan all user files recursively in hfo_hot_obsidian and other relevant dirs.
-    H_FLAGS=$(find hfo_hot_obsidian hfo_cold_obsidian . -maxdepth 6 \( -name "*.html" -o -name "*.py" -o -name "*.js" -o -name "*.md" -o -name "*.jsonl" \) | grep -vE "node_modules|\.git|\.stryker|\.venv" | xargs grep -l "$emoji" 2>/dev/null)
+    # Scan tracked files only (avoid OOM from large derived artifacts / storehouse JSONLs).
+    H_FLAGS=$(git grep -l "$emoji" -- \
+        ":(exclude)node_modules/**" \
+        ":(exclude).git/**" \
+        ":(exclude).venv/**" \
+        ":(exclude).stryker/**" \
+        ":(exclude)artifacts/**" \
+        ":(exclude)hfo_hot_obsidian/bronze/3_resources/memory_fragments_collection/**" \
+        ":(exclude)hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/**" \
+        "*.html" "*.py" "*.js" "*.md" "*.jsonl" 2>/dev/null || true)
     if [ ! -z "$H_FLAGS" ]; then
         echo "🚨 [GESTURE-HALLUCINATION]: Forbidden emoji '$emoji' detected in the following files:"
         echo "$H_FLAGS"
