@@ -22,7 +22,6 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-
 DEFAULT_PATTERNS = ("hfo_hot_obsidian/", "hfo_cold_obsidian/")
 DEFAULT_EXCLUDE_DIRS = {
     ".git",
