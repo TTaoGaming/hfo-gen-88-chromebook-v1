@@ -15,7 +15,7 @@ created_utc: 2026-01-27
 
 ## Gen88 MTG Narrative Mapping (3 Slivers + 1 Equipment)
 
-- Canonical mapping (Gen88 v2): contracts/hfo_mtg_port_card_mappings.v2.json
+- Canonical mapping (Gen88 v5): contracts/hfo_mtg_port_card_mappings.v5.json
 
 | Port | Commander        | Mosaic Domain                                 | Sliver (Static)      | Sliver (Trigger)   | Sliver (Activated) | Equipment (Non-creature)  |
 | ---- | ---------------- | --------------------------------------------- | -------------------- | ------------------ | ------------------ | ------------------------- |
@@ -26,7 +26,7 @@ created_utc: 2026-01-27
 | P4   | Red Regnant      | Red team / contestation / destructive probing | Venom Sliver         | Thorncaster Sliver | Necrotic Sliver    | Blade of the Bloodchief   |
 | P5   | Pyre Praetorian  | Blue team / defense-in-depth / recovery       | Sliver Hivelord      | Pulmonic Sliver    | Basal Sliver       | Sword of Light and Shadow |
 | P6   | Kraken Keeper    | AAR / learning / assimilation                 | Dregscape Sliver     | Lazotep Sliver     | Homing Sliver      | Sword of Fire and Ice     |
-| P7   | Spider Sovereign | C2 / navigate / hunt heuristics               | Sliver Legion        | Brood Sliver       | Sliver Overlord    | Lightning Greaves         |
+| P7   | Spider Sovereign | C2 / navigate / hunt heuristics               | Sliver Legion        | Regal Sliver       | Sliver Overlord    | Lightning Greaves         |
 
 ## Canonical Source of Commander Names
 

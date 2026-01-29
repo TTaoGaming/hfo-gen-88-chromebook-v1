@@ -23,6 +23,7 @@ This is a **narrative mapping**: MTG card names are used as compact mnemonic lab
 
 ## Canonical Mappings (SSOT)
 - contracts/hfo_mtg_port_card_mappings.v2.json
+- contracts/hfo_mtg_port_card_mappings.v5.json
 
 ## Mapping Table (Per Port)
 
@@ -35,7 +36,7 @@ This is a **narrative mapping**: MTG card names are used as compact mnemonic lab
 | P4 | Red Regnant | Red team / contestation / destructive probing | Venom Sliver | Thorncaster Sliver | Necrotic Sliver | Blade of the Bloodchief |
 | P5 | Pyre Praetorian | Blue team / defense-in-depth / recovery | Sliver Hivelord | Pulmonic Sliver | Basal Sliver | Sword of Light and Shadow |
 | P6 | Kraken Keeper | AAR / learning / assimilation | Dregscape Sliver | Lazotep Sliver | Homing Sliver | Sword of Fire and Ice |
-| P7 | Spider Sovereign | C2 / navigate / hunt heuristics | Sliver Legion | Brood Sliver | Sliver Overlord | Lightning Greaves |
+| P7 | Spider Sovereign | C2 / navigate / hunt heuristics | Sliver Legion | Regal Sliver | Sliver Overlord | Lightning Greaves |
 
 ## Equipment Oracle References (4th-Slot Constraint)
 Infiltration Lens; Goldvein Pick; Illusionist’s Bracers; Blade of Selves; Blade of the Bloodchief; Sword of Light and Shadow; Sword of Fire and Ice; Lightning Greaves.

@@ -230,6 +230,22 @@ def check_guardrails(
             f"MEMORY_FILE_PATH is set (ok if server disabled): {legacy_mem_path}"
         )
 
+    # 5) Legacy JSONL must be read-only (hard guardrail).
+    legacy_pointer_rel = get_pointer("paths.mcp_memory", None)
+    legacy_default_rel = "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl"
+    legacy_rel = (
+        legacy_pointer_rel
+        if isinstance(legacy_pointer_rel, str) and legacy_pointer_rel
+        else legacy_default_rel
+    )
+    legacy_path = (repo_root / legacy_rel).resolve()
+    if legacy_path.exists() and os.access(legacy_path, os.W_OK):
+        errors.append(
+            "Legacy MCP memory JSONL must be read-only (SSOT-only policy). "
+            f"Writable path detected: {legacy_path}. "
+            "Fix: chmod a-w <path> (or chmod 444 <path>)."
+        )
+
     ok = len(errors) == 0
 
     return {

@@ -50,7 +50,7 @@ test("HIVE8 golden master: strict format + known-answer tables", async () => {
   const mtgMapPath = path.join(
     repoRoot,
     "contracts",
-    "hfo_mtg_port_card_mappings.v2.json",
+    "hfo_mtg_port_card_mappings.v5.json",
   );
   const mtgMap = JSON.parse(fs.readFileSync(mtgMapPath, "utf-8"));
   const p0 = mtgMap?.ports?.P0 ?? {};
@@ -124,7 +124,7 @@ test("HIVE8 golden master: strict format + known-answer tables", async () => {
   expect(meta).toContain("| O | P0 | OBSERVE | ISR |");
   expect(meta).toContain("| B | P1 | BRIDGE | Data Fabric |");
 
-  // Known-answer: MTG mapping is deterministic from contracts/hfo_mtg_port_card_mappings.v2.json.
+  // Known-answer: MTG mapping is deterministic from contracts/hfo_mtg_port_card_mappings.v5.json.
   expect(meta).toContain("### 3×Sliver + 1×Equipment Mapping (per Port)");
   if (p0SliverStatic) expect(meta).toContain(p0SliverStatic);
   if (p0SliverTrigger) expect(meta).toContain(p0SliverTrigger);
