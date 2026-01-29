@@ -16,6 +16,12 @@ import process from 'node:process';
 
 import { JSDOM } from 'jsdom';
 
+import {
+  loadCompendiumManifest,
+  resolveCanonicalEntry,
+  resolveFamily,
+} from './hive8_compendium_manifest.mjs';
+
 /** @type {import('mermaid').default | null} */
 let mermaidSingleton = null;
 
@@ -107,10 +113,21 @@ async function main(argv) {
     }
 
     if (files.length === 0) {
-        // Allow running as a general-purpose gate even when no files are passed.
+        // When run as a general-purpose gate (e.g., CI), lint the canonical
+        // Hive8 compendium by default so this command is not a no-op.
         // In lint-staged, files are always provided.
-        console.log('OK: mermaid lint skipped (no files provided)');
-        return 0;
+        try {
+          const manifest = loadCompendiumManifest();
+          const family = resolveFamily(manifest, manifest.defaults.canonical_family_id);
+          const canonical = resolveCanonicalEntry(family);
+          files.push(path.join(process.cwd(), canonical.path));
+        } catch (err) {
+          console.error(
+            '[mermaid-lint] Error: no files provided and failed to resolve canonical compendium from manifest.',
+          );
+          console.error(err?.message ? String(err.message) : String(err));
+          return 1;
+        }
     }
 
     /** @type {{file:string, blockIndex?:number, message:string}[]} */
@@ -171,6 +188,8 @@ async function main(argv) {
         console.error('\nFix Mermaid parse errors before committing.');
         return 1;
     }
+
+    console.log(`OK: mermaid lint passed (${files.length} file(s) checked)`);
 
     return 0;
 }

@@ -2,8 +2,8 @@
 schema_id: hfo.hive8.compendium
 schema_version: 4
 version: v8.8
-status: canonical
-doc_id: hfo.hive8.gen88.v5.legendary_commanders_3_plus_1_compendium_bluf_8x8_meta
+status: promoted
+doc_id: hfo.grimoire.compendium.gen88.v8_8
 
 dates:
   created_utc: "2026-01-29"
@@ -21,13 +21,18 @@ promotion:
 
 consistency:
   manifest: contracts/hfo_hive8_compendium_manifest.v1.json
-  family_id: hfo.hive8.gen88.v5.legendary_commanders_3_plus_1_compendium_bluf_8x8_meta
+  family_id: hfo.grimoire.compendium.gen88
   supersedes: v8.5
   policy: "Canonical is manifest-resolved; superseded docs are informational and not gate-enforced by default."
 
 portability:
   goal: "single-file markdown (portable)"
   rule: "No http(s) URLs anywhere; no Markdown links in the portable body; any local links live only in 'Extra References (non-portable)'."
+
+crypto_receipt:
+  algorithm: sha256
+  receipt_json: artifacts/crypto_receipts/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_2026_01_29.receipt.json
+  receipt_sha256_file: artifacts/crypto_receipts/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_2026_01_29.sha256
 
 intent:
   primary:
@@ -82,7 +87,7 @@ operational_assumptions:
   - "Cross-port payloads validate or they do not cross (fail-closed)."
   - "Memory writes use the SSOT write-path only."
 ---
-# HFO HIVE8 GEN88 — Legendary Commanders 3+1 Compendium (V8.8, Portable, Full)
+# HFO Grimoire Compendium — Gen 88 (V8.8)
 
 This document is intentionally self-contained.
 
