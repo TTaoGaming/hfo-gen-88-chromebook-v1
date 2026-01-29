@@ -5,7 +5,7 @@
   "families": [
     {
       "family_id": "hfo.hive8.gen88.v5.legendary_commanders_3_plus_1_compendium_bluf_8x8_meta",
-      "canonical_version": "v8.6",
+      "canonical_version": "v8.8",
       "entries": [
         {
           "version": "v5",
@@ -54,8 +54,18 @@
         },
         {
           "version": "v8.6",
-          "status": "canonical",
+          "status": "superseded",
           "path": "hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_6_2026_01_29.md"
+        },
+        {
+          "version": "v8.7",
+          "status": "superseded",
+          "path": "hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_7_2026_01_29.md"
+        },
+        {
+          "version": "v8.8",
+          "status": "canonical",
+          "path": "hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_8_2026_01_29.md"
         }
       ]
     }

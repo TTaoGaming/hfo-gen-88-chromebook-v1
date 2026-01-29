@@ -6,24 +6,25 @@ HFO MCP Gateway Hub (Single Entry Path)
 - Logs to blackboard and DuckDB mission journal
 """
 
-import os
-import sys
-import json
 import datetime
 import hashlib
-import uuid
-import subprocess
+import json
+import os
 import re
-import urllib.request
+import shutil
+import subprocess
+import sys
 import urllib.error
 import urllib.parse
-import shutil
+import urllib.request
+import uuid
 import xml.etree.ElementTree as ET
+
 import duckdb
 import mcp.server.stdio
-from mcp.server import Server, NotificationOptions
-from mcp.server.models import InitializationOptions
 import mcp.types as types
+from mcp.server import NotificationOptions, Server
+from mcp.server.models import InitializationOptions
 
 try:
     from pathlib import Path
@@ -179,7 +180,7 @@ def _read_jsonl_tail(path: str, limit: int) -> list[dict]:
                 # If we have enough newlines for the requested tail, stop early.
                 if data.count(b"\n") >= (limit + 1):
                     break
-    except Exception as e:
+    except Exception:
         if os.environ.get("HFO_DEBUG_JSONL_TAIL") == "1":
             raise
         return []

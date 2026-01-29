@@ -14,8 +14,10 @@ To prevent "Root Pollution" across AI swarm agents, the root directory of the wo
 
 ### ✅ Authorized Root Directories
 
-- `hfo_cold_obsidian/`: Hardened source of truth (Read-Only context).
-- `hfo_hot_obsidian/`: Active integration and development layer.
+- `hfo_hot_obsidian_forge/`: Canonical active forge (Hot) — all current work lives here.
+- `hfo_cold_obsidian_forge/`: Canonical hardened forge (Cold) — hardened reference + receipts.
+- `hfo_hot_obsidian/`: Legacy compat root (drain-to-forge; avoid new writes).
+- `hfo_cold_obsidian/`: Legacy compat root (drain-to-forge; avoid new writes).
 - `hfo_cold_obsidian/bronze/4_archive/gen_88_cb_v2_archive_2026_01_18/`: Archived Gen 88 CB v2 SSOT snapshot (root copy prohibited).
 - `.github/`: Agent personas, steering instructions, and automation.
 - `.vscode/`: Workspace configuration.
@@ -51,7 +53,10 @@ All commits must pass `.pre-commit-config.yaml` checks. ROOT governance changes 
 
 ## 📓 Immutable Blackboard (Red Truth)
 
-The `.jsonl` blackboards (`hfo_hot_obsidian/hot_obsidian_blackboard.jsonl` and `hfo_cold_obsidian/cold_obsidian_blackboard.jsonl`) are **Immutable Append-Only Records**.
+The `.jsonl` blackboards are **Immutable Append-Only Records**.
+
+- Canonical (forge): `hfo_hot_obsidian_forge/.../blackboards/*` and `hfo_cold_obsidian_forge/.../blackboards/*`
+- Legacy compat shims (if present): `hfo_hot_obsidian/hot_obsidian_blackboard.jsonl` and `hfo_cold_obsidian/cold_obsidian_blackboard.jsonl`
 
 1. **No Editing/Deletion**: Deleting lines, fixing timestamps after the fact, or "cleaning" the blackboard is strictly forbidden.
 2. **Red Truth > Green Lie**: A detected 429, a BFT failure, or a BREACH must remain in the record forever.

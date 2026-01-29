@@ -20,7 +20,6 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-
 DEFAULT_BLACKBOARD_REL = "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
 DEFAULT_SECRET_REL = ".hfo_secret"
 DEFAULT_SECRET_FALLBACK = "HFO_DEFAULT_SECRET"

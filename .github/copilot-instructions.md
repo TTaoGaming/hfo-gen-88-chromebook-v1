@@ -1,6 +1,16 @@
 # Medallion: Bronze | Mutation: 0% | HIVE: V
 # 🧭 HFO Gen 88: AI Agent Steering & Governance
 
+## ✅ Gen88 v5 anchors (keep hot surface small)
+
+- Root context: [AGENTS.md](../AGENTS.md)
+- Hot Bronze consolidation index: [hfo_hot_obsidian_forge/0_bronze/2_resources/reports/consolidation/HFO_HOT_BRONZE_CONSOLIDATION_INDEX_GEN88_V5_V1_2026_01_29.md](../hfo_hot_obsidian_forge/0_bronze/2_resources/reports/consolidation/HFO_HOT_BRONZE_CONSOLIDATION_INDEX_GEN88_V5_V1_2026_01_29.md)
+- Pointer registry (working / path truth): [hfo_pointers.json](../hfo_pointers.json)
+- Pointer registry (blessed / stable): [hfo_pointers_blessed.json](../hfo_pointers_blessed.json)
+- Root hub shim entrypoint: [hfo_mcp_gateway_hub.py](../hfo_mcp_gateway_hub.py)
+- Omega Gen7 current project root: [hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified](../hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified)
+- P4 basic agent mode: [hfo-basic-p4.agent.md](agents/hfo-basic-p4.agent.md)
+
 ## 🏗️ Core Architecture: The Medallion Flow
 
 All development must follow the **Medallion Refinement Flow**. Do not bypass layers.
