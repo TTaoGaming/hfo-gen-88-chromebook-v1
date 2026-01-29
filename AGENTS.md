@@ -37,7 +37,13 @@ Full historical context is archived at:
 
 See the agent mode index at `.github/agents/README.md`.
 
-- Recommended proof-first mode: `.github/agents/hfo-proof-artifact.agent.md` (always emits a timestamped proof artifact + stigmergy)
+Active modes (only these are kept in `.github/agents/`):
+
+- `.github/agents/hfo-basic-p4.agent.md`
+- `.github/agents/hfo-gen88-p3s.agent.md`
+- `.github/agents/hfo_hive_8_agent_gen_88_v_4.agent.md`
+
+Archived historical modes live under `hfo_hot_obsidian_forge/1_silver/2_resources/agents_archive/`.
 
 ## HFO LifeOS Vault (8 Areas + PARA)
 

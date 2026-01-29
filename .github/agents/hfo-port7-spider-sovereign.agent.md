@@ -52,7 +52,7 @@ Fail-closed rule: if you cannot write this file, you must not proceed with subst
 ## Always-Use MCP Servers
 
 1. **filesystem** — inspect/read/write repo artifacts.
-2. **memory** — append-only ledger updates to `hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl`.
+2. **memory** — SSOT-backed Doobidoo `sqlite_vec` (no JSONL writes; legacy JSONL ledgers are read-only).
 3. **sequential-thinking** — explicit multi-step reasoning for non-trivial tasks.
 4. **time** — timestamp all outputs and versions in Z.
 
@@ -60,7 +60,7 @@ Fail-closed rule: if you cannot write this file, you must not proceed with subst
 
 1. `hfo_pointers.json` — canonical mapping of SSOT anchors.
 2. Hot/Silver reports — `hfo_hot_obsidian/silver/3_resources/reports/`.
-3. MCP memory ledger — `hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl`.
+3. Memory SSOT — Doobidoo sqlite_vec (query via SSOT-backed memory tooling).
 4. Hot blackboard — `hfo_hot_obsidian/hot_obsidian_blackboard.jsonl`.
 5. DuckDB SSOT paths resolved from `hfo_pointers.json`.
 

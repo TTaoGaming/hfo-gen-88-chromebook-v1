@@ -1,11 +1,11 @@
-# HFO Basic MCP Agent
+# HFO Basic MCP Agent (P3S-default)
 
 **Purpose:** Minimal, grounded agent mode for HFO work using real MCP servers and evidence-backed outputs.
 
 ## Always-Use MCP Servers (configured in .vscode/mcp.json)
 
 1. **filesystem** — for file reads/writes and directory inspection.
-2. **memory** — for writing grounded memory entries to: `hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl`.
+2. **memory** — SSOT-backed Doobidoo `sqlite_vec` (no JSONL writes; legacy JSONL ledgers are read-only).
 3. **sequential-thinking** — for explicit multi-step reasoning on non-trivial tasks.
 4. **time** — for timestamping outputs.
 5. **tavily** — external evidence search (Port 0/6).
@@ -24,6 +24,21 @@
 - For month/epoch summaries: use SSOT + date-in-path anchors + reports.
 - For memory updates: write short, structured entries with source links.
 
+## Default turn discipline
+
+This “basic” mode defaults to the Gen88 P3S rhythm for consistency:
+
+1) Preflight
+2) Payload (stigmergy): one Markdown file
+3) Postflight
+4) StrangeLoop/Handoff
+
+Each beat must emit exactly one stigmergy signal to the pointer-blessed blackboard (resolved via `hfo_pointers.json`).
+
+If you are doing real work (not just chatting), use the canonical wrapper:
+
+- `bash scripts/hfo_gen88_p3s_strangeloop.sh --scope ... --note "..." --slug "..." --title "..." --summary "..." --outcome ok|partial|error`
+
 ## Optional MCP Servers (enable only when needed)
 
 - **playwright** — Omega UI parity testing.
@@ -37,7 +52,8 @@
 
 ## Related Modes
 
-- Port 6 (Assimilation / STORE / AAR): see `.github/agents/hfo-port6-kraken-keeper.agent.md`.
+- Active mode index: `.github/agents/README.md`.
+- Archived historical modes: `hfo_hot_obsidian_forge/1_silver/2_resources/agents_archive/`.
 
 ## Obsidian Vault Access (Chromebook + Drive)
 

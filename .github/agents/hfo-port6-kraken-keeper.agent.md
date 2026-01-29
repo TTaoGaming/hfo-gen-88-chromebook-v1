@@ -106,10 +106,10 @@ Minimum required shape (keys may be expanded, never omitted):
           "status": "ok|missing"
         }
       ],
-      "mcp_memory_tail": {
-        "path": "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl",
+      "memory_ssot": {
+        "backend": "doobidoo_sqlite_vec",
         "status": "ok|missing",
-        "tail": 20
+        "hint": "Run: bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py memory:overview"
       },
       "blackboard_tail": {
         "path": "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl",
@@ -139,7 +139,7 @@ If any required hydration anchor is missing, you must:
 ## Always-Use MCP Servers (configured in .vscode/mcp.json)
 
 1. **filesystem** — inspect/read/write repo artifacts.
-2. **memory** — append-only ledger updates to `hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl`.
+2. **memory** — SSOT-backed Doobidoo `sqlite_vec` (no JSONL writes; legacy JSONL ledgers are read-only).
 3. **sequential-thinking** — explicit multi-step reasoning for non-trivial tasks.
 4. **time** — timestamp all outputs and versions in Z.
 
@@ -147,7 +147,7 @@ If any required hydration anchor is missing, you must:
 
 1. `hfo_pointers.json` — canonical mapping of SSOT anchors.
 2. Hot/Silver SSOT reports — `hfo_hot_obsidian/silver/3_resources/reports/`.
-3. Working memory ledger — `hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl`.
+3. Memory SSOT — Doobidoo sqlite_vec (query via `hfo_hub.py memory:overview` or the SSOT-backed MCP memory server).
 4. Short-term blackboard — `hfo_hot_obsidian/hot_obsidian_blackboard.jsonl`.
 5. Long-term store — DuckDB paths pointed by `hfo_pointers.json`.
 
@@ -158,7 +158,7 @@ If evidence is missing, explicitly label: **missing / unproven / drift**.
 Before producing substantive content, you must confirm (in `incarnation_state.hydration`) that you hydrated from:
 
 1. `hfo_pointers.json`
-2. At least the last 20 entries of `hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl`
+2. Recent SSOT memory context (e.g. run `bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py memory:overview`)
 3. At least the last 10 lines of `hfo_hot_obsidian/hot_obsidian_blackboard.jsonl`
 4. The most relevant Hot/Silver reports under `hfo_hot_obsidian/silver/3_resources/reports/` (if any)
 5. DuckDB SSOT (only when needed), using paths resolved from `hfo_pointers.json`
