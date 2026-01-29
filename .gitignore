@@ -114,6 +114,7 @@ hfo_hot_obsidian/bronze/3_resources/ingest_sources/
 hfo_hot_obsidian/bronze/3_resources/memory_ingest_sources/
 hfo_hot_obsidian/bronze/3_resources/memory_fragments_collection/
 hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/
+hfo_hot_obsidian/bronze/3_resources/p3s_payloads/
 hfo_hot_obsidian_forge/**/memory_fragments_collection/
 hfo_hot_obsidian_forge/**/memory_fragments_storehouse/
 

@@ -263,14 +263,6 @@
       ]
     },
     {
-      "id": "hot-p3s-payloads",
-      "type": "untracked",
-      "message": "chore(payloads): add P3S payload artifacts",
-      "paths": [
-        "hfo_hot_obsidian/bronze/3_resources/p3s_payloads/"
-      ]
-    },
-    {
       "id": "hot-omega-gen7-vendor",
       "type": "untracked",
       "message": "chore(gen7): add portable vendor assets",
