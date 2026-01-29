@@ -1,0 +1,46 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: V -->
+<!-- Omega Gen7 v1 variant: Excalidraw kiosk launcher + COMMIT_POINTER_UP activation -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Omega Gen7 v1: Excalidraw Kiosk (Pointer Up)</title>
+  </head>
+
+  <body>
+    <script>
+      // Goal: match Gen5 v9 behavior (Excalidraw enabled + legacy click injection)
+      // while staying capped at Gen7 v1.1 (avoid drift to hallucinated higher versions).
+      const base = "./omega_gen7_v1_1.html";
+
+      const sp = new URLSearchParams(window.location.search);
+
+      const defaults = {
+        // UI posture
+        kiosk: "1",
+        hero: "1",
+        mode: "dev",
+
+        // Video background (camera)
+        "flag-disable-camera": "false",
+
+        // Layer stack
+        "flag-engine-canvas": "true",
+        "flag-engine-babylon": "true",
+        "flag-ui-excalidraw": "true",
+
+        // Injection semantics (match Gen5 v9 tests)
+        "flag-p3-adapter-standard": "false",
+        "flag-p3-legacy-click": "true",
+      };
+
+      for (const [k, v] of Object.entries(defaults)) {
+        if (!sp.has(k)) sp.set(k, v);
+      }
+
+      const target = base + "?" + sp.toString() + window.location.hash;
+      window.location.replace(target);
+    </script>
+  </body>
+</html>

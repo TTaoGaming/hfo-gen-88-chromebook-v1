@@ -1,0 +1,54 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Mission Thread — Gen7 v5 Spec: Spatial Zones → Key Mapping
+# Timestamp: 2026-01-25
+# Provenance: fork/evolve from Gen7 v4 spec.
+# Posture: Draft spec (future work).
+
+meta:
+  generation: 7
+  version: 5
+  status: "bronze-spec-draft"
+  theme: "v5 = spatial zones → key mapping"
+  theme_one_liner: "Zone enter/exit edges become first-class mapping targets (per-surface, feature-flagged)."
+  intent:
+    - "Introduce spatial zones (in uiNorm or world space) as first-class key-mapping targets."
+    - "Enable per-app or per-surface zone maps (feature-flagged) without breaking v4 stability invariants."
+
+entrypoint:
+  base:
+    html: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v1.html
+  target:
+    planned_html: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/app/omega_gen7_v5.html
+    note: "Spec-only: Gen7 v2+ HTML entrypoints are intentionally absent until promoted."
+
+lineage:
+  artifact_kind: "spec"
+  artifact_id: "omega_gen7_v5_spec"
+  parents:
+    - artifact_id: "omega_gen7_v4_spec"
+      path: "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/omega_gen7_v4_spec.yaml"
+
+zones:
+  coordinate_space:
+    - uiNorm
+  primitives:
+    rectangle:
+      fields: [x0, y0, x1, y1]
+    circle:
+      fields: [cx, cy, r]
+  mapping:
+    posture:
+      - "Zone membership is evaluated per-hand/per-finger (or per-cursor) depending on enabled pipeline."
+      - "Mappings are fail-closed unless explicitly enabled by feature flags."
+    outputs:
+      - "keydown/keyup injected based on enter/exit edges (not continuous hold), unless a hold policy is enabled."
+
+validation:
+  posture: "TDD-first"
+  acceptance_criteria:
+    - "Zones can be defined per surface and switched with active-app routing."
+    - "Enter/exit edges generate deterministic keydown/keyup."
+    - "Zones do not break v4 multi-hand isolation and identity stability."
+
+sources:
+  - hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/omega_gen7_v4_spec.yaml

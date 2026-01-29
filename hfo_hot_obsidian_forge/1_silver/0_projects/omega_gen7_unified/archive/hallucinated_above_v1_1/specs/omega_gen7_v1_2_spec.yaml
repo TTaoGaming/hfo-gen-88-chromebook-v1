@@ -1,0 +1,22 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Mission Thread — Gen7 v1.2 Spec (Pointer): Arbitrary Z-Layer Ordering + Kiosk Microkernel Defaults
+# Timestamp (UTC): 2026-01-26
+# Provenance: SSOT lives in the vendored portable baseline; this file is a canonical-project pointer.
+
+meta:
+  generation: 7
+  version_major: 1
+  version_minor: 2
+  semantic_version: "1.2"
+  status: "bronze-spec-pointer"
+  intent:
+    - "Expose Gen7 v1.2 spec under omega_gen7_unified/specs for discoverability."
+    - "Keep a single SSOT body for v1.2 to avoid drift."
+
+pointer:
+  ssot_spec:
+    path: hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified/specs/assimilated_v1_portable/omega_gen7_v1_2_spec.yaml
+    note: "ASSIMILATED: former omega_gen7_v1_portable SSOT spec; now stored under omega_gen7_unified/specs/assimilated_v1_portable to avoid drift."
+
+sources:
+  - hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified/specs/assimilated_v1_portable/omega_gen7_v1_2_spec.yaml

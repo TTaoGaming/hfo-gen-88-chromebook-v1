@@ -1,0 +1,95 @@
+# Medallion: Silver | Mutation: 0% | HIVE: V
+# Purpose: Inventory + migration checklist for unifying Omega Gen7 assets into Forge Hot/Silver.
+# Timestamp (local): 2026-01-28T19:31:55-07:00
+
+version: 1
+scope:
+  program: HFO Gen88 v4
+  objective: "Unify legacy omega_gen7_current + omega_gen7_v1_portable into a single omega_gen7_unified under Hot Forge/Silver."
+
+source_state:
+  legacy_roots:
+    omega_gen7_current:
+      path: hfo_hot_obsidian/bronze/1_projects/omega_gen7_current
+      approx_size: 75M
+    omega_gen7_v1_portable:
+      path: hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable
+      approx_size: 74M
+
+  notes:
+    - "Legacy Gen7 roots coexist today under hot obsidian bronze projects."
+    - "Forge root exists and contains tiered medallion layout (0_bronze/1_silver/2_gold/3_hfo)."
+
+proposed_target_state:
+  forge_hot_silver:
+    unified_project_root:
+      path: hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified
+      rationale:
+        - "User priority: single unified Gen7 in hot silver (forge)."
+        - "Forge silver projects area is the intended integration tier (verified empty earlier)."
+
+  compatibility_bridge:
+    strategy: "Keep legacy Gen7 directories in place until all call-sites are repointed via pointers/config."
+    pointers:
+      current_pointer_keys:
+        - targets.omega_gen7_microkernel_spec_v4
+        - paths.omega_gen7_current_project_root
+      recommended_new_pointer_keys:
+        - paths.omega_gen7_unified_project_root
+        - targets.omega_gen7_unified_microkernel_spec
+
+references_to_update:
+  high_signal_code_refs:
+    - path: scripts/omega_gen7_v1_portable_smoke.spec.ts
+      note: "Contains hardcoded URL into hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/..."
+    - path: scripts/omega_gen7_v1_portable_tripwire_lookahead_monotonic.spec.ts
+      note: "Contains hardcoded fixture paths + URL into legacy omega_gen7_current."
+    - path: scripts/omega_gen7_v7_1_hero_layers.spec.ts
+      note: "References legacy omega_gen7_current app html."
+    - path: scripts/omega_gen7_v7_1_excalidraw_golden.spec.ts
+      note: "References legacy omega_gen7_current app html + fixtures."
+    - path: playwright.config.ts
+      note: "Includes glob rooted at legacy omega_gen7_current/tests/playwright/**/*.spec.ts"
+    - path: hfo_pointers.json
+      note: "Currently points omega_gen7_current_project_root and omega_gen7_microkernel_spec_v4 at legacy paths."
+
+  doc_refs_expected:
+    note: "There are many markdown/report references to legacy paths; treat as secondary unless used by tooling."
+
+migration_plan:
+  step_0_guardrails:
+    - "Do not delete legacy Gen7 roots as first step."
+    - "Prefer pointer indirection (hfo_pointers.json) over hardcoded absolute paths."
+
+  step_1_create_unified_root:
+    - "Create directory: hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified"
+    - "Decide what becomes canonical inside unified root (specs/app/tests)."
+
+  step_2_merge_strategy:
+    recommended: "Start by copying portable SSOT-like assets (specs) + necessary fixtures into unified root, then progressively repoint scripts/tests."
+    options:
+      - id: A
+        label: "Copy portable into unified, keep current as source-of-truth for app/tests initially"
+        risk: "Medium: temporary dual-source until pointers updated"
+      - id: B
+        label: "Full merge (app+tests+specs) into unified in one pass"
+        risk: "Higher: broad refactor and more path updates"
+
+  step_3_update_indirection:
+    - "Add/adjust pointer(s) for unified Gen7 root and key spec targets."
+    - "Update Playwright config and scripts to reference unified root (prefer pointer-based resolution where possible)."
+
+  step_4_validation:
+    - "Run focused Playwright/spec tasks that reference Gen7 paths."
+    - "Only after stable: consider archiving or demoting legacy paths."
+
+evidence:
+  preflight_receipt_id: d8af8e76df86
+  derived_from:
+    - "find hfo_hot_obsidian/bronze/1_projects -maxdepth 1 -name 'omega_gen7*'"
+    - "du -sh legacy omega_gen7 roots"
+    - "grep_search hits in scripts/** and playwright.config.ts"
+
+open_questions:
+  - "Exact desired name: omega_gen7_unified vs omega_gen7_unified_v1?"
+  - "Which directory is canonical SSOT for the Gen7 v1.2 YAML spec after unification?"

@@ -1,0 +1,40 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Omega Mission Thread — Gen7 v1.1 (Cap)
+# Date: 2026-01-28
+# Purpose: Establish a fail-closed cap at v1.1 and treat any higher “v2+ / v6 / v7” artifacts as non-canonical.
+
+meta:
+  generation: 7
+  version_major: 1
+  version_minor: 1
+  semantic_version: "1.1"
+  status: "bronze"
+
+canonical:
+  policy:
+    - "The only active Omega Gen7 entrypoints in this repo are v1 and v1.1."
+    - "All artifacts/specs claiming > v1.1 are archived and must not be referenced by tasks/tests as the default path."
+
+entrypoints:
+  primary:
+    html: hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified/app/omega_gen7_v1_1.html
+  compat_aliases:
+    - html: hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified/app/omega_gen7_v1.html
+      resolves_to: omega_gen7_v1_1.html
+
+scope:
+  in_scope:
+    - "Port-aligned layers + safe inset + Excalidraw commit gating (as implemented in omega_gen7_v1_1.html)."
+    - "Portable/offline posture: local libs only; runnable via the threaded static server."
+  out_of_scope:
+    - "Microkernel v4+ claims and any higher semantic versions (treated as drift/hallucination until re-validated)."
+
+validation:
+  posture: "Bronze smoke checks"
+  acceptance_criteria:
+    - "Gen7 v1 resolves to Gen7 v1.1 and loads without 404 under the threaded server."
+    - "Excalidraw kiosk launcher uses Gen7 v1.1 as its base entrypoint."
+
+sources:
+  - hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified/app/omega_gen7_v1_1.html
+  - hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified/app/omega_gen7_v1.html
