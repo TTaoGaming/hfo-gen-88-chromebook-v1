@@ -1,467 +1,482 @@
 {
-  "version": "2.0.0",
-  "inputs": [
-    {
-      "id": "memoryIngestDir",
-      "type": "promptString",
-      "description": "Directory to ingest (absolute or workspace-relative)",
-      "default": "hfo_hot_obsidian_forge/1_silver/2_resources/reports"
-    },
-    {
-      "id": "memoryIngestTags",
-      "type": "promptString",
-      "description": "Space-separated tags (e.g. gen88_v4 ssot topic:reports)",
-      "default": "gen88_v4 ssot"
-    },
-    {
-      "id": "memoryIngestMaxFiles",
-      "type": "promptString",
-      "description": "Max files (<=0 means no limit)",
-      "default": "200"
-    },
-    {
-      "id": "memoryIngestMaxBytes",
-      "type": "promptString",
-      "description": "Max bytes per file (0 means no limit)",
-      "default": "2000000"
-    },
-    {
-      "id": "memoryExportOut",
-      "type": "promptString",
-      "description": "Export output JSONL path (workspace-relative)",
-      "default": "artifacts/exports/doobidoo_export.jsonl"
-    },
-    {
-      "id": "memoryExportLimit",
-      "type": "promptString",
-      "description": "Export limit (0 means no limit)",
-      "default": "0"
-    },
-    {
-      "id": "memoryImportIn",
-      "type": "promptString",
-      "description": "Import input JSONL path (workspace-relative)",
-      "default": "artifacts/exports/doobidoo_export.jsonl"
-    },
-    {
-      "id": "flightScope",
-      "type": "promptString",
-      "description": "Flight scope (HFO, P6, P0, or fractal like P0.3.5.7.1)",
-      "default": "P6"
-    },
-    {
-      "id": "krakenProvider",
-      "type": "pickString",
-      "description": "Kraken Keeper provider mode (manual paste-in OR OpenRouter API)",
-      "options": ["manual", "openrouter"],
-      "default": "manual"
-    },
-    {
-      "id": "krakenModel",
-      "type": "promptString",
-      "description": "Model name (only used for OpenRouter API mode)",
-      "default": "openai/gpt-4o-mini"
-    },
-    {
-      "id": "krakenPrompt",
-      "type": "promptString",
-      "description": "Your message to Kraken Keeper (kept short; for longer prompts use terminal + paste)",
-      "default": "What is the next smallest step?"
-    },
-    {
-      "id": "flightSummary",
-      "type": "promptString",
-      "description": "Postflight summary (proof-only, 1-2 sentences)",
-      "default": "completed"
-    },
-    {
-      "id": "preflightReceiptId",
-      "type": "promptString",
-      "description": "Preflight receipt_id to close out",
-      "default": ""
-    },
-    {
-      "id": "shodhRecallQuery",
-      "type": "promptString",
-      "description": "Shodh recall query (natural language)",
-      "default": "timeline of 2025"
-    },
-    {
-      "id": "shodhRecallLimit",
-      "type": "promptString",
-      "description": "Shodh recall limit",
-      "default": "8"
-    }
-  ],
-  "tasks": [
-    {
-      "label": "Memory: Ingest Text Dir (Dry Run)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot ingest-text --dir '${input:memoryIngestDir}' --max-files ${input:memoryIngestMaxFiles} --max-bytes ${input:memoryIngestMaxBytes} --tags ${input:memoryIngestTags}",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Memory: Ingest Text Dir (Write)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot ingest-text --dir '${input:memoryIngestDir}' --max-files ${input:memoryIngestMaxFiles} --max-bytes ${input:memoryIngestMaxBytes} --tags ${input:memoryIngestTags} --write",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Memory: Export Doobidoo SSOT → JSONL",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot export --out '${input:memoryExportOut}' --limit ${input:memoryExportLimit}",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Memory: Import JSONL → Doobidoo SSOT (Dry Run)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot import --in '${input:memoryImportIn}'",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Memory: Import JSONL → Doobidoo SSOT (Write)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot import --in '${input:memoryImportIn}' --write",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Memory: Storage Manifest (Snapshot + latest)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot manifest",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Shodh Memory: Server (3030)",
-      "type": "shell",
-      "command": "bash scripts/shodh_memory_server.sh",
-      "isBackground": true,
-      "runOptions": {
-        "instanceLimit": 1
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Memory: Sync SSOT → Shodh (Dry Run)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot sync-shodh --dry-run",
-      "runOptions": {
-        "instanceLimit": 1
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Memory: Sync SSOT → Shodh",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot sync-shodh",
-      "runOptions": {
-        "instanceLimit": 1
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Shodh: Recall Query",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot recall-shodh --query '${input:shodhRecallQuery}' --limit ${input:shodhRecallLimit}",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "HFO Hub: Memory Health",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "HFO Hub: Memory Health (JSON)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health --json",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Memory: Overview (SSOT + Stores)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py memory:overview",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "HFO Hub: Memory Health (SSOT Only)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health:ssot",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "HFO Hub: Memory Health (SSOT Deep SQLite)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health:ssot:deep --json",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Shodh Memory: Stop Server (3030)",
-      "type": "shell",
-      "command": "bash scripts/shodh_memory_stop.sh",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "HFO Hub: Memory Guardrails",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py memory:guard",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-memory",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Kraken Keeper: Turn (Auto Preflight+Postflight)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python scripts/kraken_keeper_turn.py --scope P6 --mode chat --provider '${input:krakenProvider}' --model '${input:krakenModel}' --prompt '${input:krakenPrompt}' --write-memory false",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-kraken-keeper",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Flight: Preflight (Scope → Capsule)",
-      "type": "shell",
-      "command": "bash scripts/hfo_flight.sh preflight --scope '${input:flightScope}' --note 'vscode task preflight' --out artifacts/flight/preflight_${input:flightScope}.json",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-flight",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Flight: Postflight (Scope → Receipt)",
-      "type": "shell",
-      "command": "bash scripts/hfo_flight.sh postflight --scope '${input:flightScope}' --preflight-receipt-id '${input:preflightReceiptId}' --summary '${input:flightSummary}' --out artifacts/flight/postflight_${input:flightScope}.json",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-flight",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "P5 Sentinel Daemon",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/p5_sentinel_daemon.py",
-      "isBackground": true,
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-defense",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Stigmergy Anchor Daemon",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_stigmergy_anchor.py",
-      "isBackground": true,
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-defense",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "Port 5: Forensic Audit (Auto Close)",
-      "type": "shell",
-      "command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py p5",
-      "isBackground": true,
-      "problemMatcher": [],
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      },
-      "presentation": {
-        "echo": true,
-        "reveal": "silent",
-        "focus": false,
-        "panel": "dedicated",
-        "close": true,
-        "showReuseMessage": false,
-        "clear": false
-      },
-      "runOptions": {
-        "instanceLimit": 1
-      }
-    },
-    {
-      "label": "Port 5: Forensic Audit (V32 Report)",
-      "type": "shell",
-      "command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py p5"
-    },
-    {
-      "label": "Gen5 Local Server",
-      "type": "shell",
-      "command": "bash",
-      "args": [
-        "scripts/mcp_env_wrap.sh",
-        "python3",
-        "scripts/hfo_threaded_server.py"
-      ],
-      "isBackground": true,
-      "problemMatcher": [],
-      "group": "build"
-    },
-    {
-      "label": "Resource Shepherd Daemon",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_resource_shepherd_daemon.py --interval-sec 300",
-      "isBackground": true,
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "silent",
-        "panel": "dedicated",
-        "group": "hfo-defense",
-        "showReuseMessage": false,
-        "clear": false
-      }
-    },
-    {
-      "label": "GitOps Batcher Daemon (No Push)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --interval-sec 600 --no-push",
-      "isBackground": true,
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "silent",
-        "panel": "dedicated",
-        "group": "hfo-defense",
-        "showReuseMessage": false,
-        "clear": false
-      }
-    },
-    {
-      "label": "GitOps Batcher Once (No Push)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --no-push",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-defense",
-        "showReuseMessage": false
-      }
-    },
-    {
-      "label": "GitOps Batcher Once (Push End)",
-      "type": "shell",
-      "command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --push --push-mode end",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "group": "hfo-defense",
-        "showReuseMessage": false
-      }
-    }
-  ]
+	"version": "2.0.0",
+	"inputs": [
+		{
+			"id": "memoryIngestDir",
+			"type": "promptString",
+			"description": "Directory to ingest (absolute or workspace-relative)",
+			"default": "hfo_hot_obsidian_forge/1_silver/2_resources/reports"
+		},
+		{
+			"id": "memoryIngestTags",
+			"type": "promptString",
+			"description": "Space-separated tags (e.g. gen88_v4 ssot topic:reports)",
+			"default": "gen88_v4 ssot"
+		},
+		{
+			"id": "memoryIngestMaxFiles",
+			"type": "promptString",
+			"description": "Max files (<=0 means no limit)",
+			"default": "200"
+		},
+		{
+			"id": "memoryIngestMaxBytes",
+			"type": "promptString",
+			"description": "Max bytes per file (0 means no limit)",
+			"default": "2000000"
+		},
+		{
+			"id": "memoryExportOut",
+			"type": "promptString",
+			"description": "Export output JSONL path (workspace-relative)",
+			"default": "artifacts/exports/doobidoo_export.jsonl"
+		},
+		{
+			"id": "memoryExportLimit",
+			"type": "promptString",
+			"description": "Export limit (0 means no limit)",
+			"default": "0"
+		},
+		{
+			"id": "memoryImportIn",
+			"type": "promptString",
+			"description": "Import input JSONL path (workspace-relative)",
+			"default": "artifacts/exports/doobidoo_export.jsonl"
+		},
+		{
+			"id": "flightScope",
+			"type": "promptString",
+			"description": "Flight scope (HFO, P6, P0, or fractal like P0.3.5.7.1)",
+			"default": "P6"
+		},
+		{
+			"id": "krakenProvider",
+			"type": "pickString",
+			"description": "Kraken Keeper provider mode (manual paste-in OR OpenRouter API)",
+			"options": [
+				"manual",
+				"openrouter"
+			],
+			"default": "manual"
+		},
+		{
+			"id": "krakenModel",
+			"type": "promptString",
+			"description": "Model name (only used for OpenRouter API mode)",
+			"default": "openai/gpt-4o-mini"
+		},
+		{
+			"id": "krakenPrompt",
+			"type": "promptString",
+			"description": "Your message to Kraken Keeper (kept short; for longer prompts use terminal + paste)",
+			"default": "What is the next smallest step?"
+		},
+		{
+			"id": "flightSummary",
+			"type": "promptString",
+			"description": "Postflight summary (proof-only, 1-2 sentences)",
+			"default": "completed"
+		},
+		{
+			"id": "preflightReceiptId",
+			"type": "promptString",
+			"description": "Preflight receipt_id to close out",
+			"default": ""
+		},
+		{
+			"id": "shodhRecallQuery",
+			"type": "promptString",
+			"description": "Shodh recall query (natural language)",
+			"default": "timeline of 2025"
+		},
+		{
+			"id": "shodhRecallLimit",
+			"type": "promptString",
+			"description": "Shodh recall limit",
+			"default": "8"
+		}
+	],
+	"tasks": [
+		{
+			"label": "Memory: Ingest Text Dir (Dry Run)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot ingest-text --dir '${input:memoryIngestDir}' --max-files ${input:memoryIngestMaxFiles} --max-bytes ${input:memoryIngestMaxBytes} --tags ${input:memoryIngestTags}",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Memory: Ingest Text Dir (Write)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot ingest-text --dir '${input:memoryIngestDir}' --max-files ${input:memoryIngestMaxFiles} --max-bytes ${input:memoryIngestMaxBytes} --tags ${input:memoryIngestTags} --write",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Memory: Export Doobidoo SSOT → JSONL",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot export --out '${input:memoryExportOut}' --limit ${input:memoryExportLimit}",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Memory: Import JSONL → Doobidoo SSOT (Dry Run)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot import --in '${input:memoryImportIn}'",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Memory: Import JSONL → Doobidoo SSOT (Write)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot import --in '${input:memoryImportIn}' --write",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Memory: Storage Manifest (Snapshot + latest)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot manifest",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Shodh Memory: Server (3030)",
+			"type": "shell",
+			"command": "bash scripts/shodh_memory_server.sh",
+			"isBackground": true,
+			"runOptions": {
+				"instanceLimit": 1
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Memory: Sync SSOT → Shodh (Dry Run)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot sync-shodh --dry-run",
+			"runOptions": {
+				"instanceLimit": 1
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Memory: Sync SSOT → Shodh",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot sync-shodh",
+			"runOptions": {
+				"instanceLimit": 1
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Shodh: Recall Query",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot recall-shodh --query '${input:shodhRecallQuery}' --limit ${input:shodhRecallLimit}",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "HFO Hub: Memory Health",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "HFO Hub: Memory Health (JSON)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health --json",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Memory: Overview (SSOT + Stores)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py memory:overview",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "HFO Hub: Memory Health (SSOT Only)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health:ssot",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "HFO Hub: Memory Health (SSOT Deep SQLite)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health:ssot:deep --json",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Shodh Memory: Stop Server (3030)",
+			"type": "shell",
+			"command": "bash scripts/shodh_memory_stop.sh",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "HFO Hub: Memory Guardrails",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py memory:guard",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-memory",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Kraken Keeper: Turn (Auto Preflight+Postflight)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python scripts/kraken_keeper_turn.py --scope P6 --mode chat --provider '${input:krakenProvider}' --model '${input:krakenModel}' --prompt '${input:krakenPrompt}' --write-memory false",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-kraken-keeper",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Flight: Preflight (Scope → Capsule)",
+			"type": "shell",
+			"command": "bash scripts/hfo_flight.sh preflight --scope '${input:flightScope}' --note 'vscode task preflight' --out artifacts/flight/preflight_${input:flightScope}.json",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-flight",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Flight: Postflight (Scope → Receipt)",
+			"type": "shell",
+			"command": "bash scripts/hfo_flight.sh postflight --scope '${input:flightScope}' --preflight-receipt-id '${input:preflightReceiptId}' --summary '${input:flightSummary}' --out artifacts/flight/postflight_${input:flightScope}.json",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-flight",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "P5 Sentinel Daemon",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/p5_sentinel_daemon.py",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-defense",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Stigmergy Anchor Daemon",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_stigmergy_anchor.py",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-defense",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Port 5: Forensic Audit (Auto Close)",
+			"type": "shell",
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py p5",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "dedicated",
+				"close": true,
+				"showReuseMessage": false,
+				"clear": false
+			},
+			"runOptions": {
+				"instanceLimit": 1
+			}
+		},
+		{
+			"label": "Port 5: Forensic Audit (V32 Report)",
+			"type": "shell",
+			"command": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hfo_orchestration_hub.py p5"
+		},
+		{
+			"label": "Gen5 Local Server",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"scripts/mcp_env_wrap.sh",
+				"python3",
+				"scripts/hfo_threaded_server.py"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Resource Shepherd Daemon",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_resource_shepherd_daemon.py --interval-sec 300",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "dedicated",
+				"group": "hfo-defense",
+				"showReuseMessage": false,
+				"clear": false
+			}
+		},
+		{
+			"label": "GitOps Batcher Daemon (No Push)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --interval-sec 600 --no-push",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "dedicated",
+				"group": "hfo-defense",
+				"showReuseMessage": false,
+				"clear": false
+			}
+		},
+		{
+			"label": "GitOps Batcher Once (No Push)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --no-push",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-defense",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "GitOps Batcher Once (Push End)",
+			"type": "shell",
+			"command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --push --push-mode end",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"group": "hfo-defense",
+				"showReuseMessage": false
+			}
+		},
+		{
+			"label": "Phoenix: Shodh Regenerate (Proof)",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"cd /home/tommytai3/active/hfo_gen_88_chromebook_v_1 && scripts/shodh_regenerate_from_ssot.sh --write --limit 300 --health-timeout 180 --retries 12 --retry-backoff-sec 1 --sleep-ms 30"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
 }
