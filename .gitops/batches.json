@@ -85,6 +85,86 @@
       ]
     },
     {
+      "id": "untracked-agents",
+      "type": "untracked",
+      "message": "chore(agents): add agent modes",
+      "paths": [
+        ".github/agents/"
+      ]
+    },
+    {
+      "id": "untracked-vscode",
+      "type": "untracked",
+      "message": "chore(vscode): add workspace recommendations",
+      "paths": [
+        ".vscode/"
+      ]
+    },
+    {
+      "id": "untracked-markdownlint",
+      "type": "untracked",
+      "message": "chore(markdown): add markdownlint config",
+      "paths": [
+        ".markdownlint-cli2.jsonc"
+      ]
+    },
+    {
+      "id": "untracked-root-notes",
+      "type": "untracked",
+      "message": "docs(notes): add root notes",
+      "paths": [
+        "ai-chat-omega-gen6-2026-1-20.md",
+        "ai-gpt-5-2-reward-hacking-memory-2026-1-28.md",
+        "ai-reward-hacking-analysis-2026-1-28.md",
+        "ai-reward-hacking-pain-list-2026-1-28.md",
+        "ttao-notes-2026-1-26.md",
+        "ttao-notes-2026-1-27.md",
+        "ttao-notes-2026-1-28.md"
+      ]
+    },
+    {
+      "id": "untracked-sensemaking-turns",
+      "type": "untracked",
+      "message": "docs(sensemaking): add S3 protocol turns",
+      "paths": [
+        "hfo_hot_obsidian/bronze/3_resources/para/areas/sensemaking/s3_protocol_turns/"
+      ]
+    },
+    {
+      "id": "untracked-hot-silver-resources",
+      "type": "untracked",
+      "message": "docs(hot-silver): add resources",
+      "paths": [
+        "hfo_hot_obsidian/silver/3_resources/"
+      ]
+    },
+    {
+      "id": "untracked-hot-obsidian-forge",
+      "type": "untracked",
+      "message": "docs(forge): add hot obsidian forge reports",
+      "paths": [
+        "hfo_hot_obsidian_forge/"
+      ]
+    },
+    {
+      "id": "untracked-templates-and-tests",
+      "type": "untracked",
+      "message": "chore(templates): add templates + hive8 test",
+      "paths": [
+        "templates/",
+        "tests/hive8_golden_master.spec.ts"
+      ]
+    },
+    {
+      "id": "untracked-root-python-tools",
+      "type": "untracked",
+      "message": "chore(python): add root hub tooling",
+      "paths": [
+        "hfo_memory_guardrails.py",
+        "hfo_ssot_status_update.py"
+      ]
+    },
+    {
       "id": "gitops-tools",
       "type": "untracked",
       "message": "chore(gitops): add safe batcher + resource shepherd",
