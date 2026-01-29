@@ -63,7 +63,27 @@ yarn-error.log*
 
 # Workspace Specific
 .env
+.env.*
+!.env.example
+!.env.template
 .hfo_secret
+
+.envrc
+.direnv/
+
+# Secrets / credentials
+**/.aws/
+**/.ssh/
+**/.npmrc
+**/.pypirc
+**/kubeconfig
+**/id_rsa
+**/id_ed25519
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.jks
 
 .hfo_runtime/
 
@@ -88,6 +108,17 @@ mission_thread_*_consolidation.json
 
 # Generated run artifacts (local evidence bundles)
 artifacts/
+
+# Large local archives / memory fragments (derived or raw)
+hfo_hot_obsidian/bronze/3_resources/ingest_sources/
+hfo_hot_obsidian/bronze/3_resources/memory_ingest_sources/
+hfo_hot_obsidian/bronze/3_resources/memory_fragments_collection/
+hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/
+hfo_hot_obsidian_forge/**/memory_fragments_collection/
+hfo_hot_obsidian_forge/**/memory_fragments_storehouse/
+
+# Accidental scratch files
+%s
 
 # Large Data Files (Persist Layer)
 *.parquet

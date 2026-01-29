@@ -56,6 +56,8 @@
     "test:gen5:v11:stigmergy": "npx playwright test scripts/omega_gen5_v11_stigmergy.spec.ts --project=chromium",
     "test:gen5:v11:full": "npm run p5:preflight && bash scripts/hfo_gen5_v11_full_gate.sh omega_gen5_v11.html",
     "test:gen6:v9:dino:classify": "bash scripts/hfo_gen6_v9_dino_classify.sh",
+    "mermaid:lint": "node scripts/mermaid_lint.mjs",
+    "lint:staged": "node scripts/lint/hfo_lint_router.mjs",
     "precommit:gate": "bash scripts/hfo_precommit_gate.sh",
     "test:omega:e2e": "npm run test:omega",
     "test:fast": "npm run test:omega:fast:git",
@@ -64,11 +66,18 @@
     "cleanup:omega": "bash scripts/omega_gen5_cleanup.sh",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{md,mdx,mmd,mermaid,jsonl,json,jsonc,yaml,yml}": [
+      "node scripts/lint/hfo_lint_router.mjs"
+    ]
+  },
   "devDependencies": {
+    "@mermaid-js/parser": "^0.6.3",
     "@modelcontextprotocol/inspector": "^0.15.0",
     "@modelcontextprotocol/server-filesystem": "^2026.1.14",
     "@modelcontextprotocol/server-memory": "^2025.11.25",
     "@modelcontextprotocol/server-sequential-thinking": "^2025.12.18",
+    "@openfeature/server-sdk": "^1.20.1",
     "@stryker-mutator/core": "^9.4.0",
     "@stryker-mutator/karma-runner": "^9.4.0",
     "@stryker-mutator/typescript-checker": "^9.4.0",
@@ -76,12 +85,18 @@
     "eslint": "^9.39.2",
     "eslint-plugin-html": "^8.1.3",
     "husky": "^9.1.7",
+    "jsdom": "^27.4.0",
+    "jsonc-parser": "^3.3.1",
     "lint-staged": "^16.2.7",
+    "markdownlint-cli2": "^0.20.0",
+    "mermaid": "^11.12.2",
     "mocha": "^11.7.5",
+    "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "ws": "^8.19.0"
+    "ws": "^8.19.0",
+    "yaml": "^2.8.2"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.2",
