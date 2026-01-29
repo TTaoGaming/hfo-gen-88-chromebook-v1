@@ -626,6 +626,50 @@
       }
     },
     {
+      "label": "GitOps: Plan (Dry Run)",
+      "type": "shell",
+      "command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --plan --no-push",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "hfo-defense",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "GitOps: Auto (Plan→Run, No Push)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "cd /home/tommytai3/active/hfo_gen_88_chromebook_v_1 && scripts/hfo_gitops_auto.sh --confirm --no-push"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "hfo-defense",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "GitOps: Auto (Plan→Run, Push End)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "cd /home/tommytai3/active/hfo_gen_88_chromebook_v_1 && scripts/hfo_gitops_auto.sh --confirm --push --push-mode end"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "hfo-defense",
+        "showReuseMessage": false
+      }
+    },
+    {
       "label": "GitOps Batcher Once (Push End)",
       "type": "shell",
       "command": "bash scripts/mcp_env_wrap.sh /home/tommytai3/active/hfo_gen_88_chromebook_v_1/.venv/bin/python scripts/hfo_gitops_batcher.py --push --push-mode end",
