@@ -1,27 +1,46 @@
 {
-    "medallion": "bronze",
-    "mutation_score": 0,
-    "hive": "V",
-    "generated_utc": "2026-01-22T00:00:00Z",
-    "targets": {
-        "mcp_gateway_impl": "hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/hfo_mcp_gateway_hub.py",
-        "alpha_gen1_infra_spec_v1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/ALPHA_GEN1_INFRA_V1_SPEC_2026_01_25.yaml",
-        "hfo_phase0_infra_spec_v0_1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/HFO_PHASE0_INFRA_BOOTSTRAP_V0_1_2026_01_25.yaml",
-        "hfo_preflight_postflight_policy_v0_1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/HFO_PREFLIGHT_POSTFLIGHT_POLICY_V0_1_2026_01_25.yaml",
-        "omega_gen7_microkernel_spec_v4": "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/OMEGA_GEN7_MICROKERNEL_V4_SPEC_2026_01_25.yaml"
-    },
-    "paths": {
-        "blackboard": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v4.jsonl",
-        "blackboard_legacy": "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl",
-        "blackboard_hot_forge": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v4.jsonl",
-        "blackboard_hot_forge_legacy": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard.jsonl",
-        "blackboard_cold_forge": "hfo_cold_obsidian_forge/0_bronze/2_resources/blackboards/cold_obsidian_blackboard.jsonl",
-        "gen88_v4_hot_forge_root": "hfo_hot_obsidian_forge/",
-        "gen88_v4_cold_forge_root": "hfo_cold_obsidian_forge/",
-        "mcp_memory": "hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl",
-        "alpha_gen1_current_project_root": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current",
-        "omega_gen7_current_project_root": "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current",
-        "duckdb_unified": "hfo_gen_88_cb_v2/hfo_unified_v88.duckdb",
-        "duckdb_file_index": "hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/hfo_unified_v88_merged.duckdb"
+  "medallion": "bronze",
+  "mutation_score": 0,
+  "hive": "V",
+  "generated_utc": "2026-01-22T00:00:00Z",
+  "targets": {
+    "mcp_gateway_impl": "hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/hfo_mcp_gateway_hub.py",
+    "alpha_gen1_infra_spec_v1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/ALPHA_GEN1_INFRA_V1_SPEC_2026_01_25.yaml",
+    "hfo_phase0_infra_spec_v0_1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/HFO_PHASE0_INFRA_BOOTSTRAP_V0_1_2026_01_25.yaml",
+    "hfo_preflight_postflight_policy_v0_1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/HFO_PREFLIGHT_POSTFLIGHT_POLICY_V0_1_2026_01_25.yaml",
+    "omega_gen7_microkernel_spec_v4": "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current/specs/OMEGA_GEN7_MICROKERNEL_V4_SPEC_2026_01_25.yaml",
+    "gen88_v4_blessed_memory_guide": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/HFO_GEN88_V4_BLESSED_MEMORY_SYSTEM.md"
+  },
+  "paths": {
+    "blackboard": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/legacy_or_telemetry_jsonl/hfo_hot_obsidian_forge__0_bronze__2_resources__blackboards__hot_obsidian_blackboard_v4.jsonl",
+    "blackboard_legacy": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/legacy_or_telemetry_jsonl/hfo_hot_obsidian__hot_obsidian_blackboard.jsonl",
+    "blackboard_hot_forge": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/legacy_or_telemetry_jsonl/hfo_hot_obsidian_forge__0_bronze__2_resources__blackboards__hot_obsidian_blackboard_v4.jsonl",
+    "blackboard_hot_forge_legacy": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/legacy_or_telemetry_jsonl/hfo_hot_obsidian_forge__0_bronze__2_resources__blackboards__hot_obsidian_blackboard.jsonl",
+    "blackboard_cold_forge": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/legacy_or_telemetry_jsonl/hfo_cold_obsidian_forge__0_bronze__2_resources__blackboards__cold_obsidian_blackboard.jsonl",
+    "gen88_v4_hot_forge_root": "hfo_hot_obsidian_forge/",
+    "gen88_v4_cold_forge_root": "hfo_cold_obsidian_forge/",
+    "mcp_memory": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/legacy_or_telemetry_jsonl/hfo_hot_obsidian__bronze__3_resources__memory__mcp_memory.jsonl",
+    "mcp_memory_ssot_base_dir": "artifacts/mcp_memory_service/gen88_v4/",
+    "mcp_memory_ssot_sqlite": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/blessed_ssot/artifacts__mcp_memory_service__gen88_v4__hfo_gen88_v4_ssot_sqlite_vec_2026_01_26.db",
+    "shodh_sync_state_gen88_v4": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/derived_shodh/artifacts__shodh_memory__sync_state_doobidoo_gen88_v4.json",
+    "alpha_gen1_current_project_root": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current",
+    "omega_gen7_current_project_root": "hfo_hot_obsidian/bronze/1_projects/omega_gen7_current",
+    "duckdb_unified": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/derived_analytics/hfo_gen_88_cb_v2__hfo_unified_v88.duckdb",
+    "duckdb_file_index": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/derived_analytics/hfo_hot_obsidian__bronze__4_archive__areas_archive_2026_01_18__root_cleanup_staging_2026_01_18__hfo_unified_v88_merged.duckdb",
+    "hfo_hub_entrypoint": "hfo_hub.py",
+    "hfo_memory_healthcheck_script": "scripts/hfo_memory_healthcheck.py",
+    "memory_storage_manifest_latest": "artifacts/memory_manifest/latest.yaml"
+  },
+  "commands": {
+    "hfo_hub_memory_health": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health",
+    "hfo_hub_memory_health_json": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health --json",
+    "hfo_direct_memory_healthcheck": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python scripts/hfo_memory_healthcheck.py --json"
+  },
+  "services": {
+    "shodh": {
+      "base_url": "http://127.0.0.1:3030",
+      "host": "127.0.0.1",
+      "port": 3030
     }
+  }
 }

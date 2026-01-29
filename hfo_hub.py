@@ -8,8 +8,8 @@ versions without changing callers.
 """
 
 import os
-import sys
 import runpy
+import sys
 from pathlib import Path
 
 BASE = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
@@ -98,10 +98,99 @@ except Exception:
 if __name__ == "__main__":
     # Single blessed entryway (CLI dispatch) for Port 7 rituals.
     # Default behavior remains: forward to the active hub implementation.
+    if len(sys.argv) >= 2 and sys.argv[1] in {
+        "ssot",
+        "SSOT",
+        "memory:ssot",
+        "ssot:frontdoor",
+    }:
+        # Single blessed entryway (SSOT facade) for memory operations.
+        sys.argv[0] = "scripts/hfo_ssot.py"
+        sys.argv.pop(1)
+        runpy.run_path(str(Path(BASE) / "scripts/hfo_ssot.py"), run_name="__main__")
+        raise SystemExit(0)
+
+    # Compact HFO ritual recitation (non-destructive): lattice + invariants + grudges tail.
+    if len(sys.argv) >= 2 and sys.argv[1] in {"ritual", "p7:ritual", "hfo:ritual"}:
+        sys.argv[0] = "scripts/hfo_ritual.py"
+        sys.argv.pop(1)
+        runpy.run_path(str(Path(BASE) / "scripts/hfo_ritual.py"), run_name="__main__")
+        raise SystemExit(0)
+
     if len(sys.argv) >= 2 and sys.argv[1] in {"p7:s3-turn", "p7:turn", "p7:s3"}:
         sys.argv[0] = "scripts/p7_s3_turn.py"
         sys.argv.pop(1)
         runpy.run_path(str(Path(BASE) / "scripts/p7_s3_turn.py"), run_name="__main__")
+        raise SystemExit(0)
+
+    # Quick, antifragile health check (non-destructive).
+    if len(sys.argv) >= 2 and sys.argv[1] in {
+        "health",
+        "health:memory",
+        "memory:health",
+    }:
+        sys.argv[0] = "scripts/hfo_memory_healthcheck.py"
+        sys.argv.pop(1)
+        runpy.run_path(
+            str(Path(BASE) / "scripts/hfo_memory_healthcheck.py"), run_name="__main__"
+        )
+        raise SystemExit(0)
+
+    # SSOT-only health (Shodh treated as optional/derived).
+    if len(sys.argv) >= 2 and sys.argv[1] in {
+        "health:ssot",
+        "memory:health:ssot",
+        "health:memory:ssot",
+    }:
+        sys.argv[0] = "scripts/hfo_memory_healthcheck.py"
+        sys.argv.pop(1)
+        sys.argv.insert(1, "--ssot-only")
+        runpy.run_path(
+            str(Path(BASE) / "scripts/hfo_memory_healthcheck.py"), run_name="__main__"
+        )
+        raise SystemExit(0)
+
+    # Memory overview (operator-friendly): SSOT vs derived vs legacy, with guidance.
+    if len(sys.argv) >= 2 and sys.argv[1] in {
+        "memory:overview",
+        "overview:memory",
+        "memory:stores",
+        "memory:list",
+    }:
+        sys.argv[0] = "scripts/hfo_memory_overview.py"
+        sys.argv.pop(1)
+        runpy.run_path(
+            str(Path(BASE) / "scripts/hfo_memory_overview.py"), run_name="__main__"
+        )
+        raise SystemExit(0)
+
+    # Deep SSOT-only health (includes sqlite quick_check).
+    if len(sys.argv) >= 2 and sys.argv[1] in {
+        "health:ssot:deep",
+        "memory:health:ssot:deep",
+    }:
+        sys.argv[0] = "scripts/hfo_memory_healthcheck.py"
+        sys.argv.pop(1)
+        sys.argv.insert(1, "--deep-sqlite")
+        sys.argv.insert(1, "--ssot-only")
+        runpy.run_path(
+            str(Path(BASE) / "scripts/hfo_memory_healthcheck.py"), run_name="__main__"
+        )
+        raise SystemExit(0)
+
+    # Fail-closed memory guardrails (non-destructive).
+    if len(sys.argv) >= 2 and sys.argv[1] in {
+        "guardrails",
+        "guardrails:memory",
+        "guard:memory",
+        "memory:guard",
+        "memory:guardrails",
+    }:
+        sys.argv[0] = "scripts/hfo_memory_guardrails.py"
+        sys.argv.pop(1)
+        runpy.run_path(
+            str(Path(BASE) / "scripts/hfo_memory_guardrails.py"), run_name="__main__"
+        )
         raise SystemExit(0)
 
     if len(sys.argv) >= 2 and sys.argv[1] in {"p7:s3-validate", "p7:validate", "p7:s3_validate"}:

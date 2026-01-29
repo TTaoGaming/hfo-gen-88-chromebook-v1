@@ -18,8 +18,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Any
-
+from typing import Any, Mapping
 
 POINTERS_FILENAME = "hfo_pointers.json"
 
@@ -68,7 +67,13 @@ def get_pointer(dotted_key: str, default: Any = None) -> Any:
     return default if val is None else val
 
 
-def resolve_path(dotted_key: str, *, env_var: str | None = None, default: str | None = None) -> str:
+def resolve_path(
+    dotted_key: str,
+    *,
+    env_var: str | None = None,
+    default: str | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> str:
     """Resolve a path pointer to an absolute path.
 
     - If env_var is set and present, uses that.
@@ -80,8 +85,10 @@ def resolve_path(dotted_key: str, *, env_var: str | None = None, default: str | 
 
     repo_root = _find_repo_root()
 
+    env = environ or os.environ
+
     if env_var:
-        env_val = os.environ.get(env_var)
+        env_val = env.get(env_var)
         if env_val:
             return str(Path(env_val).expanduser())
 
