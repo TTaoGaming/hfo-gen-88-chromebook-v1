@@ -44,13 +44,47 @@ function isMermaidFile(filePath) {
 }
 
 function extractMermaidBlocksFromMarkdown(markdown) {
-    const blocks = [];
-    const re = /```mermaid\s*\n([\s\S]*?)\n```/g;
-    let match;
-    while ((match = re.exec(markdown)) !== null) {
-        blocks.push(match[1]);
+  /** @type {string[]} */
+  const blocks = [];
+
+  // Support both backtick and tilde fences (```mermaid and ~~~mermaid).
+  // We intentionally keep this scanner simple and deterministic.
+  const lines = markdown.split(/\r?\n/);
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    // Start fence: ```mermaid or ~~~mermaid (any amount of extra whitespace)
+    const fenceMatch = /^(?<fence>`{3,}|~{3,})\s*mermaid\s*$/i.exec(trimmed);
+    if (!fenceMatch) {
+      i += 1;
+      continue;
     }
-    return blocks;
+
+    const fence = fenceMatch.groups?.fence ?? "```";
+    const closeRe = new RegExp(
+      `^${fence.replace(/([\\^$.*+?()[\]{}|])/g, "\\$1")}\\s*$`,
+    );
+
+    i += 1;
+    const start = i;
+    while (i < lines.length && !closeRe.test(lines[i].trim())) {
+      i += 1;
+    }
+
+    // If we never found a close fence, treat the rest as a block; a separate
+    // heuristic below will flag unterminated fences.
+    const end = i;
+    blocks.push(lines.slice(start, end).join("\n"));
+
+    // Move past the closing fence if present.
+    if (i < lines.length && closeRe.test(lines[i].trim())) {
+      i += 1;
+    }
+  }
+
+  return blocks;
 }
 
 async function validateDiagram(diagramText, ctx) {
@@ -83,47 +117,49 @@ async function main(argv) {
     const errors = [];
 
     for (const file of files) {
-        if (!fs.existsSync(file)) continue;
+      if (!fs.existsSync(file)) continue;
 
-        const ext = path.extname(file).toLowerCase();
-        if (!(isMarkdown(file) || isMermaidFile(file))) continue;
+      const ext = path.extname(file).toLowerCase();
+      if (!(isMarkdown(file) || isMermaidFile(file))) continue;
 
-        const text = fs.readFileSync(file, 'utf-8');
+      const text = fs.readFileSync(file, "utf-8");
 
-        if (isMermaidFile(file)) {
-            try {
-                await validateDiagram(text, { file });
-            } catch (err) {
-                errors.push({
-                    file,
-                    message: err?.message ? String(err.message) : String(err),
-                });
-            }
-            continue;
+      if (isMermaidFile(file)) {
+        try {
+          await validateDiagram(text, { file });
+        } catch (err) {
+          errors.push({
+            file,
+            message: err?.message ? String(err.message) : String(err),
+          });
         }
+        continue;
+      }
 
-        // Markdown
-        const blocks = extractMermaidBlocksFromMarkdown(text);
-        for (let i = 0; i < blocks.length; i++) {
-            try {
-                await validateDiagram(blocks[i], { file, blockIndex: i });
-            } catch (err) {
-                errors.push({
-                    file,
-                    blockIndex: i,
-                    message: err?.message ? String(err.message) : String(err),
-                });
-            }
+      // Markdown
+      const blocks = extractMermaidBlocksFromMarkdown(text);
+      for (let i = 0; i < blocks.length; i++) {
+        try {
+          await validateDiagram(blocks[i], { file, blockIndex: i });
+        } catch (err) {
+          errors.push({
+            file,
+            blockIndex: i,
+            message: err?.message ? String(err.message) : String(err),
+          });
         }
+      }
 
-        // Heuristic: flag unterminated fences early.
-        const fenceCount = (text.match(/```mermaid/g) || []).length;
-        if (fenceCount !== blocks.length) {
-            errors.push({
-                file,
-                message: `Found ${fenceCount} mermaid fence starts but ${blocks.length} complete blocks. Possible missing closing \`\`\`.`,
-            });
-        }
+      // Heuristic: flag unterminated fences early (supports ```mermaid and ~~~mermaid).
+      const fenceCount = (
+        text.match(/(^|\n)\s*(`{3,}|~{3,})\s*mermaid\s*(\n|\r\n)/gi) || []
+      ).length;
+      if (fenceCount !== blocks.length) {
+        errors.push({
+          file,
+          message: `Found ${fenceCount} mermaid fence starts but ${blocks.length} complete blocks. Possible missing closing fence.`,
+        });
+      }
     }
 
     if (errors.length > 0) {

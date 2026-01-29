@@ -169,24 +169,22 @@ effective_note="$note$prev_block"
 
 # Pointer-blessed blackboard paths
 blackboard_path="$(python3 - <<'PY'
-import json
-from pathlib import Path
+from hfo_pointers import get_pointer
 
-p = Path('hfo_pointers.json')
-data = json.loads(p.read_text(encoding='utf-8'))
-paths = data.get('paths') or {}
-print((paths.get('blackboard_hot_forge') or paths.get('blackboard') or '').strip())
+print(
+  str(
+    get_pointer('paths.blackboard_hot_forge')
+    or get_pointer('paths.blackboard')
+    or ''
+  ).strip()
+)
 PY
 )"
 
 legacy_blackboard_path="$(python3 - <<'PY'
-import json
-from pathlib import Path
+from hfo_pointers import get_pointer
 
-p = Path('hfo_pointers.json')
-data = json.loads(p.read_text(encoding='utf-8'))
-paths = data.get('paths') or {}
-print((paths.get('blackboard_legacy') or '').strip())
+print(str(get_pointer('paths.blackboard_legacy') or '').strip())
 PY
 )"
 
@@ -356,13 +354,14 @@ emit_stage "preflight" "1" "$preflight_receipt_id" "" "" "" "" "" ""
 
 # 2) Payload (stigmergy) (Hot Bronze)
 payload_root="$(python3 - <<'PY'
-import json
-from pathlib import Path
+from hfo_pointers import get_pointer
 
-p = Path('hfo_pointers.json')
-data = json.loads(p.read_text(encoding='utf-8'))
-paths = data.get('paths') or {}
-print((paths.get('p3s_payload_root') or 'hfo_hot_obsidian/bronze/3_resources/p3s_payloads').strip())
+print(
+  str(
+    get_pointer('paths.p3s_payload_root')
+    or 'hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads'
+  ).strip()
+)
 PY
 )"
 mkdir -p "$payload_root"
@@ -372,6 +371,8 @@ payload_md="${payload_root}/${payload_base}.md"
 payload_json="${payload_root}/${payload_base}.json"
 
 cat >"$payload_md" <<MD
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: V -->
+
 # Executive Summary (Payload)
 
 ## Snapshot

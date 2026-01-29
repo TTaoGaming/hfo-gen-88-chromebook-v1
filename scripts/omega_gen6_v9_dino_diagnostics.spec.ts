@@ -5,7 +5,7 @@ import * as fs from 'node:fs/promises';
 const GEN6_URL =
   process.env.HFO_GEN6_URL ||
   process.env.HFO_GEN6_V9_URL ||
-  'http://localhost:8889/hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html?flag-disable-camera=true&flag-engine-babylon=true&flag-engine-canvas=true&flag-ui-excalidraw=true&mode=dev';
+  'http://localhost:8889/hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html?flag-disable-camera=true&flag-engine-babylon=true&flag-engine-canvas=true&flag-ui-excalidraw=true&flag-p3-dino-ready-edge=true&mode=dev';
 
 const GOLDEN_MANIFEST_URL =
   process.env.HFO_GEN6_V9_REPLAY_MANIFEST_URL ||
@@ -311,6 +311,13 @@ test('Gen6 v9 diag: replay seq01 correlates fsm_edge → dino_postMessage → ac
   await hfoPage.goto(GEN6_URL);
   await hfoPage.waitForFunction(() => !!(window as any).hfoReplay, null, { timeout: 20_000 });
 
+  // Some newer builds expose multiple app launchers (e.g. Touch2D/Dino).
+  // Ensure Dino is active so the replay sequence can exercise the dino adapter path.
+  const dinoBtn = hfoPage.locator('button:has-text("Dino")').first();
+  if (await dinoBtn.isVisible()) {
+    await dinoBtn.click();
+  }
+
   // Ensure the runtime loop is actually processing frames (some builds gate on IGNITE).
   await hfoPage.initHFO();
   await installReplayPipelineDiag(hfoPage);
@@ -477,6 +484,11 @@ test('Gen6 v9 diag: stress seq01 correlation (classify first failure)', async ({
   test.setTimeout(60_000 + STRESS_REPEATS * 15_000);
   await hfoPage.goto(GEN6_URL);
   await hfoPage.waitForFunction(() => !!(window as any).hfoReplay, null, { timeout: 20_000 });
+
+  const dinoBtn = hfoPage.locator('button:has-text("Dino")').first();
+  if (await dinoBtn.isVisible()) {
+    await dinoBtn.click();
+  }
 
   await hfoPage.initHFO();
   await hfoPage.waitForFunction(() => !!document.querySelector('#dino-wrapper-iframe'), null, { timeout: 20_000 });

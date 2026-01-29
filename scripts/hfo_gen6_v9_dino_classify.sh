@@ -49,7 +49,34 @@ start_server_if_needed
 export HFO_DIAG_REPEATS="${HFO_DIAG_REPEATS:-3}"
 export HFO_DIAG_FAIL_CLOSED="${HFO_DIAG_FAIL_CLOSED:-true}"
 
-# Default to v10 runtime (env override supported via HFO_GEN6_URL).
-export HFO_GEN6_URL="${HFO_GEN6_URL:-http://localhost:8889/hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html?flag-disable-camera=true&flag-engine-babylon=true&flag-engine-canvas=true&flag-ui-excalidraw=true&mode=dev}"
+resolve_pointer() {
+  local dotted_key="$1"
+  local py="$ROOT_DIR/.venv/bin/python"
+  if [[ ! -x "$py" ]]; then
+    py="$(command -v python3 || true)"
+  fi
+  if [[ -z "$py" ]]; then
+    return 1
+  fi
+  "$py" - <<PY
+from hfo_pointers import get_pointer
 
-npx playwright test scripts/omega_gen6_v9_dino_diagnostics.spec.ts --project=chromium --workers=1 --grep "wrapper emits hfo:nematocyst:ack|replay seq01 correlates fsm_edge|stress seq01 correlation"
+val = get_pointer("$dotted_key", "")
+if isinstance(val, str):
+    print(val)
+PY
+}
+
+GEN6_REL_PATH="${HFO_GEN6_REL_PATH:-$(resolve_pointer paths.gen6_runtime_html_default 2>/dev/null || true)}"
+GEN6_REL_PATH="${GEN6_REL_PATH#/}"
+
+# Default to pointer-resolved runtime (env override supported via HFO_GEN6_URL).
+if [[ -n "$GEN6_REL_PATH" ]]; then
+  export HFO_GEN6_URL="${HFO_GEN6_URL:-http://localhost:8889/${GEN6_REL_PATH}?flag-disable-camera=true&flag-engine-babylon=true&flag-engine-canvas=true&flag-ui-excalidraw=true&flag-p3-dino-ready-edge=true&mode=dev}"
+else
+  export HFO_GEN6_URL="${HFO_GEN6_URL:-http://localhost:8889/hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html?flag-disable-camera=true&flag-engine-babylon=true&flag-engine-canvas=true&flag-ui-excalidraw=true&flag-p3-dino-ready-edge=true&mode=dev}"
+fi
+
+HFO_PLAYWRIGHT_PROJECT="${HFO_PLAYWRIGHT_PROJECT:-chrome}"
+
+npx playwright test scripts/omega_gen6_v9_dino_diagnostics.spec.ts --project="$HFO_PLAYWRIGHT_PROJECT" --workers=1 --grep "wrapper emits hfo:nematocyst:ack|replay seq01 correlates fsm_edge|stress seq01 correlation"

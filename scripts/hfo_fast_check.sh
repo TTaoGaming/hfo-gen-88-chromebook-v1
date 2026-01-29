@@ -6,6 +6,10 @@ ROOT="/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
 SERVER_LOG="/tmp/hfo_fast_server.log"
 TEST_OUTPUT="/tmp/hfo_playwright_fast"
 
+# The repo Playwright config uses a "chrome" project (system chrome).
+# Allow override for other environments.
+HFO_PLAYWRIGHT_PROJECT="${HFO_PLAYWRIGHT_PROJECT:-chrome}"
+
 python3 "$ROOT/scripts/hfo_threaded_server.py" >"$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
 
@@ -34,7 +38,7 @@ if [[ "$server_ready" != "1" ]]; then
 fi
 
 PLAYWRIGHT_COMMON_ARGS=(
-  --project=chromium
+  --project="$HFO_PLAYWRIGHT_PROJECT"
   --workers=1
   --reporter=line
   --output="$TEST_OUTPUT"
