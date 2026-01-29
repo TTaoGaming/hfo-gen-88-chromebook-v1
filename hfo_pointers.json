@@ -12,7 +12,11 @@
     "gen88_v4_blessed_memory_guide": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/HFO_GEN88_V4_BLESSED_MEMORY_SYSTEM.md"
   },
   "paths": {
-    "p3s_payload_root": "hfo_hot_obsidian/bronze/3_resources/p3s_payloads",
+    "hot_forge_root": "hfo_hot_obsidian_forge/",
+    "cold_forge_root": "hfo_cold_obsidian_forge/",
+
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "p3s_payload_root_legacy": "hfo_hot_obsidian/bronze/3_resources/p3s_payloads",
     "blackboard": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl",
     "blackboard_legacy": "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl",
     "blackboard_hot_forge": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl",
@@ -36,7 +40,16 @@
     "duckdb_file_index": "hfo_hot_obsidian/bronze/3_resources/memory_fragments_storehouse/derived_analytics/hfo_hot_obsidian__bronze__4_archive__areas_archive_2026_01_18__root_cleanup_staging_2026_01_18__hfo_unified_v88_merged.duckdb",
     "hfo_hub_entrypoint": "hfo_hub.py",
     "hfo_memory_healthcheck_script": "scripts/hfo_memory_healthcheck.py",
-    "memory_storage_manifest_latest": "artifacts/memory_manifest/latest.yaml"
+    "memory_storage_manifest_latest": "artifacts/memory_manifest/latest.yaml",
+
+    "gen6_current_root": "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current",
+    "gen6_runtime_html_default": "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html",
+    "gen6_runtime_html_candidates": [
+      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html",
+      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v9.html",
+      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10_1.html",
+      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/dino_v1_wrapper.html"
+    ]
   },
   "commands": {
     "hfo_hub_memory_health": "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health",

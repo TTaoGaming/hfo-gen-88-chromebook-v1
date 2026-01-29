@@ -20,7 +20,8 @@ import os
 from pathlib import Path
 from typing import Any, Mapping
 
-POINTERS_FILENAME = "hfo_pointers.json"
+REGULAR_POINTERS_FILENAME = "hfo_pointers.json"
+BLESSED_POINTERS_FILENAME = "hfo_pointers_blessed.json"
 
 
 def _find_repo_root(start: Path | None = None) -> Path:
@@ -29,7 +30,9 @@ def _find_repo_root(start: Path | None = None) -> Path:
         cur = cur.parent
 
     for _ in range(12):
-        if (cur / "AGENTS.md").exists() and (cur / "hfo_hot_obsidian").exists():
+        if (cur / "AGENTS.md").exists() and (
+            (cur / "hfo_hot_obsidian_forge").exists() or (cur / "hfo_hot_obsidian").exists()
+        ):
             return cur
         if cur.parent == cur:
             break
@@ -39,12 +42,37 @@ def _find_repo_root(start: Path | None = None) -> Path:
     return Path(__file__).resolve().parent
 
 
-def _load_pointers(repo_root: Path) -> dict[str, Any]:
-    p = repo_root / POINTERS_FILENAME
-    if not p.exists():
+def _resolve_pointers_path(
+    repo_root: Path, environ: Mapping[str, str] | None = None
+) -> Path:
+    """Pick which pointer registry to use.
+
+    Precedence:
+    1) HFO_POINTERS_FILE (explicit path)
+    2) Blessed registry at repo root (if present)
+    3) Regular registry at repo root
+    """
+
+    env = environ or os.environ
+
+    explicit = env.get("HFO_POINTERS_FILE")
+    if explicit:
+        p = Path(explicit).expanduser()
+        return p if p.is_absolute() else (repo_root / p)
+
+    prefer_blessed = env.get("HFO_POINTERS_PREFER_BLESSED", "1") != "0"
+    blessed = repo_root / BLESSED_POINTERS_FILENAME
+    if prefer_blessed and blessed.exists():
+        return blessed
+
+    return repo_root / REGULAR_POINTERS_FILENAME
+
+
+def _load_pointers(pointers_path: Path) -> dict[str, Any]:
+    if not pointers_path.exists():
         return {}
     try:
-        return json.loads(p.read_text(encoding="utf-8"))
+        return json.loads(pointers_path.read_text(encoding="utf-8"))
     except Exception:
         return {}
 
@@ -62,7 +90,8 @@ def get_pointer(dotted_key: str, default: Any = None) -> Any:
     """Get a pointer value from hfo_pointers.json using a dotted key."""
 
     repo_root = _find_repo_root()
-    pointers = _load_pointers(repo_root)
+    pointers_path = _resolve_pointers_path(repo_root)
+    pointers = _load_pointers(pointers_path)
     val = _dig(pointers, dotted_key)
     return default if val is None else val
 
