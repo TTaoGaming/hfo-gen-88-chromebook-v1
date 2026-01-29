@@ -110,6 +110,14 @@
       ]
     },
     {
+      "id": "untracked-prompts",
+      "type": "untracked",
+      "message": "chore(prompts): add agent prompts",
+      "paths": [
+        ".github/prompts/"
+      ]
+    },
+    {
       "id": "untracked-root-notes",
       "type": "untracked",
       "message": "docs(notes): add root notes",
@@ -244,6 +252,30 @@
         "hfo_hot_obsidian/bronze/3_resources/fixtures/",
         "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/",
         "hfo_hot_obsidian/bronze/3_resources/reports/"
+      ]
+    },
+    {
+      "id": "hot-inbox",
+      "type": "untracked",
+      "message": "docs(inbox): add inbox notes",
+      "paths": [
+        "hfo_hot_obsidian/bronze/1_projects/_inbox/"
+      ]
+    },
+    {
+      "id": "hot-p3s-payloads",
+      "type": "untracked",
+      "message": "chore(payloads): add P3S payload artifacts",
+      "paths": [
+        "hfo_hot_obsidian/bronze/3_resources/p3s_payloads/"
+      ]
+    },
+    {
+      "id": "hot-omega-gen7-vendor",
+      "type": "untracked",
+      "message": "chore(gen7): add portable vendor assets",
+      "paths": [
+        "hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/vendor/"
       ]
     },
     {
