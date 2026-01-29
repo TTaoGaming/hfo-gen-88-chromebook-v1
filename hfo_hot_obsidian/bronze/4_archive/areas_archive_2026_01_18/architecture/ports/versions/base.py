@@ -5,16 +5,17 @@ HFO Port Base Logic
 Common utilities and Port (T0-T7) implementations.
 """
 
-import os
-import json
-import sys
 import datetime
-import subprocess
-import hashlib
-import requests
-import duckdb
 import fcntl
-from typing import List, Dict, Any
+import hashlib
+import json
+import os
+import subprocess
+import sys
+from typing import Any, Dict
+
+import duckdb
+import requests
 
 # --- GLOBAL UTILS ---
 BLACKBOARD_PATH = "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
@@ -75,7 +76,7 @@ def log_to_blackboard(entry: Dict[str, Any]):
                     if lines:
                         last_line = lines[-1].strip()
                         last_signature = json.loads(last_line).get("signature", "LEGACY")
-        except Exception as e:
+        except Exception:
             # print(f"DEBUG: Signature fetch fallback: {e}")
             last_signature = "ERROR"
 
