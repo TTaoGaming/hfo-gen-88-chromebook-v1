@@ -43,11 +43,12 @@
     "memory_storage_manifest_latest": "artifacts/memory_manifest/latest.yaml",
 
     "gen6_current_root": "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current",
-    "gen6_runtime_html_default": "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html",
+    "gen6_runtime_html_default": "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v23_11.html",
     "gen6_runtime_html_candidates": [
+      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v23_11.html",
+      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v23_10.html",
+      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen7_v1.html",
       "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10.html",
-      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v9.html",
-      "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/omega_gen6_v10_1.html",
       "hfo_hot_obsidian/bronze/3_resources/para/omega_gen6_current/dino_v1_wrapper.html"
     ]
   },
