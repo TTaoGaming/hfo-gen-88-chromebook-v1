@@ -1,0 +1,207 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+# Manifest: Hot Obsidian Root → Hot Obsidian Forge (PARA + 4 Medallions)
+# Date: 2026-01-29
+# Status: draft (non-destructive; plan-only)
+#
+# Goal:
+# - Move ALL content currently living under `hfo_hot_obsidian/` into the canonical
+#   `hfo_hot_obsidian_forge/<layer>/<para>/...` structure.
+# - Keep runtime stable via pointers + temporary aliases.
+# - Fail-closed: no deletes; no blackboard edits; only move/alias/copy.
+
+manifest:
+  id: HFO_HOT_OBSIDIAN_ROOT_TO_FORGE_PARA_MOVE_MANIFEST_V1
+  version: "1.0"
+  created_utc: "2026-01-29T00:00:00Z"
+  owner: "Port 4 (DISRUPT)"
+
+  intent:
+    - "De-root hfo_hot_obsidian by migrating into hot forge medallion+PARA layout."
+    - "Make future refactors cheaper by enforcing one canonical storage topology."
+
+  policy:
+    non_destructive: true
+    dry_run_only: true
+    invariants:
+      - "NEVER edit or delete lines in any .jsonl blackboard (append-only)."
+      - "SSOT writes remain Doobidoo sqlite_vec only; legacy JSONL is read-only."
+      - "No deletes during migration; only move + alias (or copy + prove)."
+      - "Root shims/entrypoints remain stable (pointers resolve critical paths)."
+
+  scope:
+    legacy_root: "hfo_hot_obsidian/"
+    target_forge_root: "hfo_hot_obsidian_forge/"
+
+  mappings:
+    medallion:
+      bronze: "0_bronze"
+      silver: "1_silver"
+      gold: "2_gold"
+      hfo: "3_hfo"
+
+    para:
+      "1_projects": "0_projects"
+      "2_areas": "1_areas"
+      "3_resources": "2_resources"
+      "4_archive": "3_archive"
+
+  prerequisites:
+    - "git status is clean (or changes are committed/stashed)"
+    - "hfo_pointers.json exists and all current pointer targets exist"
+    - "Forge skeleton exists (all 4 medallions, all 4 PARA folders)"
+
+  scaffold:
+    # These directories are REQUIRED by the canonical layout. Some may not exist yet.
+    # Create them before any moves so downstream paths never 404.
+    required_dirs:
+      - "hfo_hot_obsidian_forge/0_bronze/0_projects"
+      - "hfo_hot_obsidian_forge/0_bronze/1_areas"
+      - "hfo_hot_obsidian_forge/0_bronze/2_resources"
+      - "hfo_hot_obsidian_forge/0_bronze/3_archive"
+      - "hfo_hot_obsidian_forge/1_silver/0_projects"
+      - "hfo_hot_obsidian_forge/1_silver/1_areas"
+      - "hfo_hot_obsidian_forge/1_silver/2_resources"
+      - "hfo_hot_obsidian_forge/1_silver/3_archive"
+      - "hfo_hot_obsidian_forge/2_gold/0_projects"
+      - "hfo_hot_obsidian_forge/2_gold/1_areas"
+      - "hfo_hot_obsidian_forge/2_gold/2_resources"
+      - "hfo_hot_obsidian_forge/2_gold/3_archive"
+      - "hfo_hot_obsidian_forge/3_hfo/0_projects"
+      - "hfo_hot_obsidian_forge/3_hfo/1_areas"
+      - "hfo_hot_obsidian_forge/3_hfo/2_resources"
+      - "hfo_hot_obsidian_forge/3_hfo/3_archive"
+
+  moves:
+    # Primary capsule moves (directory-level). Prefer `git mv` to preserve history.
+    - id: bronze_projects
+      src: "hfo_hot_obsidian/bronze/1_projects"
+      dst: "hfo_hot_obsidian_forge/0_bronze/0_projects"
+      kind: "dir"
+      method: "git_mv"
+
+    - id: bronze_resources
+      src: "hfo_hot_obsidian/bronze/3_resources"
+      dst: "hfo_hot_obsidian_forge/0_bronze/2_resources"
+      kind: "dir"
+      method: "git_mv"
+
+    - id: bronze_archive
+      src: "hfo_hot_obsidian/bronze/4_archive"
+      dst: "hfo_hot_obsidian_forge/0_bronze/3_archive"
+      kind: "dir"
+      method: "git_mv"
+
+    - id: silver_projects
+      src: "hfo_hot_obsidian/silver/1_projects"
+      dst: "hfo_hot_obsidian_forge/1_silver/0_projects"
+      kind: "dir"
+      method: "git_mv"
+
+    - id: silver_areas
+      src: "hfo_hot_obsidian/silver/2_areas"
+      dst: "hfo_hot_obsidian_forge/1_silver/1_areas"
+      kind: "dir"
+      method: "git_mv"
+
+    - id: silver_resources
+      src: "hfo_hot_obsidian/silver/3_resources"
+      dst: "hfo_hot_obsidian_forge/1_silver/2_resources"
+      kind: "dir"
+      method: "git_mv"
+
+    - id: silver_archive
+      src: "hfo_hot_obsidian/silver/4_archive"
+      dst: "hfo_hot_obsidian_forge/1_silver/3_archive"
+      kind: "dir"
+      method: "git_mv"
+
+    - id: gold_resources
+      src: "hfo_hot_obsidian/gold/3_resources"
+      dst: "hfo_hot_obsidian_forge/2_gold/2_resources"
+      kind: "dir"
+      method: "git_mv"
+
+    - id: root_archive_stigmergy_anchors
+      src: "hfo_hot_obsidian/4_archive/stigmergy_anchors"
+      dst: "hfo_hot_obsidian_forge/0_bronze/2_resources/stigmergy_anchors"
+      kind: "dir"
+      method: "git_mv"
+      notes:
+        - "Stigmergy anchors are operational coordination artifacts; treat as hot bronze resources."
+
+  special_cases:
+    # Root-level files in `hfo_hot_obsidian/` that are not in medallion folders.
+    # These should be migrated to an appropriate canonical location, then replaced by
+    # governed aliases (or retired if unused).
+
+    - id: root_blackboard_jsonl
+      src: "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl"
+      dst: "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/legacy_hot_obsidian_blackboard_root.jsonl"
+      kind: "file"
+      method: "git_mv"
+      notes:
+        - "Do not edit content; only move."
+        - "Pointer-blessed blackboard is already the forge v4 path; this is a legacy root artifact."
+
+    - id: root_blackboard_receipt
+      src: "hfo_hot_obsidian/hot_obsidian_blackboard.jsonl.receipt.json"
+      dst: "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/legacy_hot_obsidian_blackboard_root.jsonl.receipt.json"
+      kind: "file"
+      method: "git_mv"
+
+    - id: root_blackboard_manifest
+      src: "hfo_hot_obsidian/blackboard_manifest.json"
+      dst: "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/legacy_blackboard_manifest.json"
+      kind: "file"
+      method: "git_mv"
+
+  pointer_updates:
+    # Update the pointer registry to stop referencing `hfo_hot_obsidian/...` after migration.
+    # IMPORTANT: do not change pointers until the moves are complete and validated.
+
+    - id: p3s_payload_root
+      current: "hfo_hot_obsidian/bronze/3_resources/p3s_payloads"
+      target: "hfo_hot_obsidian_forge/0_bronze/2_resources/p3s_payloads"
+      reason: "P3S payload bundles are hot bronze resources; keep them inside forge."
+
+    - id: mcp_gateway_impl
+      current: "hfo_hot_obsidian/bronze/1_projects/alpha_mcp_gateway_hub/hfo_mcp_gateway_hub.py"
+      target_policy: "move_with_bronze_projects_then_update_pointer"
+      reason: "Gateway impl is a hot-bronze project; avoid hard-coded deep paths."
+
+  compatibility:
+    # Temporary aliases to preserve behavior while code/docs converge.
+    # Recommend symlink_dir for folders, stub_readme for docs, shim_module for python entrypoints.
+    alias_policy: "keep_temp_aliases_during_cutover"
+    suggested_aliases:
+      - old_path: "hfo_hot_obsidian/"
+        new_path: "hfo_hot_obsidian_forge/"
+        mechanism: "stub_readme"
+        sunset_utc: "2026-02-28T00:00:00Z"
+        removal_criteria:
+          - "no_pointer_targets_use_hfo_hot_obsidian"
+          - "no_runtime_reads_of_hfo_hot_obsidian"
+
+  verification:
+    # Suggested proof steps after each capsule move.
+    # Prefer existing tasks under VS Code Tasks when available.
+    steps:
+      - id: memory_health
+        command: "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py health --json"
+        must_pass: true
+
+      - id: pointers_guardrails
+        command: "bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py memory:overview"
+        must_pass: true
+
+      - id: shodh_sync_dry_run
+        command: "(VSCode task) shell: Memory: Sync SSOT → Shodh (Dry Run)"
+        must_pass: false
+        notes:
+          - "Optional, but helpful after moving memory-related paths."
+
+  rollback:
+    strategy: "git_revert_or_git_mv_back"
+    notes:
+      - "Because this is planned as git mv, rollback is a deterministic reverse mv."
+      - "Do not delete legacy paths until sunset criteria are met."
