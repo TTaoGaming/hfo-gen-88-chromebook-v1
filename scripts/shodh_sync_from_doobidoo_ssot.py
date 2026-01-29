@@ -40,6 +40,10 @@ from typing import Any, Iterable
 
 import requests
 
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 
 @dataclass(frozen=True)
 class DoobidooMemoryRow:
@@ -203,6 +207,35 @@ def _default_shodh_url() -> str:
     return f"http://{host}:{port}"
 
 
+def _default_shodh_api_key() -> str:
+    api_key = (
+        os.getenv("SHODH_API_KEY", "").strip()
+        or os.getenv("SHODH_DEV_API_KEY", "").strip()
+    )
+    if api_key:
+        return api_key
+
+    dotenv_path = _REPO_ROOT / ".env"
+    if not dotenv_path.exists():
+        return ""
+    try:
+        text = dotenv_path.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        return ""
+
+    def get_line_value(key: str) -> str:
+        for raw in text.splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            if k.strip() == key:
+                return v.strip().strip('"').strip("'")
+        return ""
+
+    return get_line_value("SHODH_API_KEY") or get_line_value("SHODH_DEV_API_KEY")
+
+
 def _load_state(state_path: Path) -> dict[str, Any]:
     if not state_path.exists():
         return {}
@@ -279,9 +312,10 @@ def _post_upsert(
         "change_reason": "sync_from_doobidoo_sqlite_ssot",
     }
 
+    headers = {"X-API-Key": api_key} if str(api_key or "").strip() else {}
     resp = session.post(
         f"{shodh_url.rstrip('/')}/api/upsert",
-        headers={"X-API-Key": api_key},
+        headers=headers,
         json=payload,
         timeout=timeout_sec,
     )
@@ -305,8 +339,8 @@ def main(argv: list[str]) -> int:
     )
     parser.add_argument(
         "--shodh-api-key",
-        default=os.getenv("SHODH_API_KEY", ""),
-        help="Shodh API key for X-API-Key header (default: SHODH_API_KEY)",
+        default=_default_shodh_api_key(),
+        help="Shodh API key for X-API-Key header (default: SHODH_API_KEY/SHODH_DEV_API_KEY, else .env)",
     )
     parser.add_argument(
         "--shodh-user-id",
@@ -363,6 +397,12 @@ def main(argv: list[str]) -> int:
         help="Sleep between upserts (ms) to reduce server load (default: 0)",
     )
     parser.add_argument(
+        "--max-runtime-sec",
+        type=float,
+        default=0.0,
+        help="Max wall-clock seconds to spend in this run (0 means no limit)",
+    )
+    parser.add_argument(
         "--changed-by",
         default="hfo_ssot_sync",
         help="Auditing string stored in Shodh change log",
@@ -381,23 +421,32 @@ def main(argv: list[str]) -> int:
         return 2
 
     if not args.dry_run:
-        if not args.shodh_api_key:
-            print("ERROR: missing --shodh-api-key (or SHODH_API_KEY)", file=sys.stderr)
-            return 2
-
         # Fail-fast: if Shodh is down, don't churn through rows with repeated connection errors.
-        try:
-            health = requests.get(
-                f"{str(args.shodh_url).rstrip('/')}/health",
-                timeout=min(5.0, max(0.5, float(args.timeout_sec))),
-            )
-            health.raise_for_status()
-        except Exception as e:
+        probe_timeout = float(args.timeout_sec)
+        probe_timeout = max(5.0, min(30.0, probe_timeout))
+
+        last_health_exc: Exception | None = None
+        for attempt in range(max(0, int(args.retries)) + 1):
+            try:
+                health = requests.get(
+                    f"{str(args.shodh_url).rstrip('/')}/health",
+                    timeout=probe_timeout,
+                )
+                health.raise_for_status()
+                last_health_exc = None
+                break
+            except Exception as e:
+                last_health_exc = e
+                if attempt >= int(args.retries):
+                    break
+                time.sleep(max(0.0, float(args.retry_backoff_sec)))
+
+        if last_health_exc is not None:
             print(
                 "ERROR: Shodh is not reachable. Start the 'Shodh Memory: Server (3030)' task (or check SHODH_HOST/SHODH_PORT) and retry.",
                 file=sys.stderr,
             )
-            print(f"ERROR: /health probe failed: {e}", file=sys.stderr)
+            print(f"ERROR: /health probe failed: {last_health_exc}", file=sys.stderr)
             return 3
 
     since_iso = args.since_iso
@@ -487,7 +536,16 @@ def main(argv: list[str]) -> int:
     failed = 0
     max_dt: dt.datetime | None = last_synced_dt
 
+    started = time.time()
+    processed = 0
+    stopped_early = False
+
     for i, r in enumerate(rows, start=1):
+        if float(args.max_runtime_sec) > 0:
+            elapsed = time.time() - started
+            if elapsed >= float(args.max_runtime_sec):
+                stopped_early = True
+                break
         try:
             resp: dict[str, Any] | None = None
             last_exc: Exception | None = None
@@ -509,6 +567,15 @@ def main(argv: list[str]) -> int:
                 except requests.exceptions.HTTPError as e:
                     last_exc = e
                     status = getattr(getattr(e, "response", None), "status_code", None)
+                    if (
+                        status in (401, 403)
+                        and not str(args.shodh_api_key or "").strip()
+                    ):
+                        print(
+                            "ERROR: Shodh rejected /api/upsert (401/403) and no API key was provided. Set SHODH_API_KEY (or SHODH_DEV_API_KEY) / --shodh-api-key, or reconfigure Shodh to allow unauthenticated local writes.",
+                            file=sys.stderr,
+                        )
+                        return 2
                     is_retryable = isinstance(status, int) and status >= 500
                     if attempt >= int(args.retries) or not is_retryable:
                         break
@@ -529,6 +596,8 @@ def main(argv: list[str]) -> int:
                 updated += 1
             else:
                 created += 1
+
+            processed += 1
 
             rdt = row_dt(r)
             if rdt and (max_dt is None or rdt > max_dt):
@@ -560,12 +629,17 @@ def main(argv: list[str]) -> int:
 
     _save_state(state_path, state)
 
+    elapsed_sec = time.time() - started
+
     print(
         json.dumps(
             {
                 "created": created,
                 "updated": updated,
                 "failed": failed,
+                "processed": processed,
+                "stopped_early": stopped_early,
+                "elapsed_sec": round(elapsed_sec, 3),
                 "state_path": str(state_path),
                 "max_updated_at_iso": state.get("max_updated_at_iso"),
             },

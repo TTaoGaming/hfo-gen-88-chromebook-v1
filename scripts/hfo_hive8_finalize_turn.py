@@ -61,6 +61,7 @@ def _scryfall_exact_name_url(card_name: str) -> str:
 
 def _load_port_mtg_card_map(repo_root: Path) -> dict[str, dict[str, str]]:
     mapping_paths = [
+        repo_root / "contracts" / "hfo_mtg_port_card_mappings.v5.json",
         repo_root / "contracts" / "hfo_mtg_port_card_mappings.v2.json",
         repo_root / "contracts" / "hfo_mtg_port_card_mappings.v1.json",
     ]

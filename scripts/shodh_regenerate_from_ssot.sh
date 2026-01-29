@@ -33,7 +33,9 @@ query="timeline of 2025"
 retries=8
 retry_backoff_sec=1
 sleep_ms=25
-max_content_chars=12000
+max_content_chars=2000
+sync_max_runtime_sec=1800
+recall_max_runtime_sec=120
 
 usage() {
   cat <<'EOF'
@@ -48,6 +50,8 @@ Options:
   --retry-backoff-sec N  Backoff seconds between retries (default: 1)
   --sleep-ms N         Sleep between upserts to reduce load (default: 25)
   --max-content-chars N  Max chars per upsert payload (default: 12000)
+  --sync-max-runtime-sec N   Max seconds allowed for SSOT->Shodh sync (default: 1800)
+  --recall-max-runtime-sec N Max seconds allowed for recall sanity query (default: 120)
   --query TEXT         Recall sanity query (default: 'timeline of 2025')
 
 Notes:
@@ -66,6 +70,8 @@ while [[ $# -gt 0 ]]; do
     --retry-backoff-sec) retry_backoff_sec="$2"; shift 2 ;;
     --sleep-ms) sleep_ms="$2"; shift 2 ;;
     --max-content-chars) max_content_chars="$2"; shift 2 ;;
+    --sync-max-runtime-sec) sync_max_runtime_sec="$2"; shift 2 ;;
+    --recall-max-runtime-sec) recall_max_runtime_sec="$2"; shift 2 ;;
     --query) query="$2"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown arg: $1" >&2; usage; exit 2 ;;
@@ -76,6 +82,25 @@ run_nonfatal() {
   set +e
   "$@"
   local rc=$?
+  set -e
+  return $rc
+}
+
+run_tee_nonfatal() {
+  local out="$1"
+  shift
+
+  local -a cmd=("$@")
+  if command -v timeout >/dev/null 2>&1; then
+    local max_runtime="${MAX_RUNTIME_SEC:-0}"
+    if [[ -n "$max_runtime" ]] && [[ "$max_runtime" != "0" ]]; then
+      cmd=(timeout --preserve-status -k 10 "${max_runtime}" "${cmd[@]}")
+    fi
+  fi
+
+  set +e
+  "${cmd[@]}" 2>&1 | tee "$out"
+  local rc=${PIPESTATUS[0]}
   set -e
   return $rc
 }
@@ -92,7 +117,7 @@ mkdir -p "$proof_dir"
   echo "shodh_url=$shodh_url"
   echo "shodh_data_dir=$shodh_data_dir"
   echo "shodh_cache_dir=$shodh_cache_dir"
-  echo "write=$write limit=$limit timeout_sec=$timeout_sec health_timeout_sec=$health_timeout_sec retries=$retries retry_backoff_sec=$retry_backoff_sec sleep_ms=$sleep_ms max_content_chars=$max_content_chars"
+  echo "write=$write limit=$limit timeout_sec=$timeout_sec health_timeout_sec=$health_timeout_sec retries=$retries retry_backoff_sec=$retry_backoff_sec sleep_ms=$sleep_ms max_content_chars=$max_content_chars sync_max_runtime_sec=$sync_max_runtime_sec recall_max_runtime_sec=$recall_max_runtime_sec"
   echo
   echo "=== stop shodh container (if running) ==="
   bash scripts/shodh_memory_stop.sh || true
@@ -137,7 +162,10 @@ mkdir -p "$proof_dir"
 
   echo
   echo "=== /health (proof) ==="
-  curl -sS -m 2 -D - "$shodh_url/health" | head -n 40
+  health_proof_file="$proof_dir/health_initial.txt"
+  run_nonfatal curl -sS -m 5 -D - "$shodh_url/health" >"$health_proof_file" 2>&1
+  echo "EXIT=$?"
+  head -n 80 "$health_proof_file" || true
 
   echo
   echo "=== memory overview (saved) ==="
@@ -149,29 +177,39 @@ mkdir -p "$proof_dir"
   sync_rc=0
   if (( write == 1 )); then
     echo "=== ssot -> shodh sync (WRITE, retryable) ==="
-    run_nonfatal bash scripts/mcp_env_wrap.sh ./.venv/bin/python scripts/shodh_sync_from_doobidoo_ssot.py \
-      --timeout-sec "$timeout_sec" \
-      --limit "$limit" \
-      --retries "$retries" \
-      --retry-backoff-sec "$retry_backoff_sec" \
-      --sleep-ms "$sleep_ms" \
-      --max-content-chars "$max_content_chars"
-    sync_rc=$?
+    sync_rc=0
+    MAX_RUNTIME_SEC="$sync_max_runtime_sec" run_tee_nonfatal "$proof_dir/ssot_sync_shodh.txt" \
+      bash scripts/mcp_env_wrap.sh env PYTHONUNBUFFERED=1 ./.venv/bin/python scripts/shodh_sync_from_doobidoo_ssot.py \
+        --timeout-sec "$timeout_sec" \
+        --limit "$limit" \
+        --retries "$retries" \
+        --retry-backoff-sec "$retry_backoff_sec" \
+        --sleep-ms "$sleep_ms" \
+        --max-content-chars "$max_content_chars" \
+      || sync_rc=$?
     echo "EXIT=$sync_rc"
+    echo "WROTE=$proof_dir/ssot_sync_shodh.txt"
 
     echo
     echo "=== ssot recall-shodh (sanity) ==="
-    run_nonfatal bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_hub.py ssot recall-shodh --query "$query" --limit 5
-    echo "EXIT=$?"
+    recall_rc=0
+    MAX_RUNTIME_SEC="$recall_max_runtime_sec" run_tee_nonfatal "$proof_dir/ssot_recall_shodh.txt" \
+      bash scripts/mcp_env_wrap.sh env PYTHONUNBUFFERED=1 ./.venv/bin/python hfo_hub.py ssot recall-shodh --query "$query" --limit 5 \
+      || recall_rc=$?
+    echo "EXIT=$recall_rc"
+    echo "WROTE=$proof_dir/ssot_recall_shodh.txt"
   else
     echo "=== ssot -> shodh sync (dry-run) ==="
-    run_nonfatal bash scripts/mcp_env_wrap.sh ./.venv/bin/python scripts/shodh_sync_from_doobidoo_ssot.py \
+    run_nonfatal bash scripts/mcp_env_wrap.sh env PYTHONUNBUFFERED=1 ./.venv/bin/python scripts/shodh_sync_from_doobidoo_ssot.py \
       --dry-run \
       --timeout-sec "$timeout_sec" \
       --limit "$limit" \
-      --max-content-chars "$max_content_chars"
+      --max-content-chars "$max_content_chars" \
+      >"$proof_dir/ssot_sync_shodh_dry_run.txt" 2>&1
     sync_rc=$?
     echo "EXIT=$sync_rc"
+    echo "WROTE=$proof_dir/ssot_sync_shodh_dry_run.txt"
+    head -n 80 "$proof_dir/ssot_sync_shodh_dry_run.txt" || true
 
     echo
     echo "=== ssot search (works even if shodh empty) ==="
@@ -181,8 +219,10 @@ mkdir -p "$proof_dir"
 
   echo
   echo "=== /health after sync ==="
-  run_nonfatal curl -sS -m 2 -D - "$shodh_url/health" | head -n 40
+  health_after_file="$proof_dir/health_after_sync.txt"
+  run_nonfatal curl -sS -m 5 -D - "$shodh_url/health" >"$health_after_file" 2>&1
   echo "EXIT=$?"
+  head -n 80 "$health_after_file" || true
 
   echo
   echo "=== docker inspect limits (proof) ==="

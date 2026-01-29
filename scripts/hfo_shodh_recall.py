@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+from pathlib import Path
 from typing import Any
 
 import requests
@@ -68,9 +69,27 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     base = _shodh_base_url()
-    api_key = os.getenv("SHODH_API_KEY", "").strip()
-    if not api_key:
-        raise SystemExit("Missing SHODH_API_KEY in environment")
+    dotenv_path = Path(__file__).resolve().parent.parent / ".env"
+    dotenv_text = ""
+    if dotenv_path.exists():
+        dotenv_text = dotenv_path.read_text(encoding="utf-8", errors="ignore")
+
+    def _dotenv_get(key: str) -> str:
+        for raw in dotenv_text.splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            if k.strip() == key:
+                return v.strip().strip('"').strip("'")
+        return ""
+
+    api_key = (
+        os.getenv("SHODH_API_KEY", "").strip()
+        or os.getenv("SHODH_DEV_API_KEY", "").strip()
+        or _dotenv_get("SHODH_API_KEY").strip()
+        or _dotenv_get("SHODH_DEV_API_KEY").strip()
+    )
 
     url = f"{base.rstrip('/')}/api/recall"
     payload = {
@@ -80,12 +99,19 @@ def main(argv: list[str] | None = None) -> int:
         "mode": str(args.mode),
     }
 
+    headers = {"X-API-Key": api_key} if api_key else {}
     resp = requests.post(
         url,
-        headers={"X-API-Key": api_key},
+        headers=headers,
         json=payload,
         timeout=max(1.0, float(args.timeout_sec)),
     )
+    if resp.status_code in (401, 403) and not api_key:
+        print(
+            "ERROR: Shodh rejected the request (401/403). This Shodh server appears to require an API key; set SHODH_API_KEY (or SHODH_DEV_API_KEY) or reconfigure Shodh to allow unauthenticated local access.",
+            flush=True,
+        )
+        return 2
     resp.raise_for_status()
 
     obj = resp.json()

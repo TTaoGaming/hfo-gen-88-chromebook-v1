@@ -11,6 +11,11 @@ cd "$ROOT_DIR"
 
 STAGED_FILES="$(git diff --cached --name-only)"
 
+should_run_hive8_cards_verifier() {
+  # Run when staged changes touch Gen88 HIVE8 card mapping contracts or Gold views.
+  echo "$STAGED_FILES" | grep -Eqi '(^|/)(contracts/hfo_mtg_port_card_mappings\.(v1|v2)\.json|contracts/hfo_legendary_commanders_invariants\.v1\.json|hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_cards/|scripts/verify_hive8_mtg_card_mappings\.mjs)'
+}
+
 should_run_dino_classifier() {
   # Only run when staging changes likely to impact the Gen6 v9 Dino diagnostic path.
   # Intentionally avoid a bare "dino" match (e.g. Gen7 wrappers) to prevent false positives.
@@ -61,8 +66,22 @@ cleanup() {
 trap cleanup EXIT
 
 if ! should_run_dino_classifier; then
+  if should_run_hive8_cards_verifier; then
+    echo "[hfo] Pre-commit: verifying Gen88 HIVE8 card mappings (fail-closed)."
+    npm run -s verify:hive8:cards
+  else
+    echo "[hfo] Pre-commit: skipping Gen88 HIVE8 card verifier (no relevant staged files)."
+  fi
+
   echo "[hfo] Pre-commit: skipping Gen6 Dino classifier (no relevant staged files)."
   exit 0
+fi
+
+if should_run_hive8_cards_verifier; then
+  echo "[hfo] Pre-commit: verifying Gen88 HIVE8 card mappings (fail-closed)."
+  npm run -s verify:hive8:cards
+else
+  echo "[hfo] Pre-commit: skipping Gen88 HIVE8 card verifier (no relevant staged files)."
 fi
 
 echo "[hfo] Pre-commit: running Gen6 Dino classifier (fail-closed)."
