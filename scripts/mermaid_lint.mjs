@@ -66,10 +66,17 @@ async function main(argv) {
     const files = argv.filter((a) => !a.startsWith('-'));
     const wantsHelp = argv.includes('--help') || argv.includes('-h');
 
-    if (wantsHelp || files.length === 0) {
+    if (wantsHelp) {
         console.error('Usage: node scripts/mermaid_lint.mjs <file...>');
         console.error('  Intended for lint-staged: checks only passed files.');
-        return wantsHelp ? 0 : 2;
+        return 0;
+    }
+
+    if (files.length === 0) {
+        // Allow running as a general-purpose gate even when no files are passed.
+        // In lint-staged, files are always provided.
+        console.log('OK: mermaid lint skipped (no files provided)');
+        return 0;
     }
 
     /** @type {{file:string, blockIndex?:number, message:string}[]} */

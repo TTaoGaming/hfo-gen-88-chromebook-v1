@@ -3,6 +3,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import {
+  loadCompendiumManifest,
+  resolveDefaultDocPath,
+} from "./hive8_compendium_manifest.mjs";
+
 const WORKSPACE_ROOT = process.cwd();
 
 const CONTRACT_PATH = path.join(
@@ -20,15 +25,6 @@ const DOC_PATHS = [
     "reports",
     "hive8_cards",
     "HFO_HIVE8_LEGENDARY_COMMANDERS_3_PLUS_1_MTG_JADC2_FRONT_DOOR_V1_2026_01_29.md",
-  ),
-  path.join(
-    WORKSPACE_ROOT,
-    "hfo_hot_obsidian_forge",
-    "2_gold",
-    "2_resources",
-    "reports",
-    "hive8_doctrine",
-    "HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V4_2026_01_29.md",
   ),
   path.join(
     WORKSPACE_ROOT,
@@ -63,6 +59,19 @@ const EXPECTED_HEADERS = [
 function die(message) {
   process.stderr.write(`${message}\n`);
   process.exit(1);
+}
+
+// Resolve the canonical compendium path via manifest (avoid hardcoded V7/V8 drift).
+try {
+  const manifest = loadCompendiumManifest();
+  const familyId = manifest?.defaults?.mapping_drift_family_id ?? manifest?.defaults?.canonical_family_id;
+  if (!familyId) {
+    die("manifest.defaults.mapping_drift_family_id missing");
+  }
+  const resolved = resolveDefaultDocPath({ manifest, familyId });
+  DOC_PATHS.splice(1, 0, resolved.absolutePath);
+} catch (error) {
+  die(`Failed to resolve canonical compendium path: ${String(error)}`);
 }
 
 function normalizeCell(value) {
