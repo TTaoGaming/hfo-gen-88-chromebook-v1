@@ -4,7 +4,8 @@
     "push": false,
     "remote": "origin",
     "branch": "CURRENT",
-    "showUntracked": false
+    "showUntracked": false,
+    "proofRoot": "artifacts/proofs"
   },
   "batches": [
     {
