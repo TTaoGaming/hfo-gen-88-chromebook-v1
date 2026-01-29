@@ -92,6 +92,9 @@ def _read_last_json_line(fh) -> dict[str, Any] | None:
 
 
 def _read_secret() -> str:
+    env_secret = os.environ.get("HFO_BLACKBOARD_SECRET")
+    if env_secret and str(env_secret).strip():
+        return str(env_secret).strip()
     try:
         sp = _secret_path()
         if sp.exists():

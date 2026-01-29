@@ -32,7 +32,7 @@ You are reading an 8-part translation ladder:
 - **jadc2_domain**: Fusion / Joint Data Fabric (Bridger)
 - **mosaic_domain (mapping)**: Shared data fabric / interoperability
 - **trigram**: Gen (☶), element Mountain
-- **octree bits**: 100
+- **octree bits**: 001
 
 ### Lattice placement (anti-diagonal)
 - **partner (sum-to-7)**: P6

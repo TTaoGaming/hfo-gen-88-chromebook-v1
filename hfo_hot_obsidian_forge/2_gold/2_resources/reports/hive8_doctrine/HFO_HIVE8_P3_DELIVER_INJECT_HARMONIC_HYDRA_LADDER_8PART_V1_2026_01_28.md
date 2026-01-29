@@ -32,7 +32,7 @@ You are reading an 8-part translation ladder:
 - **jadc2_domain**: Effect Delivery / Precision Strike (Injector)
 - **mosaic_domain (mapping)**: Delivery / payload injection / recomposition
 - **trigram**: Xun (☴), element Wind
-- **octree bits**: 110
+- **octree bits**: 011
 
 ### Lattice placement (anti-diagonal)
 - **partner (sum-to-7)**: P4

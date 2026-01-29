@@ -51,4 +51,4 @@ Primary source for the **operator-corrected** port→binary→trigram order:
 
 Drift note:
 
-- Some older Bronze doctrine files contain a different P1/P3/P6 binary assignment; the JSON SSOT follows the 2026-01-22 operator correction.
+- Some older Bronze doctrine files contain a permuted P1/P3/P4/P6 binary assignment; the JSON SSOT now uses canonical port_index→binary ordering (P0..P7 == 000..111).

@@ -106,8 +106,16 @@ def _last_receipt_type() -> str | None:
 def _log_blackboard(entry: dict) -> None:
     try:
         entry.setdefault("timestamp", _now_iso())
-        with open(BLACKBOARD_PATH, "a") as f:
-            f.write(json.dumps(entry) + "\n")
+        try:
+            from pathlib import Path
+
+            from hfo_blackboard_events import append_signed_entry
+
+            append_signed_entry(dict(entry), blackboard_path=Path(BLACKBOARD_PATH))
+            return
+        except Exception:
+            with open(BLACKBOARD_PATH, "a") as f:
+                f.write(json.dumps(entry) + "\n")
     except Exception as e:
         print(f"Error logging to blackboard: {e}", file=sys.stderr)
 

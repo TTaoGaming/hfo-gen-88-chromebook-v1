@@ -25,7 +25,7 @@ You are reading a translation ladder:
 - **jadc2_domain**: Post-Mission Analysis / Data Repository (Assimilator)
 - **mosaic_domain (mapping)**: AAR / learning / assimilation
 - **trigram**: Dui (☱), element Lake
-- **octree bits**: 011
+- **octree bits**: 110
 
 ---
 

@@ -25,7 +25,7 @@ You are reading a translation ladder:
 - **jadc2_domain**: Fusion / Joint Data Fabric (Bridger)
 - **mosaic_domain (mapping)**: Shared data fabric / interoperability
 - **trigram**: Gen (☶), element Mountain
-- **octree bits**: 100
+- **octree bits**: 001
 
 ---
 

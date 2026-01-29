@@ -66,11 +66,11 @@
             "commander_name": "THE WEB WEAVER",
             "jadc2_domain": "Fusion / Joint Data Fabric (Bridger)",
             "mosaic_tile": "FUSE",
-            "binary": "100",
+            "binary": "001",
             "octree_bits": [
-                1,
                 0,
-                0
+                0,
+                1
             ],
             "trigram": {
                 "name": "Gen",
@@ -137,11 +137,11 @@
             "commander_name": "HARMONIC HYDRA",
             "jadc2_domain": "Effect Delivery / Precision Strike (Injector)",
             "mosaic_tile": "DELIVER",
-            "binary": "110",
+            "binary": "011",
             "octree_bits": [
+                0,
                 1,
-                1,
-                0
+                1
             ],
             "trigram": {
                 "name": "Xun",
@@ -160,11 +160,11 @@
             "commander_name": "RED REGNANT",
             "jadc2_domain": "Multi-Domain Operations / EW / Cyber (Disruptor)",
             "mosaic_tile": "DISRUPT",
-            "binary": "001",
+            "binary": "100",
             "octree_bits": [
+                1,
                 0,
-                0,
-                1
+                0
             ],
             "trigram": {
                 "name": "Zhen",
@@ -206,11 +206,11 @@
             "commander_name": "KRAKEN KEEPER",
             "jadc2_domain": "Post-Mission Analysis / Data Repository (Assimilator)",
             "mosaic_tile": "STORE",
-            "binary": "011",
+            "binary": "110",
             "octree_bits": [
-                0,
                 1,
-                1
+                1,
+                0
             ],
             "trigram": {
                 "name": "Dui",
@@ -253,7 +253,7 @@
             ".github/agents/hfo_hive_8_agent_gen_88_v_4.agent.md"
         ],
         "drift_notes": [
-            "Some older Bronze doctrine files contain a different P1/P3/P6 binary assignment; this invariants file follows the 2026-01-22 operator-corrected port→binary→trigram order from the Silver grimoire."
+            "Some older Bronze doctrine files contain a permuted P1/P3/P4/P6 binary assignment; this invariants file uses the canonical port_index→binary mapping (P0..P7 == 000..111) aligned to the standard trigram ordering (Kun..Qian)."
         ]
     }
 }

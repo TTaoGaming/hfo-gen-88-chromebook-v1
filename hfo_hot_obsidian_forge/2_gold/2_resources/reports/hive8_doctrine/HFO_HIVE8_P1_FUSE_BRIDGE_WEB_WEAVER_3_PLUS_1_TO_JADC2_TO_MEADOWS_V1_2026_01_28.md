@@ -27,7 +27,7 @@ From `contracts/hfo_legendary_commanders_invariants.v1.json`:
 - **jadc2_domain**: Fusion / Joint Data Fabric (Bridger)
 - **mosaic_domain (mapping)**: Shared data fabric / interoperability
 - **trigram**: Gen (☶), element Mountain
-- **octree bits**: 100
+- **octree bits**: 001
 
 Meaning: P1 is the system’s **interoperability engine**—it turns “different dialects of truth” into a shared fabric without letting schema drift poison the swarm.
 

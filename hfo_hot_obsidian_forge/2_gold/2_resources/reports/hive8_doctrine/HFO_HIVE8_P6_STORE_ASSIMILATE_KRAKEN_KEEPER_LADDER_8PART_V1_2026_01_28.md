@@ -32,7 +32,7 @@ You are reading an 8-part translation ladder:
 - **jadc2_domain**: Post-Mission Analysis / Data Repository (Assimilator)
 - **mosaic_domain (mapping)**: AAR / learning / assimilation
 - **trigram**: Dui (☱), element Lake
-- **octree bits**: 011
+- **octree bits**: 110
 
 ### Lattice placement (anti-diagonal)
 - **partner (sum-to-7)**: P1

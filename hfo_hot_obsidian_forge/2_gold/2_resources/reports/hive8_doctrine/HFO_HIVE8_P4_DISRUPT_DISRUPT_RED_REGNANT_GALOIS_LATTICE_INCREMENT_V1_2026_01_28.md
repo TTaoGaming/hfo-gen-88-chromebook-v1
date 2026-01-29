@@ -25,7 +25,7 @@ You are reading a translation ladder:
 - **jadc2_domain**: Multi-Domain Operations / EW / Cyber (Disruptor)
 - **mosaic_domain (mapping)**: Red team / contestation / destructive probing
 - **trigram**: Zhen (☳), element Thunder
-- **octree bits**: 001
+- **octree bits**: 100
 
 ---
 
