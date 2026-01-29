@@ -210,5 +210,23 @@ if __name__ == "__main__":
         runpy.run_path(str(Path(BASE) / "scripts/p6_bronze_progressive_rollup.py"), run_name="__main__")
         raise SystemExit(0)
 
+    # Stigmergy facade (blackboard read/write) — agent-friendly entryway.
+    if len(sys.argv) >= 2 and sys.argv[1] in {
+        "stigmergy",
+        "stigmergy:emit",
+        "stigmergy:tail",
+        "stigmergy:query",
+        "stigmergy:resolve",
+    }:
+        sys.argv[0] = "scripts/hfo_stigmergy.py"
+        cmd = sys.argv.pop(1)
+        # Allow both `stigmergy emit` and `stigmergy:emit` styles.
+        if cmd.startswith("stigmergy:"):
+            sys.argv.insert(1, cmd.split(":", 1)[1])
+        runpy.run_path(
+            str(Path(BASE) / "scripts/hfo_stigmergy.py"), run_name="__main__"
+        )
+        raise SystemExit(0)
+
     sys.argv[0] = TARGET
     runpy.run_path(TARGET, run_name="__main__")
