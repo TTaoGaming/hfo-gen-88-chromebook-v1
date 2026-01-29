@@ -263,14 +263,6 @@
       ]
     },
     {
-      "id": "hot-omega-gen7-vendor",
-      "type": "untracked",
-      "message": "chore(gen7): add portable vendor assets",
-      "paths": [
-        "hfo_hot_obsidian/bronze/1_projects/omega_gen7_v1_portable/app/vendor/"
-      ]
-    },
-    {
       "id": "scripts-specs",
       "type": "untracked",
       "message": "test(scripts): add omega specs and gates",
