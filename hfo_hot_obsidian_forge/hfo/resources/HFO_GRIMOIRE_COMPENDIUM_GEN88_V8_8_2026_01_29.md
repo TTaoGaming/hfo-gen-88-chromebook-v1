@@ -624,6 +624,14 @@ HFO HIVE8 is a safety-coupled 8-port lattice for agentic work.
 
 This V5 revision is a **quine-style anchor**: it embeds the 8 ladder doctrines and adds explicit BDD (Gherkin behaviors) + CDD (contract anchors) per commander.
 
+### HIVE/8 = PDCA (with a swarm twist)
+These are **aliases** (multiple lenses for the same control loop).
+
+- **Plan**: HFO Hindsight = Hunting Hyper-heuristics
+- **Do**: HFO Insight = interlocking interfaces
+- **Check**: HFO Validated Foresight = validation vanguard
+- **Act**: HFO Evolve = evolving engines
+
 Authoritative SSOT:
 - `contracts/hfo_legendary_commanders_invariants.v1.json`
 - `contracts/hfo_mtg_port_card_mappings.v5.json`
