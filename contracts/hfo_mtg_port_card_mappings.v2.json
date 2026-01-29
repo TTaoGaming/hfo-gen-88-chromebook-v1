@@ -1,0 +1,103 @@
+{
+  "_provenance": {
+    "medallion": "bronze",
+    "mutation_score": "0%",
+    "source": "User-provided Gen88 mapping: 3 slivers + 1 equipment (non-creature) per port",
+    "created_utc": "2026-01-27"
+  },
+  "version": "v2",
+  "gen": 88,
+  "schema": "3 slivers + 1 equipment (non-creature) per port",
+  "equipment_oracle_references": [
+    "Infiltration Lens",
+    "Goldvein Pick",
+    "Illusionist's Bracers",
+    "Blade of Selves",
+    "Blade of the Bloodchief",
+    "Sword of Light and Shadow",
+    "Sword of Fire and Ice",
+    "Lightning Greaves"
+  ],
+  "ports": {
+    "P0": {
+      "commander": "Lidless Legion",
+      "mosaic_domain": "ISR / sensing under contest",
+      "slivers": [
+        { "slot": "static", "card": "Cloudshredder Sliver" },
+        { "slot": "trigger", "card": "Synapse Sliver" },
+        { "slot": "activated", "card": "Telekinetic Sliver" }
+      ],
+      "equipment": { "card": "Infiltration Lens" }
+    },
+    "P1": {
+      "commander": "Web Weaver",
+      "mosaic_domain": "Shared data fabric / interoperability",
+      "slivers": [
+        { "slot": "static", "card": "Quick Sliver" },
+        { "slot": "trigger", "card": "Diffusion Sliver" },
+        { "slot": "activated", "card": "Gemhide Sliver" }
+      ],
+      "equipment": { "card": "Goldvein Pick" }
+    },
+    "P2": {
+      "commander": "Mirror Magus",
+      "mosaic_domain": "Creation / digital twin / spike factory",
+      "slivers": [
+        { "slot": "static", "card": "Mirror Entity" },
+        { "slot": "trigger", "card": "Hatchery Sliver" },
+        { "slot": "activated", "card": "Sliver Queen" }
+      ],
+      "equipment": { "card": "Illusionist's Bracers" }
+    },
+    "P3": {
+      "commander": "Harmonic Hydra",
+      "mosaic_domain": "Delivery / payload injection / recomposition",
+      "slivers": [
+        { "slot": "static", "card": "The First Sliver" },
+        { "slot": "trigger", "card": "Harmonic Sliver" },
+        { "slot": "activated", "card": "Hibernation Sliver" }
+      ],
+      "equipment": { "card": "Blade of Selves" }
+    },
+    "P4": {
+      "commander": "Red Regnant",
+      "mosaic_domain": "Red team / contestation / destructive probing",
+      "slivers": [
+        { "slot": "static", "card": "Venom Sliver" },
+        { "slot": "trigger", "card": "Thorncaster Sliver" },
+        { "slot": "activated", "card": "Necrotic Sliver" }
+      ],
+      "equipment": { "card": "Blade of the Bloodchief" }
+    },
+    "P5": {
+      "commander": "Pyre Praetorian",
+      "mosaic_domain": "Blue team / defense-in-depth / recovery",
+      "slivers": [
+        { "slot": "static", "card": "Sliver Hivelord" },
+        { "slot": "trigger", "card": "Pulmonic Sliver" },
+        { "slot": "activated", "card": "Basal Sliver" }
+      ],
+      "equipment": { "card": "Sword of Light and Shadow" }
+    },
+    "P6": {
+      "commander": "Kraken Keeper",
+      "mosaic_domain": "AAR / learning / assimilation",
+      "slivers": [
+        { "slot": "static", "card": "Dregscape Sliver" },
+        { "slot": "trigger", "card": "Lazotep Sliver" },
+        { "slot": "activated", "card": "Homing Sliver" }
+      ],
+      "equipment": { "card": "Sword of Fire and Ice" }
+    },
+    "P7": {
+      "commander": "Spider Sovereign",
+      "mosaic_domain": "C2 / navigate / hunt heuristics",
+      "slivers": [
+        { "slot": "static", "card": "Sliver Legion" },
+        { "slot": "trigger", "card": "Brood Sliver" },
+        { "slot": "activated", "card": "Sliver Overlord" }
+      ],
+      "equipment": { "card": "Lightning Greaves" }
+    }
+  }
+}

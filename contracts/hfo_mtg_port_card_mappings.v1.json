@@ -1,0 +1,59 @@
+{
+  "_provenance": {
+    "medallion": "bronze",
+    "mutation_score": "0%",
+    "source": "Derived from 16_SLIVER_SYNERGY_MANIFOLD.md (stabilized) + STABILIZED_HFO_SLIVER_MOSAIC_V3.md + mtg_card_manifest_v5.md",
+    "created_utc": "2026-01-27"
+  },
+  "version": "v1",
+  "ports": {
+    "P0": {
+      "persona": "THE LIDLESS LEGION",
+      "commander": "Urza, Lord High Artificer",
+      "sliver_a": "Cloudshredder Sliver",
+      "sliver_b": "Synapse Sliver"
+    },
+    "P1": {
+      "persona": "THE WEB WEAVER",
+      "commander": "Breya, Etherium Shaper",
+      "sliver_a": "Gemhide Sliver",
+      "sliver_b": "Manaweft Sliver"
+    },
+    "P2": {
+      "persona": "THE MIRROR MAGUS",
+      "commander": "Sakashima of a Thousand Faces",
+      "sliver_a": "Shifting Sliver",
+      "sliver_b": "Hollowhead Sliver"
+    },
+    "P3": {
+      "persona": "HARMONIC HYDRA",
+      "commander": "The First Sliver",
+      "sliver_a": "Harmonic Sliver",
+      "sliver_b": "Crystalline Sliver"
+    },
+    "P4": {
+      "persona": "RED REGNANT",
+      "commander": "Sliver Queen",
+      "sliver_a": "Heart Sliver",
+      "sliver_b": "Frenzy Sliver"
+    },
+    "P5": {
+      "persona": "PYRE PRAETORIAN",
+      "commander": "Syrix, Carrier of the Flame",
+      "sliver_a": "Pulmonic Sliver",
+      "sliver_b": "Clot Sliver"
+    },
+    "P6": {
+      "persona": "KRAKEN KEEPER",
+      "commander": "Arixmethes, Slumbering Isle",
+      "sliver_a": "Dormant Sliver",
+      "sliver_b": "Synapse Sliver"
+    },
+    "P7": {
+      "persona": "SPIDER SOVEREIGN",
+      "commander": "Sliver Overlord",
+      "sliver_a": "Sliver Legion",
+      "sliver_b": "Bonescythe Sliver"
+    }
+  }
+}
