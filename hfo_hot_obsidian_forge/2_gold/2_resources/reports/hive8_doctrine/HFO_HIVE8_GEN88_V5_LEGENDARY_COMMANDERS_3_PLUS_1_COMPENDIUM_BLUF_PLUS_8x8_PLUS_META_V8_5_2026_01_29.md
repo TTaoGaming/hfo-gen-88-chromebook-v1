@@ -2,7 +2,7 @@
 schema_id: hfo.hive8.compendium
 schema_version: 4
 version: v8.5
-status: canonical
+status: superseded
 
 doc_id: hfo.hive8.gen88.v5.legendary_commanders_3_plus_1_compendium_bluf_8x8_meta
 
@@ -11,7 +11,7 @@ dates:
   updated_utc: "2026-01-29"
 
 medallion:
-  layer: gold
+  layer: hyper_fractal_obsidian
   mutation_score: 0
   hive: V
 
@@ -24,6 +24,7 @@ consistency:
   manifest: contracts/hfo_hive8_compendium_manifest.v1.json
   family_id: hfo.hive8.gen88.v5.legendary_commanders_3_plus_1_compendium_bluf_8x8_meta
   supersedes: v8.4
+  superseded_by: v8.6
   policy: "Canonical is manifest-resolved; superseded docs are informational and not gate-enforced by default."
 
 portability:
