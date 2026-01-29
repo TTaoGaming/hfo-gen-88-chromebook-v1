@@ -1,0 +1,88 @@
+{
+  "schema": "hfo.event.envelope.v1",
+  "version": "v1",
+  "created_utc": "2026-01-29",
+  "purpose": "Canonical cross-port event envelope for P1↔P6 trace continuity, provenance, and budget enforcement.",
+  "invariants": [
+    "Every cross-port event must have a stable event_id.",
+    "Every cross-port event must carry trace context (trace_id/span_id/traceparent).",
+    "Every cross-port event must carry provenance (producer + sha256 of canonical payload).",
+    "Every cross-port event must carry an explicit budget (units + limit) so blast radius is enforceable.",
+    "Every cross-port event must be time-bounded (created_utc) for freshness checks."
+  ],
+  "fields": [
+    {
+      "name": "event_id",
+      "required": true,
+      "type": "string",
+      "description": "Stable unique identifier (uuid-like) for dedupe and replay."
+    },
+    {
+      "name": "event_type",
+      "required": true,
+      "type": "string",
+      "description": "Semantic type name (e.g., hfo.p1.envelope.write_request)."
+    },
+    {
+      "name": "created_utc",
+      "required": true,
+      "type": "string",
+      "description": "UTC timestamp when envelope was created (ISO-8601)."
+    },
+    {
+      "name": "producer",
+      "required": true,
+      "type": "object",
+      "description": "Producer identity and scope.",
+      "shape": {
+        "port": "P0..P7",
+        "agent_id": "string",
+        "run_id": "string"
+      }
+    },
+    {
+      "name": "trace",
+      "required": true,
+      "type": "object",
+      "description": "Trace context (W3C-friendly).",
+      "shape": {
+        "traceparent": "string",
+        "trace_id": "string",
+        "span_id": "string",
+        "parent_span_id": "string|null"
+      }
+    },
+    {
+      "name": "provenance",
+      "required": true,
+      "type": "object",
+      "description": "Provenance + integrity.",
+      "shape": {
+        "payload_sha256": "hex64",
+        "inputs": "array"
+      }
+    },
+    {
+      "name": "budget",
+      "required": true,
+      "type": "object",
+      "description": "Explicit limits for cost and blast radius.",
+      "shape": {
+        "unit": "string",
+        "limit": "number"
+      }
+    },
+    {
+      "name": "payload",
+      "required": true,
+      "type": "unknown",
+      "description": "The typed payload for the port boundary."
+    },
+    {
+      "name": "receipts",
+      "required": false,
+      "type": "array",
+      "description": "Optional links to replay manifests / receipts by id (no URLs)."
+    }
+  ]
+}

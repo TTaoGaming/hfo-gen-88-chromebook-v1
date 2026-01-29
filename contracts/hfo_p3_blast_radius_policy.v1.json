@@ -1,0 +1,28 @@
+{
+  "schema": "hfo.p3.blast_radius_policy.v1",
+  "version": "v1",
+  "created_utc": "2026-01-29",
+  "purpose": "Canonical bounded-cascade policy for P3 injection: enforce targets, concurrency, budget, rollback, and receipts.",
+  "required": {
+    "targets_allowlist": true,
+    "max_concurrency": true,
+    "budget": true,
+    "rollback_required": true,
+    "receipts_required": true
+  },
+  "targets_allowlist": [
+    "sandbox"
+  ],
+  "max_concurrency": 4,
+  "budget": {
+    "unit": "effects",
+    "limit": 200
+  },
+  "rollback_required": true,
+  "receipts_required": true,
+  "notes": [
+    "Targets are logical subjects (environments, tenants, sessions), not URLs.",
+    "This policy is a hard stop: if required fields are missing, injection is prohibited.",
+    "Rollback is required for any injection above LOW confidence tier."
+  ]
+}
