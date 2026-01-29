@@ -108,6 +108,9 @@ def has_header(path):
           break
         fm_lines.append(ln)
       fm = '\n'.join(fm_lines)
+      # Some forge docs keep the Medallion line as a YAML comment.
+      if '# Medallion:' in fm:
+        return True
       if 'medallion_layer:' in fm or '\nmedallion:' in ('\n' + fm):
         return True
 
