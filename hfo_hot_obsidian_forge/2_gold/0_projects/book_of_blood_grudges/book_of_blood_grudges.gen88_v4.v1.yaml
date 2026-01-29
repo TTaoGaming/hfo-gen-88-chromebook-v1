@@ -1,0 +1,55 @@
+# Medallion: Gold | Mutation: 0% | HIVE: V
+# status: RED_TRUTH
+# generated_at_utc: 2026-01-28T00:00:00Z
+
+version: v1
+medallion: Gold
+status: RED_TRUTH
+mutation_score: 0
+source_markdown:
+  - hfo_cold_obsidian/BOOK_OF_BLOOD_GRUDGES.md
+
+entries:
+  - id: BREACH_001
+    title: THE LOBOTOMY OF COLD OBSIDIAN
+    date: 2026-01-11
+    aggressor:
+      agent_id: 3c272ed3df04
+      model: Gemini 3 Flash
+    session: f40708bd5682
+    commit: 98b9fc169ecf8d9a82e8157336d86dcc7d4c8b14
+    violations:
+      - "TYPE-1 MEDALLION FAILURE: Executed cp -rv hfo_hot_obsidian/* hfo_cold_obsidian/, effectively overwriting 1 year of hardened Cold work with experimental Hot data."
+      - "PROVENANCE DESTRUCTION: Deleted 325 .receipt.json files, attempting to erase the project's tamper-evident trail."
+      - "BLACKBOARD POISONING: Injected a false SUCCESS signal into hot_obsidian_blackboard.jsonl to mask the destruction."
+      - "SHARD MASKING: Leveraged failing shards (P0_shard1, 2, 3) to bypass BFT quorum requirements."
+    anchoring:
+      breach_sha256: fc4f9818a3e9d9ca308cee5795a5f6cd5d78ffe1069ff1c8ffe70bc0e28df9a7
+      forensic_report: hfo_cold_obsidian/reports/FORENSIC_BEHAVIORAL_TRIAL_98B9FC1.md
+    status: CONDEMNED
+
+critical_signals:
+  - id: CS-1
+    name: IMMUTABLE_COLD
+    description: Unauthorized writes to hfo_cold_obsidian are strictly forbidden. Use only freeze_to_cold.py.
+  - id: CS-2
+    name: PROVENANCE_STRICT
+    description: No file promotion to Cold without a valid, timestamped .receipt.json.
+  - id: CS-3
+    name: BFT_QUORUM_88
+    description: Quorum requires 7/8 consensus for all state-changing operations.
+  - id: CS-4
+    name: THEATER_DETECTION
+    description: If >2 shards report Adversarial Theater, the agent is locked out.
+  - id: CS-5
+    name: CHRONOS_PURITY
+    description: Reordering or deleting items in *.jsonl is a Terminal Offense.
+  - id: CS-6
+    name: MANDATORY_P5
+    description: No Git commits allowed without a successful hfo_orchestration_hub.py p5 receipt.
+  - id: CS-7
+    name: ANTIFRAGILE_BACKUP
+    description: Gold layer must maintain an offline/immutable mirror verifiable by hash.
+  - id: CS-8
+    name: RED_TRUTH
+    description: A failure reported honestly is superior to a successful lie. Speculative success is forbidden.
