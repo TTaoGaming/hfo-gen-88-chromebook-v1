@@ -8,16 +8,20 @@
 - postflight_receipt_id: cfe2204b9925
 
 ## Objective
+
 - Hello Kraken Keeper. In one paragraph: what can you do/can\x27t you do, and can you access Jan 2025 to now?
 
 ## AAR
+
 - Outcome: **ok**
 - Summary: Chat answer delivered; operator reports written (see Hot/Bronze markdown).
 
 ## Answer (operator-facing)
+
 I can read and write files inside this current workspace, run the repo’s scripts/tasks, and create auditable artifacts (receipts + reports) following your preflight→report→postflight ritual. I can’t automatically see anything outside this workspace (so I do not inherently have all Jan 2025→now history unless it’s present here), and I won’t treat unsourced claims as true—missing evidence gets labeled and turned into the next smallest proof step.
 
 ## Proof sources
+
 - hfo_pointers.json
 - hfo_hot_obsidian/bronze/3_resources/memory/mcp_memory.jsonl
 - hfo_hot_obsidian/hot_obsidian_blackboard.jsonl

@@ -42,6 +42,34 @@ ports:
         - landmarks
 
   p2_shape:
+    sovereign_fsm:
+      description: "Per-cursor sovereign FSM (IDLE/READY/COMMIT/COAST) that gates effects and fails closed when the READY gate closes or readiness drops. P3 injection should be COMMIT-gated and deadman-fail-closed."
+      symbol: "window.hfoP2MirrorMagus.computeSovereignFsmNext"
+      notes:
+        - "The READY gate may be palm-cone (anti-midas) behind feature flag p2-ready-gate-palm-cone."
+        - "When the READY gate closes, READY/COMMIT drop to IDLE and primary seat is cleared."
+
+    tripwire_thread:
+      description: "Planck.js contact-driven tripwire crossings + analytic TTC lookahead (COMMIT-gated) for predictive early keydown scheduling."
+      physics_engine: "planck-js"
+      outputs:
+        tripwire_cross_event:
+          type: "p2/tripwire_cross"
+          payload_fields:
+            - sensorId: "static|dynamic|bandKey"
+            - sensor.engine: "planck"
+            - sensor.phase: "begin|end"
+            - direction: "down|up"
+            - speedUiNormPerS
+        tripwire_lookahead_event:
+          type: "p2/tripwire_lookahead"
+          payload_fields:
+            - bandY
+            - ttcMs
+            - lookaheadWindowMs
+            - direction: "down|up"
+            - speedUiNormPerS
+
     knuckle_tripplane:
       description: "Per-cursor knuckle tripplane and predictive TTC estimation (TOI/TTC)."
       per_cursor_inputs:
@@ -50,14 +78,6 @@ ports:
         - landmarks[17] # pinky knuckle
         - landmarks[8]  # index fingertip
       outputs:
-        tripwire_cross_event:
-          type: "p2/tripwire_cross"
-          payload_fields:
-            - sensorId: "knuckle"
-            - sensor.phase: "begin|end"
-            - direction: "down|up"
-            - speedUiNormPerS
-            - sensor.distance.orientedDistanceVelUiNormPerS
         tripplane_lookahead_event:
           type: "p2/tripplane_lookahead"
           payload_fields:
