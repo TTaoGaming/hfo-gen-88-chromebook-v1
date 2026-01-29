@@ -10,7 +10,8 @@ This file is intentionally short. It is the stable “start here” for Gen88 v5
 
 ## Canonical roots
 
-- Pointers (single source of truth for paths): [hfo_pointers.json](hfo_pointers.json)
+- Pointers (working): [hfo_pointers.json](hfo_pointers.json)
+- Pointers (blessed / stable): [hfo_pointers_blessed.json](hfo_pointers_blessed.json)
 - Root hub shim entrypoint: [hfo_mcp_gateway_hub.py](hfo_mcp_gateway_hub.py)
 - Hub CLI entrypoint: [hfo_hub.py](hfo_hub.py)
 - Forge hot blackboard (resolved via pointers): [hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl](hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl)
