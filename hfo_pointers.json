@@ -9,7 +9,20 @@
     "hfo_phase0_infra_spec_v0_1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/HFO_PHASE0_INFRA_BOOTSTRAP_V0_1_2026_01_25.yaml",
     "hfo_preflight_postflight_policy_v0_1": "hfo_hot_obsidian/bronze/1_projects/alpha_gen1_current/specs/HFO_PREFLIGHT_POSTFLIGHT_POLICY_V0_1_2026_01_25.yaml",
     "omega_gen7_microkernel_spec_v4": "hfo_hot_obsidian_forge/1_silver/0_projects/omega_gen7_unified/specs/omega_gen7_v1_1_spec.yaml",
-    "gen88_v4_blessed_memory_guide": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/HFO_GEN88_V4_BLESSED_MEMORY_SYSTEM.md"
+    "gen88_v4_blessed_memory_guide": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/HFO_GEN88_V4_BLESSED_MEMORY_SYSTEM.md",
+
+    "cold_start_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/COLD_START.md",
+    "root_governance_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/ROOT_GOVERNANCE.md",
+    "resource_lifecycle_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/RESOURCE_LIFECYCLE.md",
+    "where_are_my_logs_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/WHERE_ARE_MY_LOGS_AND_QUARANTINE.md",
+    "phoenix_protocol_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/PHOENIX_PROTOCOL_2026-01-26.md",
+    "forensic_analysis_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/FORENSIC_ANALYSIS_2026-01-26.md",
+    "forensic_analysis_hot_silver_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/FORENSIC_ANALYSIS_HOT_SILVER_2026-01-26T10-08-00-07-00.md",
+    "risk_safe_plan_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/RISK_1_2_SAFE_PLAN_2026-01-26.md",
+    "omega_gen5_v8_handoff_swarm_doc": "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/hfo_omega_gen5_v8_handoff_swarm.md",
+
+    "alpha_folder_structure_spec_v1": "hfo_hot_obsidian_forge/1_silver/2_resources/specs/HFO_ALPHA_FOLDER_STRUCTURE_V1_SPEC_2026_01_26.yaml",
+    "medallion_data_lake_cleanup_spec": "hfo_hot_obsidian_forge/1_silver/2_resources/specs/HFO_MEDALLION_DATA_LAKE_CLEANUP_2026_01_18.yaml"
   },
   "paths": {
     "hot_forge_root": "hfo_hot_obsidian_forge/",
