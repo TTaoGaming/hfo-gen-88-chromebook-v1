@@ -43,8 +43,9 @@ function shouldSkipLint(file) {
 
     // Archive ingests can be extremely large; skip linting archive content to avoid
     // pre-commit OOM/timeout while still allowing GitOps to batch commits.
-    if (f.startsWith('hfo_cold_obsidian_forge/0_bronze/3_archive/')) return true;
-    if (f.startsWith('hfo_hot_obsidian_forge/0_bronze/3_archive/')) return true;
+    // Support both repo-relative paths and absolute paths from lint-staged.
+    if (f.includes('hfo_cold_obsidian_forge/0_bronze/3_archive/')) return true;
+    if (f.includes('hfo_hot_obsidian_forge/0_bronze/3_archive/')) return true;
 
     return false;
 }
