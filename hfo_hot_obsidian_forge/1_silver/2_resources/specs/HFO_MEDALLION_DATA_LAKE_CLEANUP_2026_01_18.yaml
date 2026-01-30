@@ -1,0 +1,302 @@
+manifest:
+  name: "HFO Medallion Data Lake Cleanup"
+  date_local: "2026-01-18"
+  time_local: "19:42:18-07:00"
+  timezone: "America/Denver"
+  repo_root: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1"
+  generated_by: "GitHub Copilot"
+  release_label: "Gen 88 CB v3"
+  evidence:
+    - path: "hfo_cold_obsidian"
+    - path: "hfo_hot_obsidian"
+    - path: "hfo_hot_obsidian/bronze"
+    - path: "hfo_cold_obsidian/bronze"
+
+expected_architecture:
+  root_folders:
+    - hfo_cold_obsidian
+    - hfo_hot_obsidian
+  medallion_layers:
+    - bronze
+    - silver
+    - gold
+    - hfo
+  structure: "APARA"
+  expectation_notes:
+    - "Root should be mostly repo/tooling metadata plus the two main Obsidian folders."
+    - "Most working files should live under hot/cold Obsidian layers (primarily bronze at present)."
+
+root_keep_allowlist:
+  - .git/
+  - .serena/
+  - .husky/
+  - hfo_cold_obsidian/
+  - hfo_hot_obsidian/
+  - hfo_gen_88_cb_v2/
+  - .github/
+  - .vscode/
+  - .venv/
+  - node_modules/
+  - scripts/
+  - hfo_mcp_gateway_hub.py
+  - HFO_MEDALLION_DATA_LAKE_CLEANUP_2026_01_18.yaml
+  - AGENTS.md
+  - COLD_START.md
+  - ROOT_GOVERNANCE.md
+  - package.json
+  - tsconfig.json
+  - .gitignore
+  - .env
+  - .pre-commit-config.yaml
+  - pyproject.toml
+  - requirements.txt
+
+governance_documents:
+  - path: "ROOT_GOVERNANCE.md"
+    purpose: "Root purity allowlist and anti-pollution rules."
+  - path: "AGENTS.md"
+    purpose: "Primary agent workflow and mission constraints."
+  - path: ".github/copilot-instructions.md"
+    purpose: "Agent steering, medallion flow, and coding patterns."
+
+observed_root:
+  root_entries_all:
+    - __pycache__/
+    - .env
+    - .eslintrc.json
+    - .git/
+    - .github/
+    - .gitignore
+    - .hfo_secret
+    - .husky/
+    - .playwright-mcp/
+    - .pre-commit-config.yaml
+    - .pytest_cache/
+    - .serena/
+    - .stryker-tmp/
+    - .venv/
+    - .vscode/
+    - active_hfo_omega_entrypoint.html
+    - active_hfo_omega_entrypoint.json
+    - active_omega.html
+    - active_omega.json
+    - AGENTS.md
+    - check_blackboard.txt
+    - COLD_START.md
+    - DUCKDB_ROLLUP_PLAN.md
+    - eslint.config.mjs
+    - excalidraw_v20_wrapper.html
+    - extract_history.py
+    - find_reversals.py
+    - fix_upe.py
+    - HANDOFF_BATON_PHOENIX_RECOVERY_2026_01_17.md
+    - hfo_cold_obsidian/
+    - hfo_duckdb_mcp.py
+    - hfo_gen_88_cb_v2/
+    - hfo_generate_docs.py
+    - hfo_hexagonal_mcp_hub.py
+    - hfo_hot_obsidian/
+    - hfo_html_dashboard.py
+    - hfo_ingest_master.py
+    - HFO_LEGENDARY_COMMANDERS_V1.md
+    - hfo_mcp_gateway_hub.py
+    - HFO_MISSION_THREADS_MANIFEST_CONSOLIDATED.json
+    - hfo_survivor_search.py
+    - hfo_unified_v88_merged.duckdb
+    - inspect_db.py
+    - lib
+    - node_modules/
+    - npm/
+    - nx_context.txt
+    - OMEGA_GEN4_CONCORDANCE.md
+    - OMEGA_GEN4_CONSOLIDATED_ROADMAP.md
+    - OMEGA_GEN4_MANIFEST.yaml
+    - p0_vitality.log
+    - p1.log
+    - p2.log
+    - p3.log
+    - p4.log
+    - p5.log
+    - p7.log
+    - package-lock.json
+    - package.json
+    - patch_v24_10_v2.py
+    - patch_v24_10_v3.py
+    - patch_v24_10_v4.py
+    - patch_v24_10_v5.py
+    - patch_v24_10.py
+    - patch_v24_11.py
+    - playwright.config.ts
+    - reports/
+    - ROOT_GOVERNANCE.md
+    - scripts/
+    - seek_guidance.py
+    - server_nohup.log
+    - server.log
+    - stryker_background.log
+    - stryker-smoketest/
+    - stryker-tmp-v40-1/
+    - stryker.config.json
+    - stryker.small.config.json
+    - stryker.v40_1.config.json
+    - stryker.v40.config.json
+    - SYSTEM_STATE_ANALYSIS_COGNITIVE_PERSISTENCE.md
+    - temp_npm/
+    - test_output.txt
+    - test-results/
+    - tests/
+    - tsconfig.json
+    - ttao-notes-2025-1-14.md
+    - ttao-notes-2026-1-16.md
+    - ttao-notes-2026-1-17.md
+    - ttao-notes-2026-1-18.md
+    - UNIFIED_MISSION_HISTORY.md
+    - v25_success.png
+    - v29_1_debug.png
+    - v29_refs.txt
+    - v30_1_debug.png
+    - v30_refs.txt
+    - verify_root_sig.py
+
+observed_medallion_layers:
+  cold_obsidian_layers_present:
+    - bronze
+    - silver
+    - gold
+    - hfo
+  hot_obsidian_layers_present:
+    - bronze
+    - silver
+    - gold
+    - hfo
+
+observed_apara_in_bronze:
+  cold_obsidian_bronze:
+    present:
+      - 1_projects
+      - 2_areas
+      - 3_resources
+      - 4_archive
+    extra:
+      - 6_persist
+      - bootstrapping_hfo
+    missing:
+      - 5_assets
+  hot_obsidian_bronze:
+    present:
+      - 1_projects
+      - 2_areas
+      - 3_resources
+      - 4_archive
+    extra:
+      - 6_persist
+      - bootstrapping_hfo
+    missing:
+      - 5_assets
+
+architecture_deviations:
+  - id: ROOT-SPRAWL-01
+    severity: high
+    description: "Many working artifacts are located at the repo root instead of under hot/cold Obsidian."
+    evidence_paths:
+      - active_omega.html
+      - excalidraw_v20_wrapper.html
+      - scripts/
+      - reports/
+      - tests/
+      - hfo_gen_88_cb_v2/
+      - hfo_unified_v88_merged.duckdb
+  - id: ROOT-NODE-02
+    severity: medium
+    description: "Build and temp directories at root (node_modules, temp_npm, test-results) indicate tooling outputs not partitioned into Obsidian layers."
+    evidence_paths:
+      - node_modules/
+      - temp_npm/
+      - test-results/
+  - id: APARA-MISSING-05
+    severity: medium
+    description: "APARA layer '5_assets' not present in bronze (cold/hot)."
+    evidence_paths:
+      - hfo_hot_obsidian/bronze
+      - hfo_cold_obsidian/bronze
+  - id: APARA-EXTRA-06
+    severity: low
+    description: "Extra bronze folders present (6_persist, bootstrapping_hfo) outside strict APARA naming."
+    evidence_paths:
+      - hfo_hot_obsidian/bronze
+      - hfo_cold_obsidian/bronze
+
+governance_gaps:
+  - id: GOV-ROOT-ALLOWLIST
+    severity: high
+    description: "ROOT_GOVERNANCE.md allowlist does not match current root sprawl; enforcement appears inactive."
+    evidence_paths:
+      - ROOT_GOVERNANCE.md
+      - observed_root.root_entries_all
+  - id: GOV-MEDALLION-FLOW
+    severity: medium
+    description: "Working artifacts remain outside hot/cold bronze despite medallion flow requirements."
+    evidence_paths:
+      - AGENTS.md
+      - observed_root.root_entries_all
+
+mcp_gateway_transition:
+  primary_entrypoint:
+    path: "hfo_mcp_gateway_hub.py"
+    status: "active"
+  stale_orchestration_hub:
+    path: "hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py"
+    action: "archive copy (keep source intact)"
+    status: "pending"
+
+consolidation_plan:
+  target_label: "Gen 88 CB v3"
+  phases:
+    - "Move root working artifacts into hot_obsidian/bronze staging for processing."
+    - "Freeze into cold_obsidian/bronze once validated."
+    - "Clear hot_obsidian/bronze to rehydrate latest stable Mission Thread Alpha/Omega."
+
+move_ledger:
+  path: "hfo_hot_obsidian/bronze/2_areas/root_cleanup_staging_2026_01_18/MOVE_LEDGER_2026_01_18.md"
+  status: "generated"
+
+notes:
+  - "Repo/tooling metadata at root (.git, .github, .vscode, package.json, eslint config) is expected to remain at root."
+  - "Silver/Gold/HFO contents not audited in this pass; only layer presence checked."
+
+cleanup_candidates:
+  - category: "move into hot_obsidian/bronze/1_projects or 2_areas"
+    items:
+      - active_omega.html
+      - excalidraw_v20_wrapper.html
+      - hfo_gen_88_cb_v2/
+      - scripts/
+      - tests/
+      - reports/
+  - category: "move into hot_obsidian/bronze/3_resources"
+    items:
+      - hfo_unified_v88_merged.duckdb
+      - hfo_hexagonal_mcp_hub.py
+      - hfo_mcp_gateway_hub.py
+      - hfo_ingest_master.py
+  - category: "archive under hot_obsidian/bronze/4_archive"
+    items:
+      - v25_success.png
+      - v29_1_debug.png
+      - v30_1_debug.png
+      - test_output.txt
+  - category: "tooling/cache consider exclusion or relocation"
+    items:
+      - node_modules/
+      - temp_npm/
+      - .pytest_cache/
+      - .stryker-tmp/
+      - stryker-tmp-v40-1/
+
+next_grounded_steps:
+  - "Confirm target destinations for each cleanup candidate before moving."
+  - "Decide whether to formalize 5_assets and whether 6_persist/bootstrapping_hfo are allowed extensions to APARA."
+  - "Create a staging folder in hot_obsidian/bronze for non-destructive moves (date-stamped)."
+  - "Align move plan to ROOT_GOVERNANCE.md allowlist (document explicit exceptions)."
+  - "Archive a copy of the stale orchestration hub under hot_obsidian/bronze/4_archive before switching entrypoint docs."
+  - "After moves, regenerate this manifest and run Port 5 audit."

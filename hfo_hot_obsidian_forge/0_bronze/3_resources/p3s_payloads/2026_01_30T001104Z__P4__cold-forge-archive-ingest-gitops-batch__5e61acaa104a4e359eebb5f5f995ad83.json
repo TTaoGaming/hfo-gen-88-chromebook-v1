@@ -1,0 +1,14 @@
+{
+  "ts_utc": "2026_01_30T001104Z",
+  "mode": "hfo-p4-basic-4beat",
+  "scope": "P4",
+  "turn_id": "5e61acaa104a4e359eebb5f5f995ad83",
+  "note": "Cold-forge ingest: copy-first archive + GitOps batch + precommit guard",
+  "preflight_receipt_id": "d6b38caabb88",
+  "pointers": {
+    "p3s_payload_root": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads",
+    "blackboard_path": "hfo_hot_obsidian_forge/0_bronze/2_resources/blackboards/hot_obsidian_blackboard_v5.jsonl"
+  },
+  "payload_md": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_30T001104Z__P4__cold-forge-archive-ingest-gitops-batch__5e61acaa104a4e359eebb5f5f995ad83.md",
+  "payload_json": "hfo_hot_obsidian_forge/0_bronze/3_resources/p3s_payloads/2026_01_30T001104Z__P4__cold-forge-archive-ingest-gitops-batch__5e61acaa104a4e359eebb5f5f995ad83.json"
+}
