@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:50.814467Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/HANDOFF_BATON_HEX_HUB_REFACTOR_2026_01_16.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/HANDOFF_BATON_HEX_HUB_REFACTOR_2026_01_16.md",
+    "hash": "acec1dcc92f730354d879880c99645344c71b5fbd7be234a49772686313bd5e9",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

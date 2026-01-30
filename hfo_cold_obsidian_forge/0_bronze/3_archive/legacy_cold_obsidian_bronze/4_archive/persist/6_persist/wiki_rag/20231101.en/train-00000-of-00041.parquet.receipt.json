@@ -1,0 +1,8 @@
+{
+  "artifact": "hfo_cold_obsidian/bronze/6_persist/wiki_rag/20231101.en/train-00000-of-00041.parquet",
+  "hash": "REANCHOR_G88_382e7f6f09e488b2",
+  "timestamp": "2026-01-13T17:52:53.155555Z",
+  "medallion": "BRONZE",
+  "status": "RESTORED",
+  "hive": "V"
+}

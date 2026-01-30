@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:30.550633Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/FORENSIC_DRIFT_ANALYSIS_V20_7.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/FORENSIC_DRIFT_ANALYSIS_V20_7.md",
+    "hash": "ab47970594a35557ad2ae60b68722b79633b2f8dbef46d534cc60f5132ada52c",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

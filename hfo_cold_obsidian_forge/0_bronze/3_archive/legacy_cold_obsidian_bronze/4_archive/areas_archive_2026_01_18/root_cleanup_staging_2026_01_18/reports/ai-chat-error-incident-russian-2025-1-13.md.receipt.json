@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:53.159082Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-error-incident-russian-2025-1-13.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-error-incident-russian-2025-1-13.md",
+    "hash": "7cf42fdd64540ec9dcc47da1b4dd3136ab18f4e75b6028b4c492f61a073d7f95",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

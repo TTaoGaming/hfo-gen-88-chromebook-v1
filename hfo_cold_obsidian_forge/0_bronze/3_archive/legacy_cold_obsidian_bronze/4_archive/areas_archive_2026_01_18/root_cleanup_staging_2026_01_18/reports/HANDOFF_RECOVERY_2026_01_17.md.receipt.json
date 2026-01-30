@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:51.300833Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/HANDOFF_RECOVERY_2026_01_17.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/HANDOFF_RECOVERY_2026_01_17.md",
+    "hash": "fe650d9bc355c203a07203e996ab260a7c60ed3c5534637ee1bd7ce0ab01ac94",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:24.282975Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/test_p7_vulnerabilities.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/test_p7_vulnerabilities.py",
+    "hash": "773ce129349b27c95fcf20aedaa67db7d74943b68130932cb99ecba99d0929f2",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

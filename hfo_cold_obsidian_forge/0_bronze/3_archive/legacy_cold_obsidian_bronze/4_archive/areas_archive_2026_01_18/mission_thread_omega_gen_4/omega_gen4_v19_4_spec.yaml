@@ -1,0 +1,66 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+# Provenance: Omega Gen 4 HIVE Spec v19.4 - "Mirror-Aware Data Fabric"
+
+mission: Thread Omega
+generation: 4
+version: 19.4
+medallion: Bronze
+status: Hardening Port 1 Interlock
+
+# 🐝 HFO HIVE Base 8 Workflow alignment
+workflow_sequence:
+  1_hunt:
+    ports: [0, 7]
+    focus: [Hindsight, Hyper-heuristics]
+    p0_sense:
+      role: ISR / Observer
+      logic: MediaPipe Gesture Recognition
+      tunables:
+        mirror_mode_aware: true # V19.4 target
+    p7_navigate:
+      role: BMC2 / Navigator
+      logic: Shared Dashboard & Layout Management
+      tunables:
+        port_1_fabric_subscription: true
+
+  2_interlock:
+    ports: [1, 6]
+    focus: [Insight, Interfaces]
+    p1_fuse:
+      role: Data Fabric / Bridger
+      logic: Zod-Validated Shared Data Fabric (DataFabricSchema)
+      tunables:
+        mirror_flip_logic: "isMirror ? 1.0 - x : x"
+        strict_contract_enforcement: true
+    p6_store:
+      role: AAR / Assimilator
+      logic: Telemetry Cache
+
+  3_validate:
+    ports: [2, 5]
+    focus: [Foresight, Vanguards]
+    p2_shape:
+      role: Digital Twin / Shaper
+      logic: Planck Physics Adapter & Anatomical Scaling
+      tunables:
+        anatomical_scaling_enabled: true
+    p5_defend:
+      role: Zero Trust / Immunizer
+      logic: Forensic Integrity Audit
+
+  4_evolve:
+    ports: [3, 4]
+    focus: [Evolutionary Strange Loop, Engines]
+    p3_deliver:
+      role: Effect Delivery / Injector
+      logic: W3C Pointer Injection via Fabric Data
+    p4_disrupt:
+      role: MDO / Disruptor
+      logic: Feedback Loops
+
+# 🛠️ System Configuration
+ui_patterns:
+  exposure: Progressive Disclosure
+  theme: Red/Black HFO Shards
+  transparency: 0.7
+  shared_fabric_parity: true

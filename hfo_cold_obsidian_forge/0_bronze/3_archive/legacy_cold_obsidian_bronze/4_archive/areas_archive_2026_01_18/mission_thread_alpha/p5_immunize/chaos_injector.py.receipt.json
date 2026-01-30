@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:26.196888Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/chaos_injector.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/chaos_injector.py",
+    "hash": "10f1c906ea97ef4669b62a8f42475bb44b68dcf3d4409224ae4290b48372f398",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

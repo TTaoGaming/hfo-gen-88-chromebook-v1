@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:29.642870Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/HFO_SYSTEM_HEALTH_PHYSICS_REPORT_2026_01_18_170052.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/HFO_SYSTEM_HEALTH_PHYSICS_REPORT_2026_01_18_170052.md",
+    "hash": "db239979aec4264e4b42d0054b7e741ec9a528cd83c9293c67897855963e4ebf",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

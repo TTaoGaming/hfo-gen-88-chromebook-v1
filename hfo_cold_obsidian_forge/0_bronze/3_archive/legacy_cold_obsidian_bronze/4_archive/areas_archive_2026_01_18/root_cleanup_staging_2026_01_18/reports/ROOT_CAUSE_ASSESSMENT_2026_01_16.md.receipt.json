@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:50.021862Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ROOT_CAUSE_ASSESSMENT_2026_01_16.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ROOT_CAUSE_ASSESSMENT_2026_01_16.md",
+    "hash": "b63770b2e23b36960611f88bba96afe62def656ecae4489ca738a4e6287af7b5",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

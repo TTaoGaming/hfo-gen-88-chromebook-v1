@@ -1,0 +1,63 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: E
+# OMEGA GEN 4 V25.1 SPECIFICATION: PHASED PRODUCTION HARDENING
+
+## 1. MISSION OBJECTIVE
+Evolve the Omega Gen 4 substrate (Base: V24.23) into a production-ready system. 
+**RETROSPECTIVE**: V25.0 failed due to "Feature Overload" and unanchored state drift. 
+V25.1 adopts a prioritized, phased approach to restore stability and polish.
+
+## 2. PHASED SUBSTRATE EVOLUTION
+
+### PHASE 1: UI DE-CLUTTER & PROGRESSIVE DISCLOSURE
+- **Objective**: Regain control of Port 7 Navigator real-estate.
+- **Navigator Gating**: Implement an "Essentials / Developer" toggle in the lil-gui panel.
+- **Default View (Essentials)**: Only expose high-level results (Fire Scale, Intensity, Cursor Theme).
+- **Hidden View (Developer)**: Gate all low-level math (1EuroFilter betas, Planck stiffness, PID constants) behind the toggle.
+- **Outcome**: Reduce cognitive load for production testing.
+
+### PHASE 2: THE "READINESS" CHARGER (LEAKY BUCKET)
+- **Objective**: Consolidate fragmented dwell/charge logic into a unified system behavior.
+- **Unified READINESS**: Replace discrete 266ms timers with a continuous "Readiness Score" (0-100%).
+- **FILL Rate**: User-adjustable speed at which readiness increases when "Armed" (Index pointing up).
+- **DRAIN Rate**: User-adjustable speed at which readiness decays when signal is lost or disengaged.
+- **Propagation**: Changing these rates must automatically update the internal FSM transition thresholds and visual readiness gauges.
+
+### PHASE 3: SPATIAL ERGONOMICS & CAMERA RECTIFICATION
+- **Objective**: Fix physical reachability and display issues on Chromebook V-1.
+- **Excalidraw Spatial Buffer**: User-adjustable `screenBufferPx` (0-100px) that shrinks the interactive area to keep the pointer within the camera's usable FOV.
+- **Camera View Tuning**: Address the current video display offset. Tuna the view rectangle to ensure the physical hand location matches the virtual substrate mapping.
+- **Interactive Parent Discovery**: Harden the logic that ensures synthetic events hit the correct Excalidraw button layers.
+
+### PHASE 4: ASSIMILATION & OFFLINE RESILIENCE
+- **Objective**: Eliminate CDN dependency drift.
+- **Local Staging**: Transition all remaining CDN scripts (Babylon, OpenFeature, etc.) to the local `lib/` directory.
+- **Verification**: System must pass P5 Forensic Audit in an airplane-mode environment.
+
+## 3. ARCHITECTURAL CONSTRAINTS
+- **Base Baseline**: All work must originate from the V24.23 Golden Master.
+- **Parity Guard**: Every Phase completion MUST be followed by a Playwright Parity Test (\`v25_parity.spec.ts\`) to ensure no coordinate regressions.
+- **Provenance**: Maintain Medallion Bronze headers and HIVE workflows.
+
+## 4. HISTORICAL DEBT (V25.0 CRITICAL VOID)
+- V25.0 Attempt 1 is ARCHIVED. DO NOT USE as a logic reference. 
+- V25.1 Reborn is the active mission thread.
+
+### 3.4 Port 0 (Sense)
+- Transition `FilesetResolver` and `GestureRecognizer` to local WASM/Model paths.
+
+## 4. SUCCESS CRITERIA
+- Mutation Score: 88% (Pareto Optimal).
+- Zero External Requests in network tab (post-assimilation).
+- Verified bit-perfect click injection in Excalidraw with 50px buffer.
+
+## 5. FORENSIC LOG & REMEDIATION (2026-01-15)
+- **INCIDENT 25.2.A**: Cursor visibility lost due to Z-index regression. Babylon (9) was buried under Excalidraw (10).
+  - **Remedy**: Elevate Babylon to `z-index: 100` with `pointer-events: none`. (COMPLETED)
+- **INCIDENT 25.2.B**: Coordinate Drift detected. Magnetism logic was hand-rolled in Port 3 but not synced to Port 2.
+  - **Remedy**: Adopt "Shared Pointer Manifold" exemplar. Centralize all warping in the Port 1 Bridge logic. (IN-PROGRESS: Port 1 Logic Refactored, Port 3 Cleanup Pending)
+- **INCIDENT 25.2.C**: BFT Interlock/Chronos Fracture.
+  - **Remedy**: Stabilized baseline with `resign_v2.py`. (COMPLETED)
+- **STABILIZATION PROGRESS (V25.2)**: 
+  - **Shared Manifold**: Port 1 Bridge fused with Magnetism/Warping. All cursors now carry `viewX/Y` in the Data Fabric.
+  - **Z-Index Layering**: Unified stack established: Excalidraw (10) < Babylon (100) < Overlay Canvas (110).
+  - **FSM Integrity**: Fixed NaN crashes in velocity calculation during `pState` initialization.

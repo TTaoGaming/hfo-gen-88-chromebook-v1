@@ -1,0 +1,301 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- OMEGA GEN 4 V24.8 - FIRE VISUALIZATION LAB V3 (PLASMA NEEDLE TUNER) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | V24.8 FIRE LAB V3</title>
+    <script src="./lib/js/babylon.js"></script>
+    <style>
+        :root {
+            --hfo-cyan: #00FFFF;
+            --hfo-amber: #FFB000;
+            --hfo-white: #FFFFFF;
+            --hfo-black: #050505;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--hfo-black);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: white;
+            user-select: none;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            display: block;
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 24px;
+            border-left: 4px solid var(--hfo-amber);
+            border-radius: 4px;
+            pointer-events: auto;
+            width: 320px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .header {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--hfo-amber);
+            font-weight: 900;
+            margin-bottom: 20px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .value-display {
+            color: var(--hfo-white);
+            font-family: monospace;
+        }
+
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--hfo-amber);
+        }
+
+        #status-indicator {
+            padding: 12px;
+            margin-top: 10px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .status-ready {
+            color: var(--hfo-amber);
+            border-color: var(--hfo-amber) !important;
+        }
+
+        .status-commit {
+            color: var(--hfo-cyan);
+            font-weight: bold;
+            border-color: var(--hfo-cyan) !important;
+            accent-color: var(--hfo-cyan);
+        }
+
+        #ux-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 50;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px white;
+        }
+
+        .instruction {
+            margin-top: 24px;
+            font-size: 10px;
+            color: #666;
+            line-height: 1.5;
+            border-top: 1px solid #222;
+            padding-top: 10px;
+        }
+
+        .instruction b {
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ux-dot"></div>
+
+    <div id="ui">
+        <span class="header" id="header-text">OMEGA PLASMA TUNER // V3</span>
+
+        <div class="control-group">
+            <label>Core scale <span class="value-display" id="val-scale">1.0</span></label>
+            <input type="range" id="slider-scale" min="0.2" max="3.0" step="0.1" value="1.0">
+        </div>
+
+        <div class="control-group">
+            <label>Needle Intensity <span class="value-display" id="val-intensity">1.0</span></label>
+            <input type="range" id="slider-intensity" min="0.2" max="5.0" step="0.1" value="1.0">
+        </div>
+
+        <div id="status-indicator" class="status-ready">
+            STATE: READY
+        </div>
+
+        <div class="instruction">
+            <b>TRANSITION:</b> Hold primary mouse/touch to enter <b>COMMIT</b>.<br>
+            Amber (Ready) &rarr; Cyan (Commit).<br>
+            <i>UI Priority: Short trails enabled.</i>
+        </div>
+    </div>
+
+    <canvas id="renderCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        const uxDot = document.getElementById("ux-dot");
+        const statusPanel = document.getElementById("status-indicator");
+        const headerText = document.getElementById("header-text");
+        const sliderScale = document.getElementById("slider-scale");
+        const sliderIntensity = document.getElementById("slider-intensity");
+
+        const engine = new BABYLON.Engine(canvas, true);
+        let currentState = 'READY';
+        let emitterRoot;
+        let pSystem;
+
+        const config = {
+            scale: 1.0,
+            intensity: 1.0
+        };
+
+        const colors = {
+            ready: new BABYLON.Color4(1.0, 0.6, 0.1, 1.0), // Amber
+            commit: new BABYLON.Color4(0.0, 0.8, 1.0, 1.0), // Cyan Plasma
+            white: new BABYLON.Color4(1.0, 1.0, 1.0, 1.0)
+        };
+
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color4(0.02, 0.02, 0.02, 1);
+
+            const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0, -10), scene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            emitterRoot = BABYLON.MeshBuilder.CreateSphere("emitter", { diameter: 0.01 }, scene);
+            emitterRoot.isVisible = false;
+
+            pSystem = new BABYLON.ParticleSystem("plasma", 3000, scene);
+            pSystem.particleTexture = new BABYLON.Texture("https://playground.babylonjs.com/textures/flare.png", scene);
+            pSystem.emitter = emitterRoot;
+            pSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+            updateVisuals();
+            pSystem.start();
+
+            // Interaction
+            const onDown = () => {
+                currentState = 'COMMIT';
+                statusPanel.textContent = "STATE: COMMIT";
+                statusPanel.className = "status-commit";
+                headerText.style.color = "var(--hfo-cyan)";
+                sliderScale.style.accentColor = "var(--hfo-cyan)";
+                sliderIntensity.style.accentColor = "var(--hfo-cyan)";
+                updateVisuals();
+            };
+            const onUp = () => {
+                currentState = 'READY';
+                statusPanel.textContent = "STATE: READY";
+                statusPanel.className = "status-ready";
+                headerText.style.color = "var(--hfo-amber)";
+                sliderScale.style.accentColor = "var(--hfo-amber)";
+                sliderIntensity.style.accentColor = "var(--hfo-amber)";
+                updateVisuals();
+            };
+
+            window.addEventListener("pointerdown", onDown);
+            window.addEventListener("pointerup", onUp);
+
+            window.addEventListener("pointermove", (e) => {
+                uxDot.style.left = e.clientX + "px";
+                uxDot.style.top = e.clientY + "px";
+
+                const width = engine.getRenderWidth();
+                const height = engine.getRenderHeight();
+                const vector = new BABYLON.Vector3(e.clientX, e.clientY, 0);
+                const worldCoordNear = BABYLON.Vector3.Unproject(vector, width, height, BABYLON.Matrix.Identity(), scene.getViewMatrix(), scene.getProjectionMatrix());
+                const vectorFar = new BABYLON.Vector3(e.clientX, e.clientY, 1);
+                const worldCoordFar = BABYLON.Vector3.Unproject(vectorFar, width, height, BABYLON.Matrix.Identity(), scene.getViewMatrix(), scene.getProjectionMatrix());
+                const direction = worldCoordFar.subtract(worldCoordNear).normalize();
+                if (Math.abs(direction.z) > 0.0001) {
+                    const distance = -worldCoordNear.z / direction.z;
+                    emitterRoot.position.copyFrom(worldCoordNear.add(direction.scale(distance)));
+                }
+            });
+
+            return scene;
+        };
+
+        function updateVisuals() {
+            if (!pSystem) return;
+
+            const isReady = (currentState === 'READY');
+            const scale = parseFloat(sliderScale.value);
+            const intensity = parseFloat(sliderIntensity.value);
+
+            document.getElementById("val-scale").textContent = scale.toFixed(1);
+            document.getElementById("val-intensity").textContent = intensity.toFixed(1);
+
+            // COLOR
+            pSystem.color1 = isReady ? colors.ready : colors.commit;
+            pSystem.color2 = isReady ? new BABYLON.Color4(1, 0.2, 0, 0.5) : new BABYLON.Color4(0, 0.2, 1, 0.5);
+            pSystem.colorDead = new BABYLON.Color4(0, 0, 0, 0);
+
+            // SIZE & EMISSION
+            if (isReady) {
+                // Amber Fireball
+                pSystem.emitRate = 400 * scale;
+                pSystem.minSize = 0.05 * scale;
+                pSystem.maxSize = 0.2 * scale;
+                pSystem.minLifeTime = 0.1;
+                pSystem.maxLifeTime = 0.3;
+                pSystem.gravity = new BABYLON.Vector3(0, 2 * intensity, 0);
+                pSystem.minEmitBox = new BABYLON.Vector3(-0.02 * scale, -0.02 * scale, -0.02 * scale);
+                pSystem.maxEmitBox = new BABYLON.Vector3(0.02 * scale, 0.02 * scale, 0.02 * scale);
+            } else {
+                // Cyan Plasma Needle
+                pSystem.emitRate = 1200 * scale;
+                pSystem.minSize = 0.02 * scale;
+                pSystem.maxSize = 0.15 * scale;
+                pSystem.minLifeTime = 0.05;
+                pSystem.maxLifeTime = 0.15; // Sharper needle
+                pSystem.gravity = new BABYLON.Vector3(0, 15 * intensity, 0); // Jet force
+                pSystem.minEmitBox = new BABYLON.Vector3(-0.005 * scale, 0, -0.005 * scale);
+                pSystem.maxEmitBox = new BABYLON.Vector3(0.005 * scale, 0, 0.005 * scale);
+            }
+        }
+
+        sliderScale.oninput = updateVisuals;
+        sliderIntensity.oninput = updateVisuals;
+
+        const scene = createScene();
+        engine.runRenderLoop(() => scene.render());
+        window.addEventListener("resize", () => engine.resize());
+
+    </script>
+</body>
+
+</html>

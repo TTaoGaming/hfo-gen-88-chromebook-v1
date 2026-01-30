@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:45.257870Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/inspect_db.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/inspect_db.py",
+    "hash": "f770e6dd4968b4d2e3809ab4592dde25633590fa7174fcfa9c07fa7f72553117",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

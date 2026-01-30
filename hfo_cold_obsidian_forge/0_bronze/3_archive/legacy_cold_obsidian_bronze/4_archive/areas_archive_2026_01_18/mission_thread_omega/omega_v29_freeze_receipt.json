@@ -1,0 +1,20 @@
+{
+    "version": "v29",
+    "layer": "Cold Bronze",
+    "timestamp": "2026-01-10T06:30:00Z",
+    "summary": "Trans-Boundary Iframe Drill. Restored v26 architecture with same-origin iframe to solve boundary crossing for virtual cursors while maintaining 100% native mouse parity.",
+    "artifacts": [
+        {
+            "path": "omega_workspace_v29.html",
+            "hash": "9c30ac95c93147cf7b3075e4df6800041703fbc0f6519ea7874f6789e1f3f60b"
+        },
+        {
+            "path": "excalidraw_v29_wrapper.html",
+            "hash": "efcbe812de4dba38af88740c4ec4a4aca728364eca3e88e71f71aebf49cde11f"
+        }
+    ],
+    "validation": {
+        "playwright": "scripts/v29_smoke_test.spec.ts passed",
+        "manual": "Confirmed by user that boundary crossing is resolved and mouse parity is restored"
+    }
+}

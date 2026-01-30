@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:53.216750Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-error-loops-2025-1-11.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-error-loops-2025-1-11.md",
+    "hash": "36deb6508612fc1b81eadce06bd3d4a7b90aff2828301395e55eefc31fe8a1ac",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

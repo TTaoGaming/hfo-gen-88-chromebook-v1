@@ -1,0 +1,699 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: V -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | OMEGA GEN 2 V5.1 - Filter Tuning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono&display=swap"
+        rel="stylesheet">
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <style>
+        :root {
+            /* Material Design 3 (M3) Baseline - Dark Theme */
+            --m3-primary: #D0BCFF;
+            --m3-on-primary: #381E72;
+            --m3-surface: #1C1B1F;
+            --m3-on-surface: #E6E1E5;
+            --m3-secondary-container: #4A4458;
+            --m3-on-secondary-container: #E8DEF8;
+            --m3-on-secondary-container-fixed: #211834;
+            --m3-error: #F2B8B5;
+            --m3-background: #1C1B1F;
+            --m3-outline: #938F99;
+            --m3-radius-xl: 28px;
+            --m3-radius-m: 12px;
+            --m3-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --font-main: 'Roboto', sans-serif;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--m3-background);
+            color: var(--m3-on-surface);
+            font-family: var(--font-main);
+        }
+
+        #layout-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Golden Layout Material Overrides */
+        .lm_goldenlayout {
+            background: var(--m3-background) !important;
+        }
+
+        .lm_content {
+            background: var(--m3-surface) !important;
+            border: none !important;
+        }
+
+        .lm_header {
+            background: #211F26 !important;
+            height: 40px !important;
+        }
+
+        .lm_tab {
+            background: transparent !important;
+            color: var(--m3-on-surface) !important;
+            border: none !important;
+            margin-right: 4px !important;
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            opacity: 0.7;
+        }
+
+        .lm_tab.lm_active {
+            background: var(--m3-secondary-container) !important;
+            color: var(--m3-on-secondary-container) !important;
+            opacity: 1;
+            border-bottom: 3px solid var(--m3-primary) !important;
+        }
+
+        .component-container {
+            padding: 0;
+            /* Removing padding to allow full-bleed Hero centering */
+            height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            background-color: var(--m3-surface);
+            position: relative;
+        }
+
+        /* Hero Layout: Ensuring 1:1 parity between video and canvas */
+        .hero-view-substrate {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .video-feed,
+        .overlay-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Both must use cover to maintain spatial parity */
+            border-radius: 0;
+            /* Full bleed to avoid edge clipping in cover mode */
+            pointer-events: none;
+        }
+
+        .video-feed {
+            pointer-events: auto;
+        }
+
+        .video-feed.mirrored,
+        .overlay-canvas.mirrored {
+            transform: scaleX(-1);
+        }
+
+        .camera-controls {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            background: rgba(28, 27, 31, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 12px 24px;
+            border-radius: 100px;
+            border: 1px solid var(--m3-outline);
+            box-shadow: var(--m3-elevation-1);
+        }
+
+        .btn {
+            background: var(--m3-primary);
+            color: var(--m3-on-primary);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            background: #E8DEF8;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Gesture Card Styles */
+        .gesture-card {
+            background: #2B2930;
+            padding: 16px;
+            border-radius: var(--m3-radius-m);
+            border: 1px solid var(--m3-outline);
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+
+        .gesture-card:hover {
+            background: #332F37;
+        }
+
+        .gesture-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--m3-primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .gesture-score {
+            font-size: 12px;
+            color: var(--m3-on-surface);
+            opacity: 0.6;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .gesture-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--m3-on-surface);
+            opacity: 0.5;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* lil-gui Customization */
+        .lil-gui {
+            --background-color: var(--m3-surface);
+            --header-color: #211F26;
+            --title-color: var(--m3-primary);
+            --widget-color: var(--m3-secondary-container);
+            --hover-color: #555;
+            --focus-color: var(--m3-primary);
+            --number-color: var(--m3-on-secondary-container);
+            --string-color: var(--m3-on-secondary-container);
+            --padding: 8px;
+            --spacing: 4px;
+            border-radius: var(--m3-radius-m) !important;
+            box-shadow: var(--m3-elevation-1) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout-container"></div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import { z } from 'zod';
+
+        // --- HFO SIGNAL PROCESSING: OneEuroFilter ---
+        class LowPassFilter { constructor(alpha) { this.alpha = alpha; this.s = null; } call(v) { if (this.s === null) this.s = v; else this.s = this.alpha * v + (1 - this.alpha) * this.s; return this.s; } }
+        class OneEuroFilter {
+            constructor(freq, minCutoff = 1.0, beta = 0.0, dCutoff = 1.0) {
+                this.freq = freq; this.minCutoff = minCutoff; this.beta = beta; this.dCutoff = dCutoff;
+                this.xFilter = new LowPassFilter(this.alpha(minCutoff)); this.dxFilter = new LowPassFilter(this.alpha(dCutoff)); this.lastTime = null;
+            }
+            alpha(c) { const te = 1 / (this.freq || 60); const tau = 1 / (2 * Math.PI * (c || 1.0)); return 1 / (1 + tau / te); }
+            call(x, t = null) {
+                if (this.lastTime !== null && t !== null) {
+                    const dt = (t - this.lastTime) / 1000;
+                    if (dt > 0.001) this.freq = 1 / dt;
+                }
+                this.lastTime = t;
+                const prevX = this.xFilter.s;
+                const dx = prevX === null ? 0 : (x - prevX) * (this.freq || 60);
+                const edx = this.dxFilter.call(dx);
+                const c = this.minCutoff + this.beta * Math.abs(edx);
+                this.xFilter.alpha = this.alpha(c);
+                const result = this.xFilter.call(x);
+                return isNaN(result) ? (x || 0) : result;
+            }
+        }
+
+        // --- PORT 1: BRIDGER (Zod Contracts) ---
+        /**
+         * CoordinateSubstrate ensures landmarks are within normalized bounds [0,1].
+         * This acts as the semantic coordinate guard requested by the user.
+         */
+        const CoordinateSubstrate = z.object({
+            x: z.number().min(-0.2).max(1.2), // Allowing slight bleed for tracking
+            y: z.number().min(-0.2).max(1.2),
+            z: z.number()
+        });
+
+        const P1_HandDataContract = z.object({
+            handIndex: z.number(),
+            handedness: z.string(),
+            gestureName: z.string(),
+            gestureScore: z.number().min(0).max(1),
+            landmarks: z.array(CoordinateSubstrate).optional()
+        });
+
+        const P1_DataFabricSchema = z.array(P1_HandDataContract);
+
+        // Filter Bank to hold 2 hands x 21 landmarks x 3 axes (X,Y,Z)
+        const FILTER_BANK = new Map();
+
+        const PORT_1_BRIDGER = {
+            /**
+             * Bridges raw Port 0 Sensor data into standardized Port 1 Data Fabric
+             */
+            bridge: (mpResults) => {
+                const rawData = [];
+                if (mpResults && mpResults.gestures) {
+                    mpResults.gestures.forEach((gestureList, index) => {
+                        if (gestureList.length > 0) {
+                            const mainGesture = gestureList[0];
+                            const rawLandmarks = mpResults.landmarks ? mpResults.landmarks[index] : undefined;
+                            let processedLandmarks = rawLandmarks;
+
+                            // Apply Signal Smoothing if enabled
+                            if (state.smoothing.enabled && rawLandmarks) {
+                                processedLandmarks = rawLandmarks.map((lm, lmIdx) => {
+                                    const keyBase = `h${index}_l${lmIdx}`;
+                                    ['x', 'y', 'z'].forEach(axis => {
+                                        const key = `${keyBase}_${axis}`;
+                                        if (!FILTER_BANK.has(key)) {
+                                            FILTER_BANK.set(key, new OneEuroFilter(state.frameRate, state.smoothing.minCutoff, state.smoothing.beta));
+                                        }
+                                        const filter = FILTER_BANK.get(key);
+                                        // Update filter params if they changed (presets)
+                                        filter.minCutoff = state.smoothing.minCutoff;
+                                        filter.beta = state.smoothing.beta;
+                                        lm[axis] = filter.call(lm[axis], performance.now());
+                                    });
+                                    return lm;
+                                });
+                            }
+
+                            rawData.push({
+                                handIndex: index,
+                                gestureName: mainGesture.categoryName,
+                                gestureScore: mainGesture.score,
+                                handedness: (mpResults.handedness && mpResults.handedness[index] && mpResults.handedness[index][0])
+                                    ? mpResults.handedness[index][0].categoryName
+                                    : 'Unknown',
+                                landmarks: processedLandmarks
+                            });
+                        }
+                    });
+                }
+
+                try {
+                    // Decouple and validate
+                    return P1_DataFabricSchema.parse(rawData);
+                } catch (e) {
+                    console.warn("PORT 1 BRIDGER: Contract Violation", e);
+                    return [];
+                }
+            }
+        };
+
+        const resolutionMap = {
+            '480p': { w: 640, h: 480 },
+            '720p': { w: 1280, h: 720 },
+            '1080p': { w: 1920, h: 1080 }
+        };
+
+        const state = {
+            active: false,
+            mirrored: true,
+            numHands: 2,
+            minHandDetectionConfidence: 0.5,
+            minHandPresenceConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+            minGestureConfidence: 0.5,
+            delegate: 'GPU', // Options: GPU, CPU
+            showSkeleton: true,
+            showLandmarks: true,
+            resolution: '720p',
+            frameRate: 30,
+            smoothing: {
+                enabled: true,
+                preset: 'Fighter Pilot',
+                minCutoff: 2.0,
+                beta: 0.5
+            },
+            gestures: [], // Dynamic hand data
+            metrics: { fps: 0, lastTime: 0, frameCount: 0 },
+            renderLoopId: 0 // Bug fix: track active loop
+        };
+
+        let recognizer;
+        let video, canvas, ctx;
+        let stream;
+        let drawingUtils; // Persistent to avoid GC pressure
+
+        const initMediaPipe = async () => {
+            if (recognizer) {
+                recognizer.close(); // Clean up existing
+            }
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm");
+            recognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: state.delegate
+                },
+                runningMode: "VIDEO",
+                numHands: state.numHands,
+                minHandDetectionConfidence: state.minHandDetectionConfidence,
+                minHandPresenceConfidence: state.minHandPresenceConfidence,
+                minTrackingConfidence: state.minTrackingConfidence
+            });
+            console.log(`✅ MediaPipe Initialized (Delegate: ${state.delegate})`);
+        };
+
+        const toggleVideo = async () => {
+            if (!state.active) {
+                try {
+                    const res = resolutionMap[state.resolution];
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            width: { ideal: res.w },
+                            height: { ideal: res.h },
+                            frameRate: { ideal: state.frameRate }
+                        }
+                    });
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        state.active = true;
+                        state.renderLoopId++; // Standardize loop ID to prevent racing
+                        if (startBtn) startBtn.innerText = "Stop Video";
+
+                        // Sync canvas size to video actual size
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+
+                        // Initialize drawing utils once we have a context
+                        drawingUtils = new DrawingUtils(ctx);
+
+                        const loopId = state.renderLoopId;
+                        const run = (now) => {
+                            if (!state.active || loopId !== state.renderLoopId) {
+                                console.log(`🛑 Render Loop ${loopId} Terminated.`);
+                                return;
+                            }
+                            renderLoop(now, loopId);
+                            requestAnimationFrame(run);
+                        };
+                        requestAnimationFrame(run);
+                        console.log(`🚀 Render Loop ${loopId} Started.`);
+                    };
+                } catch (e) {
+                    console.error("Camera Initialization Error:", e);
+                    state.active = false;
+                }
+            } else {
+                state.active = false;
+                state.renderLoopId++; // Increment to kill existing loop immediately
+                if (stream) {
+                    stream.getTracks().forEach(t => t.stop());
+                }
+                video.srcObject = null;
+                if (startBtn) startBtn.innerText = "Start Video";
+            }
+        };
+
+        const renderLoop = (now, loopId) => {
+            if (!recognizer) return;
+
+            // FPS Calculation
+            state.metrics.frameCount++;
+            if (now - state.metrics.lastTime >= 1000) {
+                state.metrics.fps = state.metrics.frameCount;
+                state.metrics.frameCount = 0;
+                state.metrics.lastTime = now;
+            }
+
+            if (video.readyState < 2) return;
+
+            const results = recognizer.recognizeForVideo(video, now);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // --- Port 1: Bridging ---
+            const bridgedData = PORT_1_BRIDGER.bridge(results);
+            state.gestures = bridgedData.filter(g => g.gestureScore >= state.minGestureConfidence);
+
+            if (results && results.landmarks && drawingUtils) {
+                for (const landmarks of results.landmarks) {
+                    if (state.showSkeleton) {
+                        drawingUtils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: "rgba(208, 188, 255, 0.7)", lineWidth: 4 });
+                    }
+                    if (state.showLandmarks) {
+                        drawingUtils.drawLandmarks(landmarks, { color: "#FFFFFF", lineWidth: 1 });
+                    }
+                }
+            }
+        };
+
+        let startBtn; // Global reference for GUI sync
+
+        // Layout Components
+        const HeroComponent = (container) => {
+            const div = document.createElement('div');
+            div.className = 'hero-view-substrate';
+
+            video = document.createElement('video');
+            video.className = `video-feed ${state.mirrored ? 'mirrored' : ''}`;
+            video.autoplay = true;
+            video.playsinline = true;
+
+            canvas = document.createElement('canvas');
+            canvas.className = `overlay-canvas ${state.mirrored ? 'mirrored' : ''}`;
+            ctx = canvas.getContext('2d');
+
+            const controls = document.createElement('div');
+            controls.className = 'camera-controls';
+
+            startBtn = document.createElement('button');
+            startBtn.className = 'btn';
+            startBtn.innerText = 'Start Video';
+            startBtn.onclick = () => toggleVideo();
+
+            const flipBtn = document.createElement('button');
+            flipBtn.className = 'btn';
+            flipBtn.innerText = 'Flip';
+            flipBtn.onclick = () => {
+                state.mirrored = !state.mirrored;
+                video.classList.toggle('mirrored', state.mirrored);
+                canvas.classList.toggle('mirrored', state.mirrored);
+            };
+
+            controls.appendChild(startBtn);
+            controls.appendChild(flipBtn);
+
+            div.appendChild(video);
+            div.appendChild(canvas);
+            div.appendChild(controls);
+            container.element.appendChild(div);
+
+            const resizeHandler = () => {
+                if (video.videoWidth) {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                }
+            };
+            container.on('resize', resizeHandler);
+        };
+
+        const GestureIndicatorComponent = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container overflow-auto';
+            div.innerHTML = `
+                <div class="gesture-label">PORT 0: DATA FABRIC</div>
+                <div id="gesture-results"></div>
+            `;
+            container.element.appendChild(div);
+            const display = div.querySelector('#gesture-results');
+
+            const update = () => {
+                if (!state.gestures || state.gestures.length === 0) {
+                    display.innerHTML = '<div style="opacity: 0.5; font-style: italic; font-size: 13px;">No Hand Presence Detected</div>';
+                    return;
+                }
+                display.innerHTML = state.gestures.map(g => `
+                    <div class="gesture-card">
+                        <span class="gesture-label">${g.handedness} HAND</span>
+                        <span class="gesture-name">${g.gestureName}</span>
+                        <div class="gesture-score">
+                            Fidelity: ${(g.gestureScore * 100).toFixed(1)}%
+                        </div>
+                    </div>
+                `).join('');
+            };
+
+            setInterval(update, 100);
+        };
+
+        const TelemetryComponent = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.innerHTML = `
+                <div class="gesture-label">PORT 6: TELEMETRY SUBSTRATE</div>
+                <div id="telemetry-stats"></div>
+            `;
+            container.element.appendChild(div);
+            const display = div.querySelector('#telemetry-stats');
+
+            const update = () => {
+                const mem = window.performance.memory ?
+                    `${Math.round(window.performance.memory.usedJSHeapSize / 1024 / 1024)}MB` :
+                    'N/A';
+
+                display.innerHTML = `
+                    <div style="font-family: 'Roboto Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Performance:</span>
+                            <span style="color: ${state.metrics.fps > 20 ? 'var(--m3-primary)' : 'var(--m3-error)'}; font-weight: bold;">${state.metrics.fps} FPS</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>JS Heap:</span>
+                            <span>${mem}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Delegate:</span>
+                            <span>${state.delegate}</span>
+                        </div>
+                    </div>
+                `;
+            };
+
+            setInterval(update, 500);
+        };
+
+        const SettingsComponent = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            container.element.appendChild(div);
+
+            const gui = new GUI({ container: div, touchStyles: true, title: 'PORT 7 CONTROLS' });
+
+            const camFolder = gui.addFolder('Camera Settings');
+            camFolder.add(state, 'active').name('Camera Active').listen().onChange(v => {
+                if (v !== !!video.srcObject) toggleVideo();
+            });
+            camFolder.add(state, 'mirrored').name('Mirrored View').onChange(v => {
+                video.classList.toggle('mirrored', v);
+                canvas.classList.toggle('mirrored', v);
+            });
+            camFolder.add(state, 'resolution', Object.keys(resolutionMap)).name('Resolution').onChange(async () => {
+                if (state.active) {
+                    await toggleVideo(); // Stop current
+                    await toggleVideo(); // Re-start with new resolution
+                }
+            });
+            camFolder.add(state, 'frameRate', [15, 30, 45, 60, 90, 120]).name('Frame Rate (FPS)').onChange(() => {
+                // Feature locked to 30fps for now as per PORT 5 security directive
+                state.frameRate = 30;
+            }).listen().disable(); // Grayed out for now
+
+            const mpFolder = gui.addFolder('MediaPipe Core');
+            mpFolder.add(state, 'delegate', ['GPU', 'CPU']).name('Compute Delegate').onChange(v => {
+                initMediaPipe();
+            });
+            mpFolder.add(state, 'numHands', 1, 4, 1).name('Max Hands').onChange(v => {
+                if (recognizer) recognizer.setOptions({ numHands: v });
+            });
+            mpFolder.add(state, 'minHandDetectionConfidence', 0, 1).name('Detect Confidence').onChange(v => {
+                if (recognizer) recognizer.setOptions({ minHandDetectionConfidence: v });
+            });
+            mpFolder.add(state, 'minHandPresenceConfidence', 0, 1).name('Presence Confidence').onChange(v => {
+                if (recognizer) recognizer.setOptions({ minHandPresenceConfidence: v });
+            });
+            mpFolder.add(state, 'minTrackingConfidence', 0, 1).name('Tracking Confidence').onChange(v => {
+                if (recognizer) recognizer.setOptions({ minTrackingConfidence: v });
+            });
+
+            const smoothFolder = gui.addFolder('PORT 1: Signal Smoothing');
+            const presets = {
+                'Fighter Pilot': { minCutoff: 2.0, beta: 0.5 },
+                'Standard AR': { minCutoff: 1.0, beta: 0.1 },
+                'The Surgeon': { minCutoff: 0.1, beta: 0.1 },
+                'Organic Fluid': { minCutoff: 0.5, beta: 0.2 }
+            };
+
+            smoothFolder.add(state.smoothing, 'enabled').name('Enable OneEuro');
+            smoothFolder.add(state.smoothing, 'preset', Object.keys(presets)).name('Filter Preset').onChange(v => {
+                state.smoothing.minCutoff = presets[v].minCutoff;
+                state.smoothing.beta = presets[v].beta;
+                gui.controllersRecursive().forEach(c => {
+                    if (c.property === 'minCutoff' || c.property === 'beta') c.updateDisplay();
+                });
+            });
+            smoothFolder.add(state.smoothing, 'minCutoff', 0.001, 10).name('Min Cutoff').listen();
+            smoothFolder.add(state.smoothing, 'beta', 0, 1).name('Beta (Speed Intercept)').listen();
+
+            const gestureFolder = gui.addFolder('Gesture Settings');
+            gestureFolder.add(state, 'minGestureConfidence', 0, 1).name('Min Gesture Conf');
+            gestureFolder.add(state, 'showSkeleton').name('Show Skeleton');
+            gestureFolder.add(state, 'showLandmarks').name('Show Landmarks');
+
+            mpFolder.open();
+            camFolder.open();
+            gestureFolder.open();
+        };
+
+        // Initialize Golden Layout
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        layout.registerComponentFactoryFunction('Hero', HeroComponent);
+        layout.registerComponentFactoryFunction('Settings', SettingsComponent);
+        layout.registerComponentFactoryFunction('Gestures', GestureIndicatorComponent);
+        layout.registerComponentFactoryFunction('Telemetry', TelemetryComponent);
+
+        layout.loadLayout({
+            root: {
+                type: 'row',
+                content: [
+                    { type: 'component', componentType: 'Hero', title: 'PORT 0 MEDIAPIPELINE HANDS', width: 70 },
+                    {
+                        type: 'column',
+                        width: 30,
+                        content: [
+                            { type: 'component', componentType: 'Settings', title: 'PORT 7 SETTINGS', height: 50 },
+                            { type: 'component', componentType: 'Gestures', title: 'PORT 0 GESTURES', height: 25 },
+                            { type: 'component', componentType: 'Telemetry', title: 'PORT 6 TELEMETRY', height: 25 }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        window.addEventListener('resize', () => layout.updateSize());
+        initMediaPipe();
+    </script>
+</body>
+
+</html>

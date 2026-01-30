@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:26.235060Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/recovery_purge.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p5_immunize/recovery_purge.py",
+    "hash": "4e0be6e170aa547cb470e09163d8401a380df29c5ad0d35a7ee82a8b31df72ce",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

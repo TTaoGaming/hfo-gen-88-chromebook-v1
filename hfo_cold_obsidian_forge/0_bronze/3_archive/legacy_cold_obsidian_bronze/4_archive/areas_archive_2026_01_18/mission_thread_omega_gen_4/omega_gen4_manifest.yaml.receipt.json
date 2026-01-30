@@ -1,0 +1,9 @@
+{
+    "timestamp": "2026-01-13T03:45:41.953329Z",
+    "source": "hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_manifest.yaml",
+    "target": "hfo_cold_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_manifest.yaml",
+    "hash": "bcf623a8f3f1c0819a84afe6c298c7c79be7d6649af69af8a07aaa254ab981c4",
+    "medallion": "Bronze",
+    "state": "Frozen",
+    "hive": "V"
+}

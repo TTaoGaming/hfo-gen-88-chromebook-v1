@@ -1,0 +1,673 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO Omega: Port 1 Bridge V20</title>
+
+    <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
+    <!-- 🏗️ Styles -->
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #111;
+            color: #eee;
+            font-family: sans-serif;
+        }
+
+        #layout-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .component-container {
+            padding: 10px;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+            background: #1a1a1a;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+            transform: scaleX(-1);
+            background: #000;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transform: scaleX(-1);
+        }
+
+        .data-card {
+            background: #222;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #00ccff;
+            margin-bottom: 20px;
+        }
+
+        .data-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff88;
+        }
+
+        #gesture-visualizer div {
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            background: #333;
+            color: #666;
+        }
+
+        #gesture-visualizer div.active {
+            background: #cc00ff;
+            color: #fff;
+            box-shadow: 0 0 15px #cc00ff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout-container"></div>
+
+    <!-- 📦 Dependencies -->
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout, LayoutConfig } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, HandLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import Matter from 'matter-js';
+        import { z } from 'zod';
+
+        // 🛡️ Port 1: FUSE Contracts (Zod 6.0 Patterns)
+        const Vec2Schema = z.object({ x: z.number(), y: z.number() });
+        const CursorSchema = z.object({ x: z.number(), y: z.number(), color: z.string(), label: z.string() });
+        const HandSchema = z.object({
+            id: z.number(),
+            active: z.boolean(),
+            lastSeen: z.number(),
+            cursors: z.record(CursorSchema),
+            gestures: z.object({ active: z.string(), score: z.number(), isDown: z.boolean() })
+        });
+        const CloudEventSchema = z.object({
+            specversion: z.literal("1.0"),
+            type: z.string(),
+            source: z.string(),
+            id: z.string(),
+            time: z.string(),
+            data: z.record(HandSchema)
+        });
+
+        // 🧠 One Euro Filter Implementation
+        class LowPassFilter {
+            constructor(alpha) {
+                this.alpha = alpha;
+                this.s = null;
+            }
+            call(value) {
+                if (this.s === null) {
+                    this.s = value;
+                } else {
+                    this.s = this.alpha * value + (1.0 - this.alpha) * this.s;
+                }
+                return this.s;
+            }
+        }
+
+        class OneEuroFilter {
+            constructor(freq, minCutoff = 1.0, beta = 0.0, dCutoff = 1.0) {
+                this.freq = freq;
+                this.minCutoff = minCutoff;
+                this.beta = beta;
+                this.dCutoff = dCutoff;
+                this.xFilter = new LowPassFilter(this.alpha(minCutoff));
+                this.dxFilter = new LowPassFilter(this.alpha(dCutoff));
+                this.lastTime = null;
+            }
+
+            alpha(cutoff) {
+                const te = 1.0 / this.freq;
+                const tau = 1.0 / (2 * Math.PI * cutoff);
+                return 1.0 / (1.0 + tau / te);
+            }
+
+            call(x, timestamp = null) {
+                if (this.lastTime !== null && timestamp !== null) {
+                    const dt = (timestamp - this.lastTime) / 1000;
+                    if (dt > 0) this.freq = 1.0 / dt;
+                }
+                this.lastTime = timestamp;
+
+                const prevX = this.xFilter.s;
+                const dx = prevX === null ? 0.0 : (x - prevX) * this.freq;
+                const edx = this.dxFilter.call(dx);
+
+                const cutoff = this.minCutoff + this.beta * Math.abs(edx);
+                this.xFilter.alpha = this.alpha(cutoff);
+                return this.xFilter.call(x);
+            }
+        }
+
+        // 🎥 Global State
+        const state = {
+            active: true,
+            debug: true,
+            stats: { fps: 0 },
+            mpOptions: {
+                numHands: 2,
+                minHandDetectionConfidence: 0.5,
+                minHandPresenceConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            },
+            physics: {
+                stiffness: 0.2,
+                damping: 0.1,
+                lookAhead: 1.5,
+                springSource: 'snappy',
+                predSource: 'snappy',
+                persistence: {
+                    snapDistance: 0.15, // Threshold to re-acquire (norm coordinates)
+                    coastFrames: 15,    // How long to keep a "dead" hand alive
+                }
+            },
+            hands: {}, // Will store 2 hand objects keyed by tracked ID
+            bridge: {
+                lastEvent: null,
+                errorCount: 0,
+                status: 'IDLE'
+            }
+        };
+
+        // 🌉 Port 1 Bridge: Validation & Telemetry normalization
+        const port1Bridge = (hands) => {
+            try {
+                // 1. Construct Internal Data
+                const telemetryData = {};
+                Object.keys(hands).forEach(id => {
+                    const h = hands[id];
+                    telemetryData[id] = {
+                        id: h.id,
+                        active: h.active,
+                        lastSeen: h.lastSeen,
+                        cursors: {
+                            raw: { x: h.cursors.raw.x, y: h.cursors.raw.y, color: h.cursors.raw.color, label: h.cursors.raw.label },
+                            smooth: { x: h.cursors.smooth.x, y: h.cursors.smooth.y, color: h.cursors.smooth.color, label: h.cursors.smooth.label },
+                            snappy: { x: h.cursors.snappy.x, y: h.cursors.snappy.y, color: h.cursors.snappy.color, label: h.cursors.snappy.label },
+                            spring: { x: h.cursors.spring.x, y: h.cursors.spring.y, color: h.cursors.spring.color, label: h.cursors.spring.label },
+                            pred: { x: h.cursors.predictive.x, y: h.cursors.predictive.y, color: h.cursors.predictive.color, label: h.cursors.predictive.label }
+                        },
+                        gestures: h.gestures
+                    };
+                });
+
+                // 2. Wrap in CloudEvent
+                const event = {
+                    specversion: "1.0",
+                    type: "hfo.omega.v20.hand_update",
+                    source: "hfo.port.0.sense",
+                    id: crypto.randomUUID(),
+                    time: new Date().toISOString(),
+                    data: telemetryData
+                };
+
+                // 3. Validate via Zod
+                const validated = CloudEventSchema.parse(event);
+                state.bridge.lastEvent = validated;
+                state.bridge.status = 'VALID';
+                return validated;
+            } catch (e) {
+                state.bridge.status = 'ERROR';
+                state.bridge.errorCount++;
+                console.error("P1 Bridge Validation Failure:", e);
+                return null;
+            }
+        };
+
+        // Helper to create a Cursor Set for a hand
+        const createCursorSet = (handId, colorHue) => {
+            const h = {
+                id: handId,
+                lastSeen: 0,
+                active: true,
+                coastCount: 0,
+                cursors: {
+                    raw: { x: 0.5, y: 0.5, color: `hsl(${colorHue}, 100%, 100%)`, label: `H${handId} Raw` },
+                    smooth: { x: 0.5, y: 0.5, color: `hsl(${colorHue}, 100%, 70%)`, label: `H${handId} Smooth` },
+                    snappy: { x: 0.5, y: 0.5, color: `hsl(${colorHue}, 100%, 50%)`, label: `H${handId} Snappy` },
+                    spring: { x: 0.5, y: 0.5, body: null, anchor: null, constraint: null, color: `hsl(${colorHue}, 100%, 40%)`, label: `H${handId} Spring` },
+                    predictive: { x: 0.5, y: 0.5, body: null, color: `hsl(${colorHue}, 100%, 30%)`, label: `H${handId} Pred` }
+                },
+                filters: {
+                    smoothX: new OneEuroFilter(30, 0.5, 0.001), smoothY: new OneEuroFilter(30, 0.5, 0.001),
+                    snappyX: new OneEuroFilter(30, 2.0, 0.1), snappyY: new OneEuroFilter(30, 2.0, 0.1)
+                },
+                gestures: { active: 'None', score: 0, isDown: false }
+            };
+
+            if (engine) {
+                const { Bodies, Composite, Constraint } = Matter;
+                h.cursors.spring.anchor = Bodies.circle(0.5, 0.5, 1, { isStatic: true, isSensor: true });
+                h.cursors.spring.body = Bodies.circle(0.5, 0.5, 10, { frictionAir: 0.1, label: `H${handId}-SpringB` });
+                h.cursors.spring.constraint = Constraint.create({
+                    bodyA: h.cursors.spring.anchor,
+                    bodyB: h.cursors.spring.body,
+                    stiffness: state.physics.stiffness,
+                    damping: state.physics.damping,
+                    length: 0
+                });
+                h.cursors.predictive.body = Bodies.circle(0.5, 0.5, 10, { isStatic: true, label: `H${handId}-PredB` });
+                Composite.add(engine.world, [h.cursors.spring.anchor, h.cursors.spring.body, h.cursors.spring.constraint, h.cursors.predictive.body]);
+            }
+            return h;
+        };
+
+        // 🏗️ Matter.js Initialization
+        let engine, runner;
+        const initPhysics = () => {
+            const { Engine, Runner } = Matter;
+            engine = Engine.create();
+            engine.gravity.scale = 0;
+            runner = Runner.create();
+            Runner.run(runner, engine);
+
+            // Pre-initialize 2 hands (ID 0 and 1)
+            state.hands[0] = createCursorSet(0, 200); // Blueish
+            state.hands[1] = createCursorSet(1, 30);  // Orangish
+        };
+
+        let gestureRecognizer = null;
+
+        // 📽️ MediaPipe Processor
+        const initMediaPipe = async (container) => {
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.playsinline = true;
+            video.style.opacity = '0.3';
+            container.appendChild(video);
+
+            const canvas = document.createElement('canvas');
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            const drawingUtils = new DrawingUtils(ctx);
+
+            const visionTasks = await FilesetResolver.forVisionTasks(
+                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
+            );
+
+            gestureRecognizer = await GestureRecognizer.createFromOptions(visionTasks, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: "GPU"
+                },
+                runningMode: "VIDEO",
+                ...state.mpOptions
+            });
+
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
+            video.srcObject = stream;
+
+            let lastTime = -1;
+            const render = () => {
+                const now = performance.now();
+                if (now === lastTime) { requestAnimationFrame(render); return; }
+
+                if (state.active && video.readyState >= 2) {
+                    const results = gestureRecognizer.recognizeForVideo(video, now);
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // 🔍 Identity Tracking & Persistence (Greedy Matching)
+                    const currentLandmarks = results.landmarks || [];
+                    const handIds = Object.keys(state.hands);
+                    const assignments = []; // { landmarkIdx, handId, dist }
+
+                    currentLandmarks.forEach((lm, lMidx) => {
+                        const tip = lm[8]; // Index finger tip
+                        let bestDist = Infinity;
+                        let bestId = null;
+
+                        handIds.forEach(id => {
+                            const h = state.hands[id];
+                            const dx = tip.x - h.cursors.raw.x;
+                            const dy = tip.y - h.cursors.raw.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < bestDist && dist < state.physics.persistence.snapDistance) {
+                                bestDist = dist;
+                                bestId = id;
+                            }
+                        });
+                        assignments.push({ lMidx, handId: bestId, dist: bestDist });
+                    });
+
+                    // Greedy assignments
+                    const usedHandIds = new Set();
+                    const usedLandmarkIdx = new Set();
+                    assignments.sort((a, b) => a.dist - b.dist).forEach(asgn => {
+                        if (asgn.handId !== null && !usedHandIds.has(asgn.handId) && !usedLandmarkIdx.has(asgn.lMidx)) {
+                            const hand = state.hands[asgn.handId];
+                            const landmark = currentLandmarks[asgn.lMidx];
+                            const tip = landmark[8];
+
+                            hand.cursors.raw.x = tip.x;
+                            hand.cursors.raw.y = tip.y;
+                            hand.lastSeen = now;
+                            hand.coastCount = 0;
+                            hand.active = true;
+
+                            hand.cursors.smooth.x = hand.filters.smoothX.call(tip.x, now);
+                            hand.cursors.smooth.y = hand.filters.smoothY.call(tip.y, now);
+                            hand.cursors.snappy.x = hand.filters.snappyX.call(tip.x, now);
+                            hand.cursors.snappy.y = hand.filters.snappyY.call(tip.y, now);
+
+                            if (results.gestures && results.gestures[asgn.lMidx]) {
+                                const top = results.gestures[asgn.lMidx][0];
+                                hand.gestures = {
+                                    active: top.categoryName,
+                                    isDown: (top.categoryName === 'Closed_Fist' || top.categoryName === 'Pointing_Up'),
+                                    score: top.score
+                                };
+                            }
+                            usedHandIds.add(asgn.handId);
+                            usedLandmarkIdx.add(asgn.lMidx);
+                        }
+                    });
+
+                    // New Hand Creation
+                    currentLandmarks.forEach((lm, idx) => {
+                        if (!usedLandmarkIdx.has(idx) && Object.keys(state.hands).length < state.mpOptions.numHands) {
+                            let newId = 0;
+                            while (state.hands[newId]) newId++;
+                            state.hands[newId] = createCursorSet(newId, newId * 180);
+                            const hand = state.hands[newId];
+                            const tip = lm[8];
+                            hand.cursors.raw.x = tip.x; hand.cursors.raw.y = tip.y;
+                            hand.filters.smoothX.call(tip.x, now); hand.filters.smoothY.call(tip.y, now);
+                            hand.filters.snappyX.call(tip.x, now); hand.filters.snappyY.call(tip.y, now);
+                        }
+                    });
+
+                    // Update & Render Hands
+                    Object.keys(state.hands).forEach(id => {
+                        const hand = state.hands[id];
+                        if (!usedHandIds.has(id)) {
+                            hand.coastCount++;
+                            if (hand.coastCount > state.physics.persistence.coastFrames) {
+                                if (engine) {
+                                    Matter.World.remove(engine.world, [
+                                        hand.cursors.spring.body, hand.cursors.spring.anchor,
+                                        hand.cursors.spring.constraint, hand.cursors.predictive.body
+                                    ]);
+                                }
+                                delete state.hands[id];
+                                return;
+                            }
+                            hand.active = false;
+                        }
+
+                        if (state.debug && hand.active) {
+                            // Find the landmark index assigned to this hand
+                            const lIdx = assignments.find(a => a.handId === id)?.lMidx;
+                            if (lIdx !== undefined) {
+                                drawingUtils.drawConnectors(currentLandmarks[lIdx], HandLandmarker.HAND_CONNECTIONS, { color: "#00FF00", lineWidth: 5 });
+                            }
+                        }
+
+                        if (engine) {
+                            const springAnchor = hand.cursors[state.physics.springSource];
+                            const predBase = hand.cursors[state.physics.predSource];
+                            Matter.Body.setPosition(hand.cursors.spring.anchor, { x: springAnchor.x * canvas.width, y: springAnchor.y * canvas.height });
+                            const lead = {
+                                x: (hand.cursors.snappy.x - hand.cursors.smooth.x) * state.physics.lookAhead,
+                                y: (hand.cursors.snappy.y - hand.cursors.smooth.y) * state.physics.lookAhead
+                            };
+                            Matter.Body.setPosition(hand.cursors.predictive.body, { x: (predBase.x + lead.x) * canvas.width, y: (predBase.y + lead.y) * canvas.height });
+                            hand.cursors.spring.x = hand.cursors.spring.body.position.x / canvas.width;
+                            hand.cursors.spring.y = hand.cursors.spring.body.position.y / canvas.height;
+                            hand.cursors.predictive.x = hand.cursors.predictive.body.position.x / canvas.width;
+                            hand.cursors.predictive.y = hand.cursors.predictive.body.position.y / canvas.height;
+                        }
+
+                        [hand.cursors.raw, hand.cursors.smooth, hand.cursors.snappy, hand.cursors.spring, hand.cursors.predictive].forEach(cursor => {
+                            ctx.beginPath();
+                            ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 12, 0, 2 * Math.PI);
+                            ctx.fillStyle = cursor.color;
+                            ctx.globalAlpha = hand.active ? 1.0 : 0.4;
+                            ctx.fill();
+                            ctx.strokeStyle = hand.gestures.isDown ? '#fff' : 'transparent';
+                            ctx.lineWidth = 4;
+                            ctx.stroke();
+                            ctx.globalAlpha = 1.0;
+                            ctx.fillStyle = '#fff';
+                            ctx.font = '10px Courier';
+                            ctx.fillText(cursor.label, cursor.x * canvas.width + 15, cursor.y * canvas.height + 5);
+                        });
+                    });
+
+                    // 🌉 Bridge Integration (Validate State)
+                    port1Bridge(state.hands);
+                }
+
+                lastTime = now;
+                requestAnimationFrame(render);
+            };
+
+            video.onloadedmetadata = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                initPhysics(); // Init Matter.js when canvas dimensions are known
+                render();
+            };
+        };
+
+        const initPhysicsPanel = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.style.display = 'flex';
+            div.style.flexDirection = 'column';
+            div.style.gap = '20px';
+            container.appendChild(div);
+
+            const update = () => {
+                const event = state.bridge.lastEvent;
+                const handData = event ? event.data : {};
+                const handIds = Object.keys(handData);
+
+                if (handIds.length === 0) {
+                    if (div.innerHTML !== '<div class="data-card">Waiting for Bridge...</div>') {
+                        div.innerHTML = '<div class="data-card">Waiting for Bridge...</div>';
+                    }
+                } else {
+                    // Re-sync DOM sections if count mismatch
+                    if (div.querySelectorAll('.hand-section').length !== handIds.length) {
+                        div.innerHTML = '';
+                        handIds.sort().forEach(id => {
+                            const section = document.createElement('div');
+                            section.className = 'hand-section';
+                            section.id = `section-h${id}`;
+                            section.style.marginBottom = '15px';
+                            section.innerHTML = `
+                                <h2 style="font-size: 14px; color: #888; margin: 0 0 5px 0;">HAND ID: ${id}</h2>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+                                    <div class="data-card" style="border-left-color: #ffffff; padding: 8px;">
+                                        <h3 style="font-size:10px;">Raw</h3><code class="val-raw" style="font-size:10px;">...</code>
+                                    </div>
+                                    <div class="data-card" style="border-left-color: #00ccff; padding: 8px;">
+                                        <h3 style="font-size:10px;">Smooth</h3><code class="val-smooth" style="font-size:10px;">...</code>
+                                    </div>
+                                    <div class="data-card" style="border-left-color: #ffcc00; padding: 8px;">
+                                        <h3 style="font-size:10px;">Snappy</h3><code class="val-snappy" style="font-size:10px;">...</code>
+                                    </div>
+                                    <div class="data-card" style="border-left-color: #ff00ff; padding: 8px;">
+                                        <h3 style="font-size:10px;">Spring</h3><code class="val-spring" style="font-size:10px;">...</code>
+                                    </div>
+                                    <div class="data-card" style="border-left-color: #00ff00; padding: 8px;">
+                                        <h3 style="font-size:10px;">Pred</h3><code class="val-pred" style="font-size:10px;">...</code>
+                                    </div>
+                                </div>
+                            `;
+                            div.appendChild(section);
+                        });
+                    }
+
+                    // Update values
+                    handIds.forEach(id => {
+                        const h = handData[id];
+                        const section = div.querySelector(`#section-h${id}`);
+                        if (section) {
+                            section.querySelector('.val-raw').innerText = `X:${h.cursors.raw.x.toFixed(3)}, Y:${h.cursors.raw.y.toFixed(3)}`;
+                            section.querySelector('.val-smooth').innerText = `X:${h.cursors.smooth.x.toFixed(3)}, Y:${h.cursors.smooth.y.toFixed(3)}`;
+                            section.querySelector('.val-snappy').innerText = `X:${h.cursors.snappy.x.toFixed(3)}, Y:${h.cursors.snappy.y.toFixed(3)}`;
+                            section.querySelector('.val-spring').innerText = `X:${h.cursors.spring.x.toFixed(3)}, Y:${h.cursors.spring.y.toFixed(3)}`;
+                            section.querySelector('.val-pred').innerText = `X:${h.cursors.pred.x.toFixed(3)}, Y:${h.cursors.pred.y.toFixed(3)}`;
+                        }
+                    });
+                }
+                requestAnimationFrame(update);
+            };
+            update();
+        };
+
+        const initGesturesPanel = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            container.appendChild(div);
+
+            const update = () => {
+                const event = state.bridge.lastEvent;
+                const handData = event ? event.data : {};
+                const handIds = Object.keys(handData);
+
+                if (handIds.length === 0) {
+                    if (div.innerHTML !== '<div class="data-card">Waiting for Bridge...</div>') {
+                        div.innerHTML = '<div class="data-card">Waiting for Bridge...</div>';
+                    }
+                } else {
+                    if (div.querySelectorAll('.hand-gesture-section').length !== handIds.length) {
+                        div.innerHTML = '';
+                        handIds.sort().forEach(id => {
+                            const section = document.createElement('div');
+                            section.className = 'hand-gesture-section';
+                            section.id = `gesture-section-h${id}`;
+                            section.innerHTML = `
+                                <div class="data-card" style="border-left-color: #cc00ff; text-align:center; padding: 10px; margin-bottom:10px;">
+                                    <h3 style="margin:0; font-size:12px;">HAND ${id}</h3>
+                                    <h1 class="val-gesture" style="font-size: 28px; margin: 5px 0;">NONE</h1>
+                                    <div class="val-score" style="color: #666; font-size: 10px;">Confidence: 0%</div>
+                                    <div style="font-size: 8px; color: #444; margin-top: 5px;">Source: ${event.source}</div>
+                                </div>
+                            `;
+                            div.appendChild(section);
+                        });
+                    }
+
+                    handIds.forEach(id => {
+                        const h = handData[id];
+                        const section = div.querySelector(`#gesture-section-h${id}`);
+                        if (section) {
+                            const activeEl = section.querySelector('.val-gesture');
+                            const scoreEl = section.querySelector('.val-score');
+                            activeEl.innerText = h.gestures.active;
+                            activeEl.style.color = h.gestures.isDown ? '#00ff88' : '#fff';
+                            scoreEl.innerText = `Conf: ${(h.gestures.score * 100).toFixed(1)}%`;
+                        }
+                    });
+                }
+                requestAnimationFrame(update);
+            };
+            update();
+        };
+
+        const initSettings = (container) => {
+            const gui = new GUI({ container, autoPlace: false });
+
+            const phys = gui.addFolder('Matter.js Dynamics');
+            phys.add(state.physics, 'springSource', ['snappy', 'smooth']).name('Spring Anchor');
+            phys.add(state.physics, 'predSource', ['snappy', 'smooth']).name('Pred Anchor');
+            phys.add(state.physics, 'stiffness', 0, 1).name('Spring Stiffness').onChange(v => {
+                Object.values(state.hands).forEach(h => h.cursors.spring.constraint.stiffness = v);
+            });
+            phys.add(state.physics, 'damping', 0, 1).name('Spring Damping').onChange(v => {
+                Object.values(state.hands).forEach(h => h.cursors.spring.constraint.damping = v);
+            });
+            phys.add(state.physics, 'lookAhead', 0, 20).name('Predictive T');
+            phys.open();
+
+            const mp = gui.addFolder('MediaPipe Tasks');
+            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({ minHandDetectionConfidence: v }));
+            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({ minHandPresenceConfidence: v }));
+            mp.add(state, 'debug').name('Show Mesh');
+            mp.open();
+
+            container.appendChild(gui.domElement);
+        };
+
+        // 🏗️ Layout
+        const config = {
+            root: {
+                type: 'column',
+                content: [
+                    {
+                        type: 'row',
+                        height: 70,
+                        content: [
+                            { type: 'component', componentType: 'MediaPipe', title: 'P0: SENSE', width: 50 },
+                            { type: 'component', componentType: 'Gestures', title: 'P3: DELIVER', width: 25 },
+                            { type: 'component', componentType: 'Physics', title: 'P2: SHAPE', width: 25 }
+                        ]
+                    },
+                    { type: 'component', componentType: 'Settings', title: 'P7: NAVIGATE', height: 30 }
+                ]
+            }
+        };
+
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        layout.registerComponentFactoryFunction('MediaPipe', c => initMediaPipe(c.element));
+        layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
+        layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
+        layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
+
+        layout.loadLayout(config);
+        window.addEventListener('resize', () => layout.updateSize());
+    </script>
+</body>
+
+</html>

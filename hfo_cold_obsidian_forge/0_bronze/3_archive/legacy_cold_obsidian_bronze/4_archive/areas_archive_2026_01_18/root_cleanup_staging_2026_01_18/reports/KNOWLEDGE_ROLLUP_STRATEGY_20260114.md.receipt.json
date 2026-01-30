@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:47.338750Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/KNOWLEDGE_ROLLUP_STRATEGY_20260114.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/KNOWLEDGE_ROLLUP_STRATEGY_20260114.md",
+    "hash": "0278d3b1debd2d6a43ac746dacc693b314e42fd11c9e1d480d94b4469bebaf0f",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

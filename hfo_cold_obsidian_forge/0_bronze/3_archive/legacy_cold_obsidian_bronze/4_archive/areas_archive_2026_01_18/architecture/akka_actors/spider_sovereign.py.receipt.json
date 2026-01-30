@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:31.461632Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/akka_actors/spider_sovereign.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/akka_actors/spider_sovereign.py",
+    "hash": "37277cf1697b0d4d19724322b64d4a8930eac06ec30a4c3d23ef2e5aad9b5752",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

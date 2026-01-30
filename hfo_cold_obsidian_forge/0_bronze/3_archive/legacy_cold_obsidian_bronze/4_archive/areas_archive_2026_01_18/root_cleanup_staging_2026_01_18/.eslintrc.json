@@ -1,0 +1,56 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "module": true
+  },
+  "plugins": [
+    "html"
+  ],
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "globals": {
+    "systemState": "readonly",
+    "Zod": "readonly",
+    "MediaPipe": "readonly",
+    "HandLandmarker": "readonly",
+    "FilesetResolver": "readonly",
+    "Babylon": "readonly",
+    "BABYLON": "readonly",
+    "GoldenLayout": "readonly",
+    "OpenFeature": "readonly",
+    "DataFabricSchema": "readonly",
+    "P1Bridger": "readonly",
+    "BabylonJuiceSubstrate": "readonly",
+    "logMission": "readonly",
+    "isFlagEnabled": "readonly",
+    "updateVisualPanels": "readonly",
+    "drawResults": "readonly",
+    "TutorialSystem": "readonly",
+    "hfoTelemetry": "readonly",
+    "hfoPlayer": "readonly",
+    "hfoTutorial": "readonly",
+    "hfoState": "writable",
+    "hfoMockResults": "writable",
+    "performance": "readonly",
+    "requestAnimationFrame": "readonly"
+  },
+  "rules": {
+    "no-undef": "error",
+    "no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-unreachable": "error",
+    "no-redeclare": "error",
+    "no-dupe-args": "error",
+    "no-dupe-keys": "error",
+    "no-const-assign": "error",
+    "no-inner-declarations": "off"
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:47.265431Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/V21_LEGENDARY_FIRE_REPORT.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/V21_LEGENDARY_FIRE_REPORT.md",
+    "hash": "a58d4d78afe534f6c2ca7670f8e880e250f0bf28a2cff31024db4d0559636488",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

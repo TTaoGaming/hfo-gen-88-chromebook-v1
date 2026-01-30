@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO Omega: Physics Cursor Workspace V13</title>
+
+    <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
+    <!-- 🏗️ Styles -->
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #111;
+            color: #eee;
+            font-family: sans-serif;
+        }
+
+        #layout-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .component-container {
+            padding: 10px;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+            background: #1a1a1a;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+            transform: scaleX(-1);
+            background: #000;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transform: scaleX(-1);
+        }
+
+        .data-card {
+            background: #222;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #00ccff;
+            margin-bottom: 20px;
+        }
+
+        .data-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff88;
+        }
+
+        #gesture-visualizer div {
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            background: #333;
+            color: #666;
+        }
+
+        #gesture-visualizer div.active {
+            background: #cc00ff;
+            color: #fff;
+            box-shadow: 0 0 15px #cc00ff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout-container"></div>
+
+    <!-- 📦 Dependencies -->
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "@dimforge/rapier2d": "https://cdn.skypack.dev/pin/@dimforge/rapier2d@v0.11.2-u6X9V4w6yKyL34OUjd5o/mode=imports/optimized/@dimforge/rapier2d.js"
+        }
+    }
+    </script>
+
+    <script type="module">
+        console.log('HFO V13: Module Script Starting');
+        import { GoldenLayout, LayoutConfig } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, HandLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import * as RAPIER from '@dimforge/rapier2d';
+
+        // 🧠 One Euro Filter Implementation
+        class LowPassFilter {
+            constructor(alpha) {
+                this.alpha = alpha;
+                this.s = null;
+            }
+            call(value) {
+                if (this.s === null) {
+                    this.s = value;
+                } else {
+                    this.s = this.alpha * value + (1.0 - this.alpha) * this.s;
+                }
+                return this.s;
+            }
+        }
+
+        class OneEuroFilter {
+            constructor(freq, minCutoff = 1.0, beta = 0.0, dCutoff = 1.0) {
+                this.freq = freq;
+                this.minCutoff = minCutoff;
+                this.beta = beta;
+                this.dCutoff = dCutoff;
+                this.xFilter = new LowPassFilter(this.alpha(minCutoff));
+                this.dxFilter = new LowPassFilter(this.alpha(dCutoff));
+                this.lastTime = null;
+            }
+
+            alpha(cutoff) {
+                const te = 1.0 / this.freq;
+                const tau = 1.0 / (2 * Math.PI * cutoff);
+                return 1.0 / (1.0 + tau / te);
+            }
+
+            call(x, timestamp = null) {
+                if (this.lastTime !== null && timestamp !== null) {
+                    const dt = (timestamp - this.lastTime) / 1000;
+                    if (dt > 0) this.freq = 1.0 / dt;
+                }
+                this.lastTime = timestamp;
+
+                const prevX = this.xFilter.s;
+                const dx = prevX === null ? 0.0 : (x - prevX) * this.freq;
+                const edx = this.dxFilter.call(dx);
+
+                const cutoff = this.minCutoff + this.beta * Math.abs(edx);
+                this.xFilter.alpha = this.alpha(cutoff);
+                return this.xFilter.call(x);
+            }
+        }
+
+        // 🎥 Global State
+        const state = {
+            active: true,
+            debug: true,
+            stats: { fps: 0 },
+            RAPIER: null,
+            world: null,
+            mpOptions: {
+                numHands: 1,
+                minHandDetectionConfidence: 0.5,
+                minHandPresenceConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            },
+            cursors: {
+                smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth' },
+                snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy' },
+                spring: { x: 0.5, y: 0.5, body: null, target: { x: 0.5, y: 0.5 }, color: '#ff00ff', label: 'Spring' },
+                predictive: { x: 0.5, y: 0.5, body: null, color: '#00ff00', label: 'Predictive' }
+            },
+            gestures: {
+                active: 'None',
+                score: 0,
+                isDown: false
+            }
+        };
+
+        // Initialize Filters
+        state.cursors.smooth.filterX = new OneEuroFilter(30, 0.5, 0.001);
+        state.cursors.smooth.filterY = new OneEuroFilter(30, 0.5, 0.001);
+        state.cursors.snappy.filterX = new OneEuroFilter(30, 2.0, 0.1);
+        state.cursors.snappy.filterY = new OneEuroFilter(30, 2.0, 0.1);
+
+        let gestureRecognizer = null;
+
+        // 🏗️ Step 1: Initialize Rapier
+        const initPhysics = async () => {
+            console.log('RAPIER Namespace Keys:', Object.keys(RAPIER));
+
+            // Rapier 0.11.x uses .init() as the WASM loader
+            const init = RAPIER.init || (RAPIER.default && RAPIER.default.init) || RAPIER.default;
+
+            if (typeof init !== 'function') {
+                console.error('Could not find init function. Keys:', Object.keys(RAPIER));
+                throw new Error('RAPIER init not found in bundle');
+            }
+
+            const RAPIER_INST = await init();
+            console.log("RAPIER WASM Instance Ready");
+
+            // Initialize World FIRST
+            state.world = new RAPIER_INST.World({ x: 0.0, y: 0.0 });
+
+            // 1. Spring Cursor (Dynamic Body)
+            const springDesc = RAPIER_INST.RigidBodyDesc.dynamic()
+                .setTranslation(0.5, 0.5)
+                .setLinearDamping(10.0);
+            state.cursors.spring.body = state.world.createRigidBody(springDesc);
+            state.world.createCollider(RAPIER_INST.ColliderDesc.ball(0.01), state.cursors.spring.body);
+
+            // 2. Predictive Cursor (Kinematic Body)
+            const predDesc = RAPIER_INST.RigidBodyDesc.kinematicPositionBased()
+                .setTranslation(0.5, 0.5);
+            state.cursors.predictive.body = state.world.createRigidBody(predDesc);
+
+            console.log("Rapier Physics Ensemble Hardened");
+        };
+
+        // 📽️ MediaPipe Processor
+        const initMediaPipe = async (container) => {
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.playsinline = true;
+            video.style.opacity = '0.3';
+            container.appendChild(video);
+
+            const canvas = document.createElement('canvas');
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            const drawingUtils = new DrawingUtils(ctx);
+
+            const visionTasks = await FilesetResolver.forVisionTasks(
+                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
+            );
+
+            gestureRecognizer = await GestureRecognizer.createFromOptions(visionTasks, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: "GPU"
+                },
+                runningMode: "VIDEO",
+                ...state.mpOptions
+            });
+
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
+            video.srcObject = stream;
+
+            let lastTime = -1;
+            const render = () => {
+                const now = performance.now();
+                if (now === lastTime) { requestAnimationFrame(render); return; }
+
+                if (state.active && video.readyState >= 2) {
+                    const results = gestureRecognizer.recognizeForVideo(video, now);
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    if (results.landmarks && results.landmarks.length > 0) {
+                        results.landmarks.forEach((landmarks, index) => {
+                            if (state.debug) {
+                                drawingUtils.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, { color: "#00FF00", lineWidth: 5 });
+                                drawingUtils.drawLandmarks(landmarks, { color: "#FF0000", lineWidth: 2 });
+                            }
+
+                            // 🎯 Focus on Index Tip (8)
+                            const tip = landmarks[8];
+                            state.cursors.smooth.x = state.cursors.smooth.filterX.call(tip.x, now);
+                            state.cursors.smooth.y = state.cursors.smooth.filterY.call(tip.y, now);
+                            state.cursors.snappy.x = state.cursors.snappy.filterX.call(tip.x, now);
+                            state.cursors.snappy.y = state.cursors.snappy.filterY.call(tip.y, now);
+
+                            // � Physics Bridge (P2 SHAPE)
+                            if (state.world) {
+                                // 1. Spring-Mass-Dampener (PD Control)
+                                const k = 800.0; // Stiffness
+                                const d = 40.0;  // Damping
+                                const sBody = state.cursors.spring.body;
+                                const sPos = sBody.translation();
+                                const sVel = sBody.linvel();
+
+                                const force = {
+                                    x: k * (tip.x - sPos.x) - d * sVel.x,
+                                    y: k * (tip.y - sPos.y) - d * sVel.y
+                                };
+                                sBody.applyImpulse(force, true);
+
+                                // 2. Predictive (Velocity leads Position)
+                                const pBody = state.cursors.predictive.body;
+                                const lastTip = state.cursors.predictive.lastTip || tip;
+                                const dt = (now - (state.cursors.predictive.lastTime || now)) / 1000 || 0.016;
+
+                                const vx = (tip.x - lastTip.x) / dt;
+                                const vy = (tip.y - lastTip.y) / dt;
+
+                                const lookahead = 0.04; // 40ms prediction
+                                state.cursors.predictive.x = tip.x + vx * lookahead;
+                                state.cursors.predictive.y = tip.y + vy * lookahead;
+                                pBody.setNextKinematicTranslation({ x: state.cursors.predictive.x, y: state.cursors.predictive.y });
+
+                                state.cursors.predictive.lastTip = { ...tip };
+                                state.cursors.predictive.lastTime = now;
+
+                                state.world.step();
+
+                                // Sync physics state back
+                                const finalSpringPos = sBody.translation();
+                                state.cursors.spring.x = finalSpringPos.x;
+                                state.cursors.spring.y = finalSpringPos.y;
+                            }
+
+                            // 🤏 Gesture Integration
+                            if (results.gestures && results.gestures[index]) {
+                                const topGesture = results.gestures[index][0];
+                                state.gestures.active = topGesture.categoryName;
+                                state.gestures.score = topGesture.score;
+                                state.gestures.isDown = (topGesture.categoryName === 'Closed_Fist' || topGesture.categoryName === 'Pointing_Up');
+                            }
+
+                            // Render Custom Cursors
+                            [state.cursors.smooth, state.cursors.snappy, state.cursors.spring, state.cursors.predictive].forEach(cursor => {
+                                ctx.beginPath();
+                                ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 12, 0, 2 * Math.PI);
+                                ctx.fillStyle = cursor.color;
+                                ctx.fill();
+                                ctx.strokeStyle = state.gestures.isDown ? '#fff' : 'transparent';
+                                ctx.lineWidth = 4;
+                                ctx.stroke();
+                            });
+                        });
+                    }
+                }
+
+                lastTime = now;
+                requestAnimationFrame(render);
+            };
+
+            video.onloadedmetadata = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                render();
+            };
+        };
+
+        const initPhysicsPanel = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.innerHTML = `
+                <div class="data-card" style="border-left-color: #00ccff">
+                    <h3>SMOOTH (1€)</h3>
+                    <code id="smooth-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div class="data-card" style="border-left-color: #ffcc00">
+                    <h3>SNAPPY (1€)</h3>
+                    <code id="snappy-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div class="data-card" style="border-left-color: #ff00ff">
+                    <h3>SPRING (RAPIER)</h3>
+                    <code id="spring-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div class="data-card" style="border-left-color: #00ff00">
+                    <h3>PREDICTIVE (RAPIER)</h3>
+                    <code id="predictive-data">X: 0.000, Y: 0.000</code>
+                </div>
+            `;
+            container.appendChild(div);
+            const smoothEl = div.querySelector('#smooth-data');
+            const snappyEl = div.querySelector('#snappy-data');
+            const springEl = div.querySelector('#spring-data');
+            const predEl = div.querySelector('#predictive-data');
+
+            const update = () => {
+                smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(3)}, Y: ${state.cursors.smooth.y.toFixed(3)}`;
+                snappyEl.innerText = `X: ${state.cursors.snappy.x.toFixed(3)}, Y: ${state.cursors.snappy.y.toFixed(3)}`;
+                springEl.innerText = `X: ${state.cursors.spring.x.toFixed(3)}, Y: ${state.cursors.spring.y.toFixed(3)}`;
+                predEl.innerText = `X: ${state.cursors.predictive.x.toFixed(3)}, Y: ${state.cursors.predictive.y.toFixed(3)}`;
+                requestAnimationFrame(update);
+            };
+            update();
+        };
+
+        const initGesturesPanel = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.innerHTML = `
+                <div class="data-card" style="border-left-color: #cc00ff; text-align:center;">
+                    <h1 id="active-gesture" style="font-size: 48px; margin: 10px 0;">NONE</h1>
+                    <div id="gesture-score" style="color: #666;">Confidence: 0%</div>
+                </div>
+                <div id="gesture-visualizer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div id="g-Closed_Fist">FIST</div>
+                    <div id="g-Open_Palm">OPEN</div>
+                    <div id="g-Pointing_Up">POINT</div>
+                    <div id="g-Thumb_Up">UP</div>
+                    <div id="g-Victory">VICTORY</div>
+                    <div id="g-ILoveYou">ILY</div>
+                </div>
+            `;
+            container.appendChild(div);
+            const activeEl = div.querySelector('#active-gesture');
+            const scoreEl = div.querySelector('#gesture-score');
+            const cards = div.querySelectorAll('#gesture-visualizer div');
+
+            const update = () => {
+                activeEl.innerText = state.gestures.active;
+                scoreEl.innerText = `Confidence: ${(state.gestures.score * 100).toFixed(1)}%`;
+                cards.forEach(card => {
+                    card.className = (card.id === `g-${state.gestures.active}`) ? 'active' : '';
+                });
+                requestAnimationFrame(update);
+            };
+            update();
+        };
+
+        const initSettings = (container) => {
+            const gui = new GUI({ container, autoPlace: false });
+            const mp = gui.addFolder('MediaPipe Tasks');
+            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({ minHandDetectionConfidence: v }));
+            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({ minHandPresenceConfidence: v }));
+            mp.add(state, 'debug').name('Show Mesh');
+            mp.open();
+
+            const physics = gui.addFolder('One Euro Filters');
+            physics.add(state.cursors.smooth.filterX, 'minCutoff', 0.01, 10).name('Smooth MinCutoff').onChange(v => state.cursors.smooth.filterY.minCutoff = v);
+            physics.add(state.cursors.smooth.filterX, 'beta', 0, 1).name('Smooth Beta').onChange(v => state.cursors.smooth.filterY.beta = v);
+            physics.open();
+
+            container.appendChild(gui.domElement);
+        };
+
+        // 🏗️ Layout
+        const config = {
+            root: {
+                type: 'column',
+                content: [
+                    {
+                        type: 'row',
+                        height: 70,
+                        content: [
+                            { type: 'component', componentType: 'MediaPipe', title: 'P0: SENSE', width: 50 },
+                            { type: 'component', componentType: 'Gestures', title: 'P3: DELIVER', width: 25 },
+                            { type: 'component', componentType: 'Physics', title: 'P2: SHAPE', width: 25 }
+                        ]
+                    },
+                    { type: 'component', componentType: 'Settings', title: 'P7: NAVIGATE', height: 30 }
+                ]
+            }
+        };
+
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        layout.registerComponentFactoryFunction('MediaPipe', c => initMediaPipe(c.element));
+        layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
+        layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
+        layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
+
+        // Initialize Core Engines
+        console.log("Starting Initialization...");
+        initPhysics().then(() => {
+            console.log("Physics Ready, loading layout...");
+            layout.loadLayout(config);
+        }).catch(err => {
+            console.error("CRITICAL INIT FAILURE:", err);
+            document.body.innerHTML = `<div style="color:red; padding:20px;"><h1>Critical Initialization Failure</h1><pre>${err.stack}</pre></div>`;
+        });
+
+        window.addEventListener('resize', () => layout.updateSize());
+    </script>
+</body>
+
+</html>

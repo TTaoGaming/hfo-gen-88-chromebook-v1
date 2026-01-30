@@ -1,0 +1,159 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: I
+# Provenance: Omega Gen 4 HIVE Spec v13.0 - "Temporal Gain & Schmitt Tension"
+
+mission: Thread Omega
+generation: 4
+version: 13.0
+medallion: Bronze
+status: Blueprinting V13
+
+# 🐝 HFO HIVE Base 8 Workflow alignment
+workflow_sequence:
+  1_hunt:
+    ports: [0, 7]
+    focus: [Hindsight, Hyper-heuristics]
+    p0_sense:
+      role: ISR / Observer
+      logic: MediaPipe Gesture Recognition + Landmark Extraction (21 Points)
+      tunables:
+        min_detection_confidence: 0.5 
+        min_tracking_confidence: 0.5
+        model_complexity: 1
+    p7_navigate:
+      role: BMC2 / Navigator
+      logic: Coordinate Mapping & Global Orchestration
+      tunables:
+        canvas_parity_ratio: 1.0
+        coordinate_flip_x: true
+        active_camera_id: "default"
+
+  2_interlock:
+    ports: [1, 6]
+    focus: [Insight, Interfaces]
+    p1_fuse:
+      role: Data Fabric / Bridger
+      logic: Zod 6.0 Schema Bridge + Palm-Cone Orientation Validation
+      tunables:
+        one_euro_filter_beta: 0.05
+        one_euro_filter_mincutoff: 1.0
+        palm_facing_threshold: 0.80 # Normal.z dot product (Shared with Leaky Bucket)
+    p6_store:
+      role: AAR / Assimilator
+      logic: Telemetry Cache (DuckDB/Parquet)
+      tunables:
+        logging_interval_ms: 64 # Aligned with Sparklines
+        buffer_size: 64
+
+  3_validate:
+    ports: [2, 5]
+    focus: [Foresight, Vanguards]
+    p2_shape:
+      role: Digital Twin / Shaper
+      logic: Leaky Bucket Hysteresis Physics (Responsive V12)
+      tunables:
+        bucket_capacity: 100.0
+        fill_rate_per_frame: 5.0 # ~250ms activation @ 60fps
+        drain_rate_per_frame: 3.0 # ~200ms decay from max @ 60fps
+        hysteresis_high_threshold: 80.0
+        hysteresis_low_threshold: 64.0
+        schmitt_trigger_mode: true
+    p5_defend:
+      role: Zero Trust / Immunizer
+      logic: Forensic Integrity Audit & Purity Gates
+      tunables:
+        audit_frequency_hz: 1
+        purity_threshold: 0.64 # Aligned with Exit Threshold
+
+  4_evolve:
+    ports: [3, 4]
+    focus: [Evolutionary Strange Loop, Engines]
+    p3_deliver:
+      role: Effect Delivery / Injector
+      logic: W3C Pointer Injection & Sticky FSM Dispatch
+    p4_disrupt:
+      role: MDO / Disruptor
+      logic: Feedback Loops & Adversarial Jitter Suppression
+      tunables:
+        jitter_suppression_ratio: 0.05
+        low_velocity_deadzone: 0.02
+
+# 🕹️ FSM & Multi-User Logic
+fsm_logic:
+  states: [IDLE, READY, COMMIT, COAST]
+  flows:
+    - "IDLE <-> READY <-> COMMIT -> IDLE"
+  transitions:
+    IDLE_TO_READY:
+      trigger: "Palm Facing + Leaky Bucket >= 80"
+      logic: "dwell_hysteresis"
+    READY_TO_COMMIT:
+      trigger: "Palm Facing + Pointing Gesture + Leaky Bucket >= 80"
+      logic: "gesture_trigger"
+    COMMIT_TO_IDLE:
+      trigger: "Leaky Bucket <= 64 (Stickiness ignores gesture loss)"
+      logic: "sequential_reset"
+    READY_TO_IDLE:
+      trigger: "Leaky Bucket <= 64"
+      logic: "dwell_loss"
+
+    ANY_TO_COAST:
+      trigger: "Tracking Confidence < Coast Threshold"
+      logic: "predictive_drift"
+      description: "Engineer for consumer hardware tracking loss. Coast the pointer using last known velocity until physics system (P2) is ready."
+      tunables:
+        coast_timeout_ms:
+          value: 150
+          tag: "Normal"
+          description: "Duration to maintain pointer state during tracking loss before IDLE reset."
+    COAST_TO_SNAPLOCK:
+      trigger: "Tracking Resumed + Confidence >= Snap Threshold"
+      logic: "proximity_lock"
+      description: "Smoothly snap to resumed tracking location if within proximity threshold."
+      tunables:
+        snap_threshold:
+          value: 0.8
+          tag: "Dev"
+          description: "Confidence level required to break COAST and lock to new landmark."
+    COAST_TO_IDLE:
+      trigger: "Timeout Exceeded"
+  pre_arm_behavior:
+    description: "Anti-Midas Dwell Persistence. The leaky bucket drains slowly, allowing rapid re-arming if the user re-enters the cone quickly (Coyote Time Pattern)."
+    leaky_bucket_persistence: true
+    tunables:
+      drain_factor:
+        value: 0.5
+        tag: "Dev"
+        description: "Scale factor for bucket drainage relative to fill rate."
+  activation_gate:
+    logic: Palm Orientation Gated Dwell + Leaky Bucket
+    visuals:
+      type: "Vertical Charge-Up Bar"
+      location: "Palm Center (Landmark 0-5-17 Geometric Mean)"
+      markers: ["High Threshold", "Low Threshold"]
+      color_map: { idling: "#444", charging: "#f00", locked: "#ff0", coasting: "#00f" }
+    behavior:
+      palm_orientation_required: true
+      tunables:
+        dwell_activation_ms:
+          value: 300
+          tag: "Normal"
+        hysteresis_high:
+          value: 85.0
+          tag: "Dev"
+        hysteresis_low:
+          value: 15.0
+          tag: "Dev"
+        leaky_bucket_fill_rate:
+          value: 2.5
+          tag: "Dev"
+        leaky_bucket_drain_rate:
+          value: 1.5
+          tag: "Dev"
+
+# 🛠️ System Configuration
+ui_patterns:
+  exposure: Progressive Disclosure
+  theme: Red/Black HFO Shards
+  transparency: 0.7
+  charge_bar_width: 8
+  charge_bar_height: 40

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:34.417603Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_defend/integrity_sentinel.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/p5_defend/integrity_sentinel.py",
+    "hash": "37163712046cfa5d2aae58684b92485638df7bef9fbf15fbce25ace3b6c54a03",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

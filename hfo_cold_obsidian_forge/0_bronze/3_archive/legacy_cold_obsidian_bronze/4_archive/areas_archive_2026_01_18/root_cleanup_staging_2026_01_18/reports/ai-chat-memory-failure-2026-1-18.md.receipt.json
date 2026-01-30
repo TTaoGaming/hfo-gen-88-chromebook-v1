@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:53.391099Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-memory-failure-2026-1-18.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-memory-failure-2026-1-18.md",
+    "hash": "4b54bceb67a47925a333f38b53518cba3f230fd06d94e75b33b8f5825959ed86",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

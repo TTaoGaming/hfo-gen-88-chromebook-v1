@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:51.705603Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_HANDOFF_STALE_WORK_2026_01_18.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_HANDOFF_STALE_WORK_2026_01_18.md",
+    "hash": "3e2dadcf3e7ba87e647c07babe44e8c27b38dbe3ceb14268ce054444bc92c475",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

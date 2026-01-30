@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:45.819890Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/post_instructional_manifold_v36.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/post_instructional_manifold_v36.md",
+    "hash": "e8a75741324d9e56b49a131fb27039561efaec2c67c85b910c6e5ecc9098fb0c",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

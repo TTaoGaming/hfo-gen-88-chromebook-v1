@@ -1,0 +1,16 @@
+{
+  "project": "Omega V10 Vertical Slice",
+  "layer": "Bronze",
+  "mission_thread": "Omega",
+  "timestamp": "2026-01-10T04:30:00Z",
+  "author": "HFO-Hive8",
+  "status": "frozen",
+  "files": [
+    "THREAD_OMEGA_MANIFEST.yaml",
+    "v10_one_euro_demo.html",
+    "contracts/omega_contracts.zod.ts",
+    "p1_fuse/one_euro_filter.py",
+    "p2_shape/mass_spring_dampener.py",
+    "p3_deliver/interaction_fsm.py"
+  ]
+}

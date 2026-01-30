@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:29.770270Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/KRAKEN_KEEPER_GALOIS_SHARD_MAPPING_20260114.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/KRAKEN_KEEPER_GALOIS_SHARD_MAPPING_20260114.md",
+    "hash": "8b379251075dd242b99cd3d3b34b761bed2cf5860a7ff6094fd5534b7081ec88",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

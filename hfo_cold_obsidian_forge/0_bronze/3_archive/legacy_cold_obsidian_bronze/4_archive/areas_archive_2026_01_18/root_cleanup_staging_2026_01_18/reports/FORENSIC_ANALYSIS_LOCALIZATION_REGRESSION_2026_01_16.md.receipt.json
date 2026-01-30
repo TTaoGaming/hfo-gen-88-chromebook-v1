@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:49.964182Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_ANALYSIS_LOCALIZATION_REGRESSION_2026_01_16.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_ANALYSIS_LOCALIZATION_REGRESSION_2026_01_16.md",
+    "hash": "fb21af66002e83fca39a8ccd882d4d1d9da3bda9806f4aed795b5e823c0c867f",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

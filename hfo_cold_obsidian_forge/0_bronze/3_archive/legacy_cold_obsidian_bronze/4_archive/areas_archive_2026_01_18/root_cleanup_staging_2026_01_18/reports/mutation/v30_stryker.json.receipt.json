@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:57.234939Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/mutation/v30_stryker.json",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/mutation/v30_stryker.json",
+    "hash": "6a6e626807713424d7360a831af2814bf7e7f2fcc2b145d03749c0753a1ec04b",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

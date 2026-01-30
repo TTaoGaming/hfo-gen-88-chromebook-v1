@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:29.495905Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/HFO_MCP_STACK_STANDARDIZATION_2026_01_18.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/HFO_MCP_STACK_STANDARDIZATION_2026_01_18.md",
+    "hash": "20760562f81805d6c6878eacd0dd7bbd273f7b476d7defcaa346047a604a0efe",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

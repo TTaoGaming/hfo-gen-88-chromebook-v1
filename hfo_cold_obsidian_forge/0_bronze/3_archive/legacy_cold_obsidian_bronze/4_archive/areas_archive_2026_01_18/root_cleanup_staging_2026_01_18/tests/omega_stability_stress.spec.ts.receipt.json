@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:18:00.222377Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/tests/omega_stability_stress.spec.ts",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/tests/omega_stability_stress.spec.ts",
+    "hash": "ced5f067b2832713fc0e36c4c242986de2120d1a8bf66cf1aa54b8db5b22ee1c",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

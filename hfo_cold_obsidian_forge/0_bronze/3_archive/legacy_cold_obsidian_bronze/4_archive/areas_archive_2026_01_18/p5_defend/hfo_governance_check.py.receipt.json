@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:34.464444Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/p5_defend/hfo_governance_check.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/p5_defend/hfo_governance_check.py",
+    "hash": "9381242cf562ec8a1b696e7bd50dbc1080a3b3f89837dc92ec993bfb130504ce",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

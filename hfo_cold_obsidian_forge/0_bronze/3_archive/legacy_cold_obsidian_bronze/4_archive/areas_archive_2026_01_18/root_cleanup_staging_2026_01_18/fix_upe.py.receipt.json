@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:45.061716Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/fix_upe.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/fix_upe.py",
+    "hash": "4bd69b103d653af19b05967f72c93e4b2cfc6d4c666a6ceccdedc7e74b860ffa",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

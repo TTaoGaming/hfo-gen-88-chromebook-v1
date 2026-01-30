@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:34.787290Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_manifold.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/architecture/ports/hfo_manifold.py",
+    "hash": "073fde734fc7063c2b1b4786b5b08ca01ad8eb20bbada05599156cb49a62488d",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

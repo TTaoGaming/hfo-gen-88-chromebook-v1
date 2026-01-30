@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:33.368138Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/hfo_ingest_master.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/hfo_ingest_master.py",
+    "hash": "1cda9f9046c0dc24327ab93808ec85eb5def84fe8ac1d6f2b0d2ff9b8d264c95",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

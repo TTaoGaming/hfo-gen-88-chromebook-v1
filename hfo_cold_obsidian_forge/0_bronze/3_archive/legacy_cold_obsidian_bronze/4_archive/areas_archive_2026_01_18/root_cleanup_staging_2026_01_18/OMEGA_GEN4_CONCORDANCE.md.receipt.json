@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:44.008413Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/OMEGA_GEN4_CONCORDANCE.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/OMEGA_GEN4_CONCORDANCE.md",
+    "hash": "f0fae49f6487cca73379789b224058b6e5ba7dc7395cebccdf88a279b4996309",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

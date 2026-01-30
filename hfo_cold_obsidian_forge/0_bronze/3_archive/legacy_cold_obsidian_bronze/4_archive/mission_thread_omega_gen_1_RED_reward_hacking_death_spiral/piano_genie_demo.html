@@ -1,0 +1,239 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: D -->
+<!-- HFO PIANO GENIE STANDALONE DEMO (V53_BASELINE) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>HFO | PIANO GENIE DEMO</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <script src="./assets/piano_genie/magenta_music.js"></script>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #111;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .button {
+            width: 60px;
+            height: 120px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            transition: transform 0.1s, filter 0.1s;
+            user-select: none;
+        }
+
+        .button:active {
+            transform: scale(0.95);
+            filter: brightness(1.2);
+        }
+
+        .b0 {
+            background: #ff3b30;
+        }
+
+        .b1 {
+            background: #ff9500;
+        }
+
+        .b2 {
+            background: #ffcc00;
+        }
+
+        .b3 {
+            background: #4cd964;
+        }
+
+        .b4 {
+            background: #5ac8fa;
+        }
+
+        .b5 {
+            background: #007aff;
+        }
+
+        .b6 {
+            background: #5856d6;
+        }
+
+        .b7 {
+            background: #ff2d55;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading">🧞‍♀️ Loading Piano Genie...</div>
+    <canvas id="canvas"></canvas>
+    <div class="controls" id="controls" style="display: none;">
+        <div class="button b0" onmousedown="handleDown(0)" onmouseup="handleUp(0)" onmouseleave="handleUp(0)">1</div>
+        <div class="button b1" onmousedown="handleDown(1)" onmouseup="handleUp(1)" onmouseleave="handleUp(1)">2</div>
+        <div class="button b2" onmousedown="handleDown(2)" onmouseup="handleUp(2)" onmouseleave="handleUp(2)">3</div>
+        <div class="button b3" onmousedown="handleDown(3)" onmouseup="handleUp(3)" onmouseleave="handleUp(3)">4</div>
+        <div class="button b4" onmousedown="handleDown(4)" onmouseup="handleUp(4)" onmouseleave="handleUp(4)">5</div>
+        <div class="button b5" onmousedown="handleDown(5)" onmouseup="handleUp(5)" onmouseleave="handleUp(5)">6</div>
+        <div class="button b6" onmousedown="handleDown(6)" onmouseup="handleUp(6)" onmouseleave="handleUp(6)">7</div>
+        <div class="button b7" onmousedown="handleDown(7)" onmouseup="handleUp(7)" onmouseleave="handleUp(7)">8</div>
+    </div>
+
+    <script>
+        const GENIE_CHECKPOINT = 'https://storage.googleapis.com/magentadata/js/checkpoints/piano_genie/model/epiano/stp_v2';
+        const genie = new mm.PianoGenie(GENIE_CHECKPOINT);
+        const mouseHeld = new Set();
+        let initialized = false;
+
+        // Simple Waterfall Logic
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        const activeNotes = new Map(); // pitch -> { startTime, color }
+        const finishedNotes = []; // { pitch, startTime, endTime, color }
+
+        const COLORS = ['#ff3b30', '#ff9500', '#ffcc00', '#4cd964', '#5ac8fa', '#007aff', '#5856d6', '#ff2d55'];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        async function init() {
+            await genie.initialize();
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('controls').style.display = 'flex';
+            initialized = true;
+            render();
+        }
+
+        function handleDown(button) {
+            if (!initialized || mouseHeld.has(button)) return;
+            mouseHeld.add(button);
+
+            const pitch = genie.nextFromKeyWhitelist(button, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 0.75);
+            // Play sound (using Magenta's SoundFontPlayer if available, or simple osc)
+            playNote(pitch, button);
+        }
+
+        function handleUp(button) {
+            if (!mouseHeld.has(button)) return;
+            mouseHeld.delete(button);
+            stopNote(button);
+        }
+
+        const player = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus');
+
+        function playNote(pitch, button) {
+            player.noteOn({ pitch: pitch, velocity: 100 });
+            activeNotes.set(button, {
+                pitch: pitch,
+                startTime: performance.now(),
+                color: COLORS[button]
+            });
+        }
+
+        function stopNote(button) {
+            const note = activeNotes.get(button);
+            if (note) {
+                player.noteOff({ pitch: note.pitch });
+                note.endTime = performance.now();
+                finishedNotes.push(note);
+                activeNotes.delete(button);
+            }
+        }
+
+        function render() {
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0, 0, width, height);
+
+            const now = performance.now();
+            const scrollSpeed = 0.2; // pixels per ms
+            const noteWidth = width / 88;
+
+            // Draw finished notes
+            for (let i = finishedNotes.length - 1; i >= 0; i--) {
+                const note = finishedNotes[i];
+                const yStart = height - 150 - (now - note.startTime) * scrollSpeed;
+                const yEnd = height - 150 - (now - note.endTime) * scrollSpeed;
+                const rectHeight = yEnd - yStart;
+
+                if (yEnd < 0) {
+                    finishedNotes.splice(i, 1);
+                    continue;
+                }
+
+                ctx.fillStyle = note.color;
+                ctx.fillRect((note.pitch - 21) * noteWidth, yEnd, noteWidth - 1, -rectHeight);
+            }
+
+            // Draw active notes
+            activeNotes.forEach((note, button) => {
+                const yStart = height - 150 - (now - note.startTime) * scrollSpeed;
+                const rectHeight = (height - 150) - yStart;
+                ctx.fillStyle = note.color;
+                ctx.fillRect((note.pitch - 21) * noteWidth, height - 150, noteWidth - 1, -rectHeight);
+            });
+
+            requestAnimationFrame(render);
+        }
+
+        // Keyboard Support
+        window.addEventListener('keydown', (e) => {
+            const key = e.key;
+            if (key >= '1' && key <= '8') {
+                handleDown(parseInt(key) - 1);
+            }
+        });
+        window.addEventListener('keyup', (e) => {
+            const key = e.key;
+            if (key >= '1' && key <= '8') {
+                handleUp(parseInt(key) - 1);
+            }
+        });
+
+        init();
+    </script>
+</body>
+
+</html>

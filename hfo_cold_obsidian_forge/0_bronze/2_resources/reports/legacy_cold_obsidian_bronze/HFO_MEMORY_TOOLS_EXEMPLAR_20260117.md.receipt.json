@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:31.966671Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/HFO_MEMORY_TOOLS_EXEMPLAR_20260117.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/HFO_MEMORY_TOOLS_EXEMPLAR_20260117.md",
+    "hash": "ed1c5805aeeb4ee88fe2340cc3a3d9b816e0ef2fbf7844b1fe39830d871654e1",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:31.163964Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hex/adapters/blackboard_adapter.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/hex/adapters/blackboard_adapter.py",
+    "hash": "edc499ed11b0d9b76b9504df436c032238d341b49c3f4d3d08db996adc5ae706",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:32.027676Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/HFO_INGESTION_AUDIT_2026_01_16.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/HFO_INGESTION_AUDIT_2026_01_16.md",
+    "hash": "0aa36d63cefb85fb65b72f88e41521d32f82242ca25a6bfba0043136682d31b0",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

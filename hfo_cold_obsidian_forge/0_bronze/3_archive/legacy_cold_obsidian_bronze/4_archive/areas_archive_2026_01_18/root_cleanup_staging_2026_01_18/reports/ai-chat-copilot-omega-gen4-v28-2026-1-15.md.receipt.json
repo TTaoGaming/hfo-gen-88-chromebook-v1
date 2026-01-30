@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:53.038309Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-copilot-omega-gen4-v28-2026-1-15.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-copilot-omega-gen4-v28-2026-1-15.md",
+    "hash": "d1ff2802fd96308cbc3368eb8ec108586c5e1e0060d06350b5fcdaee954a0915",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

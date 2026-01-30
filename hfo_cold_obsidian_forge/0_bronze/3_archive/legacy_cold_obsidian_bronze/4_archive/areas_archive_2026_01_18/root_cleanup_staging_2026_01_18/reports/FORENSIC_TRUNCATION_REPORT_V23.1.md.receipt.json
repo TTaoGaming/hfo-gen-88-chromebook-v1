@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:47.395428Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_TRUNCATION_REPORT_V23.1.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_TRUNCATION_REPORT_V23.1.md",
+    "hash": "9da67cdc02a1d6f5c727b4bf815da7e62f20172d33b650b3179e883c2740f86a",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

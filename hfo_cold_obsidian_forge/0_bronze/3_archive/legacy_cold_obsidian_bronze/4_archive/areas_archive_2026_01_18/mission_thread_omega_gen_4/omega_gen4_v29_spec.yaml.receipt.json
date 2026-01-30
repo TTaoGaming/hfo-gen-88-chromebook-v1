@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:36.596685Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/mission_thread_omega_gen_4/omega_gen4_v29_spec.yaml",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/mission_thread_omega_gen_4/omega_gen4_v29_spec.yaml",
+    "hash": "f111671cc5038c384934087e4e7922e1817a2330b851e2309bd610ca5951c839",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

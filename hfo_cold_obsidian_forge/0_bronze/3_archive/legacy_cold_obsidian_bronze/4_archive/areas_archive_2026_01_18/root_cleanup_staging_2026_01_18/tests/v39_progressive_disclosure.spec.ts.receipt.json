@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:59.643909Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/tests/v39_progressive_disclosure.spec.ts",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/tests/v39_progressive_disclosure.spec.ts",
+    "hash": "a29b81f3a46bc9e3a0f875f23c20d6feec830e18806139dcc5b36de563a5d350",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

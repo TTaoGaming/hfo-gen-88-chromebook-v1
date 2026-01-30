@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:29.819857Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/MONTHLY_MISSION_SUMMARIES_2026_01_18_182116.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/MONTHLY_MISSION_SUMMARIES_2026_01_18_182116.md",
+    "hash": "7bdb2c936e04dac6eacc9c93cb3178a039faaa1a3bb157541ac93eca60d41ebb",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

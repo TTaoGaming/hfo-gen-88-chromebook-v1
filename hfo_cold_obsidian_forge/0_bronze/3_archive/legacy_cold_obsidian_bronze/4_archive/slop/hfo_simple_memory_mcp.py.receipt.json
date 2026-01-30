@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:54.872650Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/slop/hfo_simple_memory_mcp.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/slop/hfo_simple_memory_mcp.py",
+    "hash": "5e6c09d3db7ff7b4062e39782debcea87a418e531c49cd758ec437db6608691b",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

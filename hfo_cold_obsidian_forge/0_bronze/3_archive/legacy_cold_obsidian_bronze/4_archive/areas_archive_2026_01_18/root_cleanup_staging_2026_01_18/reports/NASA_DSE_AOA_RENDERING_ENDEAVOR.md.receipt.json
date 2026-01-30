@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:47.208704Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/NASA_DSE_AOA_RENDERING_ENDEAVOR.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/NASA_DSE_AOA_RENDERING_ENDEAVOR.md",
+    "hash": "ae065d9671d521f16b01e047e3a8040d370c65a36d48705461563760b92e1ee9",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

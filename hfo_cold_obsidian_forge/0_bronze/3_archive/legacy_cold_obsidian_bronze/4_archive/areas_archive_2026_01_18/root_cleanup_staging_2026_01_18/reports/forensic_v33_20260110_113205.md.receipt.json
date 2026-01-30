@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:54.624324Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/forensic_v33_20260110_113205.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/forensic_v33_20260110_113205.md",
+    "hash": "42ec482a0fb872774684c65cab1ecedbacdb58896055f80b3680fdbead477600",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

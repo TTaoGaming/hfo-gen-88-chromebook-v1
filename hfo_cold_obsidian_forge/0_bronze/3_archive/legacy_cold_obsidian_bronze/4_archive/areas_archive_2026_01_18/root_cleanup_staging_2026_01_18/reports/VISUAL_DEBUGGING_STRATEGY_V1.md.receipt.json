@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:46.959011Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/VISUAL_DEBUGGING_STRATEGY_V1.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/VISUAL_DEBUGGING_STRATEGY_V1.md",
+    "hash": "cabfcfa123d8f036bea60cde79a849adf4c873b32ecf095f38171d676a6cfff0",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:26.790043Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/playwright.config.ts",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_omega/playwright.config.ts",
+    "hash": "5b2167e39585d09474ec377952c9d7e997c535a1d0250d804440d09dc1996d07",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

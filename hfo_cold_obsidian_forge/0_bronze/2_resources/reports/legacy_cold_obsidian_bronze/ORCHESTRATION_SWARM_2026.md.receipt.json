@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:30.111230Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/ORCHESTRATION_SWARM_2026.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/ORCHESTRATION_SWARM_2026.md",
+    "hash": "3a85cb743e058b77f8c425486dde3824b379d3810465c61dd9b130842192ab34",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

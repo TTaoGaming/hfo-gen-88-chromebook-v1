@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:30.109272Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/P6_KNOWLEDGE_ROLLUP_MANIFEST.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/P6_KNOWLEDGE_ROLLUP_MANIFEST.md",
+    "hash": "cacffd204a716fb66ce1ad0f8aaec7c4e447e5131313f0c94b4c46e74e7a8e96",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

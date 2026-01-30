@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:45.884394Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/mission_thread_omega_gen_1_RED_reward_hacking_death_spiral/tests/exhaustive_fsm_v22.test.ts",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/mission_thread_omega_gen_1_RED_reward_hacking_death_spiral/tests/exhaustive_fsm_v22.test.ts",
+    "hash": "c2e2ea751769b58e55178dbfb8073c10aa094eb2c82c516a346b99538293c864",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

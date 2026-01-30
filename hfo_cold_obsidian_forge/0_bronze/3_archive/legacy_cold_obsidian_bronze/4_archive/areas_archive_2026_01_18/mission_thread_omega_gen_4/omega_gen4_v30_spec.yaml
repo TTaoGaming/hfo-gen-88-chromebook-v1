@@ -1,0 +1,37 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: ⚔️
+# OMEGA GEN 4 V30.0 SPECIFICATION
+# Focus: User Onboarding, FSM Hardening (Anti-Midas), and Visual Feedback
+
+mission_objectives:
+  - id: USER_ONBOARDING
+    status: PLANNED
+    description: "Implement a guided onboarding sequence to teach the state flow: READY <-> IDLE and READY -> COMMIT -> IDLE."
+
+  - id: FSM_HARDENING_ANTI_MIDAS
+    status: PLANNED
+    description: "Lock COMMIT state once entered. Interaction remains 'sticky' regardless of gesture changes until the user returns to IDLE (palm away)."
+
+  - id: VISUAL_FEEDBACK_MAPPING
+    status: PLANNED
+    description: "Map FSM states to specific visual substrates: IDLE (Skeleton), READY (Amber Fire), COMMIT (Cyan Fire)."
+
+  - id: PALM_DRAIN_HYSTERESIS
+    status: PLANNED
+    description: "Implement dwell leaky bucket hysteresis for Palm-to-Camera (READY) and Palm-Away (IDLE) transitions."
+
+technical_specs:
+  - id: ONBOARDING_FLOW
+    steps:
+      - pulse: "Skeleton Only (IDLE)"
+      - trigger: "Palm Towards Camera + Dwell"
+      - result: "Amber Pointer (READY)"
+      - trigger: "High Confidence Gesture + Dwell"
+      - result: "Cyan Pointer (COMMIT)"
+      - release: "Palm Away + Dwell"
+      - reset: "Back to IDLE"
+
+  - id: PALM_CONE_PRESETS
+    description: "Provide 2 standard presets (Tight/Loose) for palm angle tolerances with Developer fine-tuning override."
+
+  - id: STAMP_COMMIT_LOCK
+    description: "Once COMMIT is triggered, the index fingertip tracking is locked for document interaction until the palm-away drainage completes."

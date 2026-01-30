@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:33.737068Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/exec_summaries/EXECUTIVE_SUMMARY_VARIANT_C_2026_01_17.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/exec_summaries/EXECUTIVE_SUMMARY_VARIANT_C_2026_01_17.md",
+    "hash": "79df495f2d075f0819ba076db19363cc0883be6e0eb831d57acdc55e1bdd8899",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

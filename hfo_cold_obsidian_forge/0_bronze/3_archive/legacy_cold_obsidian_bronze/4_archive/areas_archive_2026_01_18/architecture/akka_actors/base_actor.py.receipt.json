@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:31.411113Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/akka_actors/base_actor.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/akka_actors/base_actor.py",
+    "hash": "fef8b55dd96085f91bfcc308e0cd3b7c1fa2b869b46c9bf8d308bea952c062a9",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

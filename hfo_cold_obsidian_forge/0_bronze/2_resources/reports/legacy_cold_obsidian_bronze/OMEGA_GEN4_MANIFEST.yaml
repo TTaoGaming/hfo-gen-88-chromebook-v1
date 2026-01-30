@@ -1,0 +1,43 @@
+# Medallion: Bronze | Mutation: 0% | HIVE: V
+
+# Medallion: Bronze | OMEGA GEN 4 MANIFEST
+# Project: Phoenix Rebirth (V26+)
+# Description: Unified index of critical files for infrastructure and code.
+
+manifest_metadata:
+  version: "1.2.0"
+  last_updated: "2026-01-15"
+  status: "active"
+
+core_substrates:
+  latest_stable: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v26_2.html"
+  golden_master_baseline: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v24.23.html"
+  interaction_target: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/excalidraw_v20_wrapper.html"
+
+specifications:
+  main_spec: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/omega_gen4_v25_spec.yaml"
+  delta_reports: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/OMEGA_GEN4_DELTA_REPORT.md"
+  evolution_history: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/OMEGA_EVOLUTION_HISTORY.md"
+  successful_patterns: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega_gen_4/SUCCESSFUL_PATTERNS_OMEGA.md"
+
+architectural_governance:
+  agents_master: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/AGENTS.md"
+  root_governance: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/ROOT_GOVERNANCE.md"
+  consolidated_roadmap: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/OMEGA_GEN4_CONSOLIDATED_ROADMAP.md"
+
+critical_reports:
+  wishlist_v25: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/reports/ai-chat-omega-gen4-v25-wishlist-2026-1-14.md"
+  app_killers: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/reports/ai-chat-app-killers-2026-1-15.md"
+  fsm_architecture: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/reports/FSM_ARCH_OMEGA_V1.md"
+
+scripts_and_tools:
+  p5_forensic_hub: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/architecture/ports/hfo_orchestration_hub.py"
+  sentinel_daemon: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/p5_sentinel_daemon.py"
+  chronos_repair: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/resign_v2.py"
+  parity_tests: "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/scripts/omega_gen4_v1.spec.ts"
+
+libraries_to_localize:
+  - "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0"
+  - "https://cdn.babylonjs.com/babylon.js"
+  - "https://cdn.jsdelivr.net/npm/@openfeature/web-sdk"
+  - "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision"

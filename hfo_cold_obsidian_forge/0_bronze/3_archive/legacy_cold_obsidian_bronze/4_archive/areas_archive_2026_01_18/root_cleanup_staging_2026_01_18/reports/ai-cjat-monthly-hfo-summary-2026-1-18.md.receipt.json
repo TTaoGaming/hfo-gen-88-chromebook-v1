@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:54.065118Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-cjat-monthly-hfo-summary-2026-1-18.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-cjat-monthly-hfo-summary-2026-1-18.md",
+    "hash": "3ccd296f94fc821a91b6ac7d7dba2a0dcc47dfd637fac6537d0dde5cd216f9f6",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

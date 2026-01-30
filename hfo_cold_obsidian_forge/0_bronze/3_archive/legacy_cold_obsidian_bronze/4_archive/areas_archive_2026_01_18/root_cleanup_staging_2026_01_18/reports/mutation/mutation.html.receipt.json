@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:57.180830Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/mutation/mutation.html",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/mutation/mutation.html",
+    "hash": "07c4c780ea4335f00b93725d73a7c9e9a93fe6bd332d28ac2b4e486b833622b5",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

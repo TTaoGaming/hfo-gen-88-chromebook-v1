@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:31.287045Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/HANDOFF_PHOENIX_V25_3_PRODUCTION_READINESS.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/HANDOFF_PHOENIX_V25_3_PRODUCTION_READINESS.md",
+    "hash": "5b4a77283756df2bd81bbf7f9760f8d096bd11be965758a1261f0becb6c3fe0e",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

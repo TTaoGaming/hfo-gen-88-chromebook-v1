@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:53.706155Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-omega-gen4-v24-rate-limiting-errors-2026-1-14.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-omega-gen4-v24-rate-limiting-errors-2026-1-14.md",
+    "hash": "b31078d6aad2f5d03c865008bc54628546b0547700e333fa4510c9fcca718e5a",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

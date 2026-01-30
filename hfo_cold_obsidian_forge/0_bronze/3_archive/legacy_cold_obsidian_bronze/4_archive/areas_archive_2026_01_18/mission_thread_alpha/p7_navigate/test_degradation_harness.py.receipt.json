@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:24.394096Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/test_degradation_harness.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p7_navigate/test_degradation_harness.py",
+    "hash": "f5160ab24e12dc752ff7712498276624795af8e57f0a51e37a177e6f14672ac1",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

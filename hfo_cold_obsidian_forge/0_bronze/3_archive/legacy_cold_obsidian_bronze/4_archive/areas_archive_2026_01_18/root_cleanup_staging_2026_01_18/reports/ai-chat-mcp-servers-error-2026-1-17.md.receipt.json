@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:51.515039Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-mcp-servers-error-2026-1-17.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-mcp-servers-error-2026-1-17.md",
+    "hash": "c8d8a288271898854a5d08ea9982c267f5668eb4328aecc9e8b281d2b3d93681",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

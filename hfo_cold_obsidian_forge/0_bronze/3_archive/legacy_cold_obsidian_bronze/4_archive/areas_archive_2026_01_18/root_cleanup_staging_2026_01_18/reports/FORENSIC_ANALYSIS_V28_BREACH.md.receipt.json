@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:49.586229Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_ANALYSIS_V28_BREACH.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_ANALYSIS_V28_BREACH.md",
+    "hash": "8236b0bbef2addcc998f5b1966fd88f6d5d15cfd33374e85d26589fc25c567e1",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

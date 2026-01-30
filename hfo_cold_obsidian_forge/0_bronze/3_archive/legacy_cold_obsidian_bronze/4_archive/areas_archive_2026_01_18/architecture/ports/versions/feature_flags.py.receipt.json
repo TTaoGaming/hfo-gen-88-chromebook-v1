@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:30.447511Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/versions/feature_flags.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/ports/versions/feature_flags.py",
+    "hash": "153d9610fe0183e2c4034e4d06bca671cd0919260443cc1753cf03cacdd74f06",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

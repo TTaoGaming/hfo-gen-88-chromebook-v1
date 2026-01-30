@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:31.531561Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/SUCCESS_HIVE_8_1010_18_NODE_PULSE.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/SUCCESS_HIVE_8_1010_18_NODE_PULSE.md",
+    "hash": "9a80b4d25466da42cac1b7689ad55942c967dbf98111bab6fcc0bed644ccdb4a",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

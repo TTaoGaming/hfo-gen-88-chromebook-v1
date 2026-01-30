@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:51.768273Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-memory-improvements-2026-1-18.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-memory-improvements-2026-1-18.md",
+    "hash": "55036d2878141c1fe7d2e8f094f3069756943c55433f345d3db3ddf2f543ece4",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

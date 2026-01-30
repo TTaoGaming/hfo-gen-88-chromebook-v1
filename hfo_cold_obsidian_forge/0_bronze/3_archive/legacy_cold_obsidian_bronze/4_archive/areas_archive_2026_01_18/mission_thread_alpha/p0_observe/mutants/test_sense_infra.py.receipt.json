@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:25.338884Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p0_observe/mutants/test_sense_infra.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p0_observe/mutants/test_sense_infra.py",
+    "hash": "5e2b9e1ade69e8d5dc35d5b5f1cb8db6a8f6073032e20ce285c5548b1de1bd45",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

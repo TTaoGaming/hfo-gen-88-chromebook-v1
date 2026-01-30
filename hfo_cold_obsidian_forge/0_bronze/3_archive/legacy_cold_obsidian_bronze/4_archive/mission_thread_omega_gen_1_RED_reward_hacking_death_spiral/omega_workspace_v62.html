@@ -1,0 +1,284 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO SHARDS | OMEGA V62.0 | PYRE SENTINEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <style>
+        :root {
+            --m3-bg: #000000;
+            --m3-surface: #0a0a0a;
+            --m3-primary: #ff3300;
+            --m3-on-primary: #ffffff;
+            --m3-text: #e6e1e5;
+            --m3-outline: #49454f;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--m3-bg);
+            color: var(--m3-text);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        #layout-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .component-container {
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            background: var(--m3-bg);
+        }
+
+        .video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            background: #000;
+            filter: contrast(1.2) brightness(0.8) grayscale(0.5);
+            opacity: 0.5;
+        }
+
+        .mirrored {
+            transform: scaleX(-1);
+        }
+
+        .overlay-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .status-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--m3-primary);
+            padding: 8px;
+            font-size: 10px;
+            z-index: 20;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout-container"></div>
+
+    <script type="module">
+        import { GoldenLayout } from 'https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm';
+        import { GestureRecognizer, FilesetResolver } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js';
+
+        // --- 🧪 ONE EURO FILTER ---
+        class OneEuroFilter {
+            constructor(freq, mincutoff = 1.0, beta = 0.0, dcutoff = 1.0) {
+                this.freq = freq; this.mincutoff = mincutoff;
+                this.beta = beta; this.dcutoff = dcutoff;
+                this.x = null; this.dx = 0;
+                this.last_time = null;
+            }
+            alpha(cutoff) { let tau = 1.0 / (2 * Math.PI * cutoff); return 1.0 / (1.0 + tau * this.freq); }
+            filter(val, timestamp) {
+                if (this.last_time && timestamp) this.freq = 1.0 / (timestamp - this.last_time);
+                this.last_time = timestamp;
+                if (this.x === null) { this.x = val; return val; }
+                let dx_val = (val - this.x) * this.freq;
+                let edx = this.dx + this.alpha(this.dcutoff) * (dx_val - this.dx);
+                this.dx = edx;
+                let cutoff = this.mincutoff + this.beta * Math.abs(edx);
+                let x_val = this.x + this.alpha(cutoff) * (val - this.x);
+                this.x = x_val; return x_val;
+            }
+        }
+
+        // --- 🔥 FIRE SYSTEM ---
+        class PyreParticle {
+            constructor(x, y, vx, vy, life) {
+                this.x = x; this.y = y; this.vx = vx; this.vy = vy;
+                this.life = life; this.maxLife = life;
+            }
+            update() { this.x += this.vx; this.y += this.vy; this.life--; }
+        }
+
+        class FireSystem {
+            constructor() { this.particles = []; }
+            emit(x, y, intensity = 1.0) {
+                for (let i = 0; i < 3; i++) {
+                    const vx = (Math.random() - 0.5) * 2;
+                    const vy = -Math.random() * 3 - 1;
+                    this.particles.push(new PyreParticle(x, y, vx, vy, 10 + Math.random() * 20 * intensity));
+                }
+            }
+            draw(ctx) {
+                ctx.save();
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    p.update();
+                    if (p.life <= 0) { this.particles.splice(i, 1); continue; }
+                    const alpha = p.life / p.maxLife;
+                    ctx.fillStyle = `rgba(255, ${Math.floor(100 * alpha)}, 0, ${alpha * 0.6})`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, (1 - alpha) * 4 + 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // --- 🤖 SENTINEL FSM ---
+        // IDLE -> POINTER_READY (Palm + Bucket) -> POINTER_COMMIT (PointUp)
+        class SentinelFSM {
+            constructor() {
+                this.state = 'IDLE';
+                this.bucket = 0; // 0.0 to 1.0
+                this.fillRate = 0.05;
+                this.drainRate = 0.02;
+                this.laserOffset = -30; // px
+                this.filterX = new OneEuroFilter(60, 0.8, 0.02);
+                this.filterY = new OneEuroFilter(60, 0.8, 0.02);
+            }
+
+            checkPalmFacing(landmarks) {
+                if (!landmarks) return false;
+                const v1 = { x: landmarks[5].x - landmarks[0].x, y: landmarks[5].y - landmarks[0].y, z: landmarks[5].z - landmarks[0].z };
+                const v2 = { x: landmarks[17].x - landmarks[0].x, y: landmarks[17].y - landmarks[0].y, z: landmarks[17].z - landmarks[0].z };
+                const nx = v1.y * v2.z - v1.z * v2.y;
+                const ny = v1.z * v2.x - v1.x * v2.z;
+                const nz = v1.x * v2.y - v1.y * v2.x;
+                return nz > 0.002;
+            }
+
+            update(landmarks, gestures, now) {
+                const palmOriented = this.checkPalmFacing(landmarks);
+                const isPointing = gestures?.[0]?.categoryName === 'Pointing_Up';
+
+                // Leaky Bucket
+                if (palmOriented) this.bucket = Math.min(1.0, this.bucket + this.fillRate);
+                else this.bucket = Math.max(0.0, this.bucket - this.drainRate);
+
+                // State Transitions
+                if (this.bucket >= 1.0) {
+                    if (isPointing) this.state = 'POINTER_COMMIT';
+                    else this.state = 'POINTER_READY';
+                } else {
+                    if (this.state === 'POINTER_COMMIT' && !palmOriented) {
+                        this.state = 'IDLE';
+                    } else if (this.state !== 'POINTER_COMMIT') {
+                        this.state = 'IDLE';
+                    }
+                }
+                return { state: this.state, bucket: this.bucket };
+            }
+        }
+
+        const hfoApp = {
+            fsm: new SentinelFSM(),
+            fire: new FireSystem(),
+            recognizer: null,
+            video: null,
+            canvas: null,
+            ctx: null
+        };
+
+        const initMediaPipe = async (container) => {
+            const el = container.element;
+            const video = hfoApp.video = document.createElement('video');
+            video.autoplay = true; video.playsinline = true; video.className = 'video-feed mirrored';
+            const canvas = hfoApp.canvas = document.createElement('canvas');
+            canvas.className = 'overlay-canvas mirrored';
+            const status = document.createElement('div');
+            status.className = 'status-panel';
+            el.append(video, canvas, status);
+            hfoApp.ctx = canvas.getContext('2d');
+
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm");
+            hfoApp.recognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task", delegate: "GPU" },
+                runningMode: "VIDEO", numHands: 1
+            });
+
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                requestAnimationFrame(loop);
+            };
+
+            const loop = (now) => {
+                if (!hfoApp.recognizer) return;
+                const results = hfoApp.recognizer.recognizeForVideo(video, now);
+                hfoApp.ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const hand = results.landmarks?.[0];
+                const gestures = results.gestures?.[0];
+                const info = hfoApp.fsm.update(hand, gestures, now);
+
+                if (hand) {
+                    const step = Math.floor(21 * info.bucket);
+                    for (let i = 0; i < step; i++) {
+                        hfoApp.fire.emit(hand[i].x * canvas.width, hand[i].y * canvas.height, 0.5);
+                    }
+
+                    if (info.state === 'POINTER_COMMIT') {
+                        const indexTip = hand[8];
+                        const sx = hfoApp.fsm.filterX.filter(indexTip.x * canvas.width, now / 1000);
+                        const sy = hfoApp.fsm.filterY.filter(indexTip.y * canvas.height, now / 1000) + hfoApp.fsm.laserOffset;
+                        hfoApp.fire.emit(sx, sy, 2.0);
+                        hfoApp.ctx.fillStyle = '#ff3300';
+                        hfoApp.ctx.shadowBlur = 15; hfoApp.ctx.shadowColor = '#ff3300';
+                        hfoApp.ctx.beginPath(); hfoApp.ctx.arc(sx, sy, 8, 0, Math.PI * 2); hfoApp.ctx.fill();
+                        hfoApp.ctx.shadowBlur = 0;
+                    }
+                }
+
+                hfoApp.fire.draw(hfoApp.ctx);
+                status.innerHTML = `STATE: ${info.state}<br>BUCKET: ${(info.bucket * 100).toFixed(1)}%<br>V62 PYRE SENTINEL`;
+                requestAnimationFrame(loop);
+            };
+        };
+
+        const config = {
+            root: {
+                type: 'row',
+                content: [
+                    { type: 'component', componentType: 'MediaPipe', title: 'SENTINEL VIEW' },
+                    { type: 'component', componentType: 'Excalidraw', title: 'CANVAS' }
+                ]
+            }
+        };
+
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        layout.registerComponentFactoryFunction('MediaPipe', initMediaPipe);
+        layout.registerComponentFactoryFunction('Excalidraw', c => {
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://excalidraw.com?embed=1&theme=dark';
+            iframe.style.width = '100%'; iframe.style.height = '100%'; iframe.style.border = 'none'; iframe.style.opacity = '0.5';
+            c.element.append(iframe);
+        });
+        layout.loadLayout(config);
+    </script>
+</body>
+
+</html>

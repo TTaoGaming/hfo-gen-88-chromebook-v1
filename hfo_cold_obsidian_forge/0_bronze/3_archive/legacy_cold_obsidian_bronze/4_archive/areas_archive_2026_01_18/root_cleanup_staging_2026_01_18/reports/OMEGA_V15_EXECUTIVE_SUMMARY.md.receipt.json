@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:52.565130Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/OMEGA_V15_EXECUTIVE_SUMMARY.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/OMEGA_V15_EXECUTIVE_SUMMARY.md",
+    "hash": "e5c58f2fdb158340fda107cc8c8002ed22fc75c01e749bb2e63e3eccaaaa3c68",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

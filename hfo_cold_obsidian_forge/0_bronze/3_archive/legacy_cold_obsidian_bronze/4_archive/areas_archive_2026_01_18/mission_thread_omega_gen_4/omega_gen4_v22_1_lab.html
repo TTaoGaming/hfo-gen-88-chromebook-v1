@@ -1,0 +1,283 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
+<!-- OMEGA GEN 4 V22.1 - BABYLON.JS MOBILE-OPTIMIZED FIREBALLS -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO OMEGA GEN 4 | V22.1 MOBILE FIREBALLS</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #020202;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #ffcc00;
+        }
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            display: block;
+        }
+        #ui {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border: 2px solid #ffcc00;
+            border-radius: 12px;
+            pointer-events: auto;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.15);
+            min-width: 220px;
+        }
+        .variant-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 10px;
+            background: #111;
+            color: #ccc;
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease-out;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .variant-btn:active {
+            transform: scale(0.95);
+        }
+        .variant-btn.active {
+            background: #ffcc00;
+            color: #000;
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+        }
+        .label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            color: #ffcc00;
+            display: block;
+            border-bottom: 1px solid rgba(255, 204, 0, 0.3);
+            padding-bottom: 8px;
+        }
+        #mobile-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 10px;
+            color: rgba(255, 204, 0, 0.5);
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <span class="label">HFO OMEGA V22.1 // MOBILE FIREBALLS</span>
+        <button class="variant-btn active" onclick="switchVariant(0)">🔥 SOLAR FLARE</button>
+        <button class="variant-btn" onclick="switchVariant(1)">🔷 SPIRIT WISP</button>
+        <button class="variant-btn" onclick="switchVariant(2)">🌋 MAGMA ORB</button>
+        <button class="variant-btn" onclick="switchVariant(3)">🌑 VOID FLAME</button>
+    </div>
+
+    <div id="mobile-hint">Optimized for Mobile Performance // Babylon.js 7.x</div>
+
+    <canvas id="renderCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        
+        // V22.1 Hardening: Explicitly handle WebGL failure and support software fallback
+        let engine;
+        try {
+            engine = new BABYLON.Engine(canvas, true, {
+                preserveDrawingBuffer: true,
+                stencil: true,
+                disableWebGL2Support: false, // Try WebGL 2 first
+                audioEngine: false
+            });
+        } catch (e) {
+            console.warn("WebGL 2 failed, falling back to WebGL 1", e);
+            engine = new BABYLON.Engine(canvas, true, { disableWebGL2Support: true });
+        }
+
+        let activeSystems = [];
+        let emitterRoot;
+        let lastMove = Date.now();
+        let currentScene;
+
+        // Global switchVariant for HTML onclick - ensure it remains global
+        window.switchVariant = function(index) {
+            if (currentScene) {
+                setupVariant(index, currentScene);
+            }
+        };
+
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+
+            const camera = new BABYLON.FreeCamera("mainCam", new BABYLON.Vector3(0, 0, -10), scene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            const light = new BABYLON.PointLight("cursorLight", new BABYLON.Vector3(0, 0, -2), scene);
+            light.intensity = 1.0;
+
+            emitterRoot = BABYLON.MeshBuilder.CreateSphere("root", {diameter: 0.01}, scene);
+            emitterRoot.isVisible = false;
+            light.parent = emitterRoot;
+
+            // Initial setup
+            setupVariant(0, scene);
+
+            // Interaction - Support both Mouse and Touch
+            const handleMove = (x, y) => {
+                const width = engine.getRenderWidth();
+                const height = engine.getRenderHeight();
+                
+                if (!scene.activeCamera) return;
+                const viewMatrix = scene.getViewMatrix();
+                const projectionMatrix = scene.getProjectionMatrix();
+                if (!viewMatrix || !projectionMatrix) return;
+
+                const vectorNear = new BABYLON.Vector3(x, y, 0);
+                const worldNear = BABYLON.Vector3.Unproject(vectorNear, width, height, BABYLON.Matrix.Identity(), viewMatrix, projectionMatrix);
+                
+                const vectorFar = new BABYLON.Vector3(x, y, 1);
+                const worldFar = BABYLON.Vector3.Unproject(vectorFar, width, height, BABYLON.Matrix.Identity(), viewMatrix, projectionMatrix);
+                
+                const dir = worldFar.subtract(worldNear).normalize();
+                if (Math.abs(dir.z) > 0.001) {
+                    const dist = -worldNear.z / dir.z;
+                    emitterRoot.position.copyFrom(worldNear.add(dir.scale(dist)));
+                }
+                lastMove = Date.now();
+            };
+
+            window.addEventListener("pointermove", (e) => handleMove(e.clientX, e.clientY));
+            window.addEventListener("touchmove", (e) => {
+                if (e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: false });
+
+            return scene;
+        };
+
+        function setupVariant(index, scene) {
+            activeSystems.forEach(s => { s.stop(); s.dispose(); });
+            activeSystems = [];
+            
+            const btns = document.querySelectorAll('.variant-btn');
+            btns.forEach((b, i) => b.classList.toggle('active', i === index));
+
+            const flareTex = "https://playground.babylonjs.com/textures/flare.png";
+            const cloudTex = "https://playground.babylonjs.com/textures/cloud.png";
+
+            switch(index) {
+                case 0: // SOLAR FLARE - Dense, high energy orange
+                    const solar = new BABYLON.ParticleSystem("solar", 400, scene); // Optimized count
+                    solar.particleTexture = new BABYLON.Texture(flareTex, scene);
+                    solar.emitter = emitterRoot;
+                    solar.color1 = new BABYLON.Color4(1, 1, 0.2, 1);
+                    solar.color2 = new BABYLON.Color4(1, 0.4, 0, 1);
+                    solar.colorDead = new BABYLON.Color4(0.4, 0.1, 0, 0);
+                    solar.minSize = 0.2; solar.maxSize = 0.8;
+                    solar.emitRate = 200;
+                    solar.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+                    solar.gravity = new BABYLON.Vector3(0, 10, 0);
+                    solar.addSizeGradient(0, 0.2);
+                    solar.addSizeGradient(0.5, 1.0);
+                    solar.addSizeGradient(1.0, 0.1);
+                    solar.start();
+                    activeSystems.push(solar);
+                    break;
+
+                case 1: // SPIRIT WISP - Ethereal Blue/Violet
+                    const wisp = new BABYLON.ParticleSystem("wisp", 300, scene);
+                    wisp.particleTexture = new BABYLON.Texture(flareTex, scene);
+                    wisp.emitter = emitterRoot;
+                    wisp.color1 = new BABYLON.Color4(0.4, 1, 1, 1);
+                    wisp.color2 = new BABYLON.Color4(0.5, 0.2, 1, 1);
+                    wisp.colorDead = new BABYLON.Color4(0.1, 0, 0.2, 0);
+                    wisp.minSize = 0.2; wisp.maxSize = 0.5;
+                    wisp.emitRate = 150;
+                    wisp.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+                    wisp.updateSpeed = 0.015;
+                    wisp.addVelocityGradient(0, 5);
+                    wisp.addVelocityGradient(1, 1);
+                    wisp.start();
+                    activeSystems.push(wisp);
+                    break;
+
+                case 2: // MAGMA ORB - Glowing core with orbiting embers
+                    const core = new BABYLON.ParticleSystem("core", 100, scene);
+                    core.particleTexture = new BABYLON.Texture(flareTex, scene);
+                    core.emitter = emitterRoot;
+                    core.color1 = new BABYLON.Color4(1, 0.2, 0, 1);
+                    core.color2 = new BABYLON.Color4(0.5, 0, 0, 1);
+                    core.minSize = 1.0; core.maxSize = 1.2;
+                    core.emitRate = 20;
+                    core.minLifeTime = 0.5; core.maxLifeTime = 1.0;
+                    core.start();
+                    activeSystems.push(core);
+
+                    const embers = new BABYLON.ParticleSystem("embers", 100, scene);
+                    embers.particleTexture = new BABYLON.Texture(flareTex, scene);
+                    embers.emitter = emitterRoot;
+                    embers.color1 = new BABYLON.Color4(1, 0.8, 0, 1);
+                    embers.minSize = 0.02; embers.maxSize = 0.1;
+                    embers.emitRate = 50;
+                    embers.minEmitPower = 2; embers.maxEmitPower = 5;
+                    embers.gravity = new BABYLON.Vector3(0, -2, 0);
+                    embers.start();
+                    activeSystems.push(embers);
+                    break;
+
+                case 3: // VOID FLAME - Dark purple/neon highlights
+                    const voidF = new BABYLON.ParticleSystem("void", 400, scene);
+                    voidF.particleTexture = new BABYLON.Texture(cloudTex, scene);
+                    voidF.emitter = emitterRoot;
+                    voidF.color1 = new BABYLON.Color4(0.1, 0, 0.2, 0.8);
+                    voidF.color2 = new BABYLON.Color4(0.8, 0, 1, 0.5);
+                    voidF.colorDead = new BABYLON.Color4(0, 0, 0, 0);
+                    voidF.minSize = 0.5; voidF.maxSize = 1.5;
+                    voidF.emitRate = 180;
+                    voidF.blendMode = BABYLON.ParticleSystem.BLENDMODE_MULTIPLY;
+                    voidF.gravity = new BABYLON.Vector3(0, 5, 0);
+                    voidF.start();
+                    activeSystems.push(voidF);
+
+                    const spark = new BABYLON.ParticleSystem("spark", 100, scene);
+                    spark.particleTexture = new BABYLON.Texture(flareTex, scene);
+                    spark.emitter = emitterRoot;
+                    spark.color1 = new BABYLON.Color4(1, 1, 1, 1);
+                    spark.color2 = new BABYLON.Color4(0.8, 0, 1, 1);
+                    spark.minSize = 0.01; spark.maxSize = 0.05;
+                    spark.emitRate = 40;
+                    spark.start();
+                    activeSystems.push(spark);
+                    break;
+            }
+        }
+
+        currentScene = createScene();
+        engine.runRenderLoop(() => { currentScene.render(); });
+        window.addEventListener("resize", () => { engine.resize(); });
+    </script>
+</body>
+</html>

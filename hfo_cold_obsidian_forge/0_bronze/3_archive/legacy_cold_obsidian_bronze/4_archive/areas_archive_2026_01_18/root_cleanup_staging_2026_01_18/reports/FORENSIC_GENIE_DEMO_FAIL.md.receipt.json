@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:46.393395Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_GENIE_DEMO_FAIL.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_GENIE_DEMO_FAIL.md",
+    "hash": "ef025755b9f1879013500d95f0d4e061833867726d90ea41915b45797bcb1d1d",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

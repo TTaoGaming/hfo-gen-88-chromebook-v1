@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:45.599492Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/stryker.v40_1.config.json",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/stryker.v40_1.config.json",
+    "hash": "0c704afc7d74e193a6beb467116cab2e9fd0114bf685c6c01ea2945fde4229b6",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

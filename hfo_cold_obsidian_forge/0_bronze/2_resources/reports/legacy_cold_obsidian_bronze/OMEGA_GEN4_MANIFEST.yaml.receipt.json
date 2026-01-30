@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:32.307306Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/OMEGA_GEN4_MANIFEST.yaml",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/OMEGA_GEN4_MANIFEST.yaml",
+    "hash": "d4214f7ccbffc4701326a22cf29926daf2721e3e349a341b14de28b65327acdf",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

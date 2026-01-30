@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:54.123544Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/chat-gpt-memory-2026-1-18.json",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/chat-gpt-memory-2026-1-18.json",
+    "hash": "fc754e6fae58b23ee1a32af39aed95164f84ba7320497256cf1a49fac1eb75d9",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

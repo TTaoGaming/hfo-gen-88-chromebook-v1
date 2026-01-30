@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:30.345275Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/CRITICAL_FAILURE_ANALYSIS_V61.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/CRITICAL_FAILURE_ANALYSIS_V61.md",
+    "hash": "0cb5a74db09b585effa06dda81746de587c1a6b1646da3c220753dab46807640",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

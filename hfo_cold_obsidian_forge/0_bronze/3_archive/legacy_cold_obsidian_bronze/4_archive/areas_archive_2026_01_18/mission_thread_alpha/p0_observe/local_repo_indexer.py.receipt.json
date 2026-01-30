@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:24.853312Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/p0_observe/local_repo_indexer.py",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/p0_observe/local_repo_indexer.py",
+    "hash": "f3ab4b60b3f5c4d64e9a5d11255863c139b1a9733d16b3c169f6b02b4660bd51",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

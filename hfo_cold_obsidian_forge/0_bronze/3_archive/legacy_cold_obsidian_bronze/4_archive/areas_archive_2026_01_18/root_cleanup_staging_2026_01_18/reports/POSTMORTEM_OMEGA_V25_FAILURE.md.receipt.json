@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:52.647918Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/POSTMORTEM_OMEGA_V25_FAILURE.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/POSTMORTEM_OMEGA_V25_FAILURE.md",
+    "hash": "e957f2d90e99455925adfcd85fef8c72814f24a15690bbe7f692bf7da313d710",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

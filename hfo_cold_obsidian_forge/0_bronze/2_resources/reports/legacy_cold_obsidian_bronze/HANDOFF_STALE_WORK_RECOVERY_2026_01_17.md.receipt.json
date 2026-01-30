@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:32.105349Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/HANDOFF_STALE_WORK_RECOVERY_2026_01_17.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/HANDOFF_STALE_WORK_RECOVERY_2026_01_17.md",
+    "hash": "547355bf05378ab42f8d53bfeecb8f23698d543271754fd50760a2de6f7281a0",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

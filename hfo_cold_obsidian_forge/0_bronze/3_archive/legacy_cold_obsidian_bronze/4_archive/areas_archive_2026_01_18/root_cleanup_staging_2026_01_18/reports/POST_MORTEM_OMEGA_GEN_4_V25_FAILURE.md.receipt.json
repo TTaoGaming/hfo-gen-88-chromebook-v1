@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:52.869799Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/POST_MORTEM_OMEGA_GEN_4_V25_FAILURE.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/POST_MORTEM_OMEGA_GEN_4_V25_FAILURE.md",
+    "hash": "accf480edd20bad55491b585732dba62f5462662168b6b512aa32ef279bbcd8b",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

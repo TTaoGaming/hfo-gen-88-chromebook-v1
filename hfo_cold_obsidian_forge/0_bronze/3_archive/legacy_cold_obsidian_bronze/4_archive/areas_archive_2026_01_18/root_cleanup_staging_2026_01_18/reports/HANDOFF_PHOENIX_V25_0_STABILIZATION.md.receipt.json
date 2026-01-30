@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:49.206056Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/HANDOFF_PHOENIX_V25_0_STABILIZATION.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/HANDOFF_PHOENIX_V25_0_STABILIZATION.md",
+    "hash": "442cbf4b82b5a43c80dbe42716db22c675eddee1e1a58a74031d62b7797569ab",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

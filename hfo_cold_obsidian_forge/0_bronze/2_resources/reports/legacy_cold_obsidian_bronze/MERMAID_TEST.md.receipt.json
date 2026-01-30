@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:16:32.609530Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/3_resources/reports/MERMAID_TEST.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/3_resources/reports/MERMAID_TEST.md",
+    "hash": "efd69bad8db83f49955e83061d40ba25f2372b4faf97024d4543b1db18801756",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

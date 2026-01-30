@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:53.569838Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-omega-gen4-v20.7-error.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/ai-chat-omega-gen4-v20.7-error.md",
+    "hash": "789f522111924d4f5ba56e6c4d9e9db5d130928faa0a15ea30a1e77a495fdb2c",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

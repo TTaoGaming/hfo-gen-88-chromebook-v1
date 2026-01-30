@@ -1,0 +1,13 @@
+{
+    "version": "15",
+    "medallion": "Cold Bronze",
+    "engine": "Matter.js",
+    "status": "Stable / Tuning Required",
+    "date": "2026-01-09",
+    "hashes": {
+        "html": "v15_matter_js_baseline.html",
+        "server": "p0_server_v15.py",
+        "tests": "v15_smoke_test.spec.ts"
+    },
+    "notes": "Transitioned from Rapier2D to Matter.js for improved stability. One Euro filters preserved. Physics tuning is 'weird' and needs refinement in V16."
+}

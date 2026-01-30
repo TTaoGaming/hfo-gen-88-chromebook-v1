@@ -1,0 +1,26 @@
+{
+    "mission_thread": {
+        "ALPHA": "HFO Bootstrapping: Orchestration, Mosaic Warfare, Galois Lattice, and Hive-8 swarm coordination.",
+        "OMEGA": "Total Tool Virtualization: High-fidelity virtual tool creation (MediaPipe -> W3C Physics Cursor)."
+    },
+    "architecture": {
+        "P0_OBSERVE": "ISR: Intelligence, Surveillance, Reconnaissance. Multi-shard sensing (Tavily, ArXiv, DDG, GitHub, Repo, Wiki, Agents).",
+        "P1_BRIDGE": "Data Fabric: Zod-backed schema bridge and cross-port coordination.",
+        "P2_SHAPE": "Digital Twin: Physics-backed modeling and Rapier.js/Matter.js integration.",
+        "P3_INJECT": "Kill-Web: W3C Event dispatch and FSM execution.",
+        "P4_DISRUPT": "EW: Electronic Warfare. Negative feedback loops and Reward-Hacking suppression.",
+        "P5_IMMUNIZE": "Force Protection: HardGate integrity checks and Forensic Auditing.",
+        "P6_ASSIMILATE": "Logistics: Persistent telemetry and DuckDB knowledge storage.",
+        "P7_NAVIGATE": "BMC2: Battle Management Command & Control. Semantic synthesis, baton handover, and mission navigation."
+    },
+    "governance": {
+        "MEDALLION_LAYERS": [
+            "Bronze (Incubation)",
+            "Silver (Verified)",
+            "Gold (Hardened)"
+        ],
+        "HIVE_WORKFLOW": "H (Hunt), I (Interlock), V (Validate), E (Evolve)",
+        "TRANSPARENCY_THRESHOLD": 0.88,
+        "MUTATION_TARGET": "88-98% (Goldilocks Zone)"
+    }
+}

@@ -1,0 +1,478 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO Omega: Matter.js Cursor Tuning V16</title>
+
+    <!-- Medallion: Bronze | Mutation: 0% | HIVE: E -->
+    <!-- 🏗️ Styles -->
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #111;
+            color: #eee;
+            font-family: sans-serif;
+        }
+
+        #layout-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .component-container {
+            padding: 10px;
+            height: 100%;
+            overflow: auto;
+            box-sizing: border-box;
+            background: #1a1a1a;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+            transform: scaleX(-1);
+            background: #000;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transform: scaleX(-1);
+        }
+
+        .data-card {
+            background: #222;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #00ccff;
+            margin-bottom: 20px;
+        }
+
+        .data-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff88;
+        }
+
+        #gesture-visualizer div {
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            background: #333;
+            color: #666;
+        }
+
+        #gesture-visualizer div.active {
+            background: #cc00ff;
+            color: #fff;
+            box-shadow: 0 0 15px #cc00ff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout-container"></div>
+
+    <!-- 📦 Dependencies -->
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "matter-js": "https://cdn.jsdelivr.net/npm/matter-js@0.19.0/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout, LayoutConfig } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, HandLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import Matter from 'matter-js';
+
+        // 🧠 One Euro Filter Implementation
+        class LowPassFilter {
+            constructor(alpha) {
+                this.alpha = alpha;
+                this.s = null;
+            }
+            call(value) {
+                if (this.s === null) {
+                    this.s = value;
+                } else {
+                    this.s = this.alpha * value + (1.0 - this.alpha) * this.s;
+                }
+                return this.s;
+            }
+        }
+
+        class OneEuroFilter {
+            constructor(freq, minCutoff = 1.0, beta = 0.0, dCutoff = 1.0) {
+                this.freq = freq;
+                this.minCutoff = minCutoff;
+                this.beta = beta;
+                this.dCutoff = dCutoff;
+                this.xFilter = new LowPassFilter(this.alpha(minCutoff));
+                this.dxFilter = new LowPassFilter(this.alpha(dCutoff));
+                this.lastTime = null;
+            }
+
+            alpha(cutoff) {
+                const te = 1.0 / this.freq;
+                const tau = 1.0 / (2 * Math.PI * cutoff);
+                return 1.0 / (1.0 + tau / te);
+            }
+
+            call(x, timestamp = null) {
+                if (this.lastTime !== null && timestamp !== null) {
+                    const dt = (timestamp - this.lastTime) / 1000;
+                    if (dt > 0) this.freq = 1.0 / dt;
+                }
+                this.lastTime = timestamp;
+
+                const prevX = this.xFilter.s;
+                const dx = prevX === null ? 0.0 : (x - prevX) * this.freq;
+                const edx = this.dxFilter.call(dx);
+
+                const cutoff = this.minCutoff + this.beta * Math.abs(edx);
+                this.xFilter.alpha = this.alpha(cutoff);
+                return this.xFilter.call(x);
+            }
+        }
+
+        // 🎥 Global State
+        const state = {
+            active: true,
+            debug: true,
+            stats: { fps: 0 },
+            mpOptions: {
+                numHands: 1,
+                minHandDetectionConfidence: 0.5,
+                minHandPresenceConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            },
+            physics: {
+                stiffness: 0.2,
+                damping: 0.1,
+                lookAhead: 1.5,
+                springSource: 'snappy',
+                predSource: 'snappy'
+            },
+            cursors: {
+                smooth: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#00ccff', label: 'Smooth (1€)' },
+                snappy: { x: 0.5, y: 0.5, filterX: null, filterY: null, color: '#ffcc00', label: 'Snappy (1€)' },
+                spring: { x: 0.5, y: 0.5, body: null, anchor: null, constraint: null, color: '#ff00ff', label: 'Spring (MATTER)' },
+                predictive: { x: 0.5, y: 0.5, body: null, color: '#00ff00', label: 'Predictive (MATTER)' }
+            },
+            gestures: {
+                active: 'None',
+                score: 0,
+                isDown: false
+            }
+        };
+
+        // Initialize Filters
+        state.cursors.smooth.filterX = new OneEuroFilter(30, 0.5, 0.001);
+        state.cursors.smooth.filterY = new OneEuroFilter(30, 0.5, 0.001);
+        state.cursors.snappy.filterX = new OneEuroFilter(30, 2.0, 0.1);
+        state.cursors.snappy.filterY = new OneEuroFilter(30, 2.0, 0.1);
+
+        // 🏗️ Matter.js Initialization
+        let engine, runner;
+        const initPhysics = () => {
+            const { Engine, Bodies, Composite, Constraint, Runner } = Matter;
+
+            engine = Engine.create();
+            engine.gravity.scale = 0; // No gravity for 2D UI cursors
+
+            // 1. Spring Body (Anchor + Body + Constraint)
+            state.cursors.spring.anchor = Bodies.circle(0.5, 0.5, 1, { isStatic: true, isSensor: true });
+            state.cursors.spring.body = Bodies.circle(0.5, 0.5, 10, { frictionAir: 0.1 });
+            state.cursors.spring.constraint = Constraint.create({
+                bodyA: state.cursors.spring.anchor,
+                bodyB: state.cursors.spring.body,
+                stiffness: state.physics.stiffness,
+                damping: state.physics.damping,
+                length: 0
+            });
+
+            // 2. Predictive Body (Static/Kinematic proxy)
+            state.cursors.predictive.body = Bodies.circle(0.5, 0.5, 10, { isStatic: true });
+
+            Composite.add(engine.world, [
+                state.cursors.spring.anchor,
+                state.cursors.spring.body,
+                state.cursors.spring.constraint,
+                state.cursors.predictive.body
+            ]);
+
+            runner = Runner.create();
+            Runner.run(runner, engine);
+        };
+
+        let gestureRecognizer = null;
+
+        // 📽️ MediaPipe Processor
+        const initMediaPipe = async (container) => {
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.playsinline = true;
+            video.style.opacity = '0.3';
+            container.appendChild(video);
+
+            const canvas = document.createElement('canvas');
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            const drawingUtils = new DrawingUtils(ctx);
+
+            const visionTasks = await FilesetResolver.forVisionTasks(
+                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
+            );
+
+            gestureRecognizer = await GestureRecognizer.createFromOptions(visionTasks, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: "GPU"
+                },
+                runningMode: "VIDEO",
+                ...state.mpOptions
+            });
+
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
+            video.srcObject = stream;
+
+            let lastTime = -1;
+            const render = () => {
+                const now = performance.now();
+                if (now === lastTime) { requestAnimationFrame(render); return; }
+
+                if (state.active && video.readyState >= 2) {
+                    const results = gestureRecognizer.recognizeForVideo(video, now);
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    if (results.landmarks && results.landmarks.length > 0) {
+                        results.landmarks.forEach((landmarks, index) => {
+                            if (state.debug) {
+                                drawingUtils.drawConnectors(landmarks, HandLandmarker.HAND_CONNECTIONS, { color: "#00FF00", lineWidth: 5 });
+                                drawingUtils.drawLandmarks(landmarks, { color: "#FF0000", lineWidth: 2 });
+                            }
+
+                            // 🎯 Focus on Index Tip (8)
+                            const tip = landmarks[8];
+                            const px = tip.x * canvas.width;
+                            const py = tip.y * canvas.height;
+
+                            state.cursors.smooth.x = state.cursors.smooth.filterX.call(tip.x, now);
+                            state.cursors.smooth.y = state.cursors.smooth.filterY.call(tip.y, now);
+                            state.cursors.snappy.x = state.cursors.snappy.filterX.call(tip.x, now);
+                            state.cursors.snappy.y = state.cursors.snappy.filterY.call(tip.y, now);
+
+                            // 🤏 Gesture Integration
+                            if (results.gestures && results.gestures[index]) {
+                                const topGesture = results.gestures[index][0];
+                                state.gestures.active = topGesture.categoryName;
+                                state.gestures.score = topGesture.score;
+                                state.gestures.isDown = (topGesture.categoryName === 'Closed_Fist' || topGesture.categoryName === 'Pointing_Up');
+                            }
+
+                            // ⚙️ Matter.js Sync
+                            if (engine) {
+                                const springAnchor = state.cursors[state.physics.springSource];
+                                const predBase = state.cursors[state.physics.predSource];
+
+                                // A. Update Spring Anchor
+                                Matter.Body.setPosition(state.cursors.spring.anchor, {
+                                    x: springAnchor.x * canvas.width,
+                                    y: springAnchor.y * canvas.height
+                                });
+
+                                // B. Predictive Lead
+                                const lead = {
+                                    x: (state.cursors.snappy.x - state.cursors.smooth.x) * state.physics.lookAhead,
+                                    y: (state.cursors.snappy.y - state.cursors.smooth.y) * state.physics.lookAhead
+                                };
+                                Matter.Body.setPosition(state.cursors.predictive.body, {
+                                    x: (predBase.x + lead.x) * canvas.width,
+                                    y: (predBase.y + lead.y) * canvas.height
+                                });
+
+                                // Update local state for rendering
+                                state.cursors.spring.x = state.cursors.spring.body.position.x / canvas.width;
+                                state.cursors.spring.y = state.cursors.spring.body.position.y / canvas.height;
+                                state.cursors.predictive.x = state.cursors.predictive.body.position.x / canvas.width;
+                                state.cursors.predictive.y = state.cursors.predictive.body.position.y / canvas.height;
+                            }
+
+                            // Render Custom Cursors
+                            [state.cursors.smooth, state.cursors.snappy, state.cursors.spring, state.cursors.predictive].forEach(cursor => {
+                                ctx.beginPath();
+                                ctx.arc(cursor.x * canvas.width, cursor.y * canvas.height, 12, 0, 2 * Math.PI);
+                                ctx.fillStyle = cursor.color;
+                                ctx.fill();
+                                ctx.strokeStyle = state.gestures.isDown ? '#fff' : 'transparent';
+                                ctx.lineWidth = 4;
+                                ctx.stroke();
+
+                                // Label
+                                ctx.fillStyle = '#fff';
+                                ctx.font = '12px Courier';
+                                ctx.fillText(cursor.label, cursor.x * canvas.width + 15, cursor.y * canvas.height + 5);
+                            });
+                        });
+                    }
+                }
+
+                lastTime = now;
+                requestAnimationFrame(render);
+            };
+
+            video.onloadedmetadata = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                initPhysics(); // Init Matter.js when canvas dimensions are known
+                render();
+            };
+        };
+
+        const initPhysicsPanel = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.innerHTML = `
+                <div class="data-card" style="border-left-color: #00ccff">
+                    <h3>Smooth (1€)</h3>
+                    <code id="smooth-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div class="data-card" style="border-left-color: #ff00ff">
+                    <h3>Spring (Matter)</h3>
+                    <code id="spring-data">X: 0.000, Y: 0.000</code>
+                </div>
+                <div class="data-card" style="border-left-color: #00ff00">
+                    <h3>Predictive (Matter)</h3>
+                    <code id="pred-data">X: 0.000, Y: 0.000</code>
+                </div>
+            `;
+            container.appendChild(div);
+            const smoothEl = div.querySelector('#smooth-data');
+            const springEl = div.querySelector('#spring-data');
+            const predEl = div.querySelector('#pred-data');
+
+            const update = () => {
+                smoothEl.innerText = `X: ${state.cursors.smooth.x.toFixed(4)}, Y: ${state.cursors.smooth.y.toFixed(4)}`;
+                springEl.innerText = `X: ${state.cursors.spring.x.toFixed(4)}, Y: ${state.cursors.spring.y.toFixed(4)}`;
+                predEl.innerText = `X: ${state.cursors.predictive.x.toFixed(4)}, Y: ${state.cursors.predictive.y.toFixed(4)}`;
+                requestAnimationFrame(update);
+            };
+            update();
+        };
+
+        const initGesturesPanel = (container) => {
+            const div = document.createElement('div');
+            div.className = 'component-container';
+            div.innerHTML = `
+                <div class="data-card" style="border-left-color: #cc00ff; text-align:center;">
+                    <h1 id="active-gesture" style="font-size: 48px; margin: 10px 0;">NONE</h1>
+                    <div id="gesture-score" style="color: #666;">Confidence: 0%</div>
+                </div>
+                <div id="gesture-visualizer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div id="g-Closed_Fist">FIST</div>
+                    <div id="g-Open_Palm">OPEN</div>
+                    <div id="g-Pointing_Up">POINT</div>
+                    <div id="g-Thumb_Up">UP</div>
+                    <div id="g-Victory">VICTORY</div>
+                    <div id="g-ILoveYou">ILY</div>
+                </div>
+            `;
+            container.appendChild(div);
+            const activeEl = div.querySelector('#active-gesture');
+            const scoreEl = div.querySelector('#gesture-score');
+            const cards = div.querySelectorAll('#gesture-visualizer div');
+
+            const update = () => {
+                activeEl.innerText = state.gestures.active;
+                scoreEl.innerText = `Confidence: ${(state.gestures.score * 100).toFixed(1)}%`;
+                cards.forEach(card => {
+                    card.className = (card.id === `g-${state.gestures.active}`) ? 'active' : '';
+                });
+                requestAnimationFrame(update);
+            };
+            update();
+        };
+
+        const initSettings = (container) => {
+            const gui = new GUI({ container, autoPlace: false });
+
+            const phys = gui.addFolder('Matter.js Dynamics');
+            phys.add(state.physics, 'springSource', ['snappy', 'smooth']).name('Spring Anchor');
+            phys.add(state.physics, 'predSource', ['snappy', 'smooth']).name('Pred Anchor');
+            phys.add(state.physics, 'stiffness', 0, 1).name('Spring Stiffness').onChange(v => state.cursors.spring.constraint.stiffness = v);
+            phys.add(state.physics, 'damping', 0, 1).name('Spring Damping').onChange(v => state.cursors.spring.constraint.damping = v);
+            phys.add(state.physics, 'lookAhead', 0, 20).name('Predictive T');
+            phys.open();
+
+            const mp = gui.addFolder('MediaPipe Tasks');
+            mp.add(state.mpOptions, 'minHandDetectionConfidence', 0, 1).name('Detection').onChange(v => gestureRecognizer.setOptions({ minHandDetectionConfidence: v }));
+            mp.add(state.mpOptions, 'minHandPresenceConfidence', 0, 1).name('Tracking').onChange(v => gestureRecognizer.setOptions({ minHandPresenceConfidence: v }));
+            mp.add(state, 'debug').name('Show Mesh');
+            mp.open();
+
+            container.appendChild(gui.domElement);
+        };
+
+        // 🏗️ Layout
+        const config = {
+            root: {
+                type: 'column',
+                content: [
+                    {
+                        type: 'row',
+                        height: 70,
+                        content: [
+                            { type: 'component', componentType: 'MediaPipe', title: 'P0: SENSE', width: 50 },
+                            { type: 'component', componentType: 'Gestures', title: 'P3: DELIVER', width: 25 },
+                            { type: 'component', componentType: 'Physics', title: 'P2: SHAPE', width: 25 }
+                        ]
+                    },
+                    { type: 'component', componentType: 'Settings', title: 'P7: NAVIGATE', height: 30 }
+                ]
+            }
+        };
+
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        layout.registerComponentFactoryFunction('MediaPipe', c => initMediaPipe(c.element));
+        layout.registerComponentFactoryFunction('Physics', c => initPhysicsPanel(c.element));
+        layout.registerComponentFactoryFunction('Gestures', c => initGesturesPanel(c.element));
+        layout.registerComponentFactoryFunction('Settings', c => initSettings(c.element));
+
+        layout.loadLayout(config);
+        window.addEventListener('resize', () => layout.updateSize());
+    </script>
+</body>
+
+</html>

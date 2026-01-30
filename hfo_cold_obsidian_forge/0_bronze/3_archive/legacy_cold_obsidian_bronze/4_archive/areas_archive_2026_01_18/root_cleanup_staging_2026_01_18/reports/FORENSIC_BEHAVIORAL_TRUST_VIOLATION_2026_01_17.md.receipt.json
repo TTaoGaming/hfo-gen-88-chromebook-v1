@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:51.152637Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_BEHAVIORAL_TRUST_VIOLATION_2026_01_17.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/FORENSIC_BEHAVIORAL_TRUST_VIOLATION_2026_01_17.md",
+    "hash": "9df51bca9c56c53c04dfe8fe7d36801075c09629936914e024886c49d8887868",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

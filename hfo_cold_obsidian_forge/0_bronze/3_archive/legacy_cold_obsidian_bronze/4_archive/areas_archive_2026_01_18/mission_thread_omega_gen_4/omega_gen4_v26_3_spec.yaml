@@ -1,0 +1,38 @@
+# Medallion: Bronze | OMEGA GEN 4 V26.3 SPECIFICATION
+# Mission: "Safe Harbor" Substrate (Visual Subsectioning & Edge Resilience)
+# Status: DRAFT / CONCEPT
+
+design_goals:
+  - Eliminate "edge-fighting" by visually shrinking the interaction area relative to the camera FOV.
+  - Provide clear visual cues for the interaction "dead zone."
+  - Maintain 1:1 parity between visual elements and coordinate injection.
+
+technical_strategy:
+  - name: "Inset Overlay Pattern"
+    description: "CSS-based shrinking of the Excalidraw container to create a visible safety gutter."
+    implementation:
+      - CSS: "width: 80vw; height: 80vh; left: 10vw; top: 10vh;"
+      - Logic: "Coordinate mapping must be bounded to the calculated rect of the inset overlay."
+  
+  - name: "Interactive Visual Guardrails"
+    description: "Overlay Canvas rendering of the active interaction zone."
+    visuals:
+      - border_color: "rgba(255, 215, 0, 0.3)" # Gold transparent
+      - alert_color: "rgba(255, 65, 54, 0.5)" # Red alert on boundary breach
+  
+  - name: "Dynamic Buffer Parameter"
+    description: "Transition from fixed pixels to a percentage-based 'Safe Zone' factor."
+    parameter: "systemState.parameters.excalidraw.safeZoneFactor" # 0.8 = 80% of screen
+
+coordinate_mapping_v3:
+  input: "MediaPipe Landmarks (0.0 - 1.0)"
+  logic: |
+    // 1. Calculate the 'Safe Window' in Camera Space
+    // 2. Map Camera Space [Margin, 1-Margin] to Screen Space [OverlayLeft, OverlayRight]
+    // 3. Clamp output to [0, 1] relative to the Excalidraw container
+  output: "W3C PointerEvents targeted specifically at the inset iframe."
+
+success_criteria:
+  - User can reach the corners of the Excalidraw UI without their hand leaving the camera frame.
+  - No horizontal/vertical drift when transitioning from center to edge.
+  - 100% P5 Forensic Pass for coordinate integrity.

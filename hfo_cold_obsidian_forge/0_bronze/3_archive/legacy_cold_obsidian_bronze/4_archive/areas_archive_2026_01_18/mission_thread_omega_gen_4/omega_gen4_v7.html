@@ -1,0 +1,1066 @@
+<!-- Medallion: Bronze | Mutation: 0% | HIVE: I -->
+<!-- OMEGA GEN 4 V7.0 - HFO LASER SUBSTRATE (RAY READY/STICKY COMMIT) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO OMEGA GEN 4 | V7.0 LASER SUBSTRATE</title>
+
+    <!-- CSS Dependencies -->
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+
+    <style>
+        :root {
+            --md-sys-color-primary: #D0BCFF;
+            --md-sys-color-on-primary: #381E72;
+            --md-sys-color-primary-container: #4F378B;
+            --md-sys-color-on-primary-container: #EADDFF;
+            --md-sys-color-surface: #1C1B1F;
+            --md-sys-color-on-surface: #E6E1E5;
+            --md-sys-color-surface-variant: #49454F;
+            --md-sys-color-outline: #938F99;
+            --hfo-red: #FF4136;
+            --hfo-black: #000000;
+            --m3-radius: 12px;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: var(--hfo-black);
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Roboto', system-ui, sans-serif;
+        }
+
+        #layout-container {
+            width: 100%;
+            height: calc(100% - 28px);
+        }
+
+        #status-bar {
+            height: 28px;
+            background: var(--md-sys-color-surface);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 10px;
+            border-top: 1px solid var(--md-sys-color-outline);
+            text-transform: uppercase;
+            z-index: 1000;
+        }
+
+        .component-container {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            background: var(--hfo-black);
+        }
+
+        /* 📜 SECURED SCROLLING PANEL */
+        .scrollable-panel {
+            overflow-y: auto !important;
+            height: 100% !important;
+            padding: 12px;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--hfo-black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--md-sys-color-surface-variant);
+            border-radius: 10px;
+            border: 2px solid var(--hfo-black);
+        }
+
+        .hero-view-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #video-feed {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scaleX(-1);
+            filter: grayscale(0.5) contrast(1.1);
+        }
+
+        #overlay-canvas {
+            position: absolute;
+            transform: scaleX(-1);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .hfo-btn {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            padding: 12px 32px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s;
+        }
+
+        .hfo-btn:active {
+            transform: scale(0.95);
+        }
+
+        .lil-gui {
+            --background-color: transparent;
+            --widget-color: var(--md-sys-color-surface-variant);
+            --focus-color: var(--md-sys-color-primary);
+            --title-background-color: var(--md-sys-color-primary-container);
+            --title-text-color: var(--md-sys-color-on-primary-container);
+            width: 100% !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout-container"></div>
+    <div id="status-bar">
+        <span>[HFO OMEGA V4.0]</span>
+        <span id="p5-status" style="margin-left: 16px; color: #00FF41;">P5: ENFORCED</span>
+        <span style="margin-left: auto;" id="state-indicator">P1: CONTRACTS ACTIVE | FSM: IDLE</span>
+    </div>
+
+    <!-- Import Map -->
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import { z } from 'zod';
+
+        // --- P1: FUSE CONTRACTS (The Bridger) ---
+        const ConfigSchema = z.object({
+            camera: z.object({
+                resolution: z.enum(['640x480', '1280x720', '1920x1080']),
+                fpsTarget: z.number().min(1).max(120),
+                mirror: z.boolean()
+            }),
+            landmarks: z.object({
+                minConfidence: z.number().min(0).max(1),
+                minTrackingConfidence: z.number().min(0).max(1),
+                minPresenceConfidence: z.number().min(0).max(1),
+                numHands: z.number().min(1).max(4),
+                showSkeleton: z.boolean()
+            }),
+            gestures: z.object({
+                minGestureConfidence: z.number().min(0).max(1),
+                preferredHand: z.enum(['Any', 'Left', 'Right'])
+            }),
+            palm: z.object({
+                normalThreshold: z.number().min(0).max(1)
+            }),
+            fsm: z.object({
+                hysteresisHigh: z.number().min(0).max(100),
+                hysteresisLow: z.number().min(0).max(100),
+                fillRate: z.number().min(0),
+                drainRate: z.number().min(0),
+                commitExitDelayMs: z.number().min(0)
+            }),
+            coasting: z.object({
+                timeoutMs: z.number().min(0),
+                confidenceThreshold: z.number().min(0).max(1)
+            }),
+            physics: z.object({
+                oneEuroMinCutoff: z.number().min(0),
+                oneEuroBeta: z.number().min(0),
+                springStiffness: z.number().min(0),
+                springDamping: z.number().min(0),
+                predictiveLookahead: z.number().min(0)
+            })
+        });
+
+        const LandmarkSchema = z.object({
+            x: z.number(),
+            y: z.number(),
+            z: z.number()
+        });
+
+        const CoordinateSchema = z.object({
+            screenX: z.number(),
+            screenY: z.number(),
+            fsmState: z.enum(['IDLE', 'READY', 'COMMIT', 'COAST']),
+            gesture: z.string(),
+            confidence: z.number(),
+            isPalmFacing: z.boolean(),
+            bucketLevel: z.number(),
+            curls: z.object({
+                index: z.number(),
+                middle: z.number(),
+                ring: z.number(),
+                pinky: z.number()
+            })
+        });
+
+        // --- PRODUCTION STATE ---
+        const systemState = {
+            parameters: {
+                camera: { resolution: '1280x720', fpsTarget: 30, mirror: true },
+                landmarks: { minConfidence: 0.5, minTrackingConfidence: 0.5, minPresenceConfidence: 0.5, numHands: 2, showSkeleton: true },
+                gestures: { minGestureConfidence: 0.7, preferredHand: 'Any' },
+                palm: { normalThreshold: 0.5 },
+                fsm: { hysteresisHigh: 85, hysteresisLow: 15, fillRate: 2.5, drainRate: 1.5, commitExitDelayMs: 300 },
+                coasting: { timeoutMs: 150, confidenceThreshold: 0.4 },
+                physics: {
+                    oneEuroMinCutoff: 1.0,
+                    oneEuroBeta: 0.05,
+                    springStiffness: 0.15,
+                    springDamping: 0.05,
+                    predictiveLookahead: 1.5
+                },
+                p0Active: false,
+                devMode: false
+            },
+            fsm: { currentState: 'IDLE', lastState: 'IDLE', lastCommitTime: 0, commitExitStartTime: 0 },
+            p0: { recognizer: null, video: null, canvas: null, ctx: null, videoBounds: null },
+            p1: {
+                cursors: [],
+                buckets: [0, 0, 0, 0], // Per-hand leaky buckets
+                lastData: [null, null, null, null], // Per-hand coasting data
+                coastStartTimes: [0, 0, 0, 0], // Per-hand coast timers
+                filters: [null, null, null, null], // OneEuroFilters
+                physicsState: [null, null, null, null] // Mass-Spring state
+            },
+            ui: { gestures: null, palm: null, palmCtx: null, fsm: null, fsmCtx: null }
+        };
+
+        window.hfoState = systemState;
+
+        // --- COORDINATE SUBSTRATE: 1EURO + PHYSICS ---
+        class OneEuroFilter {
+            constructor(minCutoff = 1.0, beta = 0.0) {
+                this.minCutoff = minCutoff;
+                this.beta = beta;
+                this.xPrev = null;
+                this.dxPrev = 0;
+            }
+
+            filter(x, rate = 30) {
+                if (this.xPrev === null) {
+                    this.xPrev = x;
+                    return x;
+                }
+                const dx = (x - this.xPrev) * rate;
+                const edx = this.alpha(rate, 1.0); // Simple smoothing for derivative
+                const dxHat = edx * dx + (1 - edx) * this.dxPrev;
+                const cutoff = this.minCutoff + this.beta * Math.abs(dxHat);
+                const a = this.alpha(rate, cutoff);
+                const xHat = a * x + (1 - a) * this.xPrev;
+                this.xPrev = xHat;
+                this.dxPrev = dxHat;
+                return xHat;
+            }
+
+            alpha(rate, cutoff) {
+                const tau = 1.0 / (2 * Math.PI * cutoff);
+                const te = 1.0 / rate;
+                return 1.0 / (1.0 + tau / te);
+            }
+        }
+
+        class MassSpringDampener {
+            constructor(stiffness = 0.15, damping = 0.05) {
+                this.pos = null;
+                this.vel = { x: 0, y: 0 };
+                this.stiffness = stiffness;
+                this.damping = damping;
+            }
+
+            update(targetX, targetY) {
+                if (this.pos === null) {
+                    this.pos = { x: targetX, y: targetY };
+                    return this.pos;
+                }
+                const forceX = (targetX - this.pos.x) * this.stiffness;
+                const forceY = (targetY - this.pos.y) * this.stiffness;
+
+                this.vel.x = this.vel.x * (1 - this.damping) + forceX;
+                this.vel.y = this.vel.y * (1 - this.damping) + forceY;
+
+                this.pos.x += this.vel.x;
+                this.pos.y += this.vel.y;
+                return this.pos;
+            }
+        }
+
+        // --- P1 BRIDGER: CONTRACT ENFORCEMENT ---
+        class P1Bridger {
+            static calculateCurl(landmarks, indices) {
+                let totalAngle = 0;
+                for (let i = 0; i < indices.length - 2; i++) {
+                    const a = landmarks[indices[i]];
+                    const b = landmarks[indices[i + 1]];
+                    const c = landmarks[indices[i + 2]];
+                    const v1 = { x: a.x - b.x, y: a.y - b.y, z: (a.z - b.z) * 0.1 };
+                    const v2 = { x: c.x - b.x, y: c.y - b.y, z: (c.z - b.z) * 0.1 };
+                    const mag1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z) || 1e-6;
+                    const mag2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y + v2.z * v2.z) || 1e-6;
+                    const dot = (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z) / (mag1 * mag2);
+                    totalAngle += Math.acos(Math.max(-1, Math.min(1, dot)));
+                }
+                return Math.min(1.0, totalAngle / Math.PI);
+            }
+
+            static validateConfig(config) {
+                try {
+                    return ConfigSchema.parse(config);
+                } catch (e) {
+                    console.error("🚨 P1_CONFIG_CONTRACT_BREACH:", e.errors);
+                    return null;
+                }
+            }
+
+            static fuse(results) {
+                const cursors = [];
+                const now = performance.now();
+                const { numHands } = systemState.parameters.landmarks;
+
+                for (let i = 0; i < numHands; i++) {
+                    const landmarks = results.landmarks?.[i];
+                    const bestGesture = results.gestures?.[i]?.[0];
+                    let cursorData = null;
+
+                    if (landmarks) {
+                        try {
+                            const validatedLandmarks = landmarks.map(l => LandmarkSchema.parse(l));
+                            const { width, height } = systemState.p0.videoBounds || { width: 0, height: 0 };
+
+                            // Ray Projection: Extend the vector from Knuckle (7) to Tip (8)
+                            const knuckle = validatedLandmarks[7];
+                            const tipRaw = validatedLandmarks[8];
+                            const dx_raw = tipRaw.x - knuckle.x;
+                            const dy_raw = tipRaw.y - knuckle.y;
+                            const dz_raw = tipRaw.z - knuckle.z;
+
+                            // Projection factor (slightly beyond the tip)
+                            const projectionMultiplier = 1.2;
+                            const projectedTip = {
+                                x: knuckle.x + dx_raw * projectionMultiplier,
+                                y: knuckle.y + dy_raw * projectionMultiplier,
+                                z: knuckle.z + dz_raw * projectionMultiplier
+                            };
+
+                            const screenX = projectedTip.x * width;
+                            const screenY = projectedTip.y * height;
+
+                            // Palm Orientation
+                            const lm = validatedLandmarks;
+                            const v1 = { x: lm[5].x - lm[0].x, y: lm[5].y - lm[0].y, z: lm[5].z - lm[0].z };
+                            const v2 = { x: lm[17].x - lm[0].x, y: lm[17].y - lm[0].y, z: lm[17].z - lm[0].z };
+                            const cross = {
+                                x: (v1.y * v2.z - v1.z * v2.y) || 0,
+                                y: (v1.z * v2.x - v1.x * v2.z) || 0,
+                                z: (v1.x * v2.y - v1.y * v2.x) || 1
+                            };
+                            const mag = Math.sqrt(cross.x ** 2 + cross.y ** 2 + cross.z ** 2) || 1;
+                            const isPalmFacing = Math.abs(cross.z / mag) > systemState.parameters.palm.normalThreshold;
+
+                            const category = bestGesture?.categoryName || 'None';
+                            const confidence = bestGesture?.score || 0;
+
+                            // Apply 1EuroFilter
+                            if (!systemState.p1.filters[i]) {
+                                systemState.p1.filters[i] = {
+                                    x: new OneEuroFilter(systemState.parameters.physics.oneEuroMinCutoff, systemState.parameters.physics.oneEuroBeta),
+                                    y: new OneEuroFilter(systemState.parameters.physics.oneEuroMinCutoff, systemState.parameters.physics.oneEuroBeta)
+                                };
+                            }
+                            const smoothedX = systemState.p1.filters[i].x.filter(screenX);
+                            const smoothedY = systemState.p1.filters[i].y.filter(screenY);
+
+                            // Apply Mass-Spring-Dampener
+                            if (!systemState.p1.physicsState[i]) {
+                                systemState.p1.physicsState[i] = new MassSpringDampener(
+                                    systemState.parameters.physics.springStiffness,
+                                    systemState.parameters.physics.springDamping
+                                );
+                            }
+                            const physicsPos = systemState.p1.physicsState[i].update(smoothedX, smoothedY);
+
+                            // Predictive Lookahead
+                            const vel = systemState.p1.physicsState[i].vel;
+                            const finalX = physicsPos.x + vel.x * systemState.parameters.physics.predictiveLookahead;
+                            const finalY = physicsPos.y + vel.y * systemState.parameters.physics.predictiveLookahead;
+
+                            const curls = {
+                                index: this.calculateCurl(lm, [5, 6, 7, 8]),
+                                middle: this.calculateCurl(lm, [9, 10, 11, 12]),
+                                ring: this.calculateCurl(lm, [13, 14, 15, 16]),
+                                pinky: this.calculateCurl(lm, [17, 18, 19, 20])
+                            };
+
+                            // Leaky Bucket Logic
+                            if (isPalmFacing) {
+                                systemState.p1.buckets[i] = Math.min(100, systemState.p1.buckets[i] + systemState.parameters.fsm.fillRate);
+                            } else {
+                                systemState.p1.buckets[i] = Math.max(0, systemState.p1.buckets[i] - systemState.parameters.fsm.drainRate);
+                            }
+
+                            // Sequential FSM Logic (IDLE -> READY -> COMMIT -> IDLE)
+                            let fsmState = systemState.fsm.currentState;
+                            const bucket = systemState.p1.buckets[i];
+
+                            if (fsmState === 'IDLE') {
+                                if (bucket >= systemState.parameters.fsm.hysteresisHigh) {
+                                    fsmState = 'READY';
+                                }
+                            } else if (fsmState === 'READY') {
+                                if (bucket <= systemState.parameters.fsm.hysteresisLow) {
+                                    fsmState = 'IDLE';
+                                } else if (confidence > systemState.parameters.gestures.minGestureConfidence) {
+                                    // Removed Closed_Fist; only Pointer_Up triggers laser commit
+                                    if (category === 'Pointing_Up') {
+                                        fsmState = 'COMMIT';
+                                    }
+                                }
+                            } else if (fsmState === 'COMMIT') {
+                                // 🔒 STICKY COMMIT: Locked until deliberate palm cone EXIT
+                                if (bucket <= systemState.parameters.fsm.hysteresisLow) {
+                                    if (systemState.fsm.commitExitStartTime === 0) {
+                                        systemState.fsm.commitExitStartTime = now;
+                                    }
+                                    const elapsed = now - systemState.fsm.commitExitStartTime;
+                                    if (elapsed >= systemState.parameters.fsm.commitExitDelayMs) {
+                                        fsmState = 'IDLE';
+                                        systemState.fsm.commitExitStartTime = 0;
+                                    }
+                                } else {
+                                    // Palm cone is still active; remain in COMMIT
+                                    systemState.fsm.commitExitStartTime = 0;
+                                }
+                            }
+
+                            cursorData = {
+                                screenX: finalX, screenY: finalY, fsmState, gesture: category,
+                                confidence, isPalmFacing, bucketLevel: bucket, curls
+                            };
+
+                            // Update Coasting Data
+                            systemState.p1.lastData[i] = cursorData;
+                            systemState.p1.coastStartTimes[i] = 0;
+
+                        } catch (e) {
+                            console.error("🚨 P1_FUSE_CONTRACT_BREACH:", e);
+                        }
+                    } else {
+                        // Coasting Logic for missing landmarks
+                        const last = systemState.p1.lastData[i];
+                        if (last) {
+                            if (systemState.p1.coastStartTimes[i] === 0) {
+                                systemState.p1.coastStartTimes[i] = now;
+                            }
+
+                            const elapsed = now - systemState.p1.coastStartTimes[i];
+                            if (elapsed < systemState.parameters.coasting.timeoutMs) {
+                                cursorData = { ...last, fsmState: 'COAST' };
+                            } else {
+                                systemState.p1.lastData[i] = null;
+                                // Reset FSM to IDLE on timeout
+                                if (i === 0) systemState.fsm.currentState = 'IDLE';
+                            }
+                        }
+                    }
+
+                    if (cursorData) {
+                        cursors.push(CoordinateSchema.parse(cursorData));
+                        if (i === 0) systemState.fsm.currentState = cursorData.fsmState;
+                    }
+                }
+                return cursors;
+            }
+        }
+
+        // --- P0: SENSE ---
+        async function initP0() {
+            logMission("P0: Initializing V7 Laser Cluster...");
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
+            systemState.p0.recognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: 'GPU'
+                },
+                runningMode: "VIDEO",
+                numHands: systemState.parameters.landmarks.numHands
+            });
+            logMission("✅ P0: Sensing Cluster Online");
+        }
+
+        function predictLoop() {
+            if (!systemState.parameters.p0Active) return;
+            const now = performance.now();
+            const results = systemState.p0.recognizer.recognizeForVideo(systemState.p0.video, now);
+
+            // P1 BRIDGE: Fusing sensing to coordinates under contract
+            systemState.p1.cursors = P1Bridger.fuse(results);
+
+            if (systemState.p1.cursors.length > 0) {
+                updateFSM(systemState.p1.cursors[0].fsmState);
+            } else {
+                updateFSM('IDLE');
+            }
+
+            drawResults(results);
+            updateVisualPanels(results);
+            dispatchPointerEvents();
+            requestAnimationFrame(predictLoop);
+        }
+
+        function dispatchPointerEvents() {
+            if (systemState.p1.cursors.length === 0) return;
+            const cursor = systemState.p1.cursors[0];
+            const eventType = cursor.fsmState === 'COMMIT' ? 'pointermove' : 'pointermove'; // Standard pointermove
+
+            // Simplified cursor dispatch - in reality we might want pointerdown on COMMIT enter
+            const event = new PointerEvent(eventType, {
+                bubbles: true,
+                cancelable: true,
+                pointerId: 1,
+                pointerType: 'touch',
+                clientX: cursor.screenX,
+                clientY: cursor.screenY,
+                pressure: cursor.fsmState === 'COMMIT' ? 1.0 : 0.0,
+                // We'll also dispatch pointerdown/up for full standard compliance
+            });
+
+            const target = document.elementFromPoint(cursor.screenX, cursor.screenY) || document.body;
+            target.dispatchEvent(event);
+
+            // Handle Transitions for pure standard fidelity
+            if (cursor.fsmState === 'COMMIT' && systemState.fsm.lastState !== 'COMMIT') {
+                target.dispatchEvent(new PointerEvent('pointerdown', { ...event, pressure: 1.0 }));
+            } else if (cursor.fsmState !== 'COMMIT' && systemState.fsm.lastState === 'COMMIT') {
+                target.dispatchEvent(new PointerEvent('pointerup', { ...event, pressure: 0.0 }));
+            }
+            systemState.fsm.lastState = cursor.fsmState;
+        }
+
+        function updateVisualPanels(results) {
+            // Update Gestures Panel
+            if (systemState.ui.gestures) {
+                let html = '<div style="padding:10px; font-family:monospace; font-size:12px;">';
+                if (results.landmarks && results.landmarks.length > 0) {
+                    results.landmarks.forEach((_, i) => {
+                        const gesture = results.gestures?.[i]?.[0]?.categoryName || 'None';
+                        const score = results.gestures?.[i]?.[0]?.score || 0;
+                        const handedness = results.handedness?.[i]?.[0]?.categoryName || 'Unknown';
+
+                        html += `
+                            <div style="margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
+                                <b style="color:var(--md-sys-color-primary)">HAND ${i} (${handedness})</b><br/>
+                                GESTURE: <span style="color:#FFF">${gesture}</span><br/>
+                                CONFIDENCE: <span style="color:#00FF41">${(score * 100).toFixed(1)}%</span>
+                                <div style="width:100%; height:4px; background:#222; margin-top:5px;">
+                                    <div style="width:${score * 100}%; height:100%; background:var(--md-sys-color-primary)"></div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html += '<div style="color:#666">No hands detected</div>';
+                }
+                html += '</div>';
+                systemState.ui.gestures.innerHTML = html;
+            }
+
+            // Update Palm Panel
+            if (systemState.ui.palmCtx) {
+                const ctx = systemState.ui.palmCtx;
+                const canvas = systemState.ui.palm;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (systemState.p1.cursors.length > 0) {
+                    systemState.p1.cursors.forEach((c, i) => {
+                        const x = (i === 0 ? canvas.width * 0.25 : canvas.width * 0.75);
+                        const y = canvas.height * 0.5;
+                        const radius = 40;
+
+                        // Draw background circle
+                        ctx.beginPath();
+                        ctx.arc(x, y, radius, 0, Math.PI * 2);
+                        ctx.strokeStyle = '#333';
+                        ctx.stroke();
+
+                        // Draw orientation dot
+                        // We use the normal vector to offset a dot
+                        // This is a simplified 2D projection of the 3D normal
+                        // Since normal Z > 0.5 is 'facing', we can use X/Y for the offset
+                        // We need to get the normal from somewhere - let's add it to the cursor data or recalc
+
+                        // Recalculating for visualization parity
+                        const landmarks = results.landmarks[i];
+                        if (landmarks) {
+                            const v1 = { x: landmarks[5].x - landmarks[0].x, y: landmarks[5].y - landmarks[0].y, z: landmarks[5].z - landmarks[0].z };
+                            const v2 = { x: landmarks[17].x - landmarks[0].x, y: landmarks[17].y - landmarks[0].y, z: landmarks[17].z - landmarks[0].z };
+                            const cross = {
+                                x: (v1.y * v2.z - v1.z * v2.y) || 0,
+                                y: (v1.z * v2.x - v1.x * v2.z) || 0,
+                                z: (v1.x * v2.y - v1.y * v2.x) || 1
+                            };
+                            const mag = Math.sqrt(cross.x ** 2 + cross.y ** 2 + cross.z ** 2) || 1;
+                            const nx = cross.x / mag;
+                            const ny = cross.y / mag;
+                            const nz = cross.z / mag;
+
+                            const dotX = x + nx * radius;
+                            const dotY = y + ny * radius;
+
+                            ctx.beginPath();
+                            ctx.arc(dotX, dotY, 5, 0, Math.PI * 2);
+                            ctx.fillStyle = c.isPalmFacing ? '#00FF41' : '#FF4136';
+                            ctx.fill();
+
+                            // 📊 Leaky Bucket Hysteresis Visualizer
+                            const barW = 10, barH = 80;
+                            const barX = x + radius + 10, barY = y - barH / 2;
+                            const bucketLevel = systemState.p1.buckets[i] || 0;
+
+                            // Bg
+                            ctx.fillStyle = '#111';
+                            ctx.fillRect(barX, barY, barW, barH);
+
+                            // Hysteresis Markers
+                            const highY = barY + barH * (1 - systemState.parameters.fsm.hysteresisHigh / 100);
+                            const lowY = barY + barH * (1 - systemState.parameters.fsm.hysteresisLow / 100);
+
+                            ctx.strokeStyle = '#555';
+                            ctx.setLineDash([2, 2]);
+                            ctx.beginPath(); ctx.moveTo(barX, highY); ctx.lineTo(barX + barW, highY); ctx.stroke();
+                            ctx.beginPath(); ctx.moveTo(barX, lowY); ctx.lineTo(barX + barW, lowY); ctx.stroke();
+                            ctx.setLineDash([]);
+
+                            // Bucket Level fill
+                            const fillH = barH * (bucketLevel / 100);
+                            ctx.fillStyle = c.fsmState === 'READY' ? '#FFD700' : (c.fsmState === 'COMMIT' ? '#FF4136' : '#D0BCFF');
+                            if (c.fsmState === 'COAST') ctx.fillStyle = '#00f';
+                            ctx.fillRect(barX, barY + barH - fillH, barW, fillH);
+
+                            ctx.fillStyle = '#FFF';
+                            ctx.font = '10px monospace';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(c.fsmState, barX + barW / 2, barY - 5);
+
+                            // Label
+                            ctx.fillStyle = '#FFF';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(`HAND ${i}`, x, y + radius + 15);
+                            ctx.fillText(`Z-NORM: ${nz.toFixed(2)}`, x, y + radius + 25);
+                        }
+                    });
+                }
+            }
+
+            // Update FSM Visualization Panel
+            if (systemState.ui.fsmCtx) {
+                const ctx = systemState.ui.fsmCtx;
+                const canvas = systemState.ui.fsm;
+                if (canvas.width === 0) return;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const nodes = [
+                    { id: 'IDLE', x: 0.2, y: 0.5 },
+                    { id: 'READY', x: 0.45, y: 0.5 },
+                    { id: 'COMMIT', x: 0.7, y: 0.5 },
+                    { id: 'COAST', x: 0.45, y: 0.8 }
+                ];
+
+                const nodeWidth = 80, nodeHeight = 35;
+                const current = systemState.fsm.currentState;
+
+                // Draw Transitions
+                ctx.strokeStyle = '#333';
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                // IDLE -> READY
+                ctx.moveTo(canvas.width * 0.2 + nodeWidth / 2, canvas.height * 0.5);
+                ctx.lineTo(canvas.width * 0.45 - nodeWidth / 2, canvas.height * 0.5);
+                // READY -> COMMIT
+                ctx.moveTo(canvas.width * 0.45 + nodeWidth / 2, canvas.height * 0.5);
+                ctx.lineTo(canvas.width * 0.7 - nodeWidth / 2, canvas.height * 0.5);
+                // COMMIT -> IDLE (Curved)
+                ctx.moveTo(canvas.width * 0.7, canvas.height * 0.5 - nodeHeight / 2);
+                ctx.quadraticCurveTo(canvas.width * 0.45, canvas.height * 0.2, canvas.width * 0.2, canvas.height * 0.5 - nodeHeight / 2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                nodes.forEach(node => {
+                    const nx = canvas.width * node.x;
+                    const ny = canvas.height * node.y;
+                    const isActive = node.id === current;
+
+                    // Glow for active node
+                    if (isActive) {
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = (node.id === 'COMMIT' ? '#FF4136' : (node.id === 'READY' ? '#FFD700' : '#D0BCFF'));
+                    }
+
+                    ctx.fillStyle = isActive ? '#000' : '#111';
+                    ctx.strokeStyle = isActive ? (node.id === 'COMMIT' ? '#FF4136' : (node.id === 'READY' ? '#FFD700' : '#D0BCFF')) : '#444';
+                    ctx.beginPath();
+                    ctx.roundRect(nx - nodeWidth / 2, ny - nodeHeight / 2, nodeWidth, nodeHeight, 8);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = isActive ? (node.id === 'COMMIT' ? '#FF4136' : (node.id === 'READY' ? '#FFD700' : '#D0BCFF')) : '#888';
+                    ctx.font = 'bold 11px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(node.id, nx, ny + 5);
+
+                    if (isActive && node.id === 'COMMIT' && systemState.fsm.commitExitStartTime > 0) {
+                        const elapsed = performance.now() - systemState.fsm.commitExitStartTime;
+                        const pct = Math.max(0, 1 - (elapsed / systemState.parameters.fsm.commitExitDelayMs));
+                        ctx.fillStyle = '#FFF';
+                        ctx.fillRect(nx - nodeWidth / 2, ny + nodeHeight / 2 + 2, nodeWidth * pct, 2);
+                    }
+                });
+            }
+        }
+
+        function updateFSM(state) {
+            if (systemState.fsm.currentState !== state) {
+                systemState.fsm.currentState = state;
+                const status = document.getElementById('state-indicator');
+                status.innerText = `P1: CONTRACTS ACTIVE | FSM: ${state}`;
+            }
+        }
+
+        function drawResults(results) {
+            const { ctx, canvas } = systemState.p0;
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw MediaPipe Skeleton (RAW - Very Faint)
+            if (results.landmarks && systemState.parameters.landmarks.showSkeleton) {
+                const utils = new DrawingUtils(ctx);
+                for (const landmarks of results.landmarks) {
+                    utils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: 'rgba(208, 188, 255, 0.05)', lineWidth: 1 });
+                    utils.drawLandmarks(landmarks, { color: 'rgba(255, 65, 54, 0.05)', radius: 1 });
+                }
+            }
+
+            // --- FLOATING LASER POINTER ---
+            systemState.p1.cursors.forEach((c, i) => {
+                if (i > 0) return; // Only physics/laser on the primary object
+                const { screenX, screenY, fsmState } = c;
+
+                // 🌈 HFO V7 Policy: IDLE should not have a cursor
+                if (fsmState === 'IDLE') return;
+
+                // Laser Beam from Landmark 0 (Wrist)
+                const landmarks = results.landmarks?.[i];
+                if (landmarks) {
+                    const wrist = landmarks[0];
+                    const wristX = wrist.x * canvas.width;
+                    const wristY = wrist.y * canvas.height;
+
+                    ctx.beginPath();
+                    ctx.moveTo(wristX, wristY);
+                    ctx.lineTo(screenX, screenY);
+
+                    const gradient = ctx.createLinearGradient(wristX, wristY, screenX, screenY);
+                    if (fsmState === 'COMMIT') {
+                        gradient.addColorStop(0, 'rgba(255, 65, 54, 0.05)');
+                        gradient.addColorStop(1, 'rgba(255, 65, 54, 0.8)');
+                    } else if (fsmState === 'READY') {
+                        gradient.addColorStop(0, 'rgba(255, 215, 0, 0.02)');
+                        gradient.addColorStop(1, 'rgba(255, 215, 0, 0.6)'); // Slightly bolder READY
+                    } else {
+                        gradient.addColorStop(0, 'rgba(208, 188, 255, 0.01)');
+                        gradient.addColorStop(1, 'rgba(208, 188, 255, 0.1)');
+                    }
+
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = fsmState === 'COMMIT' ? 3 : 1; // Thicker COMMIT beam
+                    ctx.setLineDash(fsmState === 'COAST' ? [2, 4] : []);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
+                // Laser Tip Dot
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, fsmState === 'COMMIT' ? 6 : 4, 0, Math.PI * 2);
+
+                if (fsmState === 'COMMIT') {
+                    ctx.fillStyle = '#FF4136'; // Red for Commit
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#FF4136';
+                } else if (fsmState === 'READY') {
+                    ctx.fillStyle = '#FFD700'; // Gold/Yellow for Ready
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = '#FFD700';
+                } else if (fsmState === 'COAST') {
+                    ctx.fillStyle = '#0074D9'; // Blue for Coast
+                    ctx.globalAlpha = 0.5;
+                }
+
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+                ctx.shadowBlur = 0;
+            });
+        }
+
+        // --- P7: NAVIGATOR (Settings Shell) ---
+        class P7Navigator {
+            static init(container) {
+                const div = document.createElement('div');
+                div.className = 'scrollable-panel';
+                container.appendChild(div);
+
+                const gui = new GUI({ container: div, title: '🛰️ NAVIGATOR CONFIG', autoPlace: false });
+
+                const fCam = gui.addFolder('P0: Camera Range');
+                fCam.add(systemState.parameters.camera, 'resolution', ['640x480', '1280x720', '1920x1080']).onChange(syncConfig);
+                fCam.add(systemState.parameters.camera, 'fpsTarget', 15, 60, 1).onChange(syncConfig);
+                fCam.add(systemState.parameters.camera, 'mirror').onChange(syncConfig);
+
+                const fLand = gui.addFolder('P0: Neural Shards');
+                fLand.add(systemState.parameters.landmarks, 'minConfidence', 0.1, 1).onChange(syncConfig);
+                fLand.add(systemState.parameters.landmarks, 'numHands', 1, 4, 1).onChange(syncConfig);
+                fLand.add(systemState.parameters.landmarks, 'showSkeleton');
+
+                const fGest = gui.addFolder('P1: Gesture Confidence');
+                fGest.add(systemState.parameters.gestures, 'minGestureConfidence', 0, 1).name('Confidence Threshold');
+                fGest.add(systemState.parameters.gestures, 'preferredHand', ['Any', 'Left', 'Right']);
+
+                const fPalm = gui.addFolder('P1: Palm Cone Orientation');
+                fPalm.add(systemState.parameters.palm, 'normalThreshold', 0, 1).name('Palm Facing Threshold');
+
+                const fFSM = gui.addFolder('P2: Sharding & Hysteresis (Dev)');
+                fFSM.add(systemState.parameters.fsm, 'hysteresisHigh', 0, 100).name('Ready Threshold');
+                fFSM.add(systemState.parameters.fsm, 'hysteresisLow', 0, 100).name('Idle Threshold');
+                fFSM.add(systemState.parameters.fsm, 'fillRate', 0.1, 10).name('Bucket Fill Rate');
+                fFSM.add(systemState.parameters.fsm, 'drainRate', 0.1, 10).name('Bucket Drain Rate');
+                fFSM.add(systemState.parameters.fsm, 'commitExitDelayMs', 0, 2000).name('Commit Exit Delay (ms)');
+
+                const fCoast = gui.addFolder('P4: Coasting Control');
+                fCoast.add(systemState.parameters.coasting, 'timeoutMs', 0, 1000).name('Coast Timeout (ms)');
+                fCoast.add(systemState.parameters.coasting, 'confidenceThreshold', 0, 1).name('Min Signal Confidence');
+
+                const fPhys = gui.addFolder('P2: Coordinate Substrate');
+                fPhys.add(systemState.parameters.physics, 'oneEuroMinCutoff', 0.1, 5).name('Smoothing MinCutoff');
+                fPhys.add(systemState.parameters.physics, 'oneEuroBeta', 0, 0.5).name('Smoothing Beta');
+                fPhys.add(systemState.parameters.physics, 'springStiffness', 0.01, 1).name('Spring Stiffness');
+                fPhys.add(systemState.parameters.physics, 'springDamping', 0.01, 0.5).name('Spring Damping');
+                fPhys.add(systemState.parameters.physics, 'predictiveLookahead', 0, 5).name('Lookahead Factor');
+
+                function syncConfig() {
+                    const valid = P1Bridger.validateConfig(systemState.parameters);
+                    if (valid) {
+                        if (systemState.p0.recognizer) {
+                            systemState.p0.recognizer.setOptions({
+                                numHands: valid.landmarks.numHands,
+                                minHandDetectionConfidence: valid.landmarks.minConfidence
+                            });
+                        }
+                        logMission("P7: Configuration Synchronized & Validated");
+                    } else {
+                        logMission("⚠️ P1: Configuration Breach Detected", '#FF4136');
+                    }
+                }
+            }
+        }
+
+        function resizeCanvas() {
+            const { video, canvas } = systemState.p0;
+            if (!video || !canvas || !video.videoWidth) return;
+            const parent = video.parentElement;
+            const pRect = parent.getBoundingClientRect();
+            const vRatio = video.videoWidth / video.videoHeight;
+
+            let drawW = pRect.width, drawH = pRect.width / vRatio;
+            if (drawH > pRect.height) { drawH = pRect.height; drawW = drawH * vRatio; }
+
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.style.width = `${drawW}px`; canvas.style.height = `${drawH}px`;
+            systemState.p0.videoBounds = { width: drawW, height: drawH };
+        }
+
+        function logMission(msg, color = '#00ff41') {
+            const logs = document.getElementById('mission-logs');
+            if (!logs) return;
+            const entry = document.createElement('div');
+            entry.style.color = color;
+            entry.innerText = `[${new Date().toLocaleTimeString('en-GB')}] ${msg}`;
+            logs.prepend(entry);
+        }
+
+        // --- LAYOUT ENGINE ---
+        const container = document.getElementById('layout-container');
+        const layout = new GoldenLayout(container);
+
+        layout.registerComponentFactoryFunction('hero', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'component-container';
+            wrap.innerHTML = `
+                <div class="hero-view-container">
+                    <video id="video-feed" autoplay playsinline></video>
+                    <canvas id="overlay-canvas"></canvas>
+                    <button id="btn-ignite" class="hfo-btn" style="position:absolute; bottom:30px; z-index:20;">IGNITE OMEGA</button>
+                </div>
+            `;
+            container.getElement().appendChild(wrap);
+            systemState.p0.video = wrap.querySelector('#video-feed');
+            systemState.p0.canvas = wrap.querySelector('#overlay-canvas');
+            systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
+
+            wrap.querySelector('#btn-ignite').onclick = async (e) => {
+                e.target.style.display = 'none';
+                await initP0();
+                const [w, h] = systemState.parameters.camera.resolution.split('x');
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { width: parseInt(w), height: parseInt(h) } });
+                systemState.p0.video.srcObject = stream;
+                systemState.p0.video.onloadeddata = () => {
+                    systemState.parameters.p0Active = true;
+                    resizeCanvas(); predictLoop();
+                };
+            };
+
+            // Responsiveness: Hub Listener
+            container.on('resize', () => resizeCanvas());
+        });
+
+        layout.registerComponentFactoryFunction('navigator', (container) => {
+            P7Navigator.init(container.getElement());
+        });
+
+        layout.registerComponentFactoryFunction('logs', (container) => {
+            const div = document.createElement('div');
+            div.id = 'mission-logs';
+            div.className = 'scrollable-panel';
+            div.style.background = '#000'; div.style.fontSize = '10px'; div.style.fontFamily = 'monospace';
+            container.getElement().appendChild(div);
+            logMission("SYSTEM_LOGS: READY");
+        });
+
+        layout.registerComponentFactoryFunction('excalidraw', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'component-container';
+            wrap.style.background = '#000';
+            wrap.innerHTML = `
+                <iframe 
+                    src="https://excalidraw.com/?theme=dark&transparent=true" 
+                    style="width:100%; height:100%; border:none; opacity: 0.8; filter: contrast(1.2) brightness(0.8);">
+                </iframe>
+                <div style="position:absolute; top:10px; right:10px; color:#555; font-size:9px; pointer-events:none;">OBSIDIAN MIRROR V7.0</div>
+            `;
+            container.getElement().appendChild(wrap);
+        });
+
+        layout.registerComponentFactoryFunction('gestures', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'component-container scrollable-panel';
+            container.getElement().appendChild(wrap);
+            systemState.ui.gestures = wrap;
+        });
+
+        layout.registerComponentFactoryFunction('fsm-viz', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'component-container';
+            wrap.style.display = 'flex'; wrap.style.alignItems = 'center'; wrap.style.justifyContent = 'center';
+            wrap.style.background = '#050505';
+            const canvas = document.createElement('canvas');
+            wrap.appendChild(canvas);
+            container.getElement().appendChild(wrap);
+            systemState.ui.fsm = canvas;
+            systemState.ui.fsmCtx = canvas.getContext('2d');
+            container.on('resize', () => {
+                const rect = wrap.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+            });
+        });
+
+        layout.registerComponentFactoryFunction('palm', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'component-container';
+            wrap.style.display = 'flex';
+            wrap.style.alignItems = 'center';
+            wrap.style.justifyContent = 'center';
+            const canvas = document.createElement('canvas');
+            wrap.appendChild(canvas);
+            container.getElement().appendChild(wrap);
+
+            systemState.ui.palm = canvas;
+            systemState.ui.palmCtx = canvas.getContext('2d');
+
+            container.on('resize', () => {
+                const rect = wrap.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+            });
+        });
+
+        layout.loadLayout({
+            root: {
+                type: 'row', content: [
+                    {
+                        type: 'stack', width: 60, content: [
+                            { type: 'component', componentType: 'hero', title: 'Tactical Workspace' },
+                            { type: 'component', componentType: 'excalidraw', title: 'Obsidian Mirror (Drawing)' }
+                        ]
+                    },
+                    {
+                        type: 'column', width: 40, content: [
+                            {
+                                type: 'row', height: 30, content: [
+                                    { type: 'component', componentType: 'gestures', title: 'P1: Gestures' },
+                                    { type: 'component', componentType: 'palm', title: 'P1: Palm Orientation' }
+                                ]
+                            },
+                            { type: 'component', componentType: 'fsm-viz', title: 'Tactical FSM Visualization', height: 25 },
+                            { type: 'component', componentType: 'navigator', title: 'Port 7: Navigator', height: 35 },
+                            { type: 'component', componentType: 'logs', title: 'System Telemetry', height: 10 }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            layout.updateSize();
+            resizeCanvas();
+        });
+    </script>
+</body>
+
+</html>

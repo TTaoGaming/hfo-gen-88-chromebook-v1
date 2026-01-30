@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:59.389166Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/tests/v35_golden_master_parity.spec.ts",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/tests/v35_golden_master_parity.spec.ts",
+    "hash": "f791a37a88fe026107114c4fb3cbf794e6f0726028673b5bd73dab03ac0edee3",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

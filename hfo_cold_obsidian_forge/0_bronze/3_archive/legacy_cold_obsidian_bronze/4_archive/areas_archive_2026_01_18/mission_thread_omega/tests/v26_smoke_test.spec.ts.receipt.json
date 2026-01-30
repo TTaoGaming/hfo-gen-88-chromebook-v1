@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:30.621808Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_omega/tests/v26_smoke_test.spec.ts",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_omega/tests/v26_smoke_test.spec.ts",
+    "hash": "fb148977b0b5ef043fb64e56d473b06733fbe19a4c8834a63f37f455c3e6cd7d",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

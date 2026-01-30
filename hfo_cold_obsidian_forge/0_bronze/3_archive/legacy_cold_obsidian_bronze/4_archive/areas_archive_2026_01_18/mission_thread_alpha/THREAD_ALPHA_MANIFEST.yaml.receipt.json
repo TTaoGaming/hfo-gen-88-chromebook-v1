@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-11T20:58:23.517597Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/2_areas/mission_thread_alpha/THREAD_ALPHA_MANIFEST.yaml",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/2_areas/mission_thread_alpha/THREAD_ALPHA_MANIFEST.yaml",
+    "hash": "946fd4a39d1eff395c6170ad86b14f6ac13d957845b45b0210483b9f4da3ceee",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

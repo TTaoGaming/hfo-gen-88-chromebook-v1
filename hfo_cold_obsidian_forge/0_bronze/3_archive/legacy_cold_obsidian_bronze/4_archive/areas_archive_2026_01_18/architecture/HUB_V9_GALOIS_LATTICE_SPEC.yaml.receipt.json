@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:29.867683Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/HUB_V9_GALOIS_LATTICE_SPEC.yaml",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/architecture/HUB_V9_GALOIS_LATTICE_SPEC.yaml",
+    "hash": "e0b8309cb38bc4aba7bd20bd92cedea3250e60fff047570d7a4b38e50f3f54e8",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

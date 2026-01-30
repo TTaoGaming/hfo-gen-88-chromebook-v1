@@ -1,0 +1,331 @@
+<!-- Medallion: Bronze | Mutation: 12.5% | HIVE: I -->
+<!-- OMEGA GEN 4 V2.0 - MODULAR HEXAGONAL MONOLITH -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFO | OMEGA GEN 4 V2.0 - SILVER FOUNDATION</title>
+    
+    <!-- CSS Dependencies -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/dist/css/themes/goldenlayout-dark-theme.css" />
+    
+    <style>
+        :root {
+            --md-sys-color-primary: #D0BCFF;
+            --md-sys-color-on-primary: #381E72;
+            --md-sys-color-primary-container: #4F378B;
+            --md-sys-color-on-primary-container: #EADDFF;
+            --md-sys-color-surface: #1C1B1F;
+            --md-sys-color-on-surface: #E6E1E5;
+            --md-sys-color-surface-variant: #49454F;
+            --md-sys-color-outline: #938F99;
+            --hfo-red: #FF4136;
+            --hfo-black: #000000;
+            --m3-radius: 12px;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100vh; width: 100vw;
+            overflow: hidden; background: var(--hfo-black); 
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Roboto', system-ui, sans-serif;
+        }
+
+        #layout-container { width: 100%; height: calc(100% - 28px); }
+
+        #status-bar { 
+            height: 28px; background: var(--md-sys-color-surface);
+            display: flex; align-items: center; padding: 0 16px;
+            font-size: 10px; border-top: 1px solid var(--md-sys-color-outline);
+            text-transform: uppercase;
+        }
+
+        .component-container { height: 100%; overflow: hidden; position: relative; }
+
+        .hero-view-container {
+            position: relative; width: 100%; height: 100%;
+            background: #000; display: flex; align-items: center; justify-content: center;
+        }
+
+        #video-feed {
+            position: absolute; width: 100%; height: 100%;
+            object-fit: contain; transform: scaleX(-1);
+            filter: grayscale(0.5) brightness(0.7);
+        }
+
+        #overlay-canvas {
+            position: absolute; transform: scaleX(-1); 
+            pointer-events: none; z-index: 5;
+        }
+
+        .hfo-btn {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none; padding: 12px 32px;
+            border-radius: 24px; cursor: pointer;
+            font-weight: 600; font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        /* FSM Indicator Overlay */
+        #fsm-overlay {
+            position: absolute; top: 16px; left: 16px;
+            z-index: 20; display: flex; gap: 8px;
+        }
+        .fsm-shard {
+            width: 12px; height: 12px; border-radius: 2px;
+            background: #333; transition: all 0.3s;
+        }
+        .fsm-shard.active { background: var(--hfo-red); box-shadow: 0 0 10px var(--hfo-red); }
+    </style>
+</head>
+<body>
+    <div id="layout-container"></div>
+    <div id="status-bar">
+        <span>[HFO OMEGA V2.0]</span>
+        <span id="p5-status" style="margin-left: 16px; color: #00FF41;">P5: SECURED</span>
+        <span style="margin-left: auto;" id="state-indicator">FSM: IDLE | PORT_1: BRIDGE_PENDING</span>
+    </div>
+
+    <!-- Import Map -->
+    <script type="importmap">
+    {
+        "imports": {
+            "golden-layout": "https://cdn.jsdelivr.net/npm/golden-layout@2.6.0/+esm",
+            "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm",
+            "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js",
+            "zod": "https://cdn.jsdelivr.net/npm/zod@3.22.4/+esm"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import { GoldenLayout } from 'golden-layout';
+        import GUI from 'lil-gui';
+        import { GestureRecognizer, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+        import { z } from 'zod';
+
+        // --- P1: FUSE CONTRACTS (ZOD 6.0) ---
+        const LandmarkSchema = z.object({
+            x: z.number().min(-0.5).max(1.5),
+            y: z.number().min(-0.5).max(1.5),
+            z: z.number()
+        });
+
+        const HandResultSchema = z.object({
+            landmarks: z.array(LandmarkSchema).length(21),
+            gesture: z.string().optional(),
+            handedness: z.enum(['Left', 'Right'])
+        });
+
+        const CoordinateSchema = z.object({
+            screenX: z.number(),
+            screenY: z.number(),
+            velocity: z.number(),
+            fsmState: z.enum(['IDLE', 'POINTER_READY', 'POINTER_COMMIT'])
+        });
+
+        // --- PRODUCTION STATE ---
+        const systemState = {
+            parameters: {
+                minConfidence: 0.5,
+                numHands: 2,
+                showSkeleton: true,
+                p0Active: false,
+                fsmPersistence: 0.88 // Pareto 88%
+            },
+            fsm: {
+                currentState: 'IDLE', // IDLE, POINTER_READY, POINTER_COMMIT
+                lastEvent: null
+            },
+            p0: {
+                recognizer: null,
+                video: null,
+                canvas: null,
+                ctx: null,
+                videoBounds: null
+            },
+            p1: {
+                cursors: [] // Validated and fused coordinates
+            }
+        };
+
+        window.hfoState = systemState;
+
+        // --- PORT 1: THE BRIDGER (FUSION LOGIC) ---
+        class P1Bridger {
+            static fuse(results) {
+                const cursors = [];
+                if (!results.landmarks) return cursors;
+
+                results.landmarks.forEach((landmarks, index) => {
+                    try {
+                        // 1. Zod Validation (Hard Boundary)
+                        const handData = HandResultSchema.parse({
+                            landmarks: landmarks,
+                            gesture: results.gestures?.[index]?.[0]?.categoryName || 'Unknown',
+                            handedness: results.handedness?.[index]?.[0]?.displayName || 'Right'
+                        });
+
+                        // 2. Coordinate Transformation (Normalized -> Screen)
+                        // Using Index Tip (Landmark 8) as cursor
+                        const tip = handData.landmarks[8];
+                        const { width, height } = systemState.p0.videoBounds || { width: 0, height: 0 };
+                        
+                        const screenX = tip.x * width;
+                        const screenY = tip.y * height;
+
+                        // 3. FSM Logic (IDLE -> READY -> COMMIT)
+                        let state = 'POINTER_READY';
+                        if (handData.gesture === 'Closed_Fist' || handData.gesture === 'Pinch') {
+                            state = 'POINTER_COMMIT';
+                        }
+
+                        // 4. Output Validation
+                        cursors.push(CoordinateSchema.parse({
+                            screenX,
+                            screenY,
+                            velocity: 0, // TODO: Implement velocity calc
+                            fsmState: state
+                        }));
+                    } catch (e) {
+                        console.error("P1_FUSE_ERROR:", e.issues || e.message);
+                    }
+                });
+
+                return cursors;
+            }
+        }
+
+        // --- P0: SENSE ---
+        async function initP0() {
+            logMission("P0: Initializing Shard...");
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
+            systemState.p0.recognizer = await GestureRecognizer.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+                    delegate: 'GPU'
+                },
+                runningMode: "VIDEO",
+                numHands: systemState.parameters.numHands
+            });
+        }
+
+        function predictLoop() {
+            if (!systemState.parameters.p0Active) return;
+            
+            const now = performance.now();
+            const results = systemState.p0.recognizer.recognizeForVideo(systemState.p0.video, now);
+            
+            // PORT 1 BRIDGE: Fusing P0 raw data into P3-compatible cursors
+            systemState.p1.cursors = P1Bridger.fuse(results);
+
+            // Update UI State
+            if (systemState.p1.cursors.length > 0) {
+                const primary = systemState.p1.cursors[0];
+                updateFSM(primary.fsmState);
+            } else {
+                updateFSM('IDLE');
+            }
+
+            drawResults(results);
+            requestAnimationFrame(predictLoop);
+        }
+
+        function updateFSM(newState) {
+            if (systemState.fsm.currentState !== newState) {
+                systemState.fsm.currentState = newState;
+                const indicator = document.getElementById('state-indicator');
+                if (indicator) indicator.innerText = `FSM: ${newState} | PORT_1: FUSED`;
+                logMission(`FSM_TRANSITION: ${newState}`);
+            }
+        }
+
+        function drawResults(results) {
+            const { ctx, canvas } = systemState.p0;
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (results.landmarks && systemState.parameters.showSkeleton) {
+                const utils = new DrawingUtils(ctx);
+                for (const landmarks of results.landmarks) {
+                    utils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, { color: '#D0BCFF', lineWidth: 2 });
+                    utils.drawLandmarks(landmarks, { color: '#FF4136', radius: 2 });
+                }
+            }
+        }
+
+        // --- SYSTEM UTILS ---
+        function resizeCanvas() {
+            const { video, canvas } = systemState.p0;
+            if (!video || !canvas) return;
+            const rect = video.getBoundingClientRect();
+            // Maintain 1:1 Aspect Ratio parity
+            const videoRatio = video.videoWidth / video.videoHeight;
+            let drawW = rect.width, drawH = rect.width / videoRatio;
+            if (drawH > rect.height) { drawH = rect.height; drawW = drawH * videoRatio; }
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.style.width = `${drawW}px`;
+            canvas.style.height = `${drawH}px`;
+            systemState.p0.videoBounds = { width: drawW, height: drawH };
+        }
+
+        function logMission(msg) {
+            const logs = document.getElementById('mission-logs');
+            if (!logs) return;
+            const entry = document.createElement('div');
+            entry.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logs.prepend(entry);
+        }
+
+        // --- LAYOUT & BOOTSTRAP ---
+        const layout = new GoldenLayout(document.getElementById('layout-container'));
+        
+        layout.registerComponentFactoryFunction('hero', (container) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'hero-view-container';
+            wrap.innerHTML = `
+                <video id="video-feed" autoplay playsinline></video>
+                <canvas id="overlay-canvas"></canvas>
+                <button id="btn-ignite" class="hfo-btn" style="position:absolute; bottom:40px; z-index:30;">IGNITE OMEGA</button>
+            `;
+            container.getElement().appendChild(wrap);
+            systemState.p0.video = wrap.querySelector('#video-feed');
+            systemState.p0.canvas = wrap.querySelector('#overlay-canvas');
+            systemState.p0.ctx = systemState.p0.canvas.getContext('2d');
+            
+            wrap.querySelector('#btn-ignite').onclick = async (e) => {
+                e.target.style.display = 'none';
+                await initP0();
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                systemState.p0.video.srcObject = stream;
+                systemState.p0.video.onloadeddata = () => {
+                    systemState.parameters.p0Active = true;
+                    resizeCanvas();
+                    predictLoop();
+                };
+            };
+        });
+
+        layout.registerComponentFactoryFunction('logs', (container) => {
+            const div = document.createElement('div');
+            div.id = 'mission-logs';
+            div.style.padding = '8px'; div.style.fontSize = '10px'; div.style.fontFamily = 'monospace';
+            container.getElement().appendChild(div);
+        });
+
+        layout.loadLayout({
+            root: { type: 'row', content: [
+                { type: 'component', componentType: 'hero', title: 'Tactical View', width: 75 },
+                { type: 'component', componentType: 'logs', title: 'System Logs', width: 25 }
+            ]}
+        });
+        
+        window.onresize = () => { layout.updateSize(); resizeCanvas(); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:46.645951Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/PARETO_FRONTIER_EVAL_HARNESS.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/reports/PARETO_FRONTIER_EVAL_HARNESS.md",
+    "hash": "93c072016e4d22e8e21bb3e77dc270a8b26c64610091bb913b6499a3558cfedc",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}

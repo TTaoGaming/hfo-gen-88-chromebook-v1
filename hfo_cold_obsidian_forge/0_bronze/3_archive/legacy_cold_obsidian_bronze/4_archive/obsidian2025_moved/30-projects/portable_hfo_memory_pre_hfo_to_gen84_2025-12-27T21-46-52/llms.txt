@@ -1,0 +1,98 @@
+# HFO Evolution Timeline - LLM Context
+
+> This is a portable memory bank for AI agents. It contains 6,423 documents spanning the HFO project from pre-HFO origins through Generation 84.
+
+## What is HFO?
+
+HFO (Human-First Ontology) is a personal knowledge management and AI collaboration system developed by ttao (the user). It evolved through 84+ generations from September 2025 to December 2025, with pre-HFO work in HOPE, Tectangle, and Spatial eras.
+
+## Core Concepts
+
+### The Obsidian Spider
+- Card 09 in the grimoire system
+- "The Godhead. The Infinite. The Web that holds the stars."
+- Represents the system's mythic identity
+- Connected to Indra's Net, the Hourglass, and the Octet of Chants
+
+### Zero Invention Principle
+- Core HFO philosophy
+- Build on what exists rather than inventing from scratch
+- Prefer composition over creation
+
+### Stigmergy
+- Indirect coordination through environment modification
+- Blackboards as shared state
+- Agents leave traces for other agents
+
+### Kraken Keeper
+- Memory and knowledge management system
+- Preserves Historical Buds across generations
+- Enables AI cold-start recovery
+
+### Grimoire Cards
+- 54+ archetypal concept cards
+- Each card represents a core system concept
+- Examples: Obsidian Spider, Kraken Keeper, Swarmlord
+
+### Historical Buds
+- Preserved knowledge snapshots
+- Each generation produces a "bud" of crystallized knowledge
+- GEMs, QUINEs, HANDOFFs, BATONs
+
+## Key File Types
+
+- **HANDOFF**: Generation transition documents
+- **QUINE**: Self-describing system documentation
+- **GEM**: Core knowledge crystallization
+- **BATON**: Knowledge transfer between sessions
+- **BLACKBOARD**: Stigmergy state storage (JSONL)
+
+## Timeline
+
+| Period | Era/Gen | Key Events |
+|--------|---------|------------|
+| Jan-Aug 2025 | Pre-HFO | HOPE, Tectangle, Spatial foundations |
+| Sep 2025 | Gen 1-31 | HFO birth, Zero Invention Principle |
+| Oct 2025 | Gen 32-52 | Vector experiments |
+| Oct-Nov 2025 | Gen 53-67 | Historical Buds consolidation |
+| Nov-Dec 2025 | Gen 68-84 | Rapid iteration, Kraken Keeper |
+
+## How to Use This Memory
+
+### Search (FTS)
+```python
+import duckdb
+con = duckdb.connect('hfo_memory.duckdb', read_only=True)
+con.execute('LOAD fts')
+
+results = con.execute("""
+    SELECT filename, generation,
+           fts_main_artifacts.match_bm25(id, 'your query') as score
+    FROM artifacts WHERE score IS NOT NULL
+    ORDER BY score DESC LIMIT 10
+""").fetchall()
+```
+
+### Get Content
+```python
+result = con.execute("""
+    SELECT content FROM artifacts 
+    WHERE filename = 'card_09_obsidian_spider.md'
+    LIMIT 1
+""").fetchone()
+```
+
+## Search Status
+
+- ✅ FTS (Full-Text Search) - Working
+- 🔜 VSS (Vector Semantic Search) - Planned
+- 🔜 GraphRAG (Entity Graph) - Planned
+- 🔜 RRF (Rank Fusion) - Blocked on VSS+GraphRAG
+
+## Important Notes
+
+1. Always cite sources with generation and filename
+2. Don't hallucinate - if not found, say so
+3. Respect generation boundaries
+4. Pre-HFO content has NULL generation values
+5. Use era field to distinguish: hfo, hope, tectangle, spatial

@@ -1,0 +1,8 @@
+{
+    "timestamp": "2026-01-20T19:17:44.064856Z",
+    "source": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_hot_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/OMEGA_GEN4_CONSOLIDATED_ROADMAP.md",
+    "target": "/home/tommytai3/active/hfo_gen_88_chromebook_v_1/hfo_cold_obsidian/bronze/4_archive/areas_archive_2026_01_18/root_cleanup_staging_2026_01_18/OMEGA_GEN4_CONSOLIDATED_ROADMAP.md",
+    "hash": "69155d6a3c1108c78a82df065f50c5e17280d5a417f312b2acd31183093c9391",
+    "medallion": "Bronze",
+    "state": "Frozen"
+}
