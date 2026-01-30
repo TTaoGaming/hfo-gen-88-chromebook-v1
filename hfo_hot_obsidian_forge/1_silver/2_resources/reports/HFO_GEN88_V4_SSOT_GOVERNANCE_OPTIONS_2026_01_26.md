@@ -15,8 +15,8 @@ This report gives you a constrained set of governance components (“what to bui
 
 Evidence sources (why governance must include lifecycle + gating):
 
-- [FORENSIC_ANALYSIS_HOT_SILVER_2026-01-26T10-08-00-07-00.md](FORENSIC_ANALYSIS_HOT_SILVER_2026-01-26T10-08-00-07-00.md)
-- [FORENSIC_ANALYSIS_2026-01-26.md](FORENSIC_ANALYSIS_2026-01-26.md)
+- [FORENSIC_ANALYSIS_HOT_SILVER_2026-01-26T10-08-00-07-00.md](root_docs/FORENSIC_ANALYSIS_HOT_SILVER_2026-01-26T10-08-00-07-00.md)
+- [FORENSIC_ANALYSIS_2026-01-26.md](root_docs/FORENSIC_ANALYSIS_2026-01-26.md)
 
 ## 1) What Your 1 YAML Is Good For
 

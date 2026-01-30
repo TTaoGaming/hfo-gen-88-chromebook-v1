@@ -15,7 +15,7 @@ This report is intentionally adversarial **against the system**, not against any
 ## Executive summary (the cracks)
 
 1) **Boundary contracts are doctrinally mandatory but practically drift-prone**.
-   - Doctrine demands Zod contract validation at ingestion ([COLD_START.md](../../../../COLD_START.md)).
+   - Doctrine demands Zod contract validation at ingestion ([COLD_START.md](../../../../hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/COLD_START.md)).
    - The workspace dependency is `zod` `^3.22.4` ([package.json](../../../../package.json)), while doctrine and instructions repeatedly say “Zod 6.0”. That mismatch is a governance crack: requirements drift faster than enforcement.
 
 2) **Your “single source of truth” rule is violated by partial modularization.**
