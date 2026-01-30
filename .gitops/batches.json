@@ -156,6 +156,14 @@
       ]
     },
     {
+      "id": "untracked-cold-obsidian-forge",
+      "type": "untracked",
+      "message": "docs(forge): add cold obsidian forge archives",
+      "paths": [
+        "hfo_cold_obsidian_forge/"
+      ]
+    },
+    {
       "id": "untracked-templates-and-tests",
       "type": "untracked",
       "message": "chore(templates): add templates + hive8 test",
