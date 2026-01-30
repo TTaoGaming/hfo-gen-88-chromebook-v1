@@ -28,6 +28,11 @@ from typing import Any
 
 from hfo_ssot_status_update import store_status_update
 
+try:
+    from hfo_pointers import resolve_path
+except Exception:  # pragma: no cover
+    resolve_path = None
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -83,7 +88,11 @@ def build_snapshot(config: SnapshotConfig) -> dict[str, Any]:
     pointers_path = REPO_ROOT / "hfo_pointers.json"
     vscode_tasks_path = REPO_ROOT / ".vscode" / "tasks.json"
     agents_path = REPO_ROOT / "AGENTS.md"
-    root_governance_path = REPO_ROOT / "ROOT_GOVERNANCE.md"
+    root_governance_path = (
+        Path(resolve_path(dotted_key="targets.root_governance_doc", default="ROOT_GOVERNANCE.md"))
+        if resolve_path
+        else (REPO_ROOT / "ROOT_GOVERNANCE.md")
+    )
     contracts_dir = REPO_ROOT / "contracts"
     ports_dir = REPO_ROOT / "hfo_ports"
 
@@ -211,7 +220,7 @@ def build_snapshot(config: SnapshotConfig) -> dict[str, Any]:
             "hfo_pointers.json",
             ".vscode/tasks.json",
             "AGENTS.md",
-            "ROOT_GOVERNANCE.md",
+            "hfo_hot_obsidian_forge/1_silver/2_resources/reports/root_docs/ROOT_GOVERNANCE.md",
             "contracts/",
             "artifacts/mcp_memory_service/gen88_v4/hfo_gen88_v4_ssot_sqlite_vec_2026_01_26.db",
         ],

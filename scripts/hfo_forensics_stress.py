@@ -23,6 +23,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
+try:
+    from hfo_pointers import resolve_path
+except Exception:  # pragma: no cover
+    resolve_path = None
+
 
 RE_OFFSET_Z = re.compile(r"[+-]\d\d:\d\dZ$")
 
@@ -158,7 +163,11 @@ def check_duckdb_path(repo_root: Path) -> list[Finding]:
 def check_zod_governance(repo_root: Path) -> list[Finding]:
     findings: list[Finding] = []
 
-    cold_start = repo_root / "COLD_START.md"
+    cold_start = (
+        Path(resolve_path(dotted_key="targets.cold_start_doc", default="COLD_START.md"))
+        if resolve_path
+        else (repo_root / "COLD_START.md")
+    )
     pkg = repo_root / "package.json"
 
     if cold_start.exists():

@@ -32,6 +32,11 @@ if str(_REPO_ROOT) not in sys.path:
 
 from hfo_blackboard_events import emit_cloudevent_to_blackboard
 
+try:
+    from hfo_pointers import resolve_path
+except Exception:  # pragma: no cover
+    resolve_path = None
+
 
 @dataclass(frozen=True)
 class Finding:
@@ -488,9 +493,17 @@ def _append_blackboard_event(
 
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description="Warn-only validator for HFO 2x4x4 forge layout")
+
+    default_spec = "HFO_ALPHA_FOLDER_STRUCTURE_V1_SPEC_2026_01_26.yaml"
+    if resolve_path:
+        default_spec = resolve_path(
+            dotted_key="targets.alpha_folder_structure_spec_v1",
+            default=default_spec,
+        )
+
     ap.add_argument(
         "--spec",
-        default="HFO_ALPHA_FOLDER_STRUCTURE_V1_SPEC_2026_01_26.yaml",
+        default=default_spec,
         help="Path to SSOT YAML spec",
     )
     ap.add_argument(
