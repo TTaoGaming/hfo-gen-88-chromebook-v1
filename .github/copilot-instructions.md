@@ -5,6 +5,8 @@
 
 - Root context: [AGENTS.md](../AGENTS.md)
 - Hot Bronze consolidation index: [hfo_hot_obsidian_forge/0_bronze/2_resources/reports/consolidation/HFO_HOT_BRONZE_CONSOLIDATION_INDEX_GEN88_V5_V1_2026_01_29.md](../hfo_hot_obsidian_forge/0_bronze/2_resources/reports/consolidation/HFO_HOT_BRONZE_CONSOLIDATION_INDEX_GEN88_V5_V1_2026_01_29.md)
+- Grimoire v8.8 (operator copy): [hfo_hot_obsidian_forge/3_hfo/2_resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_2026_01_29.md](../hfo_hot_obsidian_forge/3_hfo/2_resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_2026_01_29.md)
+- Grimoire v8.8 Quickstart: [hfo_hot_obsidian_forge/3_hfo/2_resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_QUICKSTART_2026_01_29.md](../hfo_hot_obsidian_forge/3_hfo/2_resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_QUICKSTART_2026_01_29.md)
 - Pointer registry (working / path truth): [hfo_pointers.json](../hfo_pointers.json)
 - Pointer registry (blessed / stable): [hfo_pointers_blessed.json](../hfo_pointers_blessed.json)
 - Root hub shim entrypoint: [hfo_mcp_gateway_hub.py](../hfo_mcp_gateway_hub.py)
@@ -54,6 +56,18 @@ Workflow:
 	Use: `bash scripts/mcp_env_wrap.sh ./.venv/bin/python hfo_ssot_status_update.py --topic <topic> --payload-json '{...}'`
 
 This is mandatory for cognitive persistence and to prevent repeated regressions.
+
+## 🧩 IDE usage (VS Code + Copilot)
+
+When working in this repo, bind your work to **Gen88 v5 anchors** up front:
+
+- Start from [AGENTS.md](../AGENTS.md).
+- For doctrine + port meaning, use the Grimoire v8.8 and the Quickstart above.
+- Always state your active port (P0–P7) and beat (Preflight/Payload/Postflight/Payoff) in prompts.
+
+Suggested prompt starter:
+
+"Operate as Gen88v5. Use the Grimoire v8.8 BLUF + port ladder. Make the smallest safe change. Produce a P4 4-beat proof bundle. End with an SSOT status_update." 
 
 ## 🔗 File Linking & Context
 

@@ -26,6 +26,12 @@ This file is intentionally short. It is the stable “start here” for Gen88 v5
 
 - Hive8 Compendium v8.6: [hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_6_2026_01_29.md](hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_6_2026_01_29.md)
 - Hive8 Compendium v8.7: [hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_7_2026_01_29.md](hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_7_2026_01_29.md)
+- Hive8 Compendium v8.8 (canonical): [hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_8_2026_01_29.md](hfo_hot_obsidian_forge/2_gold/2_resources/reports/hive8_doctrine/HFO_HIVE8_GEN88_V5_LEGENDARY_COMMANDERS_3_PLUS_1_COMPENDIUM_BLUF_PLUS_8x8_PLUS_META_V8_8_2026_01_29.md)
+
+Promoted operator copy (Grimoire):
+- Grimoire v8.8: [hfo_hot_obsidian_forge/3_hfo/2_resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_2026_01_29.md](hfo_hot_obsidian_forge/3_hfo/2_resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_2026_01_29.md)
+- Grimoire v8.8 (hot resources): [hfo_hot_obsidian_forge/hfo/resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_2026_01_29.md](hfo_hot_obsidian_forge/hfo/resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_2026_01_29.md)
+- Grimoire v8.8 Quickstart: [hfo_hot_obsidian_forge/3_hfo/2_resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_QUICKSTART_2026_01_29.md](hfo_hot_obsidian_forge/3_hfo/2_resources/HFO_GRIMOIRE_COMPENDIUM_GEN88_V8_8_QUICKSTART_2026_01_29.md)
 
 ## Hot Bronze consolidation index
 
