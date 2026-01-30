@@ -31,6 +31,24 @@ function normalizeArgs(argv) {
     return argv.filter((a) => a && !a.startsWith('-'));
 }
 
+function normalizePathForMatch(p) {
+    return String(p).replaceAll('\\', '/');
+}
+
+function shouldSkipLint(file) {
+    const f = normalizePathForMatch(file);
+
+    // Receipts are machine-generated; linting them is high-friction and low-signal.
+    if (f.endsWith('.receipt.json') || f.endsWith('.receipt.jsonl')) return true;
+
+    // Archive ingests can be extremely large; skip linting archive content to avoid
+    // pre-commit OOM/timeout while still allowing GitOps to batch commits.
+    if (f.startsWith('hfo_cold_obsidian_forge/0_bronze/3_archive/')) return true;
+    if (f.startsWith('hfo_hot_obsidian_forge/0_bronze/3_archive/')) return true;
+
+    return false;
+}
+
 function uniq(arr) {
     return Array.from(new Set(arr));
 }
@@ -68,7 +86,12 @@ async function main(argv) {
     const lintEnabled = await of.getBooleanValue('lint.enabled', true);
     if (!lintEnabled) return 0;
 
-    const files = uniq(normalizeArgs(argv));
+    const rawFiles = uniq(normalizeArgs(argv));
+    const files = rawFiles.filter((f) => !shouldSkipLint(f));
+    const skipped = rawFiles.length - files.length;
+    if (skipped > 0) {
+        console.warn(`[hfo-lint] skipped ${skipped} archive/receipt paths (pre-commit performance guard)`);
+    }
     if (!shouldLintFiles(files)) return 0;
 
     const mdFiles = files.filter((f) => ['.md', '.mdx'].includes(extOf(f)));
