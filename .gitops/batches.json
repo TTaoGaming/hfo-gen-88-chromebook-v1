@@ -118,20 +118,6 @@
       ]
     },
     {
-      "id": "untracked-root-notes",
-      "type": "untracked",
-      "message": "docs(notes): add root notes",
-      "paths": [
-        "ai-chat-omega-gen6-2026-1-20.md",
-        "ai-gpt-5-2-reward-hacking-memory-2026-1-28.md",
-        "ai-reward-hacking-analysis-2026-1-28.md",
-        "ai-reward-hacking-pain-list-2026-1-28.md",
-        "ttao-notes-2026-1-26.md",
-        "ttao-notes-2026-1-27.md",
-        "ttao-notes-2026-1-28.md"
-      ]
-    },
-    {
       "id": "untracked-sensemaking-turns",
       "type": "untracked",
       "message": "docs(sensemaking): add S3 protocol turns",
@@ -208,14 +194,6 @@
       "message": "contracts: add zod schemas",
       "paths": [
         "contracts/"
-      ]
-    },
-    {
-      "id": "root-notes",
-      "type": "untracked",
-      "message": "chore(notes): add omega chat note",
-      "paths": [
-        "ai-chat-omega-gen6-2026-1-20.md"
       ]
     },
     {
